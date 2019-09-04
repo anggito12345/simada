@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Eloquent as Model;
+use App\Models\BaseModel;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
@@ -26,17 +26,12 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property integer umur_ekonomis
  * @property string keterangan
  */
-class inventaris extends Model
+class inventaris extends BaseModel
 {
     // use SoftDeletes;
 
     public $table = 'inventaris';
     
-    const CREATED_AT = 'created_at';
-    const UPDATED_AT = 'updated_at';
-
-
-    protected $dates = ['deleted_at'];
 
 
     public $fillable = [
@@ -81,14 +76,36 @@ class inventaris extends Model
         'keterangan' => 'string'
     ];
 
+
     /**
      * Validation rules
      *
      * @var array
      */
     public static $rules = [
-        
+        'noreg' => 'max:6'
     ];
 
-    
+    public function setTglPerolehanAttribute($value)
+    {
+        $this->attributes['tgl_perolehan'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
+    }
+
+    public function setTglSensusAttribute($value)
+    {
+        $this->attributes['tgl_sensus'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
+    }
+
+    public function setCreatedAtAttribute($value)
+    {
+        exit();
+        $this->attributes['created_at'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
+    }
+
+    public function setUpdatedAtAtAttribute($value)
+    {
+        exit();
+        $this->attributes['updated_at'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
+    }
+
 }

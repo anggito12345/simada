@@ -60,6 +60,25 @@
             margin-right: 1em;
         }
 
+        span.select2-selection {
+            border-color: #d2d6de !important;
+            padding: .375rem .75rem !important;
+            border-radius: none !important;
+            height: 37.73px !important;
+        }
+
+        .select2-container--default .select2-selection--single {
+            border-radius: 0px !important;
+        }
+
+        .select2-container--default .select2-selection--single .select2-selection__arrow {
+            top: 5px;
+        }
+
+
+        .select2-container--default .select2-selection--single .select2-selection__rendered {
+            line-height: 2rem;
+        }
     </style>
 </head>
 

@@ -18,6 +18,7 @@ class inventarisController extends AppBaseController
 
     public function __construct(inventarisRepository $inventarisRepo)
     {
+        parent::__construct();
         $this->inventarisRepository = $inventarisRepo;
     }
 
@@ -52,6 +53,7 @@ class inventarisController extends AppBaseController
     public function store(CreateinventarisRequest $request)
     {
         $input = $request->all();
+
 
         $inventaris = $this->inventarisRepository->create($input);
 

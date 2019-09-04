@@ -18,6 +18,11 @@ use Response;
  */
 class AppBaseController extends Controller
 {
+    public function __construct() {
+
+        \App::setLocale('in');
+    }
+
     public function sendResponse($result, $message)
     {
         return Response::json(ResponseUtil::makeResponse($message, $result));

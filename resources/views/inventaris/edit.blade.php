@@ -10,7 +10,7 @@
        @include('adminlte-templates::common.errors')
        <div class="box box-primary">
            <div class="box-body">
-               <div class="row">
+               <div class="">
                    {!! Form::model($inventaris, ['route' => ['inventaris.update', $inventaris->id], 'method' => 'patch']) !!}
 
                         @include('inventaris.fields')
