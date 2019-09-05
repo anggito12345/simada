@@ -1,96 +1,92 @@
-<!-- Id Field -->
-<div class="form-group">
-    {!! Form::label('id', 'Id:') !!}
-    <p>{!! $inventaris->id !!}</p>
-</div>
+
 
 <!-- Noreg Field -->
-<div class="form-group">
-    {!! Form::label('noreg', 'Noreg:') !!}
-    <p>{!! $inventaris->noreg !!}</p>
+<div class="row">
+    {!! Form::label('noreg', 'Noreg:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $inventaris->noreg !!}</p>
 </div>
 
 <!-- Pidbarang Field -->
-<div class="form-group">
-    {!! Form::label('pidbarang', 'Pidbarang:') !!}
-    <p>{!! $inventaris->pidbarang !!}</p>
+<div class="row">
+    {!! Form::label('pidbarang', __('field.pidbarang'), ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! \App\Models\BaseModel::getRelationData($inventaris->barang, "nama_rek_aset", "") !!}</p>
 </div>
 
 <!-- Pidopd Field -->
-<div class="form-group">
-    {!! Form::label('pidopd', 'Pidopd:') !!}
-    <p>{!! $inventaris->pidopd !!}</p>
+<div class="row">
+    {!! Form::label('pidopd', __('field.pidopd'), ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! \App\Models\BaseModel::getRelationData($inventaris->organisasi, "nama", "") !!}</p>
 </div>
 
 <!-- Pidlokasi Field -->
-<div class="form-group">
-    {!! Form::label('pidlokasi', 'Pidlokasi:') !!}
-    <p>{!! $inventaris->pidlokasi !!}</p>
+<div class="row">
+    {!! Form::label('pidlokasi', __('field.pidlokasi'), ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! \App\Models\BaseModel::getRelationData($inventaris->lokasi, "nama", "") !!}</p>
 </div>
 
 <!-- Tgl Perolehan Field -->
-<div class="form-group">
-    {!! Form::label('tgl_perolehan', 'Tgl Perolehan:') !!}
-    <p>{!! $inventaris->tgl_perolehan !!}</p>
+<div class="row">
+    {!! Form::label('tgl_perolehan', 'Tgl Perolehan:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $inventaris->tgl_perolehan !!}</p>
 </div>
 
 <!-- Tgl Sensus Field -->
-<div class="form-group">
-    {!! Form::label('tgl_sensus', 'Tgl Sensus:') !!}
-    <p>{!! $inventaris->tgl_sensus !!}</p>
+<div class="row">
+    {!! Form::label('tgl_sensus', 'Tgl Sensus:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $inventaris->tgl_sensus !!}</p>
 </div>
 
 <!-- Volume Field -->
-<div class="form-group">
-    {!! Form::label('volume', 'Volume:') !!}
-    <p>{!! $inventaris->volume !!}</p>
+<div class="row">
+    {!! Form::label('volume', 'Volume:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $inventaris->volume !!}</p>
 </div>
 
 <!-- Pembagi Field -->
-<div class="form-group">
-    {!! Form::label('pembagi', 'Pembagi:') !!}
-    <p>{!! $inventaris->pembagi !!}</p>
+<div class="row">
+    {!! Form::label('pembagi', 'Pembagi:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $inventaris->pembagi !!}</p>
 </div>
 
 <!-- Satuan Field -->
-<div class="form-group">
-    {!! Form::label('satuan', 'Satuan:') !!}
-    <p>{!! $inventaris->satuan !!}</p>
+<div class="row">
+    {!! Form::label('satuan', 'Satuan:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $inventaris->satuan !!}</p>
 </div>
 
 <!-- Harga Satuan Field -->
-<div class="form-group">
-    {!! Form::label('harga_satuan', 'Harga Satuan:') !!}
-    <p>{!! $inventaris->harga_satuan !!}</p>
+<div class="row">
+    {!! Form::label('harga_satuan', 'Harga Satuan:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $inventaris->harga_satuan !!}</p>
 </div>
 
 <!-- Perolehan Field -->
-<div class="form-group">
-    {!! Form::label('perolehan', 'Perolehan:') !!}
-    <p>{!! $inventaris->perolehan !!}</p>
+<div class="row">
+    {!! Form::label('perolehan', 'Perolehan:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $inventaris->perolehan !!}</p>
 </div>
 
 <!-- Kondisi Field -->
-<div class="form-group">
-    {!! Form::label('kondisi', 'Kondisi:') !!}
-    <p>{!! $inventaris->kondisi !!}</p>
+<div class="row">
+    {!! Form::label('kondisi', 'Kondisi:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $inventaris->kondisi !!}</p>
 </div>
 
 <!-- Lokasi Detil Field -->
-<div class="form-group">
-    {!! Form::label('lokasi_detil', 'Lokasi Detil:') !!}
-    <p>{!! $inventaris->lokasi_detil !!}</p>
+<div class="row">
+    {!! Form::label('lokasi_detil', 'Lokasi Detil:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $inventaris->lokasi_detil !!}</p>
 </div>
 
 <!-- Umur Ekonomis Field -->
-<div class="form-group">
-    {!! Form::label('umur_ekonomis', 'Umur Ekonomis:') !!}
-    <p>{!! $inventaris->umur_ekonomis !!}</p>
+<div class="row">
+    {!! Form::label('umur_ekonomis', 'Umur Ekonomis:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $inventaris->umur_ekonomis !!}</p>
 </div>
 
 <!-- Keterangan Field -->
-<div class="form-group">
-    {!! Form::label('keterangan', 'Keterangan:') !!}
-    <p>{!! $inventaris->keterangan !!}</p>
+<div class="row">
+    {!! Form::label('keterangan', 'Keterangan:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $inventaris->keterangan !!}</p>
 </div>
 

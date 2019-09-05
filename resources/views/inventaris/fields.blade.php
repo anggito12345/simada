@@ -110,7 +110,7 @@
 <div class="form-group col-sm-6 row">
     {!! Form::label('tgl_sensus', 'Tgl Sensus:') !!}
     <div class="input-group ">
-        <input type="text" class="form-control" name="tgl_sensus" id="tgl_sensus">
+        {!! Form::text('tgl_sensus', null, ['class' => 'form-control','id'=>'tgl_sensus']) !!}
         <div class="input-group-append">
             <span class="input-group-text">
                 <span class="fa fa-calendar"></span>

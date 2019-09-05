@@ -6,3 +6,7 @@
     <a href="{!! route('inventaris.index') !!}"><i class="fa fa-edit"></i><span>Inventaris</span></a>
 </li>
 
+<li class="{{ Request::is('pemeliharaans*') ? 'active' : '' }}">
+    <a href="{!! route('pemeliharaans.index') !!}"><i class="fa fa-edit"></i><span>Pemeliharaans</span></a>
+</li>
+

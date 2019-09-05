@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class inventarisRepository
  * @package App\Repositories
- * @version September 3, 2019, 2:31 pm UTC
+ * @version September 5, 2019, 2:24 pm UTC
 */
 
 class inventarisRepository extends BaseRepository

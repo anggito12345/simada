@@ -79,6 +79,24 @@
         .select2-container--default .select2-selection--single .select2-selection__rendered {
             line-height: 2rem;
         }
+
+        .container-view {
+            margin-bottom: 20px;
+        }        
+
+        .container-view .row:nth-child(2n) {
+            background:#F3F3F3;
+        }
+
+        .container-view .row .item-view {
+            margin-bottom:0;
+            padding:10px;   
+        }
+
+        .container-view .row .item-view:first-child {
+            text-align: right;
+            font-weight: bold;            
+        }
     </style>
 </head>
 

@@ -3,17 +3,16 @@
 @section('content')
     <section class="content-header">
         <h1>
-            Users
+            Pemeliharaan
         </h1>
     </section>
     <div class="content">
         <div class="box box-primary">
             <div class="box-body">
-                <div class="container container-view">
-                    @include('users.show_fields')
-                    
+                <div class="row" style="padding-left: 20px">
+                    @include('pemeliharaans.show_fields')
+                    <a href="{!! route('pemeliharaans.index') !!}" class="btn btn-default">Back</a>
                 </div>
-                <a href="{!! route('users.index') !!}" class="btn btn-default">Back</a>
             </div>
         </div>
     </div>

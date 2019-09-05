@@ -40,4 +40,10 @@ class BaseModel extends Model {
 
         return $defaultValues;
     }
+
+
+    public static function getRelationData($data, $keyToObtain, $defaultValue = "")
+    {
+        return isset($data) ? $data->$keyToObtain : $defaultValue;
+    }
 }

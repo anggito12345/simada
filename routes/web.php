@@ -24,3 +24,5 @@ Route::resource('users', 'usersController');
 Route::resource('users', 'usersController');
 
 Route::resource('inventaris', 'inventarisController');
+
+Route::resource('pemeliharaans', 'pemeliharaanController');

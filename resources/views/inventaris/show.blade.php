@@ -9,10 +9,11 @@
     <div class="content">
         <div class="box box-primary">
             <div class="box-body">
-                <div class="row" style="padding-left: 20px">
+                <div class="container container-view" >
                     @include('inventaris.show_fields')
-                    <a href="{!! route('inventaris.index') !!}" class="btn btn-default">Back</a>
+                   
                 </div>
+                <a href="{!! route('inventaris.index') !!}" class="btn btn-default">Back</a>
             </div>
         </div>
     </div>

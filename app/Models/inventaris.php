@@ -2,13 +2,13 @@
 
 namespace App\Models;
 
-use App\Models\BaseModel;
+use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
  * Class inventaris
  * @package App\Models
- * @version September 3, 2019, 2:31 pm UTC
+ * @version September 5, 2019, 2:24 pm UTC
  *
  * @property string noreg
  * @property integer pidbarang
@@ -26,12 +26,16 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property integer umur_ekonomis
  * @property string keterangan
  */
-class inventaris extends BaseModel
+class inventaris extends Model
 {
-    // use SoftDeletes;
 
     public $table = 'inventaris';
     
+    const CREATED_AT = 'created_at';
+    const UPDATED_AT = 'updated_at';
+
+
+    protected $dates = ['deleted_at'];
 
 
     public $fillable = [
@@ -76,36 +80,42 @@ class inventaris extends BaseModel
         'keterangan' => 'string'
     ];
 
-
     /**
      * Validation rules
      *
      * @var array
      */
     public static $rules = [
-        'noreg' => 'max:6'
+        
     ];
+
 
     public function setTglPerolehanAttribute($value)
     {
+        $value = date("Y-m-d", strtotime($value));
         $this->attributes['tgl_perolehan'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
     }
 
     public function setTglSensusAttribute($value)
     {
+        $value = date("Y-m-d", strtotime($value));
         $this->attributes['tgl_sensus'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
     }
 
-    public function setCreatedAtAttribute($value)
+    public function Lokasi()
     {
-        exit();
-        $this->attributes['created_at'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
+        return $this->hasOne('App\Models\lokasi', 'id', 'pidlokasi');
     }
 
-    public function setUpdatedAtAtAttribute($value)
+    public function Barang()
     {
-        exit();
-        $this->attributes['updated_at'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
+        return $this->hasOne('App\Models\barang', 'id', 'pidbarang');
     }
 
+    public function Organisasi()
+    {
+        return $this->hasOne('App\Models\organisasi', 'id', 'pidopd');
+    }
+
+    
 }

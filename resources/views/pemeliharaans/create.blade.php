@@ -3,17 +3,21 @@
 @section('content')
     <section class="content-header">
         <h1>
-            Users
+            Pemeliharaan
         </h1>
     </section>
     <div class="content">
+        @include('adminlte-templates::common.errors')
         <div class="box box-primary">
+
             <div class="box-body">
-                <div class="container container-view">
-                    @include('users.show_fields')
-                    
+                <div class="">
+                    {!! Form::open(['route' => 'pemeliharaans.store']) !!}
+
+                        @include('pemeliharaans.fields')
+
+                    {!! Form::close() !!}
                 </div>
-                <a href="{!! route('users.index') !!}" class="btn btn-default">Back</a>
             </div>
         </div>
     </div>

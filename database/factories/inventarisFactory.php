@@ -22,6 +22,8 @@ $factory->define(inventaris::class, function (Faker $faker) {
         'kondisi' => $faker->word,
         'lokasi_detil' => $faker->word,
         'umur_ekonomis' => $faker->randomDigitNotNull,
-        'keterangan' => $faker->word
+        'keterangan' => $faker->word,
+        'updated_at' => $faker->word,
+        'created_at' => $faker->word
     ];
 });

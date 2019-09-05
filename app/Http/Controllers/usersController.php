@@ -19,6 +19,7 @@ class usersController extends AppBaseController
 
     public function __construct(usersRepository $usersRepo)
     {
+        parent::__construct();
         $this->usersRepository = $usersRepo;
     }
 

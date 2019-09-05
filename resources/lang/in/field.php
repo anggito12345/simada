@@ -7,5 +7,7 @@ return [
     'pidbarang' => 'Barang',
     'pidopd' => 'OPD',
     'pidlokasi' => 'Lokasi',
+    'pidinventaris' => 'Inventaris',
+    'persh' => 'Perusahaan'
 
 ];
