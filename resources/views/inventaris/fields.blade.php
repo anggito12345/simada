@@ -104,6 +104,15 @@
             $(this).datepicker('hide');
         });
     </script>
+
+    @if (isset($inventaris))
+    <script>
+        App.Helpers.defaultSelect2($('#pidbarang'), "<?= url('api/barangs', [$inventaris->pidbarang]) ?>","id","nama_rek_aset")
+        App.Helpers.defaultSelect2($('#pidopd'), "<?= url('api/organisasis', [$inventaris->pidbarang]) ?>","id","nama")
+        App.Helpers.defaultSelect2($('#pidlokasi'), "<?= url('api/lokasis', [$inventaris->pidbarang]) ?>","id","nama")
+        App.Helpers.defaultSelect2($('#satuan'), "<?= url('api/satuan_barangs', [$inventaris->pidbarang]) ?>","id","nama")
+    </script>
+    @endif
 @endsection
 
 <!-- Tgl Sensus Field -->
@@ -152,11 +161,7 @@
 <!-- Kondisi Field -->
 <div class="form-group col-sm-6 row">
     {!! Form::label('kondisi', 'Kondisi:') !!}
-    {!! Form::select('kondisi',[
-        'Baik' => 'Baik',
-        'Kurang Baik' => 'Kurang Baik',
-        'Rusak Berat' => 'Rusak Berat'
-    ], null, ['class' => 'form-control']) !!}
+    {!! Form::select('kondisi',\App\Models\BaseModel::$kondisiDs, null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Lokasi Detil Field -->

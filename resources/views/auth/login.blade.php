@@ -20,6 +20,17 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="<?= url('css/thirdparty/AdminLTE.min.css') ?>">
     <link rel="stylesheet" href="<?= url('css/thirdparty/_all-skins.min.css') ?>">
+
+    <style>
+        @font-face {
+            font-family: mainfont;
+            src: url(<?= url('css/fonts/SourceSansPro-Regular.otf') ?>);
+        }
+
+        body {
+            font-family: mainfont !important;
+        }
+    </style>
 </head>
 <body class="hold-transition login-page">
 <div class="login-box">
@@ -64,8 +75,6 @@
         </form>
 
         <br />
-
-        <a href="{{ url('/password/reset') }}">I forgot my password</a><br>
 
     </div>
     <!-- /.login-box-body -->

@@ -2,11 +2,11 @@
 
 namespace App\DataTables;
 
-use App\Models\pemeliharaan;
+use App\Models\penghapusan;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 
-class pemeliharaanDataTable extends DataTable
+class penghapusanDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -18,22 +18,21 @@ class pemeliharaanDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable
-            ->addColumn('action', 'pemeliharaans.datatables_actions');
+        return $dataTable->addColumn('action', 'penghapusans.datatables_actions');
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\pemeliharaan $model
+     * @param \App\Models\penghapusan $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(pemeliharaan $model)
+    public function query(penghapusan $model)
     {
         return $model->newQuery()->select([
-            'pemeliharaan.*',
-            'inventaris.noreg as noreg'
-        ])->join('inventaris','inventaris.id','pemeliharaan.pidinventaris');
+            'penghapusan.*',
+            'inventaris.noreg as noreg_inv'
+        ])->join('inventaris','inventaris.id','penghapusan.pidinventaris');
     }
 
     /**
@@ -53,7 +52,7 @@ class pemeliharaanDataTable extends DataTable
                 'order'     => [[0, 'desc']],
                 'buttons'   => [
                     ['extend' => 'create', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner', 'buttons' => [ 'csv', 'excel']],
+                    ['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner',],
                     ['extend' => 'print', 'className' => 'btn btn-default btn-sm no-corner',],
                     ['extend' => 'reset', 'className' => 'btn btn-default btn-sm no-corner',],
                     ['extend' => 'reload', 'className' => 'btn btn-default btn-sm no-corner',],
@@ -69,20 +68,23 @@ class pemeliharaanDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'noreg' => [
-                'title' => __('field.noreg'),
+            'noreg_inv' => [
+                'title' => __('field.noreg') . ' inventaris',
                 'name' => 'inventaris.noreg'
             ],
-            'tgl',
-            // 'uraian',
-            'persh' => [
-                'title' => __('field.persh')
+            'noreg' => [
+                'title' => __('field.noreg'),
             ],
-            'alamat',
-            'nokontrak',
-            'tglkontrak',
-            'biaya',
-            // 'menambah',
+            'tglhapus' => [
+                'title' => __('field.tglhapus'),
+            ],
+            'kriteria',
+            // 'kondisi',
+            'harga_apprisal',
+            // 'dokumen',
+            // 'foto',
+            // 'nosk',
+            // 'tglsk',
             // 'keterangan'
         ];
     }
@@ -94,6 +96,6 @@ class pemeliharaanDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'pemeliharaansdatatable_' . time();
+        return 'penghapusansdatatable_' . time();
     }
 }

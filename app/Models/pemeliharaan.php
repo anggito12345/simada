@@ -25,10 +25,6 @@ class pemeliharaan extends Model
 {
 
     public $table = 'pemeliharaan';
-    
-    const CREATED_AT = 'created_at';
-    const UPDATED_AT = 'updated_at';
-
 
     protected $dates = ['deleted_at'];
 
@@ -73,6 +69,24 @@ class pemeliharaan extends Model
     public static $rules = [
         
     ];
+
+
+    public function setTglAttribute($value)
+    {
+        $value = date("Y-m-d", strtotime($value));
+        $this->attributes['tgl'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
+    }
+
+    public function setTglkontrakAttribute($value)
+    {
+        $value = date("Y-m-d", strtotime($value));
+        $this->attributes['tglkontrak'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
+    }
+
+    public function Inventaris()
+    {
+        return $this->hasOne('App\Models\inventaris', 'id', 'pidinventaris');
+    }
 
     
 }

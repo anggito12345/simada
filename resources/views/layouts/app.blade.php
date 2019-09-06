@@ -28,6 +28,8 @@
     <!-- Ionicons -->
     <link rel="stylesheet" href="<?= url('css/thirdparty/ionicons2.min.css') ?>">
 
+    <script src="<?= url('js/public.js') ?>"></script>
+
     @yield('css')
 
     <style>
@@ -97,10 +99,23 @@
             text-align: right;
             font-weight: bold;            
         }
+
+        .image-preview {
+            width: 220px;
+        }
+
+        @font-face {
+            font-family: mainfont;
+            src: url(<?= url('css/fonts/SourceSansPro-Regular.otf') ?>);
+        }
+
+        body {
+            font-family: mainfont !important;
+        }
     </style>
 </head>
 
-<body class="skin-blue sidebar-mini">
+<body class="skin-green-light sidebar-mini">
 @if (!Auth::guest())
     <div class="wrapper">
         <!-- Main Header -->
@@ -234,6 +249,8 @@
     <script src="<?= url('js/thirdparty/adminlte.min.js') ?>"></script>
 
     <script src="<?= url('js/thirdparty/select2.min.js') ?>"></script>
+
+    
 
     @yield('scripts')
 

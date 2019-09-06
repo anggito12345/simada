@@ -8,6 +8,6 @@ return [
     'pidopd' => 'OPD',
     'pidlokasi' => 'Lokasi',
     'pidinventaris' => 'Inventaris',
-    'persh' => 'Perusahaan'
-
+    'persh' => 'Perusahaan',
+    'tglhapus' => 'Tanggal Penghapusan'
 ];

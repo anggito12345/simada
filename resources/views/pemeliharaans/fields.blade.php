@@ -40,6 +40,12 @@
         });
 
     </script>
+
+    @if (isset($pemeliharaan))
+    <script>
+        App.Helpers.defaultSelect2($('#pidinventaris'), "<?= url('api/inventaris', [$pemeliharaan->pidinventaris]) ?>","id","noreg")
+    </script>
+    @endif
 @endsection
 
 <!-- Uraian Field -->

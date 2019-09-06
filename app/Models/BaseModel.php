@@ -46,4 +46,17 @@ class BaseModel extends Model {
     {
         return isset($data) ? $data->$keyToObtain : $defaultValue;
     }
+
+
+    public static $menambahDs = [
+        '1' => 'Ya',
+        '0' => 'Tidak'
+    ];
+
+
+    public static $kondisiDs = [
+        'Baik' => 'Baik',
+        'Kurang Baik' => 'Kurang Baik',
+        'Rusak Berat' => 'Rusak Berat'
+    ];
 }
