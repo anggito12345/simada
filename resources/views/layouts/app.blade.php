@@ -21,12 +21,16 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="<?= url('css/thirdparty/AdminLTE.min.css') ?>">
     <link rel="stylesheet" href="<?= url('css/thirdparty/_all-skins.min.css') ?>">
-
+    
 
     <link rel="stylesheet" href="<?= url('css/thirdparty/select2.min.css') ?>">
 
+    <link rel="stylesheet" href="<?= url('css/thirdparty/select2-bootstrap.min.css') ?>">
+
     <!-- Ionicons -->
     <link rel="stylesheet" href="<?= url('css/thirdparty/ionicons2.min.css') ?>">
+
+    <link rel="stylesheet" href="<?= url('css/thirdparty/sweetalert2.min.css') ?>">
 
     <script src="<?= url('js/public.js') ?>"></script>
 
@@ -62,24 +66,12 @@
             margin-right: 1em;
         }
 
-        span.select2-selection {
-            border-color: #d2d6de !important;
-            padding: .375rem .75rem !important;
-            border-radius: none !important;
-            height: 37.73px !important;
+        .select2-selection__rendered {
+            line-height: 2;
         }
 
-        .select2-container--default .select2-selection--single {
-            border-radius: 0px !important;
-        }
-
-        .select2-container--default .select2-selection--single .select2-selection__arrow {
-            top: 5px;
-        }
-
-
-        .select2-container--default .select2-selection--single .select2-selection__rendered {
-            line-height: 2rem;
+        .select2-container--bootstrap {
+            width: 100% !important;
         }
 
         .container-view {
@@ -102,6 +94,10 @@
 
         .image-preview {
             width: 220px;
+        }
+
+        .paginate_button.active a{
+            color: rgba(255,255,255,.5);
         }
 
         @font-face {
@@ -243,16 +239,17 @@
     <script src="<?= url('js/thirdparty/bootstrap.min.js') ?>"></script>
     <script src="<?= url('js/thirdparty/bootstrap-datepicker.min.js') ?>"></script>
     <script src="<?= url('js/thirdparty/bootstrap-toggle.min.js') ?>"></script>
-
+    
     <!-- AdminLTE App -->
     <script src="<?= url('js/thirdparty/bootstrap-toggle.min.js') ?>"></script>
     <script src="<?= url('js/thirdparty/adminlte.min.js') ?>"></script>
 
     <script src="<?= url('js/thirdparty/select2.min.js') ?>"></script>
 
-    
+    <script src="<?= url('js/thirdparty/sweetalert2.min.js') ?>"></script>
 
     @yield('scripts')
+    @yield('scripts_2')
 
     <script>
         $(function() {

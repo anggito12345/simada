@@ -22,7 +22,8 @@
                     results: data.data
                 };
                 }
-            } 
+            },
+            theme: 'bootstrap' ,
         })
         
         $('#tgl').datepicker({

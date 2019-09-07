@@ -9,5 +9,7 @@ return [
     'pidlokasi' => 'Lokasi',
     'pidinventaris' => 'Inventaris',
     'persh' => 'Perusahaan',
-    'tglhapus' => 'Tanggal Penghapusan'
+    'tglhapus' => 'Tanggal Penghapusan',
+    'pid' => 'Induk',
+    'nama_rek_aset' => 'Nama Barang'
 ];

@@ -2,31 +2,23 @@
 
 namespace App\Repositories;
 
-use App\Models\barang;
+use App\Models\jenisbarang;
 use App\Repositories\BaseRepository;
 
 /**
- * Class barangRepository
+ * Class jenisbarangRepository
  * @package App\Repositories
- * @version September 7, 2019, 10:23 am UTC
+ * @version September 7, 2019, 1:53 pm UTC
 */
 
-class barangRepository extends BaseRepository
+class jenisbarangRepository extends BaseRepository
 {
     /**
      * @var array
      */
     protected $fieldSearchable = [
-        'pid',
-        'kodetampil',
-        'kode_rek',
-        'nama_rek_aset',
-        'jenis_barang',
-        'umur_ekononomis',
-        'aset',
-        'obyek',
-        'rincianobyek',
-        'subrincianobyek'
+        'nama',
+        'aktif'
     ];
 
     /**
@@ -44,6 +36,6 @@ class barangRepository extends BaseRepository
      **/
     public function model()
     {
-        return barang::class;
+        return jenisbarang::class;
     }
 }

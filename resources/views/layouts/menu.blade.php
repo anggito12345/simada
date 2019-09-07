@@ -23,6 +23,11 @@
     </ul>
 </li>
 
+<li class="{{ Request::is('barangs*') ? 'active' : '' }}">
+    <a href="{!! route('barangs.index') !!}"><i class="fa fa-box-open"></i><span>Master Barang</span></a>
+</li>
+
+
 <li class="treeview {{ Request::is('users*')? 'active' : '' }}">
     <a href="#">
         <i class="fa fa-wrench"></i>
@@ -30,8 +35,7 @@
         <span class="pull-right-container">
             <i class="fa fa-angle-left pull-right"></i>
         </span>
-    </a>
-   
+    </a>   
     <ul class="treeview-menu">
         <li class="{{ Request::is('users*') ? 'active' : '' }}">
             <a href="{!! route('users.index') !!}"><i class="fa fa-users"></i><span>Users</span></a>
@@ -39,5 +43,11 @@
     </ul>
 </li>
 
+<li class="{{ Request::is('alamats*') ? 'active' : '' }}">
+    <a href="{!! route('alamats.index') !!}"><i class="fa fa-edit"></i><span>Alamats</span></a>
+</li>
 
+<li class="{{ Request::is('jenisbarangs*') ? 'active' : '' }}">
+    <a href="{!! route('jenisbarangs.index') !!}"><i class="fa fa-edit"></i><span>Jenisbarangs</span></a>
+</li>
 

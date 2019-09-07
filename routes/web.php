@@ -28,3 +28,9 @@ Route::resource('inventaris', 'inventarisController');
 Route::resource('pemeliharaans', 'pemeliharaanController');
 
 Route::resource('penghapusans', 'penghapusanController');
+
+Route::resource('barangs', 'barangController');
+
+Route::resource('alamats', 'alamatController');
+
+Route::resource('jenisbarangs', 'jenisbarangController');

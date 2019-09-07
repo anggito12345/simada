@@ -70,7 +70,8 @@
                     results: data.data
                 };
                 }
-            } 
+            },
+            theme: 'bootstrap' ,
         })
 
         $('#tglhapus').datepicker({
@@ -88,7 +89,7 @@
         });
     </script>
 
-     @if (isset($penghapusan))
+    @if (isset($penghapusan))
     <script>
         App.Helpers.defaultSelect2($('#pidinventaris'), "<?= url('api/inventaris', [$penghapusan->pidinventaris]) ?>","id","noreg")
     </script>

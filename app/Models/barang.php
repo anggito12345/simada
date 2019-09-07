@@ -74,5 +74,10 @@ class barang extends Model
         
     ];
 
+    public function Barang()
+    {
+        return $this->hasOne('App\Models\barang', 'id', 'pid');
+    }
+
     
 }

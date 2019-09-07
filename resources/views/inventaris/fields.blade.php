@@ -47,7 +47,8 @@
                     results: data.data
                 };
                 }
-            } 
+            },
+            theme: 'bootstrap' ,
         })
 
         $('#pidopd').select2({
@@ -60,7 +61,8 @@
                     results: data.data
                 };
                 }
-            } 
+            },
+            theme: 'bootstrap' ,
         })
 
         $('#pidlokasi').select2({
@@ -73,7 +75,8 @@
                     results: data.data
                 };
                 }
-            } 
+            },
+            theme: 'bootstrap' , 
         })
 
 
@@ -87,7 +90,8 @@
                     results: data.data
                 };
                 }
-            } 
+            },
+            theme: 'bootstrap' , 
         })
 
         $('#tgl_perolehan').datepicker({
