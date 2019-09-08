@@ -1,6 +1,6 @@
 var App = {
     Helpers: {
-        defaultSelect2: (select2Ele, url, keyField, valueField) => {
+        defaultSelect2: (select2Ele, url, keyField, valueField, callbackDone) => {
             $.ajax({
                 type: 'GET',
                 url: url,
@@ -16,6 +16,11 @@ var App = {
                         data: data
                     }
                 });
+
+                if (callbackDone != null) {
+                    callbackDone();
+                }                
+
             });
         },
         downloadFile : (path) => {

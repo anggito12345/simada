@@ -2,11 +2,11 @@
 
 namespace App\DataTables;
 
-use App\Models\alamat;
+use App\Models\detiltanah;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 
-class alamatDataTable extends DataTable
+class detiltanahDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -18,22 +18,27 @@ class alamatDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'alamats.datatables_actions');
+        return $dataTable->addColumn('action', 'detiltanahs.datatables_actions');
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\alamat $model
+     * @param \App\Models\detiltanah $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(alamat $model)
+    public function query(detiltanah $model)
     {
         return $model->newQuery()
             ->select([
-                "m_alamat.*",        
-                "m_alamat_2.nama as nama_foreign"        
-            ])->leftJoin("m_alamat as m_alamat_2", "m_alamat_2.id", "m_alamat.pid");
+                'detil_tanah.*',
+                'al_kota.nama as kota',
+                'al_kecamatan.nama as kecamatan',
+                'inventaris.noreg as noreg',
+            ])
+            ->leftJoin('m_alamat as al_kota', 'al_kota.id', 'detil_tanah.idkota')
+            ->leftJoin('m_alamat as al_kecamatan', 'al_kecamatan.id', 'detil_tanah.idkota')
+            ->leftJoin('inventaris', 'inventaris.id', 'detil_tanah.pidinventaris');
     }
 
     /**
@@ -69,13 +74,31 @@ class alamatDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'nama_foreign' => [
-                "name" => "m_alamat_2.nama",
-                "title" => __('field.pid')
+            'noreg' => [
+                'name' => 'inventaris.noreg',
+                'title' => __('field.pidinventaris'),
             ],
-            'nama',
-            'jenis',
-            'kodepos'
+            'luas',
+            // 'alamat',
+            'kota' => [
+                'name' => 'al_kota.nama',
+                'title' => __('field.idkota'),
+            ],
+            'kecamatan' => [
+                'name' => 'al_kecamatan.nama',
+                'title' => __('field.idkecamatan'),
+            ],
+            // 'idkelurahan',
+            // 'koordinatlokasi',
+            // 'koordinattanah',
+            // 'hak',
+            // 'status_sertifikat',
+            // 'tgl_sertifikat',
+            'nama_sertifikat',
+            // 'penggunaan',
+            // 'keterangan',
+            // 'dokumen',
+            // 'foto'
         ];
     }
 
@@ -86,6 +109,6 @@ class alamatDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'alamatsdatatable_' . time();
+        return 'detiltanahsdatatable_' . time();
     }
 }

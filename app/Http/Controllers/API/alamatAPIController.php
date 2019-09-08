@@ -33,13 +33,27 @@ class alamatAPIController extends AppBaseController
      * @return Response
      */
     public function index(Request $request)
-    {
-        $alamats = \App\Models\alamat::select([
-            'nama as text',
-            'id'
-        ])
-        ->whereRaw("nama like '%".$request->input("q")."%'")
-        ->limit(10)
+    {   
+        $fieldText = "nama";
+
+        if ($request->__isset("fieldText")) {
+            $fieldText = $request->input("fieldText");
+        }
+
+        $query = \App\Models\alamat::selectRaw(
+            $fieldText." as text, id
+        ")
+        ->whereRaw("nama like '%".$request->input("q")."%'");
+        
+
+        if ($request->__isset("addWhere")) {
+            foreach ($request->input("addWhere") as $key => $value) {
+                $query = $query->whereRaw($value);
+            }
+            
+        }
+
+        $alamats = $query->limit(10)
         ->get();
 
         return $this->sendResponse($alamats->toArray(), 'Alamats retrieved successfully');

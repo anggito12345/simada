@@ -59,4 +59,12 @@ class BaseModel extends Model {
         'Kurang Baik' => 'Kurang Baik',
         'Rusak Berat' => 'Rusak Berat'
     ];
+
+    public static $jenisKotaDs = [
+        'Propinsi' => 'Propinsi',
+        'Kota' => 'Kota',
+        'Kecamatan' => 'Kecamatan',
+        'Kelurahan/Desa' => 'Kelurahan/Desa',
+
+    ];
 }

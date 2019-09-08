@@ -63,12 +63,12 @@ class penghapusanController extends AppBaseController
             $input["dokumen"] = "";
             $input["foto"] = "";
             if ($request->file("dokumen")) {
-                $input["dokumen"] = $request->file("dokumen")->storeAs("public/" . Auth::user()->id . "/penghapusan", $request->file("dokumen")->getClientOriginalName());
+                $input["dokumen"] = $request->file("dokumen")->storeAs("public/" . Auth::user()->id . "/penghapusan/" . sha1(time()), $request->file("dokumen")->getClientOriginalName());
                
             }
 
             if ($request->file("foto")) {
-                $input["foto"] = $request->file("foto")->storeAs("public/" . Auth::user()->id . "/penghapusan", $request->file("foto")->getClientOriginalName());
+                $input["foto"] = $request->file("foto")->storeAs("public/" . Auth::user()->id . "/penghapusan/" . sha1(time()), $request->file("foto")->getClientOriginalName());
             }
     
             $penghapusan = $this->penghapusanRepository->create($input);
@@ -79,6 +79,13 @@ class penghapusanController extends AppBaseController
         } catch(\Exception $e) {
             Flash::error('Error when saving data : ' . $e->getMessage());
             DB::rollBack();
+
+            Storage::delete($input["dokumen"]);
+            Storage::delete($input["foto"]);
+
+            return redirect()->back()
+                ->withInput()
+                ->withErrors($e->getMessage());
         }
         
 
@@ -147,15 +154,14 @@ class penghapusanController extends AppBaseController
                 return redirect(route('penghapusans.index'));
             }
 
-            $input = $request->all();
-            
+            $input = $request->all();            
 
             if ($request->file("dokumen")) {
                 $input["dokumen"] = "";
                 if ($penghapusan->dokumen != "") {
                     Storage::delete($penghapusan->dokumen);                    
                 }
-                $input["dokumen"] = $request->file("dokumen")->storeAs("public/" . Auth::user()->id . "/penghapusan", $request->file("dokumen")->getClientOriginalName());
+                $input["dokumen"] = $request->file("dokumen")->storeAs("public/" . Auth::user()->id . "/penghapusan/" . sha1(time()), $request->file("dokumen")->getClientOriginalName());
             }
 
             if ($request->file("foto")) {
@@ -163,7 +169,7 @@ class penghapusanController extends AppBaseController
                 if ($penghapusan->foto != "") {
                     Storage::delete($penghapusan->foto);
                 }
-                $input["foto"] = $request->file("foto")->storeAs("public/" . Auth::user()->id . "/penghapusan", $request->file("foto")->getClientOriginalName());
+                $input["foto"] = $request->file("foto")->storeAs("public/" . Auth::user()->id . "/penghapusan/" . sha1(time()), $request->file("foto")->getClientOriginalName());
             }
     
             $penghapusan = $this->penghapusanRepository->update($input, $id);
@@ -174,6 +180,13 @@ class penghapusanController extends AppBaseController
         } catch(\Exception $e) {
             Flash::error('Error when saving data : ' . $e->getMessage());
             DB::rollBack();
+
+            Storage::delete($input["dokumen"]);
+            Storage::delete($input["foto"]);
+
+            return redirect()->back()
+                ->withInput()
+                ->withErrors($e->getMessage());
         }
 
        
@@ -200,7 +213,9 @@ class penghapusanController extends AppBaseController
                 Flash::error('Penghapusan not found');
     
                 return redirect(route('penghapusans.index'));
-            }
+            }            
+
+            $this->penghapusanRepository->delete($id);
 
             if ($penghapusan->dokumen != "") {
                 Storage::delete($penghapusan->dokumen);
@@ -211,9 +226,6 @@ class penghapusanController extends AppBaseController
                 Storage::delete($penghapusan->foto);
             }
 
-
-            $this->penghapusanRepository->delete($id);
-
             Flash::success('Penghapusan deleted successfully.');
 
     
@@ -223,6 +235,10 @@ class penghapusanController extends AppBaseController
         } catch(\Exception $e) {
             Flash::error('Error when deleting data : ' . $e->getMessage());
             DB::rollBack();
+
+            return redirect()->back()
+                ->withInput()
+                ->withErrors($e->getMessage());
         }
        
         return redirect(route('penghapusans.index'));

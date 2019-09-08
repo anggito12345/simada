@@ -43,3 +43,7 @@ Route::resource('perolehans', 'perolehanAPIController');
 Route::resource('satuanbarangs', 'satuanbarangAPIController');
 
 Route::resource('jenisopds', 'jenisopdAPIController');
+
+Route::resource('detiltanahs', 'detiltanahAPIController');
+
+Route::resource('detilmesins', 'detilmesinAPIController');

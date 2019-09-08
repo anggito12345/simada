@@ -2,11 +2,11 @@
 
 namespace App\DataTables;
 
-use App\Models\alamat;
+use App\Models\detilmesin;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 
-class alamatDataTable extends DataTable
+class detilmesinDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -18,22 +18,18 @@ class alamatDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'alamats.datatables_actions');
+        return $dataTable->addColumn('action', 'detilmesins.datatables_actions');
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\alamat $model
+     * @param \App\Models\detilmesin $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(alamat $model)
+    public function query(detilmesin $model)
     {
-        return $model->newQuery()
-            ->select([
-                "m_alamat.*",        
-                "m_alamat_2.nama as nama_foreign"        
-            ])->leftJoin("m_alamat as m_alamat_2", "m_alamat_2.id", "m_alamat.pid");
+        return $model->newQuery();
     }
 
     /**
@@ -69,13 +65,19 @@ class alamatDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'nama_foreign' => [
-                "name" => "m_alamat_2.nama",
-                "title" => __('field.pid')
-            ],
-            'nama',
-            'jenis',
-            'kodepos'
+            'id',
+            'pidinventaris',
+            'merk',
+            'ukuran',
+            'bahan',
+            'nopabrik',
+            'norangka',
+            'nomesin',
+            'nopol',
+            'bpkb',
+            'keterangan',
+            'dokumen',
+            'foto'
         ];
     }
 
@@ -86,6 +88,6 @@ class alamatDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'alamatsdatatable_' . time();
+        return 'detilmesinsdatatable_' . time();
     }
 }

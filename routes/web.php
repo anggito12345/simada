@@ -48,3 +48,7 @@ Route::resource('perolehans', 'perolehanController');
 Route::resource('satuanbarangs', 'satuanbarangController');
 
 Route::resource('jenisopds', 'jenisopdController');
+
+Route::resource('detiltanahs', 'detiltanahController');
+
+Route::resource('detilmesins', 'detilmesinController');

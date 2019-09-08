@@ -13,7 +13,7 @@
 <!-- Jenis Field -->
 <div class="form-group <?= strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
     {!! Form::label('jenis', 'Jenis:') !!}
-    {!! Form::text('jenis', null, ['class' => 'form-control']) !!}
+    {!! Form::select('jenis', \App\Models\BaseModel::$jenisKotaDs, null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Kodepos Field -->
@@ -38,6 +38,15 @@
             ajax: {
                 url: "<?= url('api/alamats') ?>",
                 dataType: 'json',
+                data: function (params) {
+                    var query = {
+                        q: params.term,
+                        fieldText: "concat(jenis, ' - ', nama)",                        
+                    }
+
+                    // Query parameters will be ?search=[term]&type=public
+                    return query;
+                },
                 processResults: function (data) {
 
                     let options = {

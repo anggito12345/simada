@@ -11,5 +11,8 @@ return [
     'persh' => 'Perusahaan',
     'tglhapus' => 'Tanggal Penghapusan',
     'pid' => 'Induk',
-    'nama_rek_aset' => 'Nama Barang'
+    'nama_rek_aset' => 'Nama Barang',
+    'idkota' => 'Kota',
+    'idkecamatan' => 'Kecamatan',
+    'idkelurahan' => 'Kelurahan/Desa'
 ];
