@@ -82,7 +82,7 @@
 
         $('#satuan').select2({
             ajax: {
-                url: "<?= url('api/satuan_barangs') ?>",
+                url: "<?= url('api/satuanbarangs') ?>",
                 dataType: 'json',
                 processResults: function (data) {
                 // Transforms the top-level key of the response object from 'items' to 'results'

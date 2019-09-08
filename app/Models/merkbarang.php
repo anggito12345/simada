@@ -6,18 +6,17 @@ use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * Class satuan_barang
+ * Class merkbarang
  * @package App\Models
- * @version September 4, 2019, 4:35 pm UTC
+ * @version September 8, 2019, 1:46 am UTC
  *
  * @property string nama
  * @property integer aktif
- * @property integer bisadibagi
  */
-class satuan_barang extends Model
+class merkbarang extends Model
 {
 
-    public $table = 'm_satuan_barang';
+    public $table = 'm_merk_barang';
     
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
@@ -28,8 +27,7 @@ class satuan_barang extends Model
 
     public $fillable = [
         'nama',
-        'aktif',
-        'bisadibagi'
+        'aktif'
     ];
 
     /**
@@ -40,8 +38,7 @@ class satuan_barang extends Model
     protected $casts = [
         'id' => 'integer',
         'nama' => 'string',
-        'aktif' => 'integer',
-        'bisadibagi' => 'integer'
+        'aktif' => 'integer'
     ];
 
     /**

@@ -34,3 +34,17 @@ Route::resource('barangs', 'barangController');
 Route::resource('alamats', 'alamatController');
 
 Route::resource('jenisbarangs', 'jenisbarangController');
+
+Route::resource('kondisis', 'kondisiController');
+
+Route::resource('lokasis', 'lokasiController');
+
+Route::resource('merkbarangs', 'merkbarangController');
+
+Route::resource('organisasis', 'organisasiController');
+
+Route::resource('perolehans', 'perolehanController');
+
+Route::resource('satuanbarangs', 'satuanbarangController');
+
+Route::resource('jenisopds', 'jenisopdController');

@@ -31,3 +31,15 @@ Route::resource('inventaris', 'inventarisAPIController');
 Route::resource('alamats', 'alamatAPIController');
 
 Route::resource('jenisbarangs', 'jenisbarangAPIController');
+
+Route::resource('kondisis', 'kondisiAPIController');
+
+Route::resource('lokasis', 'lokasiAPIController');
+
+Route::resource('merkbarangs', 'merkbarangAPIController');
+
+Route::resource('perolehans', 'perolehanAPIController');
+
+Route::resource('satuanbarangs', 'satuanbarangAPIController');
+
+Route::resource('jenisopds', 'jenisopdAPIController');

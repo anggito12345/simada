@@ -27,6 +27,45 @@
     <a href="{!! route('barangs.index') !!}"><i class="fa fa-box-open"></i><span>Master Barang</span></a>
 </li>
 
+<li class="treeview {{ Request::is('alamats*') || Request::is('jenisbarangs*') || Request::is('kondisis*') || Request::is('lokasis*') || Request::is('merkbarangs*') || Request::is('organisasis*') || Request::is('perolehans*') || Request::is('satuanbarangs*') || Request::is('jenisopds*') ? 'active' : '' }}">
+    <a href="#">
+        <i class="fa fa-edit"></i>
+        <span>Master Data</span>
+        <span class="pull-right-container">
+            <i class="fa fa-angle-left pull-right"></i>
+        </span>
+    </a>
+   
+    <ul class="treeview-menu">
+        <li class="{{ Request::is('alamats*') ? 'active' : '' }}">
+            <a href="{!! route('alamats.index') !!}"><i class="fa fa-edit"></i><span>Alamat</span></a>
+        </li>
+        <li class="{{ Request::is('jenisbarangs*') ? 'active' : '' }}">
+            <a href="{!! route('jenisbarangs.index') !!}"><i class="fa fa-edit"></i><span>Jenis Barang</span></a>
+        </li>
+        <li class="{{ Request::is('kondisis*') ? 'active' : '' }}">
+            <a href="{!! route('kondisis.index') !!}"><i class="fa fa-edit"></i><span>Kondisi</span></a>
+        </li>
+        <li class="{{ Request::is('lokasis*') ? 'active' : '' }}">
+            <a href="{!! route('lokasis.index') !!}"><i class="fa fa-edit"></i><span>Lokasi</span></a>
+        </li>
+        <li class="{{ Request::is('merkbarangs*') ? 'active' : '' }}">
+            <a href="{!! route('merkbarangs.index') !!}"><i class="fa fa-edit"></i><span>Merk Barang</span></a>
+        </li>
+        <li class="{{ Request::is('organisasis*') ? 'active' : '' }}">
+            <a href="{!! route('organisasis.index') !!}"><i class="fa fa-edit"></i><span>Organisasi</span></a>
+        </li>
+        <li class="{{ Request::is('perolehans*') ? 'active' : '' }}">
+            <a href="{!! route('perolehans.index') !!}"><i class="fa fa-edit"></i><span>Perolehan</span></a>
+        </li>
+        <li class="{{ Request::is('satuanbarangs*') ? 'active' : '' }}">
+            <a href="{!! route('satuanbarangs.index') !!}"><i class="fa fa-edit"></i><span>Satuan Barang</span></a>
+        </li>
+        <li class="{{ Request::is('jenisopds*') ? 'active' : '' }}">
+            <a href="{!! route('jenisopds.index') !!}"><i class="fa fa-edit"></i><span>Jenis OPD</span></a>
+        </li>
+    </ul>
+</li>
 
 <li class="treeview {{ Request::is('users*')? 'active' : '' }}">
     <a href="#">
@@ -43,11 +82,13 @@
     </ul>
 </li>
 
-<li class="{{ Request::is('alamats*') ? 'active' : '' }}">
-    <a href="{!! route('alamats.index') !!}"><i class="fa fa-edit"></i><span>Alamats</span></a>
-</li>
 
-<li class="{{ Request::is('jenisbarangs*') ? 'active' : '' }}">
-    <a href="{!! route('jenisbarangs.index') !!}"><i class="fa fa-edit"></i><span>Jenisbarangs</span></a>
-</li>
+
+
+
+
+
+
+
+
 

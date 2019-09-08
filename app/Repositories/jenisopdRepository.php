@@ -2,24 +2,23 @@
 
 namespace App\Repositories;
 
-use App\Models\satuan_barang;
+use App\Models\jenisopd;
 use App\Repositories\BaseRepository;
 
 /**
- * Class satuan_barangRepository
+ * Class jenisopdRepository
  * @package App\Repositories
- * @version September 4, 2019, 4:35 pm UTC
+ * @version September 8, 2019, 1:19 pm UTC
 */
 
-class satuan_barangRepository extends BaseRepository
+class jenisopdRepository extends BaseRepository
 {
     /**
      * @var array
      */
     protected $fieldSearchable = [
         'nama',
-        'aktif',
-        'bisadibagi'
+        'aktif'
     ];
 
     /**
@@ -37,6 +36,6 @@ class satuan_barangRepository extends BaseRepository
      **/
     public function model()
     {
-        return satuan_barang::class;
+        return jenisopd::class;
     }
 }

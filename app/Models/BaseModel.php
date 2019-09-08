@@ -48,7 +48,7 @@ class BaseModel extends Model {
     }
 
 
-    public static $menambahDs = [
+    public static $YesNoDs = [
         '1' => 'Ya',
         '0' => 'Tidak'
     ];

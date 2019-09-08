@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Class lokasi
  * @package App\Models
- * @version September 4, 2019, 4:14 pm UTC
+ * @version September 8, 2019, 1:40 am UTC
  *
  * @property integer pid
  * @property string nama

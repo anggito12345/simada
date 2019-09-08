@@ -50,7 +50,7 @@
 <!-- Menambah Field -->
 <div class="row">
     {!! Form::label('menambah', 'Menambah:', ["class" => 'col-md-4 item-view']) !!}
-    <p class="col-md-8 item-view">{!! \App\Models\BaseModel::$menambahDs[$pemeliharaan->menambah] !!}</p>
+    <p class="col-md-8 item-view">{!! \App\Models\BaseModel::$YesNoDs[$pemeliharaan->menambah] !!}</p>
 </div>
 
 <!-- Keterangan Field -->
