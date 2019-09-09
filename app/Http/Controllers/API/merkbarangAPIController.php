@@ -34,11 +34,13 @@ class merkbarangAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $merkbarangs = $this->merkbarangRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
+        $merkbarangs = \App\Models\merkbarang::select([
+            'nama as text',
+            'id'
+        ])
+        ->whereRaw("nama like '%".$request->input("q")."%'")
+        ->limit(10)
+        ->get();
 
         return $this->sendResponse($merkbarangs->toArray(), 'Merkbarangs retrieved successfully');
     }

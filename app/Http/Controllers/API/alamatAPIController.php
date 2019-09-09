@@ -49,8 +49,7 @@ class alamatAPIController extends AppBaseController
         if ($request->__isset("addWhere")) {
             foreach ($request->input("addWhere") as $key => $value) {
                 $query = $query->whereRaw($value);
-            }
-            
+            }            
         }
 
         $alamats = $query->limit(10)

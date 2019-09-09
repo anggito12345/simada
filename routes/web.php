@@ -52,3 +52,9 @@ Route::resource('jenisopds', 'jenisopdController');
 Route::resource('detiltanahs', 'detiltanahController');
 
 Route::resource('detilmesins', 'detilmesinController');
+
+Route::resource('detilbangunans', 'detilbangunanController');
+
+Route::resource('statustanahs', 'statustanahController');
+
+Route::resource('detiljalans', 'detiljalanController');

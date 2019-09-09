@@ -1,6 +1,9 @@
 
 
-<li class="treeview {{ Request::is('detiltanahs*') || Request::is('detilmesins*') ? 'active' : '' }}">
+<li class="treeview {{ Request::is('detiltanahs*') 
+    || Request::is('detilmesins*') 
+    || Request::is('detilbangunans*')
+    || Request::is('detiljalans*') ? 'active' : '' }}">
     <a href="#">
         <i class="fa fa-edit"></i>
         <span>Kelompok Aset</span>
@@ -15,6 +18,12 @@
         </li>
         <li class="{{ Request::is('detilmesins*') ? 'active' : '' }}">
             <a href="{!! route('detilmesins.index') !!}"><i class="fa fa-edit"></i><span>KIB B</span></a>
+        </li>
+        <li class="{{ Request::is('detilbangunans*') ? 'active' : '' }}">
+            <a href="{!! route('detilbangunans.index') !!}"><i class="fa fa-edit"></i><span>KIB C</span></a>
+        </li>
+        <li class="{{ Request::is('detiljalans*') ? 'active' : '' }}">
+            <a href="{!! route('detiljalans.index') !!}"><i class="fa fa-edit"></i><span>KIB D</span></a>
         </li>
     </ul>
 </li>
@@ -46,7 +55,16 @@
     <a href="{!! route('barangs.index') !!}"><i class="fa fa-car"></i><span>Master Barang</span></a>
 </li>
 
-<li class="treeview {{ Request::is('alamats*') || Request::is('jenisbarangs*') || Request::is('kondisis*') || Request::is('lokasis*') || Request::is('merkbarangs*') || Request::is('organisasis*') || Request::is('perolehans*') || Request::is('satuanbarangs*') || Request::is('jenisopds*') ? 'active' : '' }}">
+<li class="treeview {{ Request::is('alamats*') 
+    || Request::is('jenisbarangs*') 
+    || Request::is('kondisis*') 
+    || Request::is('lokasis*') 
+    || Request::is('merkbarangs*') 
+    || Request::is('organisasis*') 
+    || Request::is('perolehans*') 
+    || Request::is('satuanbarangs*') 
+    || Request::is('jenisopds*')
+    || Request::is('statustanahs*') ? 'active' : '' }}">
     <a href="#">
         <i class="fa fa-edit"></i>
         <span>Master Data</span>
@@ -82,6 +100,9 @@
         </li>
         <li class="{{ Request::is('jenisopds*') ? 'active' : '' }}">
             <a href="{!! route('jenisopds.index') !!}"><i class="fa fa-edit"></i><span>Jenis OPD</span></a>
+        </li>
+        <li class="{{ Request::is('statustanahs*') ? 'active' : '' }}">
+            <a href="{!! route('statustanahs.index') !!}"><i class="fa fa-edit"></i><span>Status Tanah</span></a>
         </li>
     </ul>
 </li>

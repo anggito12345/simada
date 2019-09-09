@@ -115,10 +115,7 @@
                         addWhere: [
                             "jenis = 'Kota'"
                         ]
-                    }                  
-
-                   
-
+                    } 
                     return query;
                 },
                 processResults: function (data) {
@@ -212,9 +209,7 @@
                     let id = '<?=  "#pidinventaris-".$idPostfix ?>'
                     if (id.indexOf("non-ajax") > -1) {
                         data.data.unshift(options)
-                    }
-                    
-                    // Transforms the top-level key of the response object from 'items' to 'results'
+                    }                    
                     return {
                         results: data.data
                     };

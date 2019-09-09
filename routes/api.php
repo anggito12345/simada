@@ -47,3 +47,9 @@ Route::resource('jenisopds', 'jenisopdAPIController');
 Route::resource('detiltanahs', 'detiltanahAPIController');
 
 Route::resource('detilmesins', 'detilmesinAPIController');
+
+Route::resource('detilbangunans', 'detilbangunanAPIController');
+
+Route::resource('statustanahs', 'statustanahAPIController');
+
+Route::resource('detiljalans', 'detiljalanAPIController');

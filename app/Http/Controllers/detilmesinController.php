@@ -18,6 +18,7 @@ class detilmesinController extends AppBaseController
 
     public function __construct(detilmesinRepository $detilmesinRepo)
     {
+        parent::__construct();
         $this->detilmesinRepository = $detilmesinRepo;
     }
 

@@ -34,11 +34,33 @@ class detiltanahAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $detiltanahs = $this->detiltanahRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
+       
+
+        $fieldText = "concat(al_kota.nama, ', ', al_kecamatan.nama, ', ', detil_tanah.nama_sertifikat)";
+
+        if ($request->__isset("fieldText")) {
+            $fieldText = $request->input("fieldText");
+        }
+
+        $query = \App\Models\detiltanah::selectRaw(
+            $fieldText." as text, detil_tanah.id
+        ")
+        ->leftJoin('m_alamat as al_kota', 'al_kota.id', 'detil_tanah.idkota')
+        ->leftJoin('m_alamat as al_kecamatan', 'al_kecamatan.id', 'detil_tanah.idkecamatan')
+        ->leftJoin('inventaris', 'inventaris.id', 'detil_tanah.pidinventaris')
+        ->whereRaw("al_kota.nama like '%".$request->input("q")."%'")
+        ->orWhereRaw("al_kecamatan.nama like '%".$request->input("q")."%'")
+        ->orWhereRaw("nama_sertifikat like '%".$request->input("q")."%'");
+        
+
+        if ($request->__isset("addWhere")) {
+            foreach ($request->input("addWhere") as $key => $value) {
+                $query = $query->whereRaw($value);
+            }            
+        }
+
+        $detiltanahs = $query->limit(10)
+        ->get();
 
         return $this->sendResponse($detiltanahs->toArray(), 'Detiltanahs retrieved successfully');
     }
@@ -71,7 +93,15 @@ class detiltanahAPIController extends AppBaseController
     public function show($id)
     {
         /** @var detiltanah $detiltanah */
-        $detiltanah = $this->detiltanahRepository->find($id);
+        $detiltanah = \App\Models\detiltanah::select([
+            'detil_tanah.*',
+            'al_kota.nama as nama_kota',
+            'al_kecamatan.nama as nama_kecamatan',
+        ])
+        ->leftJoin('m_alamat as al_kota', 'al_kota.id', 'detil_tanah.idkota')
+        ->leftJoin('m_alamat as al_kecamatan', 'al_kecamatan.id', 'detil_tanah.idkecamatan')
+        ->leftJoin('inventaris', 'inventaris.id', 'detil_tanah.pidinventaris')
+        ->where(['detil_tanah.id' => $id])->first();
 
         if (empty($detiltanah)) {
             return $this->sendError('Detiltanah not found');

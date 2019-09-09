@@ -29,7 +29,15 @@ class detilmesinDataTable extends DataTable
      */
     public function query(detilmesin $model)
     {
-        return $model->newQuery();
+        return $model
+            ->newQuery()
+            ->select([
+                'detil_mesin.*',
+                'inventaris.noreg as noreg',
+                'm_merk_barang.nama as nama_merk'
+            ])
+            ->leftJoin('m_merk_barang', 'm_merk_barang.id', 'detil_mesin.merk')
+            ->leftJoin('inventaris', 'inventaris.id', 'detil_mesin.pidinventaris');
     }
 
     /**
@@ -65,19 +73,25 @@ class detilmesinDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'id',
-            'pidinventaris',
-            'merk',
+            // 'id',
+            'noreg' => [
+                'name' => 'inventaris.noreg',
+                'title' => 'Register Inventaris',
+            ],
+            'nama_merk' => [
+                'name' => 'm_merk_barang.nama',
+                'title' => 'Merk Barang',
+            ],
             'ukuran',
-            'bahan',
-            'nopabrik',
+            // 'bahan',
+            // 'nopabrik',
             'norangka',
-            'nomesin',
+            // 'nomesin',
             'nopol',
             'bpkb',
-            'keterangan',
-            'dokumen',
-            'foto'
+            // 'keterangan',
+            // 'dokumen',
+            // 'foto'
         ];
     }
 

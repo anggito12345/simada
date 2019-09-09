@@ -109,7 +109,7 @@
 
         // handler modal section here
         // this function will available if implement modal section
-        function saveJson() {
+        function saveJsonBarang() {
 
             $.ajax({
                 url: "<?= url('api/barangs') ?>",

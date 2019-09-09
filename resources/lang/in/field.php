@@ -14,5 +14,6 @@ return [
     'nama_rek_aset' => 'Nama Barang',
     'idkota' => 'Kota',
     'idkecamatan' => 'Kecamatan',
-    'idkelurahan' => 'Kelurahan/Desa'
+    'idkelurahan' => 'Kelurahan/Desa',
+    'bpkb' => 'Nomor BPKB'
 ];

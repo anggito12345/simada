@@ -32,7 +32,7 @@
 
     <link rel="stylesheet" href="<?= url('css/thirdparty/sweetalert2.min.css') ?>">
 
-    <script src="<?= url('js/public.js') ?>"></script>
+    <script src="<?= url('js/public.js?key='.sha1(time())) ?>"></script>
 
     @yield('css')
 
@@ -107,6 +107,23 @@
 
         body {
             font-family: mainfont !important;
+        }
+
+        .collapse-toggle {
+            width: 100%;
+        }
+
+        .box-header .collapse-toggle:after {
+            /* symbol for "opening" panels */
+            font-family: FontAwesome;  /* essential for enabling glyphicon */
+            content: "\f062";    /* adjust as needed, taken from bootstrap.css */
+            float: right;        /* adjust as needed */
+            color: white;         /* adjust as needed */
+        }
+
+        .box-header .collapse-toggle.collapsed:after {
+            /* symbol for "collapsed" panels */
+            content: "\f063";    /* adjust as needed, taken from bootstrap.css */
         }
     </style>
 </head>

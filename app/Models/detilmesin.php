@@ -37,7 +37,6 @@ class detilmesin extends Model
 
 
     public $fillable = [
-        'id',
         'pidinventaris',
         'merk',
         'ukuran',
@@ -81,6 +80,16 @@ class detilmesin extends Model
     public static $rules = [
         
     ];
+
+    public function Inventaris()
+    {
+        return $this->hasOne('App\Models\inventaris', 'id', 'pidinventaris');
+    }
+
+    public function Merkbarang()
+    {
+        return $this->hasOne('App\Models\merkbarang', 'id', 'merk');
+    }
 
     
 }

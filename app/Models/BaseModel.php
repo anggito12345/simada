@@ -65,6 +65,10 @@ class BaseModel extends Model {
         'Kota' => 'Kota',
         'Kecamatan' => 'Kecamatan',
         'Kelurahan/Desa' => 'Kelurahan/Desa',
+    ];
 
+    public static $konstruksiDs = [
+        'Permanen' => 'Permanen',
+        'Tidak Permanen' => 'Tidak Permanen',
     ];
 }

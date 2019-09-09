@@ -37,7 +37,7 @@ class detiltanahDataTable extends DataTable
                 'inventaris.noreg as noreg',
             ])
             ->leftJoin('m_alamat as al_kota', 'al_kota.id', 'detil_tanah.idkota')
-            ->leftJoin('m_alamat as al_kecamatan', 'al_kecamatan.id', 'detil_tanah.idkota')
+            ->leftJoin('m_alamat as al_kecamatan', 'al_kecamatan.id', 'detil_tanah.idkecamatan')
             ->leftJoin('inventaris', 'inventaris.id', 'detil_tanah.pidinventaris');
     }
 
