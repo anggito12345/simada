@@ -1,0 +1,98 @@
+1. ditambahnkan unit
+2. jika memasukkan 100 unit spd motor 1 spd motor.  Master unit, exemplar,bidang.
+3. register 
+4. ada draft. Saat menyimpan ada pilihan.
+5. Thn 2019 0001.
+6. Kode Lokasi diotomatiskan
+7. Lokasi detil tanah, bangunan dan peralatan tdk bergerak
+8. Ternak diganti aset biologis.
+9. upload gambar dan dokumen ada di KIB A (ditanyakan)
+KIB A :
+10. Pakai/Pengelolaan/Milik
+11. Sertifikat ada/tidak
+12. Penggunaan di masterkan
+KIB B :
+13. No Pabrik dihilangkan. *
+14. BPKB jadi Nomor BPKB *
+KIB C :
+15. Konstruksi : Permanen/Tidak Permanen *
+16. Pilihan menggunakan combo box *
+17. Status Tanah dimasterkan (milik sendiri, pinjam, sewa, lainnya) *
+18. Kode Tanah menyambung ke KIB A (Inventaris Tanah) *
+KIB F :
+19. Kode Tanah menyambung ke KIB A (Inventaris Tanah) 
+20. Ada button untuk mutasi ke KIB mana C dan D (nomor registrasi F hilang muncul Register Baru)
+
+Pemeliharaan :
+1. Pilih KIB nya :
+2. Menambah Aset berarti biaya ditambahkan ke nilai perolehan pada regsiter tertentu.
+3. Juga menambah umur ekonomis. 
+
+Di KIB B, KIB C dan KIB D ada tambahan ada umur ekonomis tahun, nilai buku nilai sisa yaitu nilai perolehan-akumulasi penyusutan.
+Penyusutan 1 nopember 2018 maka 20 nopember 2019 dianggap 1 thn
+
+Pemindah Tanganan yg lama dari Penghapusan :
+1. Dinonaktifkan.
+2. Bisa search dari no register atau no inventaris
+3. Pemindah Tanganan dahulu baru penghapusan.
+- No register,No Inventaris, 
+4. Form Penghapusan diganti pemindah tanganan
+
+
+
+Pemusnahan yg lama dari Penghapusan :
+1. Dinonaktifkan.
+2. Bisa search dari no register atau no inventaris
+3. Pemindah Tanganan dahulu baru penghapusan.
+- No register,No Inventaris, 
+4. Form Penghapusan diganti pemindah tanganan
+
+Form Penghapusan Baru :
+1. Search ke Nomor Pemindah Tanganan.
+2. No persetujuan penghapusan. No SK Skeda ada upload dokumen.
+3. No persetujuan DPRD dan upload dokumen
+4. Ada pemilihan : Pemindah tanganan, Pemusnahan, Alasan Lainnya
+
+MUTASI :
+1. Dari OPD ke OPD mana. Ada usulan mutasi dari 1 OPD ke OPD yg lain.Jika disetujui maka ada nomor BAST.
+2. Surat BAST upload. Isian No dan Tgl. Ada Template surat.
+3. Satu BAST bisa banyak barang.
+PEMANFAATAN :
+1. search no register
+2. Bentuk pemanfaatan : Pinjam Pakai, Sewa, BGS, BSG, KSP, KSPI (master).
+3. Umur pemaanfataan diisi.
+4. No Perjanjian
+5. Tgl Perjanjian Mulai.
+6. Tgl Perjanjian Akhir.
+7. Mitra ambil dari master
+8. Kontribusi per tahun input? ada pilihan A. tetap B. Bagi Hasil C. Keduanya
+9. Upload dokumen kontrak.
+10. Foto aset
+
+PENGUNAAN :
+1. diberi status penggunaan jika belum ada status penggunaan maka tdk bisa di pelihara atau prosesnya.
+
+PENCABUTAN PENGGUNAAN.
+1. Pencabutan penggunaan.
+- No. SK , TGL SK
+- Balik ke Pengelola Barang.
+
+PENGHENTIAN PENGGUNAAN
+1. Rusak berat dari aset KIB A sd F dipindah ke aset lain-lain
+
+EXTRA COMPTABLE :
+1. KIB B , KIB E untuk barang dibawah 1 jt. Saat membuat neraca ini tdk dihitung.
+
+INTRA COMPTABLE :
+1. KIB B , KIB E buku masuk semua ,untuk barang diatas 1 jt. Saat membuat neraca ini dihitung.
+
+
+Inventaris diganti Penatausahaan.
+INVENTARIS
+1. No Dokumen dan Tgl Dokumen
+
+Jenis ternak dan ukuran ternak menjadi aset biologis dan ukuran aset biologis. Jenis aset biologis atau ukurannya dimasterkan . 
+Merk di input bukan dimasterkan.
+
+
+
