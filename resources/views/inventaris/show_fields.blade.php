@@ -26,8 +26,8 @@
 
 <!-- Tgl Perolehan Field -->
 <div class="row">
-    {!! Form::label('tgl_perolehan', 'Tgl Perolehan:', ["class" => 'col-md-4 item-view']) !!}
-    <p class="col-md-8 item-view">{!! $inventaris->tgl_perolehan !!}</p>
+    {!! Form::label('tahun_perolehan', 'Tahun Perolehan:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $inventaris->tahun_perolehan !!}</p>
 </div>
 
 <!-- Tgl Sensus Field -->

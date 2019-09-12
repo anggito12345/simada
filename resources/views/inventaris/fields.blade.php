@@ -1,13 +1,30 @@
 
+<!-- <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
+    {!! Form::label('pidbarang', __("field.pidbarang")) !!}
+    {!! Form::select('pidbarang', [], null, \App\Models\BaseModel::generateValidation('pidbarang', \App\Models\inventaris::$rules, ['class' => 'form-control form-control-lg'])) !!}
+</div> -->
+
 <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
-    {!! Form::label('noreg', __("field.noreg")) !!}
-    {!! Form::text('noreg', null, \App\Models\BaseModel::generateValidation('noreg', \App\Models\inventaris::$rules, ['class' => 'form-control'])) !!}
+    {!! Form::label('pidbarang', __("field.pidbarang")) !!} 
+    {!! Form::text('pidbarang', null, ['class' => 'form-control baranglookup', 'id' => 'baranglookup']) !!}
+</div>
+
+<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
+    <!-- Tahun Perolehan -->
+    {!! Form::label('tahun_perolehan', 'Tahun Perolehan') !!}
+    <div class="input-group">
+        
+        {!! Form::text('tahun_perolehan', null, ['class' => 'form-control', 'maxlength' => 4]) !!}
+        <div class="input-group-append">
+            <span class="input-group-text text-danger" id="basic-addon2">4 digit (mis: 1998)</span>
+        </div>
+    </div>
 </div>
 
 
 <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
-    {!! Form::label('pidbarang', __("field.pidbarang")) !!}
-    {!! Form::select('pidbarang', [], null, \App\Models\BaseModel::generateValidation('pidbarang', \App\Models\inventaris::$rules, ['class' => 'form-control form-control-lg'])) !!}
+    {!! Form::label('noreg', __("field.noreg")) !!}
+    {!! Form::text('noreg', null, \App\Models\BaseModel::generateValidation('noreg', \App\Models\inventaris::$rules, ['class' => 'form-control'])) !!}
 </div>
 
 <!-- Pidopd Field -->
@@ -22,8 +39,9 @@
     {!! Form::select('pidlokasi',[], null, ['class' => 'form-control form-control-lg']) !!}
 </div>
 
+
 <!-- Tgl Sensus Field -->
-<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
+<!-- <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
     {!! Form::label('tgl_perolehan', 'Tgl Perolehan:') !!}  
     <div class="input-group ">
         {!! Form::text('tgl_perolehan', null, ['class' => 'form-control','id'=>'tgl_perolehan']) !!}
@@ -33,10 +51,39 @@
             </span>
         </div>
     </div>
-</div>
+</div> -->
 
 @section(!isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'scripts' : 'scripts_2')
     <script type="text/javascript">     
+        $(".baranglookup").LookupTable({
+            DataTable: {
+                ajax: {
+                    url: $("[base-path]").val() + "/api/barangs/get",
+                    dataSrc: 'data'
+                },
+                columns: [
+                    { data: 'kode_rek', title: 'Kode Barang' },
+                    { data: 'nama_rek_aset', title: 'Nama Barang' },
+                    
+                ],
+                "processing": true,
+                "serverSide": true,
+                "searching": false,      
+                responsive: true,    
+                custom: {
+                    typeInput: 'radio',
+                    textField: 'nama_rek_aset',
+                    valueField: 'id',
+                    autoClose: false,
+                    filters: [
+                        { name: "nama_rek_aset", type: "text", title: "Nama Barang" }
+                    ],                                        
+                }  
+            }
+        })
+
+        
+
         $('#pidbarang').select2({
             ajax: {
                 url: "<?= url('api/barangs') ?>",
@@ -94,12 +141,12 @@
             theme: 'bootstrap' , 
         })
 
-        $('#tgl_perolehan').datepicker({
-            format: "yyyy-mm-dd",
-            autoClose: true
-        }).on('changeDate', function (ev) {
-            $(this).datepicker('hide');
-        });
+        // $('#tgl_perolehan').datepicker({
+        //     format: "yyyy-mm-dd",
+        //     autoClose: true
+        // }).on('changeDate', function (ev) {
+        //     $(this).datepicker('hide');
+        // });
 
         $('#tgl_sensus').datepicker({
             format: "yyyy-mm-dd",
@@ -111,7 +158,7 @@
 
     @if (isset($inventaris))
     <script>
-        App.Helpers.defaultSelect2($('#pidbarang'), "<?= url('api/barangs', [$inventaris->pidbarang]) ?>","id","nama_rek_aset")
+        $(".baranglookup").LookupTable().setValAjax("<?= url('api/barangs', [$inventaris->pidbarang]) ?>")
         App.Helpers.defaultSelect2($('#pidopd'), "<?= url('api/organisasis', [$inventaris->pidbarang]) ?>","id","nama")
         App.Helpers.defaultSelect2($('#pidlokasi'), "<?= url('api/lokasis', [$inventaris->pidbarang]) ?>","id","nama")
         App.Helpers.defaultSelect2($('#satuan'), "<?= url('api/satuan_barangs', [$inventaris->pidbarang]) ?>","id","nama")

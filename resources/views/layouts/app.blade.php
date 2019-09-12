@@ -5,6 +5,13 @@
     <title>SIMADA</title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 
+    <style>
+        @font-face {
+            font-family: 'Glyphicons Halflings';
+            src: url('<?= url('css/fonts/glyphicons-halflings-regular.eot') ?>');
+            src: url('<?= url('css/fonts/glyphicons-halflings-regular.eot') ?>') format('embedded-opentype'),  url('<?= url('css/fonts/glyphicons-halflings-regular.woff') ?>') format('woff'), url('<?= url('css/fonts/glyphicons-halflings-regular.ttf') ?>') format('truetype'), url('<?= url('css/fonts/glyphicons-halflings-regular.svg') ?>') format('svg');
+        }
+    </style>
 
     <!-- Bootstrap 3.3.7 -->
     <link rel="stylesheet" href="<?= url('css/thirdparty/bootstrap.min.css') ?>">
@@ -32,11 +39,15 @@
 
     <link rel="stylesheet" href="<?= url('css/thirdparty/sweetalert2.min.css') ?>">
 
-    <script src="<?= url('js/public.js?key='.sha1(time())) ?>"></script>
+    <link rel="stylesheet" href="<?= url('css/thirdparty/responsive.dataTables.min.css') ?>">
+   
+    @include('layouts.datatables_css')
 
     @yield('css')
 
     <style>
+
+        
         .navbar {
             padding: 0px;
         }
@@ -125,8 +136,44 @@
             /* symbol for "collapsed" panels */
             content: "\f063";    /* adjust as needed, taken from bootstrap.css */
         }
+
+        .width-60 {
+            width: 60% !important;
+            float: left;
+        }
+
+        .lookup-100 {
+            width: 100%;
+        }
+
+        table.dataTable {
+            width:100% !important;
+        }
+
+        .modal-lookup .dataTables_length {
+        }
+
+        .modal-lookup .row {
+            width: 100%;
+            margin: 0;
+        }
+
+        .fade-scale {
+            transform: scale(0);
+            opacity: 0;
+            -webkit-transition: all 1s linear;
+            -o-transition: all 1s linear;
+            transition: all 1s linear;
+        }
+
+        .fade-scale.show {
+            opacity: 1;
+            transform: scale(1);
+        }
     </style>
 </head>
+
+<input type="text" value="<?= url('') ?>" base-path style="display:none" />
 
 <body class="skin-green-light sidebar-mini">
 @if (!Auth::guest())
@@ -252,6 +299,11 @@
 
     <!-- jQuery 3.1.1 -->
     <script src="<?= url('js/thirdparty/jquery.min.js') ?>"></script>
+
+    @include('layouts.datatables_js')
+
+    <script src="<?= url('js/public.js?key='.sha1(time())) ?>"></script>
+
     <script src="<?= url('js/thirdparty/moment.min.js') ?>"></script>
     <script src="<?= url('js/thirdparty/bootstrap.min.js') ?>"></script>
     <script src="<?= url('js/thirdparty/bootstrap-datepicker.min.js') ?>"></script>

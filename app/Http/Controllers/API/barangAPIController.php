@@ -25,6 +25,29 @@ class barangAPIController extends AppBaseController
         $this->barangRepository = $barangRepo;
     }
 
+    public function lookup(Request $request)
+    {
+
+        $query =  new \App\Models\barang();
+
+        $queryFiltered = $query;
+        $searchLookup = $request->input("search-lookup");
+        if ($searchLookup != null) {
+            if ($searchLookup['nama_rek_aset'] != null) {
+                $queryFiltered = $queryFiltered->whereRaw("nama_rek_aset like '%".$searchLookup['nama_rek_aset']."%'");
+            }
+            
+        }
+
+        $barangs = $queryFiltered->skip($request->input('start'))        
+        ->limit($request->input('length'))->get();
+        return json_encode([
+            'data' => $barangs->toArray(),
+            'recordsFiltered' => $queryFiltered->count(),
+            'recordsTotal' => $query->count(),
+        ]);
+    }
+
     /**
      * Display a listing of the barang.
      * GET|HEAD /barangs

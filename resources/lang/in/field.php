@@ -4,7 +4,7 @@ return [
 
 
     'noreg' => 'Register',
-    'pidbarang' => 'Barang',
+    'pidbarang' => 'Nama Barang',
     'pidopd' => 'OPD',
     'pidlokasi' => 'Lokasi',
     'pidinventaris' => 'Inventaris',

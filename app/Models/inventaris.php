@@ -43,7 +43,7 @@ class inventaris extends Model
         'pidbarang',
         'pidopd',
         'pidlokasi',
-        'tgl_perolehan',
+        'tahun_perolehan',
         'tgl_sensus',
         'volume',
         'pembagi',
@@ -67,7 +67,7 @@ class inventaris extends Model
         'pidbarang' => 'integer',
         'pidopd' => 'string',
         'pidlokasi' => 'integer',
-        'tgl_perolehan' => 'date',
+        'tahun_perolehan' => 'string',
         'tgl_sensus' => 'date',
         'volume' => 'integer',
         'pembagi' => 'integer',
@@ -90,10 +90,9 @@ class inventaris extends Model
     ];
 
 
-    public function setTglPerolehanAttribute($value)
+    public function setTahunPerolehanAttribute($value)
     {
-        $value = date("Y-m-d", strtotime($value));
-        $this->attributes['tgl_perolehan'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
+        $this->attributes['tahun_perolehan'] = date("Y", strtotime($value));
     }
 
     public function setTglSensusAttribute($value)
