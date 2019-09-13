@@ -72,6 +72,10 @@ jQuery.fn.extend({
     saveLookup: (idlookupParam) => {
         $("[name="+$.fn.customLookup[idlookupParam].maskid+"]").val($.fn.datasourceLookup[$.fn.selectedIdLookup[idlookupParam]][$.fn.customLookup[idlookupParam].textField]);
         $("[name="+$.fn.customLookup[idlookupParam].realid+"]").val($.fn.datasourceLookup[$.fn.selectedIdLookup[idlookupParam]][$.fn.customLookup[idlookupParam].valueField]);
+
+        if($.fn.customLookup[idlookupParam].select != undefined && typeof $.fn.customLookup[idlookupParam].select == "function") {
+            $.fn.customLookup[idlookupParam].select($.fn.datasourceLookup[$.fn.selectedIdLookup[idlookupParam]])
+        }
     },
     isExistChecked: (idlookupParam,id) => {
         return $.fn.selectedIdLookup[idlookupParam] == id
@@ -271,32 +275,54 @@ jQuery.fn.extend({
     },
     LookupTable: function(config) {
         this.setValAjax = (url) => {
-            this.each(() => {
-                console.log()
-                for( let i = 0 ; i < this.length; i ++ ) {
-                    const recentConfig = $.fn.cacheLookupConfig[this[i]]
-                    let data = {}                            
-                    
-                    data[recentConfig.DataTable.custom.valueField] = $("[name="+data[recentConfig.DataTable.custom.maskid]+"]").val()
-                    
-                    $.ajax({
-                        method: "GET",
-                        dataType: "json",
-                        data: data,
-                        url: url
-                    }).then((d) => {
-                        if (d.data != null) {                   
-                            $("[name="+recentConfig.DataTable.customLookup.realid+"]").val(d.data[recentConfig.DataTable.custom.valueField])
-                            $("[name="+recentConfig.DataTable.customLookup.maskid+"]").val(d.data[recentConfig.DataTable.custom.textField])
+            const promise = new Promise((resolve, reject) => {
+                this.each(() => {
+                    for( let i = 0 ; i < this.length; i ++ ) {
+                        const recentConfig = $.fn.cacheLookupConfig[this[i]]
+                        let data = {}                            
+                        
+                        data[recentConfig.DataTable.custom.valueField] = $("[name="+data[recentConfig.DataTable.custom.maskid]+"]").val()
+                        
+                        $.ajax({
+                            method: "GET",
+                            dataType: "json",
+                            data: data,
+                            url: url
+                        }).then((d) => {
+                            if (d.data != null) {                   
+                                $("[name="+recentConfig.DataTable.customLookup.realid+"]").val(d.data[recentConfig.DataTable.custom.valueField])
+                                $("[name="+recentConfig.DataTable.customLookup.maskid+"]").val(d.data[recentConfig.DataTable.custom.textField])
+    
+                                $.fn.selectedIdLookup[recentConfig.DataTable.id] = d.data[recentConfig.DataTable.custom.valueField]
+    
+                                $("#table-" + recentConfig.DataTable.id).DataTable().draw()
 
-                            $.fn.selectedIdLookup[recentConfig.DataTable.id] = d.data[recentConfig.DataTable.custom.valueField]
-
-                            $("#table-" + recentConfig.DataTable.id).DataTable().draw()
-                        }
-                    })
-                }
+                                if (i == this.length - 1) {
+                                    resolve(d.data)
+                                }
+                            }
+                            if (i == this.length - 1) {
+                                reject(d.data)
+                            }
+                            
+                        })
+                    }
+                })
             })
             
+
+            return promise
+        }
+
+        this.invokeEvent = {
+            select: (url) => {
+                this.each(() => {
+                    for( let i = 0 ; i < this.length; i ++ ) {
+                        const recentConfig = $.fn.cacheLookupConfig[this[i]]
+                        let data = {}                            
+                    }
+                })
+            }
         }
 
         return this.each(() => {
@@ -318,7 +344,7 @@ jQuery.fn.extend({
                 const inputNameElementMask = currEle.name + "-mask"
                 maskEle.name = inputNameElementMask
                 maskEle.style.display = "block"
-                maskEle.className = "form-control width-60"
+                maskEle.className = "form-control width-80"
                 maskEle.disabled = true
                 maskEle.setAttribute('data-target', currSource)
 
@@ -342,6 +368,8 @@ jQuery.fn.extend({
                 if (configDataTable.id == undefined) {
                     configDataTable.id = "modal-" + currSource
                 } 
+
+                
 
                 $.fn.CreateModalLookup(configDataTable)
 
@@ -370,6 +398,12 @@ jQuery.fn.extend({
                 $.fn.cacheLookupConfig[currEle] = config 
                 $.fn.generatedLookup++;
                 
+
+                if (configDataTable.customLookup.change != null && typeof configDataTable.customLookup.change == "function") {
+                    $("[name="+configDataTable.customLookup.maskid+"]").change(() => {
+                        configDataTable.customLookup.change($.fn.customLookup[idlookupParam].select($.fn.datasourceLookup[$.fn.selectedIdLookup[idlookupParam]]))
+                    })
+                }
             }            
         })
     }

@@ -4,9 +4,16 @@
     {!! Form::select('pidbarang', [], null, \App\Models\BaseModel::generateValidation('pidbarang', \App\Models\inventaris::$rules, ['class' => 'form-control form-control-lg'])) !!}
 </div> -->
 
-<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
-    {!! Form::label('pidbarang', __("field.pidbarang")) !!} 
-    {!! Form::text('pidbarang', null, ['class' => 'form-control baranglookup', 'id' => 'baranglookup']) !!}
+<div class="form-group col-sm-6 no-padding <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?>">
+    {!! Form::label('pidbarang', 'Barang') !!} 
+    <div class="row">
+        <div class="col-md-4">
+            {!! Form::text('kodebarang', null, ['class' => 'form-control','style' => 'margin:1px -15px 0 0px; float:left', 'readonly' => true]) !!} 
+        </div>
+        <div class="col-md-8">
+            {!! Form::text('pidbarang', null, ['class' => 'form-control baranglookup', 'id' => 'baranglookup']) !!}
+        </div>
+    </div>    
 </div>
 
 <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
@@ -54,7 +61,41 @@
 </div> -->
 
 @section(!isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'scripts' : 'scripts_2')
-    <script type="text/javascript">     
+    <script type="text/javascript">   
+        const funcBarangSelect = function(d) {
+            let appendKode = ""
+            if (d.kode_akun != "" && d.kode_akun != null) {
+                appendKode += d.kode_akun
+            }
+
+            if (d.kode_kelompok != "" && d.kode_kelompok != null) {
+                appendKode += "." + d.kode_kelompok
+            }
+
+            if (d.kode_jenis != "" && d.kode_jenis != null) {
+                appendKode += "." + d.kode_jenis
+            }
+
+            if (d.kode_objek != "" && d.kode_objek != null) {
+                appendKode += "." + d.kode_objek
+            }
+
+            if (d.kode_rincian_objek != "" && d.kode_rincian_objek != null) {
+                appendKode += "." + d.kode_rincian_objek
+            }
+
+            if (d.kode_sub_rincian_objek != "" && d.kode_sub_rincian_objek != null) {
+                appendKode += "." + d.kode_sub_rincian_objek
+            }
+
+            if (d.kode_sub_sub_rincian_objek != "" && d.kode_sub_sub_rincian_objek != null) {
+                appendKode += "." + d.kode_sub_sub_rincian_objek
+            }
+
+            $("[name=kodebarang]").val(appendKode)
+        }
+                  
+    
         $(".baranglookup").LookupTable({
             DataTable: {
                 ajax: {
@@ -62,7 +103,6 @@
                     dataSrc: 'data'
                 },
                 columns: [
-                    { data: 'kode_rek', title: 'Kode Barang' },
                     { data: 'nama_rek_aset', title: 'Nama Barang' },
                     
                 ],
@@ -77,8 +117,9 @@
                     autoClose: false,
                     filters: [
                         { name: "nama_rek_aset", type: "text", title: "Nama Barang" }
-                    ],                                        
-                }  
+                    ],                 
+                    select: funcBarangSelect
+                }
             }
         })
 
@@ -158,7 +199,9 @@
 
     @if (isset($inventaris))
     <script>
-        $(".baranglookup").LookupTable().setValAjax("<?= url('api/barangs', [$inventaris->pidbarang]) ?>")
+        $(".baranglookup").LookupTable().setValAjax("<?= url('api/barangs', [$inventaris->pidbarang]) ?>").then((d) => {
+            funcBarangSelect(d)
+        })
         App.Helpers.defaultSelect2($('#pidopd'), "<?= url('api/organisasis', [$inventaris->pidbarang]) ?>","id","nama")
         App.Helpers.defaultSelect2($('#pidlokasi'), "<?= url('api/lokasis', [$inventaris->pidbarang]) ?>","id","nama")
         App.Helpers.defaultSelect2($('#satuan'), "<?= url('api/satuan_barangs', [$inventaris->pidbarang]) ?>","id","nama")

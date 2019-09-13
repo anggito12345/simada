@@ -142,6 +142,11 @@
             float: left;
         }
 
+        .width-80 {
+            width: 80% !important;
+            float: left;
+        }
+
         .lookup-100 {
             width: 100%;
         }

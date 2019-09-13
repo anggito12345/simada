@@ -34,16 +34,14 @@ class barang extends Model
 
 
     public $fillable = [
-        'pid',
-        'kodetampil',
-        'kode_rek',
         'nama_rek_aset',
-        'jenis_barang',
         'umur_ekononomis',
-        'aset',
-        'obyek',
-        'rincianobyek',
-        'subrincianobyek'
+        'kode_akun',
+        'kode_kelompok',
+        'kode_objek',
+        'kode_rincian_objek',
+        'kode_sub_rincian_objek',
+        'kode_sub_sub_rincian_objek',
     ];
 
     /**
@@ -53,16 +51,13 @@ class barang extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'pid' => 'integer',
-        'kodetampil' => 'string',
-        'kode_rek' => 'string',
         'nama_rek_aset' => 'string',
-        'jenis_barang' => 'integer',
         'umur_ekononomis' => 'integer',
-        'aset' => 'string',
-        'obyek' => 'string',
-        'rincianobyek' => 'string',
-        'subrincianobyek' => 'string'
+        'kode_akun' => 'string',
+        'kode_kelompok' => 'string',
+        'kode_rincian_objek' => 'string',
+        'kode_sub_rincian_objek' => 'string',
+        'kode_sub_sub_rincian_objek' => 'string',
     ];
 
     /**
@@ -73,11 +68,5 @@ class barang extends Model
     public static $rules = [
         
     ];
-
-    public function Barang()
-    {
-        return $this->hasOne('App\Models\barang', 'id', 'pid');
-    }
-
     
 }
