@@ -23,16 +23,27 @@
         
         {!! Form::text('tahun_perolehan', null, ['class' => 'form-control', 'maxlength' => 4]) !!}
         <div class="input-group-append">
-            <span class="input-group-text text-danger" id="basic-addon2">4 digit (mis: 1998)</span>
+            <span class="input-group-text text-danger" id="basic-addon2">4 digit (mis: 1998)</span>Fz
         </div>
     </div>
 </div>
 
-
+<!-- Harga Satuan Field -->
 <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
+    {!! Form::label('harga_satuan', 'Harga Satuan:') !!}
+    <div class="input-group">
+        <div class="input-group-prepend">1`
+            <span class="input-group-text" id="basic-addon1">Rp.</span>
+        </div>
+        {!! Form::text('harga_satuan', null, ['class' => 'form-control']) !!}        
+    </div>   
+</div>
+
+
+<!-- <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
     {!! Form::label('noreg', __("field.noreg")) !!}
     {!! Form::text('noreg', null, \App\Models\BaseModel::generateValidation('noreg', \App\Models\inventaris::$rules, ['class' => 'form-control'])) !!}
-</div>
+</div> -->
 
 <!-- Pidopd Field -->
 <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
@@ -62,7 +73,7 @@
 
 @section(!isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'scripts' : 'scripts_2')
     <script type="text/javascript">   
-        const funcBarangSelect = function(d) {
+        const funcBarangSelect = function(d) {            
             let appendKode = ""
             if (d.kode_akun != "" && d.kode_akun != null) {
                 appendKode += d.kode_akun
@@ -116,14 +127,135 @@
                     valueField: 'id',
                     autoClose: false,
                     filters: [
-                        { name: "nama_rek_aset", type: "text", title: "Nama Barang" }
+                        { name: "kode_jenis", type: "select2", title: "Bidang" , select2config: {                            
+                            ajax: {                                
+                                url: "<?= url('api/jenisbarangs') ?>",
+                                dataType: 'json',
+                                data: function (params) {
+
+                                    return params;
+                                },
+                                processResults: function (data) {
+                                    // Transforms the top-level key of the response object from 'items' to 'results'
+                                    return {
+                                        results: data.data.map((d) => {
+                                            d.text = d.nama
+                                            d.id = parseInt(d.kode)
+
+                                            return d
+                                        })
+                                    };
+                                }
+                            },
+                            theme: 'bootstrap' ,
+                            custom: {
+                                valueField: "kode",
+                                change: (obj) => {                                    
+                                    let idInput = obj.currentTarget.id
+                                    $("#" + idInput.replace('kode_jenis', 'kode_objek')).val("").trigger('change')
+                                }
+                            }
+                        }},
+                        { name: "kode_objek", type: "select2", title: "Kelompok" , select2config: {                            
+                            ajax: {                                
+                                url: "<?= url('api/barangs') ?>",
+                                dataType: 'json',
+                                data: function (params) {
+                                    idInput = $(this)[0].id
+
+                                    params.kode_jenis = $("#" + idInput.replace('kode_objek', 'kode_jenis')).val() 
+
+                                    return params;
+                                },
+                                processResults: function (data) {
+                                    // Transforms the top-level key of the response object from 'items' to 'results'
+                                    return {
+                                        results: data.data.map((d) => {
+                                            d.text = d.nama_rek_aset
+                                            d.id = d.id
+                                            return d
+                                        })
+                                    };
+                                },                                
+                            },
+                            theme: 'bootstrap' ,
+                            custom: {
+                                valueField: "kode_objek",
+                                change: (obj) => {                                    
+                                    let idInput = obj.currentTarget.id
+                                    $("#" + idInput.replace('kode_objek', 'kode_rincian_objek')).val("").trigger('change')
+                                }
+                            }
+                        }},
+                        { name: "kode_rincian_objek", type: "select2", title: "Sub Kelompok" , select2config: {                            
+                            ajax: {                                
+                                url: "<?= url('api/barangs') ?>",
+                                dataType: 'json',
+                                data: function (params) {
+                                    idInput = $(this)[0].id
+                                    
+
+                                    params.kode_objek = $("#" + idInput.replace('kode_rincian_objek', 'kode_objek')).select2('data')[0].kode_objek 
+                                    params.kode_jenis = $("#" + idInput.replace('kode_rincian_objek', 'kode_jenis')).val() 
+
+                                    return params;
+                                },
+                                processResults: function (data) {
+                                    // Transforms the top-level key of the response object from 'items' to 'results'
+                                    return {
+                                        results: data.data.map((d) => {
+                                            d.text = d.nama_rek_aset
+                                            d.id = d.id
+                                            return d
+                                        })
+                                    };
+                                },
+                                
+                            },
+                            theme: 'bootstrap' ,
+                            custom: {
+                                valueField: "kode_rincian_objek",
+                                change: (obj) => {                                    
+                                    let idInput = obj.currentTarget.id
+                                    $("#" + idInput.replace('kode_rincian_objek', 'kode_sub_rincian_objek')).val("").trigger('change')
+                                }
+                            }
+                        }},
+                        { name: "kode_sub_rincian_objek", type: "select2", title: "Sub Sub Kelompok" , select2config: {                            
+                            ajax: {                                
+                                url: "<?= url('api/barangs') ?>",
+                                dataType: 'json',
+                                data: function (params) {
+                                    idInput = $(this)[0].id
+                                    params.kode_objek = $("#" + idInput.replace('kode_sub_rincian_objek', 'kode_objek')).select2('data')[0].kode_objek 
+                                    params.kode_jenis = $("#" + idInput.replace('kode_sub_rincian_objek', 'kode_jenis')).val() 
+                                    params.kode_rincian_objek = $("#" + idInput.replace('kode_sub_rincian_objek', 'kode_rincian_objek')).select2('data')[0].kode_rincian_objek 
+
+                                    return params;
+                                },
+                                processResults: function (data) {
+                                    // Transforms the top-level key of the response object from 'items' to 'results'
+                                    return {
+                                        results: data.data.map((d) => {
+                                            d.text = d.nama_rek_aset
+                                            return d
+                                        })
+                                    };
+                                }
+                            },
+                            theme: 'bootstrap' ,
+                            custom: {
+                                valueField: "kode_sub_rincian_objek"
+                            }
+                        }},
+                        { name: "nama_rek_aset", type:"text", title: "Ketik nama barang/jenis barang yang akan dicari"},
                     ],                 
                     select: funcBarangSelect
                 }
             }
         })
 
-        
+        $('#harga_satuan').mask("#.##0", {reverse: true});
 
         $('#pidbarang').select2({
             ajax: {
@@ -202,9 +334,6 @@
         $(".baranglookup").LookupTable().setValAjax("<?= url('api/barangs', [$inventaris->pidbarang]) ?>").then((d) => {
             funcBarangSelect(d)
         })
-        App.Helpers.defaultSelect2($('#pidopd'), "<?= url('api/organisasis', [$inventaris->pidbarang]) ?>","id","nama")
-        App.Helpers.defaultSelect2($('#pidlokasi'), "<?= url('api/lokasis', [$inventaris->pidbarang]) ?>","id","nama")
-        App.Helpers.defaultSelect2($('#satuan'), "<?= url('api/satuan_barangs', [$inventaris->pidbarang]) ?>","id","nama")
     </script>
     @endif
 @endsection
@@ -238,12 +367,6 @@
 <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
     {!! Form::label('satuan', 'Satuan:') !!}
     {!! Form::select('satuan', [], null, ['class' => 'form-control']) !!}
-</div>
-
-<!-- Harga Satuan Field -->
-<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
-    {!! Form::label('harga_satuan', 'Harga Satuan:') !!}
-    {!! Form::number('harga_satuan', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Perolehan Field -->

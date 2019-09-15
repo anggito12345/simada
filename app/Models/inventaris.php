@@ -95,6 +95,11 @@ class inventaris extends Model
         $this->attributes['tahun_perolehan'] = date("Y", strtotime($value));
     }
 
+    public function setHargaSatuanAttribute($value)
+    {
+        $this->attributes['harga_satuan'] = str_replace('.', '', $value);
+    }
+
     public function setTglSensusAttribute($value)
     {
         $value = date("Y-m-d", strtotime($value));

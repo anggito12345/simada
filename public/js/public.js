@@ -145,16 +145,7 @@ jQuery.fn.extend({
             } 
         })
 
-        if (config.ajax != undefined) {
-            config.ajax.data = (d) => {
-                d['search-lookup'] = {}
-                for (let i = 0; i < filters.length; i ++) {
-                    d['search-lookup'][filters[i].name] = $("[name="+idlookup+"-"+filters[i].name+"]").val()
-                }
-
-                return d
-            }
-        }
+        
 
         config.customLookup.idlookup = idlookup
 
@@ -172,7 +163,7 @@ jQuery.fn.extend({
         
 
         const modalTemplate = `
-        <div class="modal fade" id="`+idlookup+`" tabindex="-1" role="dialog">
+        <div class="modal fade" id="`+idlookup+`" role="dialog">
             <div class="modal-dialog modal-lg" role="document">
                 <div class="modal-content">
                 <div class="modal-header">
@@ -248,6 +239,15 @@ jQuery.fn.extend({
                 case 'text':
                     input = document.createElement("input")                    
                     break;
+                case 'select2':
+                    // it like select but configured with select2
+                    if (filters[i].select2config == undefined) {
+                        console.error('select2Configuration is required when using select2 type input')
+                        return
+                    }
+
+                    input = document.createElement("select")                   
+                    break;
             
                 default:
                     input = document.createElement("input")
@@ -255,6 +255,7 @@ jQuery.fn.extend({
             }            
 
             input.name = name
+            input.id = 'input-' + name
             input.className = className    
                   
 
@@ -269,8 +270,61 @@ jQuery.fn.extend({
             $("[name="+idlookup+"-"+filters[i].name+"]")[0].addEventListener('keyup', () => {
                 $("#table-" + idlookup).DataTable().ajax.reload()
             })  
+
+            if (filters[i].type == 'select2') {               
+                $("#" + input.id).select2(filters[i].select2config)
+                $("#" + input.id).find('option').remove()
+
+                $("#" + input.id).on('change', () => {
+                    $("#table-" + idlookup).DataTable().ajax.reload()
+                })
+
+                if(filters[i].select2config.custom != undefined) {
+                    if(filters[i].select2config.custom.select != undefined && typeof filters[i].select2config.custom.select == 'function') {
+                        $("#" + input.id).on('select2:select', filters[i].select2config.custom.select)
+                    }  
+                    
+                    if(filters[i].select2config.custom.change != undefined && typeof filters[i].select2config.custom.change == 'function') {
+                        $("#" + input.id).on('change', filters[i].select2config.custom.change)
+                    }  
+                }
+            }
         }
-        
+
+        if (config.ajax != undefined) {
+            config.ajax.data = (d) => {
+                d['search-lookup'] = {}
+                for (let i = 0; i < filters.length; i ++) {
+                    if (filters[i].type == "select2") {
+                        let defaultValueField = "id"
+
+                        if(filters[i].select2config == undefined) {
+                            console.error('select2Configuration is required when using select2 type input')                            
+                        }
+
+                        if(filters[i].select2config.custom != undefined) {
+                            if(filters[i].select2config.custom.valueField != undefined) {
+                                defaultValueField = filters[i].select2config.custom.valueField                           
+                            }            
+                        }
+
+                        d['search-lookup'][filters[i].name] = {
+                            operator: '=',
+                            value: $("[name="+idlookup+"-"+filters[i].name+"]").select2('data')[0] == undefined ? null : $("[name="+idlookup+"-"+filters[i].name+"]").select2('data')[0][defaultValueField]
+                        }
+                    } else {
+                        d['search-lookup'][filters[i].name] = {
+                            value: $("[name="+idlookup+"-"+filters[i].name+"]").val(),
+                            operator: '~*'
+                        }
+                    }                    
+                    
+                }
+
+                return d
+            }
+        }
+
         $("#table-" + idlookup).DataTable(config)
     },
     LookupTable: function(config) {
@@ -289,21 +343,18 @@ jQuery.fn.extend({
                             data: data,
                             url: url
                         }).then((d) => {
+                            resolve(d.data)
                             if (d.data != null) {                   
                                 $("[name="+recentConfig.DataTable.customLookup.realid+"]").val(d.data[recentConfig.DataTable.custom.valueField])
                                 $("[name="+recentConfig.DataTable.customLookup.maskid+"]").val(d.data[recentConfig.DataTable.custom.textField])
     
                                 $.fn.selectedIdLookup[recentConfig.DataTable.id] = d.data[recentConfig.DataTable.custom.valueField]
     
-                                $("#table-" + recentConfig.DataTable.id).DataTable().draw()
-
-                                if (i == this.length - 1) {
-                                    resolve(d.data)
-                                }
+                                $("#table-" + recentConfig.DataTable.id).DataTable().draw()                                
+                                
+                            } else {
                             }
-                            if (i == this.length - 1) {
-                                reject(d.data)
-                            }
+                            
                             
                         })
                     }

@@ -304,9 +304,9 @@
 
     <!-- jQuery 3.1.1 -->
     <script src="<?= url('js/thirdparty/jquery.min.js') ?>"></script>
+    <script src="<?= url('js/thirdparty/jquery.mask.min.js') ?>"></script>
 
-    @include('layouts.datatables_js')
-
+    @include('layouts.datatables_js')    
     <script src="<?= url('js/public.js?key='.sha1(time())) ?>"></script>
 
     <script src="<?= url('js/thirdparty/moment.min.js') ?>"></script>
