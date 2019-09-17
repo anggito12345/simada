@@ -5,6 +5,13 @@
     <title>SIMADA</title>
     <meta content='width=device-width, initial-scale=1, maximum-scale=1, user-scalable=no' name='viewport'>
 
+    <style>
+        @font-face {
+            font-family: 'Glyphicons Halflings';
+            src: url('<?= url('css/fonts/glyphicons-halflings-regular.eot') ?>');
+            src: url('<?= url('css/fonts/glyphicons-halflings-regular.eot') ?>') format('embedded-opentype'),  url('<?= url('css/fonts/glyphicons-halflings-regular.woff') ?>') format('woff'), url('<?= url('css/fonts/glyphicons-halflings-regular.ttf') ?>') format('truetype'), url('<?= url('css/fonts/glyphicons-halflings-regular.svg') ?>') format('svg');
+        }
+    </style>
 
     <!-- Bootstrap 3.3.7 -->
     <link rel="stylesheet" href="<?= url('css/thirdparty/bootstrap.min.css') ?>">
@@ -32,11 +39,15 @@
 
     <link rel="stylesheet" href="<?= url('css/thirdparty/sweetalert2.min.css') ?>">
 
-    <script src="<?= url('js/public.js?key='.sha1(time())) ?>"></script>
+    <link rel="stylesheet" href="<?= url('css/thirdparty/responsive.dataTables.min.css') ?>">
+   
+    @include('layouts.datatables_css')
 
     @yield('css')
 
     <style>
+
+        
         .navbar {
             padding: 0px;
         }
@@ -51,6 +62,10 @@
             margin: 1px;
             color: white;
             cursor: pointer;
+        }
+
+        .dataTables_wrapper .row {
+            width: 100% !important;
         }
 
         .pagination>li.disabled>a {
@@ -125,8 +140,49 @@
             /* symbol for "collapsed" panels */
             content: "\f063";    /* adjust as needed, taken from bootstrap.css */
         }
+
+        .width-60 {
+            width: 60% !important;
+            float: left;
+        }
+
+        .width-80 {
+            width: 80% !important;
+            float: left;
+        }
+
+        .lookup-100 {
+            width: 100%;
+        }
+
+        table.dataTable {
+            width:100% !important;
+        }
+
+        .modal-lookup .dataTables_length {
+        }
+
+        .modal-lookup .row {
+            width: 100%;
+            margin: 0;
+        }
+
+        .fade-scale {
+            transform: scale(0);
+            opacity: 0;
+            -webkit-transition: all 1s linear;
+            -o-transition: all 1s linear;
+            transition: all 1s linear;
+        }
+
+        .fade-scale.show {
+            opacity: 1;
+            transform: scale(1);
+        }
     </style>
 </head>
+
+<input type="text" value="<?= url('') ?>" base-path style="display:none" />
 
 <body class="skin-green-light sidebar-mini">
 @if (!Auth::guest())
@@ -252,6 +308,11 @@
 
     <!-- jQuery 3.1.1 -->
     <script src="<?= url('js/thirdparty/jquery.min.js') ?>"></script>
+    <script src="<?= url('js/thirdparty/jquery.mask.min.js') ?>"></script>
+
+    @include('layouts.datatables_js')    
+    <script src="<?= url('js/public.js?key='.sha1(time())) ?>"></script>
+
     <script src="<?= url('js/thirdparty/moment.min.js') ?>"></script>
     <script src="<?= url('js/thirdparty/bootstrap.min.js') ?>"></script>
     <script src="<?= url('js/thirdparty/bootstrap-datepicker.min.js') ?>"></script>
@@ -265,15 +326,60 @@
 
     <script src="<?= url('js/thirdparty/sweetalert2.min.js') ?>"></script>
 
-    @yield('scripts')
-    @yield('scripts_2')
-
+    
     <script>
+
+        $.fn.datepicker.defaults.language = 'in'
+        $.fn.datepicker.defaults.autClose = true
+        $.fn.datepicker.dates['in'] = {
+            days: ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu"],
+            daysShort: ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"],
+            daysMin: ["Mg", "Sn", "Su", "Sl", "Rb", "Km", "Sb"],
+            months: ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"],
+            monthsShort: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"],
+            today: "Hari Ini",
+            clear: "Clear",
+            format: "dd-mm-yyyy",
+            titleFormat: "MM yyyy", /* Leverages same syntax as 'format' */
+        };
+
+
         $(function() {
             $('input').attr('autocomplete','off');
             $('input').attr('autocorrect','off');
             $('form').attr('autocomplete','off');
+
+            $('input[type=number]').keyup((obj) => {
+                let valueNumber = parseInt(obj.target.value)
+                const maxAttribute = obj.target.getAttribute('max')
+                if (maxAttribute != undefined) {
+                    if (valueNumber > parseInt(maxAttribute)) {
+                        obj.target.value = parseInt(maxAttribute)
+                    }
+                }
+            });  
+            
+            var elements = document.querySelectorAll("input,select");
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].oninvalid = function(e) {
+                    e.target.setCustomValidity("");
+                    if (!e.target.validity.valid) {
+                        if (e.target.getAttribute('required') != null && (e.target.value == '' || e.target.value == null)) {
+                            e.target.setCustomValidity("Data wajib di isi!");
+                        }
+                        
+                    }
+                };
+                elements[i].oninput = function(e) {
+                    e.target.setCustomValidity("");
+                };
+            }
         })
+
+
     </script>
+    @yield('scripts')
+    @yield('scripts_2')
+
 </body>
 </html>

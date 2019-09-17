@@ -1,6 +1,6 @@
 
 
-<li class="treeview {{ Request::is('detiltanahs*') 
+<!-- <li class="treeview {{ Request::is('detiltanahs*') 
     || Request::is('detilmesins*') 
     || Request::is('detilbangunans*')
     || Request::is('detiljalans*') ? 'active' : '' }}">
@@ -26,9 +26,9 @@
             <a href="{!! route('detiljalans.index') !!}"><i class="fa fa-edit"></i><span>KIB D</span></a>
         </li>
     </ul>
-</li>
+</li> -->
 
-<li class="treeview {{ Request::is('inventaris*') || Request::is('pemeliharaans*') || Request::is('penghapusans*')? 'active' : '' }}">
+<!-- <li class="treeview {{ Request::is('inventaris*') || Request::is('pemeliharaans*') || Request::is('penghapusans*')? 'active' : '' }}">
     <a href="#">
         <i class="fa fa-edit"></i>
         <span>Transaksi</span>
@@ -49,13 +49,15 @@
             <a href="{!! route('penghapusans.index') !!}"><i class="fa fa-edit"></i><span>Penghapusan</span></a>
         </li>
     </ul>
+</li> -->
+<li class="{{ Request::is('inventaris*') ? 'active' : '' }}">
+    <a href="{!! route('inventaris.index') !!}"><i class="fa fa-edit"></i><span>Penata Usahaan</span></a>
 </li>
-
 <li class="{{ Request::is('barangs*') ? 'active' : '' }}">
     <a href="{!! route('barangs.index') !!}"><i class="fa fa-car"></i><span>Master Barang</span></a>
 </li>
 
-<li class="treeview {{ Request::is('alamats*') 
+<!-- <li class="treeview {{ Request::is('alamats*') 
     || Request::is('jenisbarangs*') 
     || Request::is('kondisis*') 
     || Request::is('lokasis*') 
@@ -105,7 +107,7 @@
             <a href="{!! route('statustanahs.index') !!}"><i class="fa fa-edit"></i><span>Status Tanah</span></a>
         </li>
     </ul>
-</li>
+</li> -->
 
 <li class="treeview {{ Request::is('users*')? 'active' : '' }}">
     <a href="#">

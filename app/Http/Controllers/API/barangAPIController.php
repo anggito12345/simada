@@ -25,6 +25,23 @@ class barangAPIController extends AppBaseController
         $this->barangRepository = $barangRepo;
     }
 
+    public function lookup(Request $request)
+    {
+
+        $query =  new \App\Models\barang();
+
+        $queryFiltered = $query;
+        $queryFiltered = \App\Helpers\LookupHelper::build($queryFiltered, $request);
+
+        $barangs = $queryFiltered->skip($request->input('start'))        
+        ->limit($request->input('length'))->get();
+        return json_encode([
+            'data' => $barangs->toArray(),
+            'recordsFiltered' => $queryFiltered->count(),
+            'recordsTotal' => $query->count(),
+        ]);
+    }
+
     /**
      * Display a listing of the barang.
      * GET|HEAD /barangs
@@ -35,12 +52,36 @@ class barangAPIController extends AppBaseController
     public function index(Request $request)
     {
 
-        $barangs =  \App\Models\barang::select([
-            'nama_rek_aset as text',
-            'id'
-        ])
-        ->whereRaw("nama_rek_aset like '%".$request->input("q")."%'")
-        ->limit(10)
+        $queryBarang =  new \App\Models\barang;
+
+        $queryBarangFinal = $queryBarang;
+
+        if ($request->input("kode_objek") != null && $request->input("kode_jenis") != null && $request->input("kode_rincian_objek") == null) {
+            $queryBarangFinal = $queryBarang           
+                 ->whereRaw("kode_objek = '".sprintf("%02d",$request->input("kode_objek"))."'")  
+                 ->whereRaw("kode_sub_rincian_objek IS NULL")
+                 ->whereRaw("kode_rincian_objek IS NOT NULL")
+                 ->whereRaw("kode_jenis = '".$request->input("kode_jenis")."'");
+        } else if ($request->input("kode_objek") != null && $request->input("kode_jenis") != null && $request->input("kode_rincian_objek") != null) {
+            $queryBarangFinal = $queryBarang           
+                ->whereRaw("kode_objek = '".sprintf("%02d",$request->input("kode_objek"))."'")  
+                ->whereRaw("kode_rincian_objek = '".sprintf("%02d",$request->input("kode_rincian_objek"))."'")
+                ->whereRaw("kode_jenis = '".$request->input("kode_jenis")."'")
+                ->whereRaw("kode_sub_rincian_objek IS NOT NULL")            ;
+        } else if ($request->input("kode_jenis") != null) {
+           $queryBarangFinal = $queryBarang             
+                ->whereRaw("kode_rincian_objek IS NULL")
+                ->whereRaw("kode_objek IS NOT NULL")
+                ->whereRaw("kode_jenis = '".$request->input("kode_jenis")."'");
+        }        
+
+        if ($request->input('term') != null) {
+            $queryBarangFinal = $queryBarangFinal->whereRaw("nama_rek_aset ~* '.*".$request->input("term").".*'");
+        }
+
+       
+        
+        $barangs = $queryBarangFinal->limit(10)
         ->get();
 
         return $this->sendResponse($barangs->toArray(), 'Barangs retrieved successfully');
@@ -132,3 +173,4 @@ class barangAPIController extends AppBaseController
         return $this->sendResponse($id, 'Barang deleted successfully');
     }
 }
+

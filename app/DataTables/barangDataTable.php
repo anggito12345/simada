@@ -66,11 +66,13 @@ class barangDataTable extends DataTable
     {
         return [
             // 'pid',
-            // 'kodetampil',
-            'kode_rek',
+            'kode_akun',
+            'kode_kelompok',
+            'kode_objek',
+            'kode_rincian_objek',
+            'kode_sub_rincian_objek',
+            'kode_sub_sub_rincian_objek',
             'nama_rek_aset',
-            'jenis_barang',
-            'umur_ekononomis',
             // 'aset',
             // 'obyek',
             // 'rincianobyek',
