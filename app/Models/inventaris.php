@@ -53,7 +53,9 @@ class inventaris extends Model
         'kondisi',
         'lokasi_detil',
         'umur_ekonomis',
-        'keterangan'
+        'keterangan',
+        'jumlah',
+        'tgl_dibukukan'
     ];
 
     /**
@@ -75,6 +77,8 @@ class inventaris extends Model
         'harga_satuan' => 'integer',
         'perolehan' => 'string',
         'kondisi' => 'string',
+        'tgl_dibukukan' => 'date',
+        'jumlah' => 'int',
         'lokasi_detil' => 'string',
         'umur_ekonomis' => 'integer',
         'keterangan' => 'string'
@@ -86,14 +90,13 @@ class inventaris extends Model
      * @var array
      */
     public static $rules = [
-        
+        'harga_satuan' => 'required',
+        'jumlah' => 'required',
+        'satuan' => 'required',
+        'perolehan' => 'required',
+        'kondisi' => 'required',
+        'tahun_perolehan' => 'required'
     ];
-
-
-    public function setTahunPerolehanAttribute($value)
-    {
-        $this->attributes['tahun_perolehan'] = date("Y", strtotime($value));
-    }
 
     public function setHargaSatuanAttribute($value)
     {
@@ -102,8 +105,33 @@ class inventaris extends Model
 
     public function setTglSensusAttribute($value)
     {
-        $value = date("Y-m-d", strtotime($value));
-        $this->attributes['tgl_sensus'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
+        $value = date("d-m-Y", strtotime($value));
+        $this->attributes['tgl_sensus'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
+    }
+
+    public function getTglSensusAttribute($value)
+    {
+        if ($value == "") {
+            return "";
+        }
+
+        return date("d/m/Y", strtotime($value));
+    }
+
+
+    public function setTglDibukukanAttribute($value)
+    {        
+        $value = date("d-m-Y", strtotime($value));
+        $this->attributes['tgl_dibukukan'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
+    }    
+
+    public function getTglDibukukanAttribute($value)
+    {
+        if ($value == "") {
+            return "";
+        }
+
+        return date("d/m/Y", strtotime($value));
     }
 
     public function Lokasi()

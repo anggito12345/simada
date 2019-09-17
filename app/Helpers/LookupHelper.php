@@ -16,6 +16,7 @@ class LookupHelper {
                 if ($value['value'] == null) {
                     continue;
                 }
+                
                 $query = $query->whereRaw($key." ".$value['operator']." '".$value['value']."'");
             }
         }

@@ -71,4 +71,11 @@ class BaseModel extends Model {
         'Permanen' => 'Permanen',
         'Tidak Permanen' => 'Tidak Permanen',
     ];
+
+    public static $perolehanDs = [
+        'Pembelian' => 'Pembelian',
+        'Hadiah/Hibah' => 'Hadiah/Hibah',
+        'Lainnya' => 'Lainnya',
+        'Mutasi' => 'Mutasi',
+    ];
 }

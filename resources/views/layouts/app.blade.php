@@ -64,6 +64,10 @@
             cursor: pointer;
         }
 
+        .dataTables_wrapper .row {
+            width: 100% !important;
+        }
+
         .pagination>li.disabled>a {
             cursor: not-allowed;
             color: rgba(255,255,255,.5);
@@ -322,15 +326,60 @@
 
     <script src="<?= url('js/thirdparty/sweetalert2.min.js') ?>"></script>
 
-    @yield('scripts')
-    @yield('scripts_2')
-
+    
     <script>
+
+        $.fn.datepicker.defaults.language = 'in'
+        $.fn.datepicker.defaults.autClose = true
+        $.fn.datepicker.dates['in'] = {
+            days: ["Minggu", "Senin", "Selasa", "Rabu", "Kamis", "Jum'at", "Sabtu"],
+            daysShort: ["Min", "Sen", "Sel", "Rab", "Kam", "Jum", "Sab"],
+            daysMin: ["Mg", "Sn", "Su", "Sl", "Rb", "Km", "Sb"],
+            months: ["Januari", "Februari", "Maret", "April", "Mei", "Juni", "Juli", "Agustus", "September", "Oktober", "November", "Desember"],
+            monthsShort: ["Jan", "Feb", "Mar", "Apr", "Mei", "Jun", "Jul", "Agu", "Sep", "Okt", "Nov", "Des"],
+            today: "Hari Ini",
+            clear: "Clear",
+            format: "dd-mm-yyyy",
+            titleFormat: "MM yyyy", /* Leverages same syntax as 'format' */
+        };
+
+
         $(function() {
             $('input').attr('autocomplete','off');
             $('input').attr('autocorrect','off');
             $('form').attr('autocomplete','off');
+
+            $('input[type=number]').keyup((obj) => {
+                let valueNumber = parseInt(obj.target.value)
+                const maxAttribute = obj.target.getAttribute('max')
+                if (maxAttribute != undefined) {
+                    if (valueNumber > parseInt(maxAttribute)) {
+                        obj.target.value = parseInt(maxAttribute)
+                    }
+                }
+            });  
+            
+            var elements = document.querySelectorAll("input,select");
+            for (var i = 0; i < elements.length; i++) {
+                elements[i].oninvalid = function(e) {
+                    e.target.setCustomValidity("");
+                    if (!e.target.validity.valid) {
+                        if (e.target.getAttribute('required') != null && (e.target.value == '' || e.target.value == null)) {
+                            e.target.setCustomValidity("Data wajib di isi!");
+                        }
+                        
+                    }
+                };
+                elements[i].oninput = function(e) {
+                    e.target.setCustomValidity("");
+                };
+            }
         })
+
+
     </script>
+    @yield('scripts')
+    @yield('scripts_2')
+
 </body>
 </html>

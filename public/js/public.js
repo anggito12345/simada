@@ -62,7 +62,9 @@ var App = {
     }
 }
 
-jQuery.fn.extend({
+
+
+jQuery.fn.extend({    
     generatedLookup: 1,
     lookupGeneratedValue: {},
     customLookup: {},
@@ -292,6 +294,10 @@ jQuery.fn.extend({
         }
 
         if (config.ajax != undefined) {
+            let funcData = null
+            if (config.ajax.data != undefined) {
+                funcData = config.ajax.data
+            }
             config.ajax.data = (d) => {
                 d['search-lookup'] = {}
                 for (let i = 0; i < filters.length; i ++) {
@@ -319,6 +325,10 @@ jQuery.fn.extend({
                         }
                     }                    
                     
+                }
+
+                if (typeof funcData == 'function') {
+                    return funcData(d)
                 }
 
                 return d
@@ -459,3 +469,372 @@ jQuery.fn.extend({
         })
     }
 })
+
+
+var inlineDatepicker = function(element, config) {
+
+    defaultConfig = {
+        format: 'YYYY-MM-DD',
+        startYear: 2010,
+        formatDefault: 'DD/MM/YYYY',
+        buttonClear: false
+    }
+
+    const monthNames = [
+        'Januari',
+        'Februari',
+        'Maret',
+        'April',
+        'Mei',
+        'Juni',
+        'Juli',
+        'Agustus',
+        'September',
+        'Oktober',
+        'Desember'
+    ]
+
+    if (config != null) {
+        defaultConfig = {...defaultConfig, ...config}
+    }
+    
+    const wrapperElement  = document.createElement('div')
+    wrapperElement.className = 'row col-md-12'
+
+    let classAtItem = 'col-md-4 no-padding'
+
+    if (defaultConfig.buttonClear) {
+        classAtItem = 'col-md-3 no-padding'
+    }
+
+    const wrapperInputElementTemplate = document.createElement('div')
+    wrapperInputElementTemplate.className = classAtItem
+
+    const yearPicker = document.createElement('select')
+    yearPicker.className = 'form-control'
+
+    const monthPicker = yearPicker.cloneNode(true)
+
+    const dayPicker = yearPicker.cloneNode(true)    
+
+    const dayPopulate = (daySelectElement) => {
+        const saveRecentDayPicked = daySelectElement.value;
+
+        daySelectElement.innerHTML = ''        
+
+        const maxDateInYearAndMonth = new Date(yearPicker.value, monthPicker.value, 0).getDate()
+
+        for(let dayStart = 1; dayStart <= maxDateInYearAndMonth; dayStart++) {
+            const dayOption = document.createElement('option')
+            dayOption.appendChild( document.createTextNode(dayStart) );
+            dayOption.value = dayStart;
+
+            daySelectElement.appendChild(dayOption)
+        }
+
+        if (saveRecentDayPicked > maxDateInYearAndMonth) {
+            daySelectElement.value = 1
+        } else {
+            daySelectElement.value = saveRecentDayPicked
+        }
+    }
+    
+    const monthPopulate = (monthSelectElement) => {
+        for(let monthStart = 1; monthStart <= 12; monthStart++) {
+            const monthOption = document.createElement('option')
+            monthOption.appendChild( document.createTextNode(monthNames[monthStart - 1]) );
+            monthOption.value = monthStart;
+
+            monthSelectElement.appendChild(monthOption)
+        }
+    }
+
+    const yearPopulate = (yearSelectElement) => {
+        for(let yearStart = defaultConfig.startYear; yearStart <= new Date().getFullYear(); yearStart++) {
+            const yearOption = document.createElement('option')
+            yearOption.appendChild( document.createTextNode(yearStart) );
+            yearOption.value = yearStart;
+
+            yearSelectElement.appendChild(yearOption)
+        }
+    }
+
+    const pad2 = function(number) {
+        return (number < 10 ? '0' : '') + number
+    }
+
+    const creatingResult = () => {
+        let stringValue = moment(yearPicker.value + "-" + monthPicker.value + "-" + dayPicker.value, "YYYY-MM-DD").format(defaultConfig.format)
+
+        element.value = stringValue
+
+        element.setAttribute('value', stringValue)
+    }
+
+    const attributeJson = function(element) {
+        jsonOutput = {}
+        for(var i = attrs.length - 1; i >= 0; i--) {
+            jsonOutput[attrs[i].name] = attrs[i].value;
+        }
+
+        return jsonOutput
+    }
+    
+    const buildingUi = function(elementUi) {
+        elementUi.style.display = 'none';        
+        
+        // create 4 warpperInputElement
+        const wrapperInputYear = wrapperInputElementTemplate.cloneNode(true)
+        const wrapperInputMonth = wrapperInputElementTemplate.cloneNode(true)
+        const wrapperInputDay = wrapperInputElementTemplate.cloneNode(true)
+        let wrapperButtonClear = null;
+
+        if (defaultConfig.buttonClear) {
+            wrapperButtonClear = wrapperInputElementTemplate.cloneNode(true)
+        }
+
+        wrapperInputYear.appendChild(yearPicker)
+        wrapperInputMonth.appendChild(monthPicker)
+        wrapperInputDay.appendChild(dayPicker)
+
+        if (defaultConfig.buttonClear) {
+            const buttonClear = document.createElement('div')
+            buttonClear.className = 'btn btn-default'
+            buttonClear.textContent = 'Clear'
+            buttonClear.addEventListener('click', (ev) => {
+                yearPicker.value = defaultConfig.startYear
+                monthPicker.value = 1
+                dayPicker.value = 1
+            })
+
+            wrapperButtonClear.appendChild(buttonClear)
+        }
+
+        yearPopulate(yearPicker)
+        monthPopulate(monthPicker)
+        dayPopulate(dayPicker)
+
+        wrapperElement.appendChild(wrapperInputYear)
+        wrapperElement.appendChild(wrapperInputMonth)
+        wrapperElement.appendChild(wrapperInputDay)
+
+        if (defaultConfig.buttonClear) {
+            wrapperElement.appendChild(wrapperButtonClear)
+        }
+        
+        elementUi.parentNode.insertBefore(wrapperElement,elementUi.nextSibling)
+        elementUi.style.display = 'none';
+    }
+
+    if (element.length > 0) {
+        element = element[0]        
+    }
+
+    // initialize event
+    yearPicker.addEventListener('change', (ev) => {
+        dayPopulate(dayPicker)
+
+        creatingResult()
+    })
+
+    monthPicker.addEventListener('change', (ev) => {
+        dayPopulate(dayPicker)
+
+        creatingResult()
+    })
+
+    dayPicker.addEventListener('change', (ev) => {
+        creatingResult()
+    })
+
+    let DateEle = new Date()
+    if (element.value != null && element.value != "" ) {
+        DateEle = moment(element.value,defaultConfig.formatDefault).toDate()
+    }    
+
+    buildingUi(element)
+
+    yearPicker.value = DateEle.getFullYear()
+    monthPicker.value = DateEle.getMonth() + 1
+    dayPicker.value = DateEle.getDate()
+
+    creatingResult()
+}
+
+function uuidv4() {
+    return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
+      var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
+      return v.toString(16);
+    });
+  }
+
+  
+let FileGalleryGenerated = 0;
+let FileGallery = function(element, config) {
+
+    if (element == undefined || element.type != 'file') {
+        console.error('only allowable for type file');
+        return false;
+    }
+
+    if (element.length > 0) {
+        element = element[0]        
+    }  
+
+    const tableId = `file-gallery-table-${FileGalleryGenerated}`
+    const modalId = `modal-file-gallery-${FileGalleryGenerated}`
+    const fileTempId = `file-gallery-temp-${FileGalleryGenerated}`
+    const ketTempId = `file-gallery-keterangan-${FileGalleryGenerated}`
+    const buttonSaveId = `file-gallery-button-${FileGalleryGenerated}`
+
+    var arrayChangeHandler = {
+        get: function(target, property) {          
+          return target[property];
+        },
+        set: function(target, property, value, receiver) {
+          target[property] = value;
+          
+          if (Number.isInteger(value)) { 
+            $(`#${tableId}`).DataTable().clear();
+            $(`#${tableId}`).DataTable().rows.add(target);
+            $(`#${tableId}`).DataTable().draw();
+          }
+
+          return true;
+        }
+    };
+    
+    this.rawFiles = []     
+    this.fileList = []
+    this.proxyFileList = new Proxy(this.fileList, arrayChangeHandler)   
+
+    const modalContent = `<div class="modal fade" id="${modalId}" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+      <div class="modal-content">
+        <div class="modal-body">
+            <div class='form-group'>
+                <label>
+                    Dokumen
+                </label>
+                <input type='file' id="${fileTempId}"  class='form-control' />
+            </div>
+            <div class='form-group'>
+                <label>
+                    Keterangan
+                </label>
+                <textarea class='form-control' id='${ketTempId}' />
+            </div>
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-primary" id="${buttonSaveId}">Simpan</button>
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+        </div>
+      </div>
+    </div>
+  </div>`
+
+    $('body').append(modalContent)
+
+
+    $(`#${fileTempId}`).change((e) => {       
+        element.dispatchEvent(new Event("change"));
+    })
+
+    $(`#${buttonSaveId}`).click((e) => {
+        temp = {}
+        if ($(`#${fileTempId}`)[0].files.length > 0) {
+            let file = $(`#${fileTempId}`)[0].files[0]
+            temp = {
+                rawFile: file,
+                lastModified: file.lastModified,
+                lastModifiedDate: file.lastModifiedDate,
+                name: file.name,
+                size: file.size,
+                type: file.type,
+                keterangan:  $(`#${ketTempId}`).val(),
+                uid: uuidv4()
+            }
+
+            this.proxyFileList.push(temp)            
+        }
+
+        console.log(this.fileList)
+
+        $(`#${fileTempId}`).val(null)
+
+        $(`#${modalId}`).modal('hide')
+    })
+
+    defaultConfig = {
+        title: ''
+    }
+
+    if (config != null) {
+        defaultConfig = {...defaultConfig, ...config}
+    }
+  
+
+    element.style.display = 'none';
+
+    const tableEle = document.createElement('table')
+    const tableHead = document.createElement('thead')
+    const tableBody = document.createElement('tbody')
+
+
+    const toolbars = document.createElement('div')
+    toolbars.className = 'pull-right'
+
+    const toolAdd = document.createElement('span')
+    toolAdd.style.cursor = 'pointer'    
+    const toolRemove = toolAdd.cloneNode(true)
+    const toolEdit = toolAdd.cloneNode(true)
+    
+    toolAdd.addEventListener('click', () => {
+        $(`#${modalId}`).modal('show')
+    })
+
+    toolRemove.className = 'fa fa-trash mr-2'
+    toolAdd.className = 'fa fa-plus mr-2'
+    toolEdit.className = 'fa fa-edit mr-2'
+
+    toolbars.appendChild(toolAdd)
+    toolbars.appendChild(toolEdit)
+    toolbars.appendChild(toolRemove)
+
+    tableEle.id = tableId
+    tableEle.className = 'table table-bordered table-striped'
+    tableEle.style.width = '100%!important'
+
+    tableEle.appendChild(tableHead)
+    tableEle.appendChild(tableBody)
+
+    const wrapperBox = document.createElement('div')
+    wrapperBox.className = 'box box-primary'
+    const wrapperBoxHeading = document.createElement('div')
+    wrapperBoxHeading.className = 'box-header bg-blue'
+    wrapperBoxHeading.textContent = defaultConfig.title
+    const wrapperBoxBody = document.createElement('div')
+    wrapperBoxBody.className = 'box box-body'
+
+    wrapperBoxBody.appendChild(tableEle)
+    wrapperBoxHeading.appendChild(toolbars)
+    wrapperBox.appendChild(wrapperBoxHeading)
+    wrapperBox.appendChild(wrapperBoxBody)
+
+    element.parentNode.insertBefore(wrapperBox, element.nextSibling)
+
+    $(`#${tableEle.id}`).DataTable({
+        data: [],
+        columns: [
+            {data: 'name', title: 'Dokumen'},
+            {data: 'keterangan', title: 'Keterangan'},
+        ],
+        info:     false,
+        bLengthChange: false,
+        searching: false,
+        ordering: false,
+    })
+
+    FileGalleryGenerated++
+
+}

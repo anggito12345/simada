@@ -10,6 +10,7 @@ use App\Repositories\inventarisRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use Illuminate\Support\Facades\DB;
 
 class inventarisController extends AppBaseController
 {
@@ -55,10 +56,48 @@ class inventarisController extends AppBaseController
         $input = $request->all();
 
 
-        $inventaris = $this->inventarisRepository->create($input);
+        DB::beginTransaction();
+        try {
 
-        Flash::success('Inventaris saved successfully.');
+            // generate no register
+            $modelInventaris = new \App\Models\inventaris();
 
+            $barangMaster = \App\Models\barang::find($input['pidbarang']);
+
+            $currentNoReg = DB::table($modelInventaris->table)
+                ->select([
+                    'inventaris.*',                    
+                ])
+                ->join('m_barang', 'm_barang.id', 'inventaris.pidbarang')
+                ->where('m_barang.kode_jenis', '=', $barangMaster->kode_jenis)
+                ->where('inventaris.tahun_perolehan', '=', $input['tahun_perolehan'])
+                ->where('inventaris.harga_satuan', '=', str_replace(".","", $input['harga_satuan']))
+                ->orderBy('inventaris.noreg', 'desc')
+                ->lockForUpdate()->first();
+            
+            $lastNoReg = 0;
+            if ($currentNoReg != null) {
+                $lastNoReg = (int)$currentNoReg->noreg;
+            }            
+            for ($i = 0; $i < $input['jumlah'] ; $i ++) {
+                
+                $input['noreg'] = sprintf('%03d',$lastNoReg + 1);
+
+                $inventaris = $this->inventarisRepository->create($input);
+
+                $lastNoReg++;
+            }                
+
+            Flash::success('Inventaris saved successfully.');
+
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            
+            return redirect()->back()->withInput()->withErrors($e->getMessage());
+        }
+
+        
         return redirect(route('inventaris.index'));
     }
 

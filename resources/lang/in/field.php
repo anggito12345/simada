@@ -15,5 +15,6 @@ return [
     'idkota' => 'Kota',
     'idkecamatan' => 'Kecamatan',
     'idkelurahan' => 'Kelurahan/Desa',
-    'bpkb' => 'Nomor BPKB'
+    'bpkb' => 'Nomor BPKB',
+    'perolehan' => 'Asal Usul/Cara Perolehan'
 ];

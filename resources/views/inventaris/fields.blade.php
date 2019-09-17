@@ -18,58 +18,86 @@
 
 <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
     <!-- Tahun Perolehan -->
-    {!! Form::label('tahun_perolehan', 'Tahun Perolehan') !!}
+    {!! Form::label('tahun_perolehan', 'Tahun Perolehan') !!} <span class="text-danger">*</span>
     <div class="input-group">
         
-        {!! Form::text('tahun_perolehan', null, ['class' => 'form-control', 'maxlength' => 4]) !!}
+        {!! Form::number('tahun_perolehan', null, ['class' => 'form-control', 'maxlength' => 4, 'required' => true]) !!}
         <div class="input-group-append">
-            <span class="input-group-text text-danger" id="basic-addon2">4 digit (mis: 1998)</span>Fz
+            <span class="input-group-text text-danger" id="basic-addon2">4 digit(mis: 2018)</span>
         </div>
     </div>
 </div>
 
 <!-- Harga Satuan Field -->
 <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
-    {!! Form::label('harga_satuan', 'Harga Satuan:') !!}
+    {!! Form::label('harga_satuan', 'Harga Satuan:') !!} <span class="text-danger">*</span>
     <div class="input-group">
-        <div class="input-group-prepend">1`
+        <div class="input-group-prepend">
             <span class="input-group-text" id="basic-addon1">Rp.</span>
         </div>
-        {!! Form::text('harga_satuan', null, ['class' => 'form-control']) !!}        
+        {!! Form::text('harga_satuan', null, ['class' => 'form-control', 'required' => true]) !!}        
     </div>   
 </div>
 
 
-<!-- <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
-    {!! Form::label('noreg', __("field.noreg")) !!}
-    {!! Form::text('noreg', null, \App\Models\BaseModel::generateValidation('noreg', \App\Models\inventaris::$rules, ['class' => 'form-control'])) !!}
-</div> -->
-
-<!-- Pidopd Field -->
-<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
-    {!! Form::label('pidopd', __("field.pidopd")) !!}
-    {!! Form::select('pidopd', [], null, ['class' => 'form-control form-control-lg']) !!}
+<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpozs($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
+    <div class="row">
+        <div class="col-md-6">
+            {!! Form::label('jumlah', 'Jumlah') !!} <span class="text-danger">*</span>
+            <div class="input-group col-md-12 no-padding mr-2">            
+                {!! Form::number('jumlah',  (isset($inventaris) ? $inventaris->jumlah : 1 ), ['class' => 'form-control', 'max' => 99, 'required' => true]) !!}       
+                <div class="input-group-append">
+                    <span class="input-group-text text-danger" id="basic-addon2">(max: 99)</span>
+                </div> 
+            </div>
+        </div>
+        <div class="col-md-6">
+            {!! Form::label('satuan', 'Satuan') !!} <span class="text-danger">*</span>
+            <div class="input-group col-md-12 no-padding">        
+                {!! Form::select('satuan', [], null, ['class' => 'form-control', 'required' => true]) !!}                
+            </div>
+        </div>
+    </div>
 </div>
 
-<!-- Pidlokasi Field -->
+<!-- Perolehan Field -->
 <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
-    {!! Form::label('pidlokasi',__("field.pidlokasi")) !!}
-    {!! Form::select('pidlokasi',[], null, ['class' => 'form-control form-control-lg']) !!}
+    {!! Form::label('perolehan', __('field.perolehan')) !!} <span class="text-danger">*</span>
+    {!! Form::select('perolehan', \App\Models\BaseModel::$perolehanDs , null, ['class' => 'form-control', 'required' => true]) !!}
+</div>
+
+<!-- Kondisi Field -->
+<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
+    {!! Form::label('kondisi', 'Kondisi:') !!} <span class="text-danger">*</span>
+    {!! Form::select('kondisi',\App\Models\BaseModel::$kondisiDs, null, ['class' => 'form-control', 'required' => true]) !!}
+</div>
+
+<!-- Tgl Sensus Field -->
+<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
+    {!! Form::label('tgl_dibukukan', 'Tgl Dibukukan:') !!}
+    {!! Form::text('tgl_dibukukan', null, ['class' => 'form-control tgl_dibukukan','id'=>'tgl_dibukukan']) !!}
 </div>
 
 
 <!-- Tgl Sensus Field -->
+<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
+    {!! Form::label('tgl_sensus', 'Tgl Sensus:') !!}
+    {!! Form::text('tgl_sensus', null, ['class' => 'form-control tgl_sensus','id'=>'tgl_sensus']) !!}
+</div>
+
+@if (isset($inventaris))
+<div class="form-group col-sm-12 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-12' : 'col-md-12' ?> row">
+    {!! Form::file('filedokumen', ['class' => 'form-control','id'=>'filedokumen', 'name' => 'filedokumen[]', 'multiple' => true]) !!}
+</div>
+</div>
+@endif
+
+<!-- Pidlokasi Field -->
 <!-- <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
-    {!! Form::label('tgl_perolehan', 'Tgl Perolehan:') !!}  
-    <div class="input-group ">
-        {!! Form::text('tgl_perolehan', null, ['class' => 'form-control','id'=>'tgl_perolehan']) !!}
-        <div class="input-group-append">
-            <span class="input-group-text">
-                <span class="fa fa-calendar"></span>
-            </span>
-        </div>
-    </div>
+    {!! Form::label('pidlokasi',__("field.pidlokasi")) !!}
+    {!! Form::select('pidlokasi',[], null, ['class' => 'form-control form-control-lg']) !!}
 </div> -->
+
 
 @section(!isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'scripts' : 'scripts_2')
     <script type="text/javascript">   
@@ -111,7 +139,10 @@
             DataTable: {
                 ajax: {
                     url: $("[base-path]").val() + "/api/barangs/get",
-                    dataSrc: 'data'
+                    dataSrc: 'data',
+                    data: (d) => {
+                        return d
+                    }
                 },
                 columns: [
                     { data: 'nama_rek_aset', title: 'Nama Barang' },
@@ -313,24 +344,26 @@
             },
             theme: 'bootstrap' , 
         })
+        document.getElementByClass
 
-        // $('#tgl_perolehan').datepicker({
-        //     format: "yyyy-mm-dd",
-        //     autoClose: true
-        // }).on('changeDate', function (ev) {
-        //     $(this).datepicker('hide');
-        // });
-
-        $('#tgl_sensus').datepicker({
-            format: "yyyy-mm-dd",
-            autoClose: true
-        }).on('changeDate', function (ev) {
-            $(this).datepicker('hide');
+        new inlineDatepicker(document.getElementsByClassName('tgl_dibukukan'), {
+            format: 'DD-MM-YYYY',
+            buttonClear: true,
         });
+
+        new inlineDatepicker(document.getElementsByClassName('tgl_sensus'), {
+            format: 'DD-MM-YYYY',
+            buttonClear: true,
+        });
+
+        new FileGallery(document.getElementById('filedokumen'), {
+            title: 'File Dokumen'
+        })
     </script>
 
     @if (isset($inventaris))
     <script>
+        App.Helpers.defaultSelect2($('#satuan'), "<?= url('api/satuanbarangs', [$inventaris->satuan]) ?>","id","nama")
         $(".baranglookup").LookupTable().setValAjax("<?= url('api/barangs', [$inventaris->pidbarang]) ?>").then((d) => {
             funcBarangSelect(d)
         })
@@ -338,71 +371,16 @@
     @endif
 @endsection
 
-<!-- Tgl Sensus Field -->
-<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
-    {!! Form::label('tgl_sensus', 'Tgl Sensus:') !!}
-    <div class="input-group ">
-        {!! Form::text('tgl_sensus', null, ['class' => 'form-control','id'=>'tgl_sensus']) !!}
-        <div class="input-group-append">
-            <span class="input-group-text">
-                <span class="fa fa-calendar"></span>
-            </span>
-        </div>
-    </div>
-</div>
 
-<!-- Volume Field -->
-<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
-    {!! Form::label('volume', 'Volume:') !!}
-    {!! Form::number('volume', null, ['class' => 'form-control']) !!}
-</div>
 
-<!-- Pembagi Field -->
-<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
-    {!! Form::label('pembagi', 'Pembagi:') !!}
-    {!! Form::number('pembagi', null, ['class' => 'form-control']) !!}
-</div>
-
-<!-- Satuan Field -->
-<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
-    {!! Form::label('satuan', 'Satuan:') !!}
-    {!! Form::select('satuan', [], null, ['class' => 'form-control']) !!}
-</div>
-
-<!-- Perolehan Field -->
-<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
-    {!! Form::label('perolehan', 'Perolehan:') !!}
-    {!! Form::text('perolehan', null, ['class' => 'form-control']) !!}
-</div>
-
-<!-- Kondisi Field -->
-<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
-    {!! Form::label('kondisi', 'Kondisi:') !!}
-    {!! Form::select('kondisi',\App\Models\BaseModel::$kondisiDs, null, ['class' => 'form-control']) !!}
-</div>
-
-<!-- Lokasi Detil Field -->
-<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
-    {!! Form::label('lokasi_detil', 'Lokasi Detil:') !!}
-    {!! Form::text('lokasi_detil', null, ['class' => 'form-control']) !!}
-</div>
-
-<!-- Umur Ekonomis Field -->
-<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
-    {!! Form::label('umur_ekonomis', 'Umur Ekonomis:') !!}
-    {!! Form::number('umur_ekonomis', null, ['class' => 'form-control']) !!}
-</div>
-
-<!-- Keterangan Field -->
-<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
-    {!! Form::label('keterangan', 'Keterangan:') !!}
-    {!! Form::textarea('keterangan', null, ['class' => 'form-control']) !!}
-</div>
+<div class="form-group btn btn-default">
+    Tampilkan KIB
+</div>  
 
 @if(!isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1)
 <!-- Submit Field -->
 <div class="form-group col-sm-12">
     {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-    <a href="{!! route('barangs.index') !!}" class="btn btn-default">Cancel</a>
+    <a href="{!! route('inventaris.index') !!}" class="btn btn-default">Cancel</a>
 </div>
 @endif
