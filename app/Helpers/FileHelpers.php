@@ -29,4 +29,22 @@ class FileHelpers {
             return "<img src='".$filename."' class='image-preview'/>";
         }
     }
+
+    public static function uploadMultiple($files, $metadatas, $folder, $funcBeforeSave = null) {
+        if($files) {
+            foreach ($files as $key => $value) {
+                $systemUpload = new \App\Models\system_upload();
+                $systemUpload->name = $value->getClientOriginalName();
+                $systemUpload->path = $value->storeAs('public/'. $folder, sha1($value->getClientOriginalName()));
+                $systemUpload->size = $value->getSize();
+                $systemUpload->type = $value->extension();
+                if ($funcBeforeSave != null ) {
+                    $systemUpload = $funcBeforeSave($metadatas, $index, $systemUpload);
+                }
+                
+                $systemUpload->save();
+
+            }
+        }
+    }
 }

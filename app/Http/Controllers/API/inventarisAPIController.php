@@ -9,6 +9,8 @@ use App\Repositories\inventarisRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use Illuminate\Support\Facades\DB;
+use Auth;
 
 /**
  * Class inventarisController
@@ -57,6 +59,8 @@ class inventarisAPIController extends AppBaseController
     {
         $input = $request->all();
 
+        
+
         $inventaris = $this->inventarisRepository->create($input);
 
         return $this->sendResponse($inventaris->toArray(), 'Inventaris saved successfully');
@@ -102,7 +106,29 @@ class inventarisAPIController extends AppBaseController
             return $this->sendError('Inventaris not found');
         }
 
-        $inventaris = $this->inventarisRepository->update($input, $id);
+        DB::beginTransaction();
+        try {
+            $input["dokumen"] = "";
+            $input["foto"] = "";
+            
+            \App\Helpers\FileHelpers::uploadMultiple($request->file('dokumen'), $input, "inventaris", function($metadatas, $index, $systemUpload) {
+                $systemUpload->keterangan = $metadatas['dokumen_metadata_' . $index . '_keterangan'];
+                $systemUpload->uid = $metadatas['dokumen_metadata_' . $index . '_uid'];
+                return $systemUpload;
+            });
+
+            $inventaris = $this->inventarisRepository->update($input, $id);
+            DB::commit();
+
+            return $this->sendResponse($inventaris->toArray(), 'inventaris updated successfully');
+        } catch(\Exception $e) {
+            DB::rollBack();
+
+            return $this->sendError('Failed save data ' . $e->getMessage() . ' '. $e->getLine());
+        }
+        
+
+        
 
         return $this->sendResponse($inventaris->toArray(), 'inventaris updated successfully');
     }

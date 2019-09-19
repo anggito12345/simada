@@ -140,32 +140,7 @@ class inventarisController extends AppBaseController
 
         return view('inventaris.edit')->with('inventaris', $inventaris);
     }
-
-    /**
-     * Update the specified inventaris in storage.
-     *
-     * @param  int              $id
-     * @param UpdateinventarisRequest $request
-     *
-     * @return Response
-     */
-    public function update($id, UpdateinventarisRequest $request)
-    {
-        $inventaris = $this->inventarisRepository->find($id);
-
-        if (empty($inventaris)) {
-            Flash::error('Inventaris not found');
-
-            return redirect(route('inventaris.index'));
-        }
-
-        $inventaris = $this->inventarisRepository->update($request->all(), $id);
-
-        Flash::success('Inventaris updated successfully.');
-
-        return redirect(route('inventaris.index'));
-    }
-
+    
     /**
      * Remove the specified inventaris from storage.
      *

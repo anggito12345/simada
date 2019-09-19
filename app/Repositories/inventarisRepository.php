@@ -48,7 +48,7 @@ class inventarisRepository extends BaseRepository
      * Configure the Model
      **/
     public function model()
-    {
+    {        
         return inventaris::class;
     }
 }

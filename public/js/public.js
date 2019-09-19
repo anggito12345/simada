@@ -666,7 +666,54 @@ function uuidv4() {
       var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
       return v.toString(16);
     });
-  }
+}
+
+function clone(obj) {
+    if (null == obj || "object" != typeof obj) return obj;
+    var copy = obj.constructor();
+    for (var attr in obj) {
+        if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
+    }
+    return copy;
+}
+
+let quantumArray = function(defaultValue) {
+    let valueLocal = []
+
+    if (defaultValue != null) {
+        valueLocal = defaultValue
+    }
+
+    this.changeListener = function(newValue) {        
+    }
+
+    const self = this
+
+    return new Proxy(function(args) {
+        if (args != null) {
+            valueLocal = args
+        }
+        return valueLocal
+    },{
+        apply: function(target, thisArgs, argumentsList) {      
+
+            if(argumentsList[0] != undefined && target() != argumentsList[0]) {
+                target.apply(null, argumentsList)       
+                self.changeListener(target())                          
+            }                                  
+
+            return target()
+        },
+        set: function(target, property, value) {                  
+            if (property == 'subscriber' && typeof value == 'function') {
+                self.changeListener = value
+            }
+        },
+        construct: function(target, argArray) {
+
+        }
+    })
+}
 
   
 let FileGalleryGenerated = 0;
@@ -686,27 +733,23 @@ let FileGallery = function(element, config) {
     const fileTempId = `file-gallery-temp-${FileGalleryGenerated}`
     const ketTempId = `file-gallery-keterangan-${FileGalleryGenerated}`
     const buttonSaveId = `file-gallery-button-${FileGalleryGenerated}`
+    const checkBoxClass = `file-gallery-checkbox-${FileGalleryGenerated}`
+    const checkBoxClassAll = `file-gallery-checkbox-${FileGalleryGenerated}-all`
 
-    var arrayChangeHandler = {
-        get: function(target, property) {          
-          return target[property];
-        },
-        set: function(target, property, value, receiver) {
-          target[property] = value;
-          
-          if (Number.isInteger(value)) { 
-            $(`#${tableId}`).DataTable().clear();
-            $(`#${tableId}`).DataTable().rows.add(target);
-            $(`#${tableId}`).DataTable().draw();
-          }
-
-          return true;
-        }
-    };
+    const refreshDataTable = (items) => {
+        $(`#${tableId}`).DataTable().clear();
+        $(`#${tableId}`).DataTable().rows.add(items);
+        $(`#${tableId}`).DataTable().draw();        
+    }   
     
     this.rawFiles = []     
-    this.fileList = []
-    this.proxyFileList = new Proxy(this.fileList, arrayChangeHandler)   
+    this.fileList = new quantumArray([])
+    this.fileList.subscriber = function(newValue) {
+        refreshDataTable(newValue)        
+    }
+    this.checkedRow = new quantumArray()
+    this.isEdit = false
+    const self = this
 
     const modalContent = `<div class="modal fade" id="${modalId}" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
@@ -742,8 +785,17 @@ let FileGallery = function(element, config) {
 
     $(`#${buttonSaveId}`).click((e) => {
         temp = {}
-        if ($(`#${fileTempId}`)[0].files.length > 0) {
-            let file = $(`#${fileTempId}`)[0].files[0]
+
+        let file = $(`#${fileTempId}`)[0].files[0]
+
+        if (file == undefined && !self.isEdit) {
+            swal.fire({
+                type: 'error',
+                message: 'file tidak boleh kosong'
+            })
+        }
+
+        if (!self.isEdit && $(`#${fileTempId}`)[0].files.length > 0) {            
             temp = {
                 rawFile: file,
                 lastModified: file.lastModified,
@@ -755,10 +807,30 @@ let FileGallery = function(element, config) {
                 uid: uuidv4()
             }
 
-            this.proxyFileList.push(temp)            
+            self.fileList().push(temp)               
+        } else {            
+            let changeValue = {}
+            const index = self.fileList().map((d) => {
+                return d.uid
+            }).indexOf(self.checkedRow()[0].uid)
+
+            if (file != undefined) {
+                changeValue = {
+                    rawFile: file,
+                    lastModified: file.lastModified,
+                    lastModifiedDate: file.lastModifiedDate,
+                    name: file.name,
+                    size: file.size,
+                    type: file.type,
+                }
+            }
+
+            changeValue.keterangan = $(`#${ketTempId}`).val()
+
+            self.fileList()[index] = {...self.fileList()[index], ...changeValue}
         }
 
-        console.log(this.fileList)
+        refreshDataTable(self.fileList())
 
         $(`#${fileTempId}`).val(null)
 
@@ -790,7 +862,41 @@ let FileGallery = function(element, config) {
     const toolEdit = toolAdd.cloneNode(true)
     
     toolAdd.addEventListener('click', () => {
+        self.isEdit = false
+
         $(`#${modalId}`).modal('show')
+    })
+
+    toolEdit.addEventListener('click', () => {
+        if (self.checkedRow().length != 1) {
+            Swal.fire({
+                type: 'info',
+                text: 'Pilih 1 data',
+            })
+            return
+        }
+
+        self.isEdit = true
+
+        $(`#${ketTempId}`).val(self.checkedRow()[0].keterangan)
+        $(`#${modalId}`).modal('show')
+        refreshDataTable(self.fileList())     
+    })
+
+    toolRemove.addEventListener('click', () => {
+
+        cloneFileList = clone(self.fileList())
+        
+        for (let i = 0 ; i < self.checkedRow().length ; i ++) {
+            let checked = self.checkedRow()[i]
+
+            cloneFileList.splice(cloneFileList.map((d) => {
+                return d.uid
+            }).indexOf(checked.uid), 1)
+        }
+
+        self.fileList(cloneFileList)
+        self.checkedRow([])
     })
 
     toolRemove.className = 'fa fa-trash mr-2'
@@ -828,11 +934,38 @@ let FileGallery = function(element, config) {
         columns: [
             {data: 'name', title: 'Dokumen'},
             {data: 'keterangan', title: 'Keterangan'},
+            {title: `<input type='checkbox' class='${checkBoxClassAll}' />`, "render": function ( data, type, full, meta ) {
+                const typeInput = 'checkbox'
+                const checked = self.checkedRow().find((d) => {
+                    return d.uid == full.uid
+                })
+                return `<input type='${typeInput}' ${checked != undefined ? 'checked' : ''} value='1' data-uid='${full.uid}' class='${checkBoxClass}' />`;
+            }}
         ],
         info:     false,
         bLengthChange: false,
         searching: false,
         ordering: false,
+        drawCallback: () => {
+            $(`.${checkBoxClass}`).change((ev) => {
+                
+                if (ev.currentTarget.checked) {
+                    self.checkedRow().push(self.fileList().find((file) => {
+                        return file.uid == ev.currentTarget.getAttribute('data-uid')
+                    }))
+                } else {
+                    self.checkedRow().splice(self.checkedRow().map((d) => {
+                        return d.uid
+                    }).indexOf(ev.currentTarget.getAttribute('data-uid')), 1)            
+                }        
+            })
+        }
+    })
+
+    
+
+    $(`.${checkBoxClassAll}`).click((ev) => {
+        $(`.${checkBoxClass}`).prop('checked', ev.currentTarget.checked)
     })
 
     FileGalleryGenerated++

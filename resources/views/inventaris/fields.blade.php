@@ -87,8 +87,11 @@
 
 @if (isset($inventaris))
 <div class="form-group col-sm-12 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-12' : 'col-md-12' ?> row">
-    {!! Form::file('filedokumen', ['class' => 'form-control','id'=>'filedokumen', 'name' => 'filedokumen[]', 'multiple' => true]) !!}
+    {!! Form::file('dokumen', ['class' => 'form-control','id'=>'dokumen', 'name' => 'dokumen[]', 'multiple' => true]) !!}
 </div>
+
+<div class="form-group col-sm-12 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-12' : 'col-md-12' ?> row">
+    {!! Form::file('foto', ['class' => 'form-control','id'=>'foto', 'name' => 'foto[]', 'multiple' => true]) !!}
 </div>
 @endif
 
@@ -344,7 +347,6 @@
             },
             theme: 'bootstrap' , 
         })
-        document.getElementByClass
 
         new inlineDatepicker(document.getElementsByClassName('tgl_dibukukan'), {
             format: 'DD-MM-YYYY',
@@ -356,9 +358,14 @@
             buttonClear: true,
         });
 
-        new FileGallery(document.getElementById('filedokumen'), {
+        var fileGallery = new FileGallery(document.getElementById('dokumen'), {
             title: 'File Dokumen'
         })
+
+        var foto = new FileGallery(document.getElementById('foto'), {
+            title: 'Foto'
+        })
+        
     </script>
 
     @if (isset($inventaris))
@@ -366,6 +373,39 @@
         App.Helpers.defaultSelect2($('#satuan'), "<?= url('api/satuanbarangs', [$inventaris->satuan]) ?>","id","nama")
         $(".baranglookup").LookupTable().setValAjax("<?= url('api/barangs', [$inventaris->pidbarang]) ?>").then((d) => {
             funcBarangSelect(d)
+        })
+        const form = document.querySelector('#form-inventaris')
+        form.addEventListener('submit', (ev) => {
+            ev.preventDefault()
+
+            let formData = new FormData($('#form-inventaris')[0])
+            
+            fileGallery.fileList().forEach((d, index) => {
+                formData.append('dokumen[]', d.rawFile)
+
+                delete d.rawFile;
+
+                let keys = Object.keys(d)
+
+                keys.forEach((key) => {
+                    formData.append(`dokumen_metadata_${index}_${key}[]`, d[key])
+                })
+                
+                return d.rawFile
+            })
+
+            foto.fileList().forEach((d) => {
+                formData.append('foto[]', d.rawFile)
+                return d.rawFile
+            })
+            
+            $.ajax({
+                method: 'POST',
+                url: "<?= url('api/inventaris', [$inventaris->id]) ?>",
+                data: formData,
+                processData: false,
+                contentType: false,
+            })
         })
     </script>
     @endif

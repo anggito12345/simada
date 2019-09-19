@@ -122,4 +122,7 @@
             <a href="{!! route('users.index') !!}"><i class="fa fa-users"></i><span>Users</span></a>
         </li>
     </ul>
+</li><li class="{{ Request::is('systemUploads*') ? 'active' : '' }}">
+    <a href="{!! route('systemUploads.index') !!}"><i class="fa fa-edit"></i><span>System Uploads</span></a>
 </li>
+

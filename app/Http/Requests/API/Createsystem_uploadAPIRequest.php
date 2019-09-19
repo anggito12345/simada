@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\API;
 
-use Illuminate\Foundation\Http\FormRequest;
-use App\Models\inventaris;
+use App\Models\system_upload;
+use InfyOm\Generator\Request\APIRequest;
 
-class UpdateinventarisRequest extends FormRequest
+class Createsystem_uploadAPIRequest extends APIRequest
 {
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -25,7 +24,6 @@ class UpdateinventarisRequest extends FormRequest
      */
     public function rules()
     {
-        // return inventaris::$rules;
-        return [];
+        return system_upload::$rules;
     }
 }

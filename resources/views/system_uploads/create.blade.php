@@ -1,17 +1,20 @@
 @extends('layouts.app')
 
 @section('content')
+    <section class="content-header">
+        <h1>
+            System Upload
+        </h1>
+    </section>
     <div class="content">
         @include('adminlte-templates::common.errors')
         <div class="box box-primary">
-            <div class="box-header bg-blue">
-                Baru
-            </div>
-            <div class="box-body">
-                <div class="">
-                    {!! Form::open(['route' => 'inventaris.store', 'id' => 'form-inventaris']) !!}
 
-                        @include('inventaris.fields')
+            <div class="box-body">
+                <div class="row">
+                    {!! Form::open(['route' => 'systemUploads.store']) !!}
+
+                        @include('system_uploads.fields')
 
                     {!! Form::close() !!}
                 </div>

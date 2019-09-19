@@ -9,7 +9,7 @@
             </div>
            <div class="box-body">
                <div class="">
-                   {!! Form::model($inventaris, ['route' => ['inventaris.update', $inventaris->id], 'method' => 'patch']) !!}
+                   {!! Form::model($inventaris, ['route' => ['inventaris.update', $inventaris->id], 'method' => 'patch', 'id' => 'form-inventaris']) !!}
 
                         @include('inventaris.fields')
 

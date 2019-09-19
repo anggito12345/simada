@@ -3,9 +3,9 @@
 namespace App\Http\Requests;
 
 use Illuminate\Foundation\Http\FormRequest;
-use App\Models\inventaris;
+use App\Models\system_upload;
 
-class UpdateinventarisRequest extends FormRequest
+class Updatesystem_uploadRequest extends FormRequest
 {
 
     /**
@@ -25,7 +25,6 @@ class UpdateinventarisRequest extends FormRequest
      */
     public function rules()
     {
-        // return inventaris::$rules;
-        return [];
+        return system_upload::$rules;
     }
 }

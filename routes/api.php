@@ -54,3 +54,5 @@ Route::resource('detilbangunans', 'detilbangunanAPIController');
 Route::resource('statustanahs', 'statustanahAPIController');
 
 Route::resource('detiljalans', 'detiljalanAPIController');
+
+Route::resource('system_uploads', 'system_uploadAPIController');

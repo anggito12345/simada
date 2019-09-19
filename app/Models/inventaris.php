@@ -90,12 +90,12 @@ class inventaris extends Model
      * @var array
      */
     public static $rules = [
-        'harga_satuan' => 'required',
-        'jumlah' => 'required',
-        'satuan' => 'required',
-        'perolehan' => 'required',
-        'kondisi' => 'required',
-        'tahun_perolehan' => 'required'
+        // 'harga_satuan' => 'required',
+        // 'jumlah' => 'required',
+        // 'satuan' => 'required',
+        // 'perolehan' => 'required',
+        // 'kondisi' => 'required',
+        // 'tahun_perolehan' => 'required'
     ];
 
     public function setHargaSatuanAttribute($value)
