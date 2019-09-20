@@ -33,7 +33,13 @@ class system_upload extends Model
         'name',
         'type',
         'size',
-        'path'
+        'path',
+        'keterangan',
+        'jenis',
+        'foreign_field',
+        'foreign_value',
+        'foreign_id',
+        'table'
     ];
 
     /**

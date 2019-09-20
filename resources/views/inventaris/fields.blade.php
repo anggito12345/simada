@@ -87,11 +87,11 @@
 
 @if (isset($inventaris))
 <div class="form-group col-sm-12 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-12' : 'col-md-12' ?> row">
-    {!! Form::file('dokumen', ['class' => 'form-control','id'=>'dokumen', 'name' => 'dokumen[]', 'multiple' => true]) !!}
+    {!! Form::file('dokumen', ['class' => 'form-control','id'=>'dokumen', 'name' => 'dummy', 'multiple' => true]) !!}
 </div>
 
 <div class="form-group col-sm-12 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-12' : 'col-md-12' ?> row">
-    {!! Form::file('foto', ['class' => 'form-control','id'=>'foto', 'name' => 'foto[]', 'multiple' => true]) !!}
+    {!! Form::file('foto', ['class' => 'form-control','id'=>'foto', 'name' => 'dummy', 'multiple' => true]) !!}
 </div>
 @endif
 
@@ -136,7 +136,36 @@
 
             $("[name=kodebarang]").val(appendKode)
         }
+
+        const funcGetDokumenFileList = () => {
+            __ajax({
+                method: 'GET',
+                url: "<?= url('api/system_uploads') ?>",
+                data: {
+                    jenis: 'dokumen',
+                    foreign_field: 'id',
+                    foreign_id: true,
+                    foreign_table: 'inventaris'
+                },
+            }).then((files) => {                
+                fileGallery.fileList(files)
+            }) 
+        }
                   
+        const funcGetFotoFileList = () => {
+            __ajax({
+                method: 'GET',
+                url: "<?= url('api/system_uploads') ?>",
+                data: {
+                    jenis: 'foto',
+                    foreign_field: 'id',
+                    foreign_id: true,
+                    foreign_table: 'inventaris'
+                },
+            }).then((files) => {
+                foto.fileList(files)
+            }) 
+        }
     
         $(".baranglookup").LookupTable({
             DataTable: {
@@ -359,12 +388,60 @@
         });
 
         var fileGallery = new FileGallery(document.getElementById('dokumen'), {
-            title: 'File Dokumen'
+            title: 'File Dokumen',
+            maxSize: 5000000,
+            accept: App.Constant.MimeOffice,
+            onDelete: () => {                
+                return new Promise((resolve, reject) => {
+                    let checkIfIdExist = fileGallery.checkedRow().filter((d) => {
+                        return d.id != undefined
+                    })
+                    if (checkIfIdExist.length < 1) {
+                        resolve(true)
+                        return
+                    }
+                    __ajax({
+                        method: 'DELETE',
+                        url: "<?= url('api/system_uploads') ?>/" + checkIfIdExist.map((d) => {
+                                return d.id
+                            }),
+                    }).then((d) => {
+                        resolve(true)
+                        funcGetDokumenFileList()
+                    })
+                })
+            }
         })
 
         var foto = new FileGallery(document.getElementById('foto'), {
-            title: 'Foto'
+            title: 'Foto',
+            maxSize: 3000000,
+            accept: "image/*",
+            onDelete: () => {                
+                return new Promise((resolve, reject) => {
+                    let checkIfIdExist = foto.checkedRow().filter((d) => {
+                        return d.id != undefined
+                    })
+                    if (checkIfIdExist.length < 1) {
+                        resolve(true)
+                        return
+                    }
+                    __ajax({
+                        method: 'DELETE',
+                        url: "<?= url('api/system_uploads') ?>/" + checkIfIdExist.map((d) => {
+                                return d.id
+                            }),
+                    }).then((d) => {
+                        resolve(true)
+                        funcGetDokumenFileList()
+                    })
+                })
+            }
         })
+
+        // ... please put any starter code here
+        funcGetFotoFileList()
+        funcGetDokumenFileList()
         
     </script>
 
@@ -380,31 +457,56 @@
 
             let formData = new FormData($('#form-inventaris')[0])
             
-            fileGallery.fileList().forEach((d, index) => {
-                formData.append('dokumen[]', d.rawFile)
-
-                delete d.rawFile;
+            for (let index =0 ; index < fileGallery.fileList().length; index ++) {
+                const d = fileGallery.fileList()[index]
+                if (d.rawFile) {
+                    formData.append(`dokumen[${index}]`, d.rawFile)
+                } else {
+                    formData.append(`dokumen[${index}]`, false)
+                }
 
                 let keys = Object.keys(d)
 
                 keys.forEach((key) => {
-                    formData.append(`dokumen_metadata_${index}_${key}[]`, d[key])
-                })
+                    if (key == 'rawFile') {
+                        return
+                    }
+                    formData.append(`dokumen_metadata_${key}[${index}]`, d[key])
+                })                
+                
+                formData.append(`dokumen_metadata_id_inventaris[${index}]`, <?= $inventaris->id ?>)
+            }
+
+            foto.fileList().forEach((d, index) => {
+                if (d.rawFile) {
+                    formData.append(`foto[${index}]`, d.rawFile)
+                } else {
+                    formData.append(`foto[${index}]`, false)
+                }
+
+                let keys = Object.keys(d)
+
+                keys.forEach((key) => {
+                    if (key == 'rawFile') {
+                        return
+                    }
+                    formData.append(`foto_metadata_${key}[${index}]`, d[key])
+                })                
+                
+                formData.append(`foto_metadata_id_inventaris[${index}]`, <?= $inventaris->id ?>)
                 
                 return d.rawFile
             })
-
-            foto.fileList().forEach((d) => {
-                formData.append('foto[]', d.rawFile)
-                return d.rawFile
-            })
             
-            $.ajax({
+            __ajax({
                 method: 'POST',
                 url: "<?= url('api/inventaris', [$inventaris->id]) ?>",
                 data: formData,
                 processData: false,
                 contentType: false,
+            }).then((d) => {
+                funcGetFotoFileList()
+                funcGetDokumenFileList()
             })
         })
     </script>

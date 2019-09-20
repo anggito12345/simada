@@ -55,7 +55,7 @@ class inventaris extends Model
         'umur_ekonomis',
         'keterangan',
         'jumlah',
-        'tgl_dibukukan'
+        'tgl_dibukukan',
     ];
 
     /**

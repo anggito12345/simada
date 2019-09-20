@@ -183,6 +183,8 @@
 </head>
 
 <input type="text" value="<?= url('') ?>" base-path style="display:none" />
+<input type="text" value="<?= Storage::url('') ?>" base-storage style="display:none" />
+<input type="text" value="<?= public_path('') ?>" base-http style="display:none" />
 
 <body class="skin-green-light sidebar-mini">
 @if (!Auth::guest())
@@ -310,8 +312,7 @@
     <script src="<?= url('js/thirdparty/jquery.min.js') ?>"></script>
     <script src="<?= url('js/thirdparty/jquery.mask.min.js') ?>"></script>
 
-    @include('layouts.datatables_js')    
-    <script src="<?= url('js/public.js?key='.sha1(time())) ?>"></script>
+    @include('layouts.datatables_js')        
 
     <script src="<?= url('js/thirdparty/moment.min.js') ?>"></script>
     <script src="<?= url('js/thirdparty/bootstrap.min.js') ?>"></script>
@@ -326,7 +327,7 @@
 
     <script src="<?= url('js/thirdparty/sweetalert2.min.js') ?>"></script>
 
-    
+    <script src="<?= url('js/public.js?key='.sha1(time())) ?>"></script>
     <script>
 
         $.fn.datepicker.defaults.language = 'in'

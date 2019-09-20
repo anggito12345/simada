@@ -1,4 +1,7 @@
 var App = {
+    Constant: {
+        MimeOffice: "application/pdf|application/msword|application/msword|application/vnd.ms-excel"
+    },
     Helpers: {
         defaultSelect2: (select2Ele, url, valueField, textField, callbackDone) => {
         
@@ -668,6 +671,31 @@ function uuidv4() {
     });
 }
 
+function IDGenerator() {
+	 
+    this.length = 50;
+    this.timestamp = +new Date;
+    
+    var _getRandomInt = function( min, max ) {
+       return Math.floor( Math.random() * ( max - min + 1 ) ) + min;
+    }
+    
+    this.generate = function() {
+        var ts = this.timestamp.toString();
+        var parts = ts.split( "" ).reverse();
+        var id = "";
+        
+        for( var i = 0; i < this.length; ++i ) {
+           var index = _getRandomInt( 0, parts.length - 1 );
+           id += parts[index];	 
+        }
+        
+        return id;
+    }
+
+    
+}
+
 function clone(obj) {
     if (null == obj || "object" != typeof obj) return obj;
     var copy = obj.constructor();
@@ -675,6 +703,14 @@ function clone(obj) {
         if (obj.hasOwnProperty(attr)) copy[attr] = obj[attr];
     }
     return copy;
+}
+
+function isPromise(object){
+    if(Promise && Promise.resolve){
+      return Promise.resolve(object) == object;
+    }else{
+      throw "Promise not supported in your environment"
+    }
 }
 
 let quantumArray = function(defaultValue) {
@@ -735,48 +771,98 @@ let FileGallery = function(element, config) {
     const buttonSaveId = `file-gallery-button-${FileGalleryGenerated}`
     const checkBoxClass = `file-gallery-checkbox-${FileGalleryGenerated}`
     const checkBoxClassAll = `file-gallery-checkbox-${FileGalleryGenerated}-all`
+    const iconFontAwesome = {
+        "application/pdf": "fa fa-pdf",
+        "application/msword": "fa fa-word",
+        "image/.*": "fa fa-picture-o",
+        ".*": "fa fa-file"
+    }
+
+    const classEnablePreview = "data-on-preview"
 
     const refreshDataTable = (items) => {
         $(`#${tableId}`).DataTable().clear();
         $(`#${tableId}`).DataTable().rows.add(items);
         $(`#${tableId}`).DataTable().draw();        
     }   
+
+    const previewFile = (full) => {
+        const fontKeys = Object.keys(iconFontAwesome)
+        for (let i = 0; i < fontKeys.length ; i++) {
+            if (full.type.match(new RegExp(fontKeys[i]))) {
+                previewImage = ""
+                if (fontKeys[i] == "image/.*") {
+                    previewImage = classEnablePreview
+                } 
+                return `class="${iconFontAwesome[fontKeys[i]]}" ${previewImage} data-uid="${full.uid}"`
+            }
+        }
+        
+    }
     
     this.rawFiles = []     
     this.fileList = new quantumArray([])
-    this.fileList.subscriber = function(newValue) {
+    this.fileList.subscriber = function(newValue) {        
         refreshDataTable(newValue)        
     }
     this.checkedRow = new quantumArray()
     this.isEdit = false
-    const self = this
+    const self = this        
 
+    let defaultConfig = {
+        title: '',
+        accept: "image/*|application/*",
+        maxSize: 5000000
+    }
+
+    if (config != null) {
+        defaultConfig = Object.assign(defaultConfig, config)
+    }
+    
+    
     const modalContent = `<div class="modal fade" id="${modalId}" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
-      <div class="modal-content">
-        <div class="modal-body">
-            <div class='form-group'>
-                <label>
-                    Dokumen
-                </label>
-                <input type='file' id="${fileTempId}"  class='form-control' />
+        <div class="modal-content">
+            <div class="modal-body">
+                <div class='form-group'>
+                    <label>
+                        Dokumen
+                    </label>
+                    <input type='file' accept="${defaultConfig.accept}" id="${fileTempId}"  class='form-control' />
+                </div>
+                <div class='form-group'>
+                    <label>
+                        Keterangan
+                    </label>
+                    <textarea class='form-control' id='${ketTempId}' />
+                </div>
             </div>
-            <div class='form-group'>
-                <label>
-                    Keterangan
-                </label>
-                <textarea class='form-control' id='${ketTempId}' />
+            <div class="modal-footer">
+            <button type="button" class="btn btn-primary" id="${buttonSaveId}">Simpan</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
             </div>
         </div>
-        <div class="modal-footer">
-          <button type="button" class="btn btn-primary" id="${buttonSaveId}">Simpan</button>
-          <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
         </div>
-      </div>
-    </div>
-  </div>`
+    </div>`
+
+    const modalIdPreview = `modal-file-gallery-preview-${FileGalleryGenerated}`
+    const containerPreviewImage = `file-gallery-preview-container${FileGalleryGenerated}`
+
+    const modalPreview = `<div class="modal fade" id="${modalIdPreview}" tabindex="-1" role="dialog">
+    <div class="modal-dialog" role="document">
+        <div class="modal-content">
+            <div class="modal-body">
+                <img src=""  id="${containerPreviewImage}"/>
+            </div>
+            <div class="modal-footer">            
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+            </div>
+        </div>
+        </div>
+    </div>`
 
     $('body').append(modalContent)
+    $('body').append(modalPreview)
 
 
     $(`#${fileTempId}`).change((e) => {       
@@ -788,10 +874,26 @@ let FileGallery = function(element, config) {
 
         let file = $(`#${fileTempId}`)[0].files[0]
 
+        if (!file.type.match(new RegExp(defaultConfig.accept))) {
+            swal.fire({
+                type: 'error',
+                text: 'type file tidak diperbolehkan'
+            })
+            return
+        }
+
+        if (file.size > defaultConfig.maxSize) {
+            swal.fire({
+                type: 'error',
+                text: `Ukuran file melebihi ukuran maksimal ${(defaultConfig.maxSize/1000000).toFixed(1)} MB`
+            })
+            return
+        }
+
         if (file == undefined && !self.isEdit) {
             swal.fire({
                 type: 'error',
-                message: 'file tidak boleh kosong'
+                text: 'file tidak boleh kosong'
             })
         }
 
@@ -803,8 +905,8 @@ let FileGallery = function(element, config) {
                 name: file.name,
                 size: file.size,
                 type: file.type,
-                keterangan:  $(`#${ketTempId}`).val(),
-                uid: uuidv4()
+                keterangan:  $(`#${ketTempId}`).val() == null ? "" : $(`#${ketTempId}`).val(),
+                uid: new IDGenerator().generate()
             }
 
             self.fileList().push(temp)               
@@ -828,6 +930,8 @@ let FileGallery = function(element, config) {
             changeValue.keterangan = $(`#${ketTempId}`).val()
 
             self.fileList()[index] = {...self.fileList()[index], ...changeValue}
+
+            self.checkedRow()[0] = self.fileList()[index]
         }
 
         refreshDataTable(self.fileList())
@@ -837,14 +941,7 @@ let FileGallery = function(element, config) {
         $(`#${modalId}`).modal('hide')
     })
 
-    defaultConfig = {
-        title: ''
-    }
-
-    if (config != null) {
-        defaultConfig = {...defaultConfig, ...config}
-    }
-  
+    
 
     element.style.display = 'none';
 
@@ -863,7 +960,8 @@ let FileGallery = function(element, config) {
     
     toolAdd.addEventListener('click', () => {
         self.isEdit = false
-
+        $(`#${ketTempId}`).val(null)
+        $(`#${fileTempId}`).val(null)
         $(`#${modalId}`).modal('show')
     })
 
@@ -885,18 +983,52 @@ let FileGallery = function(element, config) {
 
     toolRemove.addEventListener('click', () => {
 
-        cloneFileList = clone(self.fileList())
-        
-        for (let i = 0 ; i < self.checkedRow().length ; i ++) {
-            let checked = self.checkedRow()[i]
+        const deleteFunc = () => {
+            cloneFileList = clone(self.fileList())
+            for (let i = 0 ; i < self.checkedRow().length ; i ++) {
+                let checked = self.checkedRow()[i]
+    
+                cloneFileList.splice(cloneFileList.map((d) => {
+                    return d.uid
+                }).indexOf(checked.uid), 1)
+            }
 
-            cloneFileList.splice(cloneFileList.map((d) => {
-                return d.uid
-            }).indexOf(checked.uid), 1)
+            Swal.fire(
+                'Terhapus!',
+                'File telah berhasil dihapus!',
+                'success'
+            )
+    
+            self.fileList(cloneFileList)
+            self.checkedRow([])
         }
 
-        self.fileList(cloneFileList)
-        self.checkedRow([])
+        Swal.fire({
+            title: 'Anda yakin?',
+            text: "Anda tidak akan bisa mengembalikan file yang telah terhapus",
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Hapus!'
+          }).then((result) => {
+            if (result.value) {
+                if (defaultConfig.onDelete != undefined) {
+                    const returnOnDelete = defaultConfig.onDelete(self.checkedRow())
+        
+                    if (isPromise(returnOnDelete)) {
+                        returnOnDelete.then((resp) => {
+                            if (resp) // true then delete on grid
+                                deleteFunc()
+                        }) 
+                    } else if (returnOnDelete) {
+                        deleteFunc()
+                    }
+                } else {
+                    deleteFunc()
+                }              
+            }
+          })
     })
 
     toolRemove.className = 'fa fa-trash mr-2'
@@ -934,13 +1066,17 @@ let FileGallery = function(element, config) {
         columns: [
             {data: 'name', title: 'Dokumen'},
             {data: 'keterangan', title: 'Keterangan'},
+            {title: `Preview`, "render": function ( data, type, full, meta ) {
+                return `<i ${previewFile(full)}></i>`
+            }},
             {title: `<input type='checkbox' class='${checkBoxClassAll}' />`, "render": function ( data, type, full, meta ) {
                 const typeInput = 'checkbox'
                 const checked = self.checkedRow().find((d) => {
                     return d.uid == full.uid
                 })
                 return `<input type='${typeInput}' ${checked != undefined ? 'checked' : ''} value='1' data-uid='${full.uid}' class='${checkBoxClass}' />`;
-            }}
+            }},
+            
         ],
         info:     false,
         bLengthChange: false,
@@ -959,15 +1095,69 @@ let FileGallery = function(element, config) {
                     }).indexOf(ev.currentTarget.getAttribute('data-uid')), 1)            
                 }        
             })
+
+            $(`[${classEnablePreview}]`).click((ev) => {
+                const uid = ev.target.getAttribute('data-uid')
+                selectedFile = self.fileList().find((file) => {
+                    return file.uid == uid
+                })
+
+                if (selectedFile.path != undefined) {
+                    $(`#${containerPreviewImage}`)[0].src = $("[base-path]").val().replace("public", "storage/") + "app/" + selectedFile.path
+                    $(`#${modalIdPreview}`).modal('show')
+                } else {
+                    readURL(selectedFile.rawFile, $(`#${containerPreviewImage}`))
+                    $(`#${modalIdPreview}`).modal('show')
+                }
+
+            })
         }
     })
 
-    
-
     $(`.${checkBoxClassAll}`).click((ev) => {
         $(`.${checkBoxClass}`).prop('checked', ev.currentTarget.checked)
+        $(`.${checkBoxClass}`).trigger('change')
     })
 
     FileGalleryGenerated++
 
 }
+
+const __ajax = (config) => {
+   
+    const promise = new Promise((resolve,reject) => {
+        let anoErrorFunc = () => {}
+        
+        if (config.error != undefined) {
+            anoErrorFunc = config.error            
+        }
+
+        config.error = (xmlHttpError, textStatus, errorThrown) => {
+            anoErrorFunc(textStatus)  
+            reject(textStatus)       
+            
+            swal.fire({
+                type: 'error',
+                title: textStatus,
+                text: JSON.parse(xmlHttpError.responseText).message,
+            })
+        }
+
+        $.ajax(config).then((d) => {resolve(d.data)})
+    })
+
+    return promise
+}
+
+
+function readURL(file, containerToShow) {
+    if (file) {
+      var reader = new FileReader();
+      
+      reader.onload = function(e) {
+        containerToShow.attr('src', e.target.result);
+      }
+      
+      reader.readAsDataURL(file);
+    }
+  }

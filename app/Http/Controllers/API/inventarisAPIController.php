@@ -106,14 +106,37 @@ class inventarisAPIController extends AppBaseController
             return $this->sendError('Inventaris not found');
         }
 
+        $fileDokumens = [];
+        $fileFotos = [];
+
         DB::beginTransaction();
         try {
-            $input["dokumen"] = "";
-            $input["foto"] = "";
             
-            \App\Helpers\FileHelpers::uploadMultiple($request->file('dokumen'), $input, "inventaris", function($metadatas, $index, $systemUpload) {
-                $systemUpload->keterangan = $metadatas['dokumen_metadata_' . $index . '_keterangan'];
-                $systemUpload->uid = $metadatas['dokumen_metadata_' . $index . '_uid'];
+            $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen', $request, "inventaris", function($metadatas, $index, $systemUpload) {
+                if (isset($metadatas['dokumen_metadata_keterangan'][$index]) && $metadatas['dokumen_metadata_keterangan'][$index] != null) {
+                    $systemUpload->keterangan = $metadatas['dokumen_metadata_keterangan'][$index];
+                }
+                
+                $systemUpload->uid = $metadatas['dokumen_metadata_uid'][$index];             
+                $systemUpload->foreign_field = 'id';
+                $systemUpload->jenis = 'dokumen';
+                $systemUpload->foreign_table = 'inventaris';
+                $systemUpload->foreign_id = $metadatas['dokumen_metadata_id_inventaris'][$index];                
+
+                return $systemUpload;
+            });
+
+
+            $fileFotos = \App\Helpers\FileHelpers::uploadMultiple('foto', $request, "inventaris", function($metadatas, $index, $systemUpload) {
+                if (isset($metadatas['foto_metadata_keterangan'][$index]) && $metadatas['foto_metadata_keterangan'][$index] != null) {
+                    $systemUpload->keterangan = $metadatas['foto_metadata_keterangan'][$index];
+                }
+                $systemUpload->uid = $metadatas['foto_metadata_uid'][$index];             
+                $systemUpload->foreign_field = 'id';
+                $systemUpload->jenis = 'foto';
+                $systemUpload->foreign_table = 'inventaris';
+                $systemUpload->foreign_id = $metadatas['foto_metadata_id_inventaris'][$index];               
+
                 return $systemUpload;
             });
 
@@ -123,13 +146,11 @@ class inventarisAPIController extends AppBaseController
             return $this->sendResponse($inventaris->toArray(), 'inventaris updated successfully');
         } catch(\Exception $e) {
             DB::rollBack();
-
+            \App\Helpers\FileHelpers::deleteAll($fileDokumens);
+            \App\Helpers\FileHelpers::deleteAll($fileFotos);
             return $this->sendError('Failed save data ' . $e->getMessage() . ' '. $e->getLine());
         }
         
-
-        
-
         return $this->sendResponse($inventaris->toArray(), 'inventaris updated successfully');
     }
 

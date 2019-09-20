@@ -34,14 +34,30 @@ class system_uploadAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $systemUploads = $this->systemUploadRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
+        $query = new \App\Models\system_upload();
+        $query = $query->select([
+            'system_upload.*'
+        ]); 
+
+        if (!$request->input('foreign_table')) {
+            return $this->sendError('foreign_table is required');
+        }
+
+        if ($request->input('jenis')) {
+            $query = $query->where('system_upload.jenis', '=', $request->input('jenis'));
+            
+        }
+
+        if ($request->input('foreign_field') && $request->input('foreign_id')) {
+            $query = $query->join($request->input('foreign_table'), $request->input('foreign_table') . '.' . $request->input('foreign_field'), 'system_upload.foreign_id');
+        }
+
+        $systemUploads = $query->get();
 
         return $this->sendResponse($systemUploads->toArray(), 'System Uploads retrieved successfully');
     }
+
+    
 
     /**
      * Store a newly created system_upload in storage.
@@ -117,14 +133,17 @@ class system_uploadAPIController extends AppBaseController
      */
     public function destroy($id)
     {
-        /** @var system_upload $systemUpload */
-        $systemUpload = $this->systemUploadRepository->find($id);
 
-        if (empty($systemUpload)) {
+
+        $ids = explode(",", $id);
+        
+        $systemUploads = \App\Models\system_upload::whereIn('id', $ids)->get();
+
+        \App\Helpers\FileHelpers::deleteAll($systemUploads, true);
+
+        if (empty($systemUploads)) {
             return $this->sendError('System Upload not found');
         }
-
-        $systemUpload->delete();
 
         return $this->sendResponse($id, 'System Upload deleted successfully');
     }
