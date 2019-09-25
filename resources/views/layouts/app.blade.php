@@ -40,6 +40,8 @@
     <link rel="stylesheet" href="<?= url('css/thirdparty/sweetalert2.min.css') ?>">
 
     <link rel="stylesheet" href="<?= url('css/thirdparty/responsive.dataTables.min.css') ?>">
+
+    <link rel="stylesheet" href="<?= url('css/thirdparty/ol.css') ?>">
    
     @include('layouts.datatables_css')
 
@@ -308,7 +310,10 @@
     </div>
     @endif
 
+    <script src="<?= url('js/thirdparty/ol.js') ?>"></script>
+
     <!-- jQuery 3.1.1 -->
+    <script src="<?= url('js/thirdparty/knockout-3.5.0.js') ?>"></script>
     <script src="<?= url('js/thirdparty/jquery.min.js') ?>"></script>
     <script src="<?= url('js/thirdparty/jquery.mask.min.js') ?>"></script>
 
@@ -328,6 +333,9 @@
     <script src="<?= url('js/thirdparty/sweetalert2.min.js') ?>"></script>
 
     <script src="<?= url('js/public.js?key='.sha1(time())) ?>"></script>
+
+    <script src="<?= url('js/app.ko.js?key='.sha1(time())) ?>"></script>
+    <script src="<?= url('js/plugins/inlinedatepicker.plugin.js?key='.sha1(time())) ?>"></script>
     <script>
 
         $.fn.datepicker.defaults.language = 'in'
@@ -381,6 +389,11 @@
     </script>
     @yield('scripts')
     @yield('scripts_2')
+    @include('layouts.pages')
 
+
+    <script>
+        ko.applyBindings(viewModel)
+    </script>
 </body>
 </html>

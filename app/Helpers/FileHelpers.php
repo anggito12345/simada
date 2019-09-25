@@ -59,7 +59,7 @@ class FileHelpers {
             
                 if ($value && $value != "false") {
                     $systemUpload->name = $value->getClientOriginalName();
-                    $systemUpload->path = $value->storeAs('public/'. $folder, sha1(time(). $value->getClientOriginalName()));
+                    $systemUpload->path = $value->storeAs('public/'. $folder, sha1(time(). $value->getClientOriginalName()). uniqid());
                     $systemUpload->size = $value->getSize();
                     $systemUpload->type = $value->getClientMimeType();
                 }
@@ -81,7 +81,11 @@ class FileHelpers {
     }
 
 
-    public static function deleteAll($files, $commited = true) {        
+    public static function deleteAll($files, $commited = true) { 
+        if ($files == null) {
+            return; 
+        }
+
         foreach ($files as $key => $value) {
             # code...
             $systemUpload = null;

@@ -92,11 +92,19 @@ class detiltanah extends Model
         
     ];
 
-
     public function setTglSertifikatAttribute($value)
     {
-        $value = date("Y-m-d", strtotime($value));
-        $this->attributes['tgl_sertifikat'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
+        $value = date("d-m-Y", strtotime($value));
+        $this->attributes['tgl_sertifikat'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
+    }
+
+    public function getTglSertifikatAttribute($value)
+    {
+        if ($value == "") {
+            return date("d/m/Y");
+        }
+
+        return date("d/m/Y", strtotime($value));
     }
 
     public function Inventaris()

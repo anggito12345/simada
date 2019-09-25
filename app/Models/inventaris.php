@@ -4,6 +4,8 @@ namespace App\Models;
 
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Support\Facades\Validator;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class inventaris
@@ -90,13 +92,49 @@ class inventaris extends Model
      * @var array
      */
     public static $rules = [
-        // 'harga_satuan' => 'required',
-        // 'jumlah' => 'required',
-        // 'satuan' => 'required',
-        // 'perolehan' => 'required',
-        // 'kondisi' => 'required',
-        // 'tahun_perolehan' => 'required'
+        'harga_satuan' => 'required',
+        'jumlah' => 'required',
+        'satuan' => 'required',
+        'perolehan' => 'required',
+        'kondisi' => 'required',
+        'tahun_perolehan' => 'required'
     ];
+
+    public static function saveKib($dataKib, $tipe) {
+        $rules = [];
+
+        switch ($tipe) {
+            case 'A':
+                $rules = \App\Models\detiltanah::$rules;
+                $validator = Validator::make($dataKib, $rules);
+
+                if ($validator->fails()) {
+                    throw new \Exception($validator);
+                    return;
+                }
+
+                if (isset($dataKib['pidinventaris']) && $dataKib['pidinventaris'] != null && $dataKib['pidinventaris'] != "") {                    
+                    $exist = DB::table('detil_tanah')->where('pidinventaris', $dataKib['pidinventaris'])->count();
+                    if(is_array($dataKib['koordinattanah'])) {
+                        $dataKib['koordinattanah'] = json_encode($dataKib['koordinattanah']);
+                    }
+                    if ($exist > 0 ) {
+                        DB::table('detil_tanah')->where('pidinventaris', $dataKib['pidinventaris'])->update($dataKib);
+                        break;
+                    }
+                } 
+
+                DB::table('detil_tanah')->insert($dataKib);
+                break;
+            
+            default:
+                break;
+        }
+
+        
+
+
+    }
 
     public function setHargaSatuanAttribute($value)
     {

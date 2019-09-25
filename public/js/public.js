@@ -473,197 +473,6 @@ jQuery.fn.extend({
     }
 })
 
-
-var inlineDatepicker = function(element, config) {
-
-    defaultConfig = {
-        format: 'YYYY-MM-DD',
-        startYear: 2010,
-        formatDefault: 'DD/MM/YYYY',
-        buttonClear: false
-    }
-
-    const monthNames = [
-        'Januari',
-        'Februari',
-        'Maret',
-        'April',
-        'Mei',
-        'Juni',
-        'Juli',
-        'Agustus',
-        'September',
-        'Oktober',
-        'Desember'
-    ]
-
-    if (config != null) {
-        defaultConfig = {...defaultConfig, ...config}
-    }
-    
-    const wrapperElement  = document.createElement('div')
-    wrapperElement.className = 'row col-md-12'
-
-    let classAtItem = 'col-md-4 no-padding'
-
-    if (defaultConfig.buttonClear) {
-        classAtItem = 'col-md-3 no-padding'
-    }
-
-    const wrapperInputElementTemplate = document.createElement('div')
-    wrapperInputElementTemplate.className = classAtItem
-
-    const yearPicker = document.createElement('select')
-    yearPicker.className = 'form-control'
-
-    const monthPicker = yearPicker.cloneNode(true)
-
-    const dayPicker = yearPicker.cloneNode(true)    
-
-    const dayPopulate = (daySelectElement) => {
-        const saveRecentDayPicked = daySelectElement.value;
-
-        daySelectElement.innerHTML = ''        
-
-        const maxDateInYearAndMonth = new Date(yearPicker.value, monthPicker.value, 0).getDate()
-
-        for(let dayStart = 1; dayStart <= maxDateInYearAndMonth; dayStart++) {
-            const dayOption = document.createElement('option')
-            dayOption.appendChild( document.createTextNode(dayStart) );
-            dayOption.value = dayStart;
-
-            daySelectElement.appendChild(dayOption)
-        }
-
-        if (saveRecentDayPicked > maxDateInYearAndMonth) {
-            daySelectElement.value = 1
-        } else {
-            daySelectElement.value = saveRecentDayPicked
-        }
-    }
-    
-    const monthPopulate = (monthSelectElement) => {
-        for(let monthStart = 1; monthStart <= 12; monthStart++) {
-            const monthOption = document.createElement('option')
-            monthOption.appendChild( document.createTextNode(monthNames[monthStart - 1]) );
-            monthOption.value = monthStart;
-
-            monthSelectElement.appendChild(monthOption)
-        }
-    }
-
-    const yearPopulate = (yearSelectElement) => {
-        for(let yearStart = defaultConfig.startYear; yearStart <= new Date().getFullYear(); yearStart++) {
-            const yearOption = document.createElement('option')
-            yearOption.appendChild( document.createTextNode(yearStart) );
-            yearOption.value = yearStart;
-
-            yearSelectElement.appendChild(yearOption)
-        }
-    }
-
-    const pad2 = function(number) {
-        return (number < 10 ? '0' : '') + number
-    }
-
-    const creatingResult = () => {
-        let stringValue = moment(yearPicker.value + "-" + monthPicker.value + "-" + dayPicker.value, "YYYY-MM-DD").format(defaultConfig.format)
-
-        element.value = stringValue
-
-        element.setAttribute('value', stringValue)
-    }
-
-    const attributeJson = function(element) {
-        jsonOutput = {}
-        for(var i = attrs.length - 1; i >= 0; i--) {
-            jsonOutput[attrs[i].name] = attrs[i].value;
-        }
-
-        return jsonOutput
-    }
-    
-    const buildingUi = function(elementUi) {
-        elementUi.style.display = 'none';        
-        
-        // create 4 warpperInputElement
-        const wrapperInputYear = wrapperInputElementTemplate.cloneNode(true)
-        const wrapperInputMonth = wrapperInputElementTemplate.cloneNode(true)
-        const wrapperInputDay = wrapperInputElementTemplate.cloneNode(true)
-        let wrapperButtonClear = null;
-
-        if (defaultConfig.buttonClear) {
-            wrapperButtonClear = wrapperInputElementTemplate.cloneNode(true)
-        }
-
-        wrapperInputYear.appendChild(yearPicker)
-        wrapperInputMonth.appendChild(monthPicker)
-        wrapperInputDay.appendChild(dayPicker)
-
-        if (defaultConfig.buttonClear) {
-            const buttonClear = document.createElement('div')
-            buttonClear.className = 'btn btn-default'
-            buttonClear.textContent = 'Clear'
-            buttonClear.addEventListener('click', (ev) => {
-                yearPicker.value = defaultConfig.startYear
-                monthPicker.value = 1
-                dayPicker.value = 1
-            })
-
-            wrapperButtonClear.appendChild(buttonClear)
-        }
-
-        yearPopulate(yearPicker)
-        monthPopulate(monthPicker)
-        dayPopulate(dayPicker)
-
-        wrapperElement.appendChild(wrapperInputYear)
-        wrapperElement.appendChild(wrapperInputMonth)
-        wrapperElement.appendChild(wrapperInputDay)
-
-        if (defaultConfig.buttonClear) {
-            wrapperElement.appendChild(wrapperButtonClear)
-        }
-        
-        elementUi.parentNode.insertBefore(wrapperElement,elementUi.nextSibling)
-        elementUi.style.display = 'none';
-    }
-
-    if (element.length > 0) {
-        element = element[0]        
-    }
-
-    // initialize event
-    yearPicker.addEventListener('change', (ev) => {
-        dayPopulate(dayPicker)
-
-        creatingResult()
-    })
-
-    monthPicker.addEventListener('change', (ev) => {
-        dayPopulate(dayPicker)
-
-        creatingResult()
-    })
-
-    dayPicker.addEventListener('change', (ev) => {
-        creatingResult()
-    })
-
-    let DateEle = new Date()
-    if (element.value != null && element.value != "" ) {
-        DateEle = moment(element.value,defaultConfig.formatDefault).toDate()
-    }    
-
-    buildingUi(element)
-
-    yearPicker.value = DateEle.getFullYear()
-    monthPicker.value = DateEle.getMonth() + 1
-    dayPicker.value = DateEle.getDate()
-
-    creatingResult()
-}
-
 function uuidv4() {
     return 'xxxxxxxx-xxxx-4xxx-yxxx-xxxxxxxxxxxx'.replace(/[xy]/g, function(c) {
       var r = Math.random() * 16 | 0, v = c == 'x' ? r : (r & 0x3 | 0x8);
@@ -695,6 +504,19 @@ function IDGenerator() {
 
     
 }
+
+function readURL(file, containerToShow) {
+    if (file) {
+      var reader = new FileReader();
+      
+      reader.onload = function(e) {
+        containerToShow.attr('src', e.target.result);
+      }
+      
+      reader.readAsDataURL(file);
+    }
+}
+
 
 function clone(obj) {
     if (null == obj || "object" != typeof obj) return obj;
@@ -1123,6 +945,286 @@ let FileGallery = function(element, config) {
 
 }
 
+let GoogleMapInputIncrement = 1;
+let GoogleMapInput = function(element, config) {
+    const GoogleMapInputCurrentInc = GoogleMapInputIncrement
+    const self = this
+
+    GoogleMapInputIncrement++
+
+    if (element == undefined) {
+        console.error('Error when rendering GoogleMapInput');
+        return false;
+    }
+
+    if (element.length > 0) {
+        element = element[0]        
+    }
+
+    if (!navigator.geolocation) {
+        console.error('Geolocation not supported on this browser!')
+        return false
+    }
+
+    this.defaultConfig = {
+        autoClose: true,
+        draw: false,
+        drawOptions: [
+            'Polygon',
+            'Line'
+        ]
+    }
+
+    let position
+
+    navigator.geolocation.getCurrentPosition((pos) => {
+        position = pos
+
+    })
+
+    if  (config != null) {
+        self.defaultConfig = Object.assign(self.defaultConfig, config)
+    }
+
+    
+
+    new Promise((resolve, reject) => {
+        let TIMEOUT = 10
+        let intervalTicking = setInterval(function() {
+            if (TIMEOUT < 0) {
+                console.error('Oopss please include google map apis javascript')
+                reject(false)
+                clearInterval(intervalTicking)                
+            }
+            if (ol != undefined) {
+                resolve(true)
+                clearInterval(intervalTicking)
+            }
+            TIMEOUT--
+        },1000)
+        
+    }).then(() => {
+        element.style.display = "none"
+
+        
+
+        const containerInputGroup = document.createElement('div')
+        containerInputGroup.className = 'input-group'
+    
+        let inputMaskingElement
+
+        if (!self.defaultConfig.draw) {
+            inputMaskingElement = element.cloneNode(true)
+            inputMaskingElement.style.display = 'block'
+        } else {
+            inputMaskingElement = document.createElement('textarea')
+            inputMaskingElement.style.display = 'block'
+        }
+        
+    
+        const inputGroupAppend = document.createElement('div')
+        inputGroupAppend.className = 'input-group-append'
+    
+        const inputGroupText = document.createElement('div')
+        inputGroupText.className = 'input-group-text'
+        
+        const inputGroupTextButton = document.createElement('i')
+        inputGroupTextButton.className = 'fa fa-globe'
+
+        let selectOption = document.createElement('select')        
+        for (let i = 0 ; i < self.defaultConfig.drawOptions.length; i ++ ) {
+            var drawOption = document.createElement('option')
+            drawOption.appendChild(document.createTextNode(self.defaultConfig.drawOptions[i]))
+            drawOption.value = self.defaultConfig.drawOptions[i]
+            selectOption.appendChild(drawOption)
+        }
+
+        if (!self.defaultConfig.draw) {                        
+            selectOption = null           
+        }
+    
+        this.marker
+        this.markerVectorLayer
+        this.draw
+        this.lastFeature
+
+        inputMaskingElement.disabled = true
+    
+        containerInputGroup.appendChild(inputMaskingElement)
+        inputGroupText.appendChild(inputGroupTextButton)
+        inputGroupAppend.appendChild(inputGroupText)
+        containerInputGroup.appendChild(inputGroupAppend)
+        
+
+        const addInteraction = function() {
+            var value = selectOption.value;
+            if (value !== 'None') {
+              self.draw = new ol.interaction.Draw({
+                source: source,
+                type: value
+              });
+
+              self.draw.on('drawstart', function(ev) {
+
+                if (self.lastFeature)
+                     source.removeFeature(self.lastFeature);
+
+              })
+
+              self.draw.on('drawend', function(ev) {
+
+                ev.feature.setId(new IDGenerator().generate());
+                
+                self.lastFeature = ev.feature
+
+                let format = new ol.format['GeoJSON']()
+
+                setTimeout(() => {
+                    let data = format.writeFeatures(vector.getSource().getFeatures())
+
+                    inputMaskingElement.value = JSON.stringify(data, null, 4)
+                    inputMaskingElement.dispatchEvent(new Event('change'))
+                },1000)
+                
+
+              })
+              self.map.addInteraction(self.draw);
+            }
+        }
+
+        const createLayer = (LonLat) => {
+            self.marker = new ol.Feature({
+                geometry: new ol.geom.Point(
+                  ol.proj.fromLonLat([parseFloat(LonLat[0]),parseFloat(LonLat[1])])
+                ),  // Cordinates of New York's Town Hall
+            });
+
+
+            source.addFeature(self.marker)
+        }
+    
+        inputGroupText.addEventListener('click', (ev) => {            
+            $(`#${modalIdGoogleMap}`).modal('show')
+        })        
+
+        inputMaskingElement.addEventListener('change', (ev) => {
+            element.value = ev.target.value
+            element.dispatchEvent(new Event('change'))
+        })
+    
+        
+        const mapId = `google-map-${GoogleMapInputCurrentInc}`
+        const modalIdGoogleMap = `google-map-id-${GoogleMapInputCurrentInc}`
+        
+        const modalMapPicker = `<div class="modal fade" id="${modalIdGoogleMap}" tabindex="-1" role="dialog">
+        <div class="modal-dialog" role="document">
+            <div class="modal-content">
+                <div class="modal-body">     
+                    <div id='${mapId}' style='width:100%; height:300px'>
+                    </div>           
+                    ${selectOption != null ? selectOption.outerHTML : ''}
+                </div>
+                <div class="modal-footer">            
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                </div>
+            </div>
+            </div>
+        </div>`
+        
+        $('body').append(modalMapPicker)
+
+
+        $(`#${modalIdGoogleMap}`).on('shown.bs.modal', function () {
+            self.map.updateSize();
+
+            if (element.value != "" && element.value != null && !self.defaultConfig.draw) {
+                let splittedValue = element.value.split(",")
+                if (splittedValue.length < 2) {
+                    console.error("doesn't support fomat value!")
+                    return;
+                }
+                
+                self.map.setView(
+                    new ol.View({
+                        center: ol.proj.fromLonLat([parseFloat(splittedValue[0]), parseFloat(splittedValue[1])]),                         
+                        zoom: 12
+                    })
+                );
+
+                if (self.marker != null) {
+                    source.removeFeature(self.marker)
+                }
+                createLayer(splittedValue)
+            } else if (element.value != "" && element.value != null) {
+                // if (self.marker != null) {
+                //     source.removeFeature(self.marker)
+                // }
+
+                let values = JSON.parse(element.value);
+                if (typeof values != 'object') 
+                    values = JSON.parse(values)
+                let coordinatesDraws = []
+                let currentCoord = values.features[0].geometry.coordinates[0]
+                for (let n = 0; n < currentCoord.length; n ++) {
+                    coordinatesDraws.push(ol.proj.transform(currentCoord[n], 'EPSG:4326', 'EPSG:3857'))
+                }
+                let things = new ol.geom.Polygon(
+                    [ values.features[0].geometry.coordinates[0].concat([values.features[0].geometry.coordinates[0][0]]) ]
+                )
+                self.lastFeature = new ol.Feature({
+                    geometry: things
+                })
+                source.addFeature(self.lastFeature)
+            }
+        })
+
+        let raster =  new ol.layer.Tile({
+            source: new ol.source.OSM()
+        })
+    
+        let source = new ol.source.Vector({wrapX: false});
+    
+        let vector = new ol.layer.Vector({
+            source: source
+        });
+
+        this.loadMap = () => {
+            $("#mapId").html('')
+
+            let mapConfig = {
+                target: mapId,
+                layers: [
+                  raster, vector
+                ],
+                view: new ol.View({
+                  center: ol.proj.fromLonLat([position.coords.longitude, position.coords.latitude]),
+                  zoom: 12
+                })
+            }
+        
+            self.map =  new ol.Map(mapConfig);
+    
+            if (!self.defaultConfig.draw) {
+                self.map.on('click', (ev) => {
+                    const coord = ol.proj.transform(ev.coordinate, 'EPSG:3857', 'EPSG:4326');
+                    inputMaskingElement.value = `${coord[0]},${coord[1]}`
+                    inputMaskingElement.dispatchEvent(new Event('change'))
+        
+                    if (self.defaultConfig.autoClose) {
+                        $(`#${modalIdGoogleMap}`).modal('hide')
+                    }
+                })
+            } else {
+                addInteraction()
+            }
+        }
+
+        self.loadMap();
+
+        element.parentNode.insertBefore(containerInputGroup, element.nextSibling)
+    })
+}
+
 const __ajax = (config) => {
    
     const promise = new Promise((resolve,reject) => {
@@ -1143,21 +1245,12 @@ const __ajax = (config) => {
             })
         }
 
-        $.ajax(config).then((d) => {resolve(d.data)})
+        $.ajax(config).then((d) => {
+            resolve(d.data)
+        })
     })
 
     return promise
 }
 
 
-function readURL(file, containerToShow) {
-    if (file) {
-      var reader = new FileReader();
-      
-      reader.onload = function(e) {
-        containerToShow.attr('src', e.target.result);
-      }
-      
-      reader.readAsDataURL(file);
-    }
-  }

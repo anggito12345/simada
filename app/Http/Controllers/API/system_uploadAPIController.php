@@ -44,8 +44,13 @@ class system_uploadAPIController extends AppBaseController
         }
 
         if ($request->input('jenis')) {
-            $query = $query->where('system_upload.jenis', '=', $request->input('jenis'));
-            
+            $query = $query->where('system_upload.jenis', '=', $request->input('jenis'));            
+        }
+
+        if ($request->input('foreign_id')) {
+            $query = $query->where('system_upload.foreign_id', '=', $request->input('foreign_id'));            
+        } else {
+            return $this->sendResponse([], 'System Uploads retrieved successfully');
         }
 
         if ($request->input('foreign_field') && $request->input('foreign_id')) {

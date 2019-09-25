@@ -85,7 +85,6 @@
     {!! Form::text('tgl_sensus', null, ['class' => 'form-control tgl_sensus','id'=>'tgl_sensus']) !!}
 </div>
 
-@if (isset($inventaris))
 <div class="form-group col-sm-12 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-12' : 'col-md-12' ?> row">
     {!! Form::file('dokumen', ['class' => 'form-control','id'=>'dokumen', 'name' => 'dummy', 'multiple' => true]) !!}
 </div>
@@ -93,7 +92,6 @@
 <div class="form-group col-sm-12 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-12' : 'col-md-12' ?> row">
     {!! Form::file('foto', ['class' => 'form-control','id'=>'foto', 'name' => 'dummy', 'multiple' => true]) !!}
 </div>
-@endif
 
 <!-- Pidlokasi Field -->
 <!-- <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
@@ -135,6 +133,14 @@
             }
 
             $("[name=kodebarang]").val(appendKode)
+
+            __ajax({
+                method: 'GET',
+                url: `<?= url('api/jenisbarangs') ?>/${d.kode_jenis}`,
+                dataType: 'json'
+            }).then((response) => {
+                viewModel.data.tipeKib(`KIB ${response.kelompok_kib}`);
+            })
         }
 
         const funcGetDokumenFileList = () => {
@@ -144,8 +150,8 @@
                 data: {
                     jenis: 'dokumen',
                     foreign_field: 'id',
-                    foreign_id: true,
-                    foreign_table: 'inventaris'
+                    foreign_id: <?= isset($inventaris) ? $inventaris->id : 'null' ?>,
+                    foreign_table: 'inventaris',                    
                 },
             }).then((files) => {                
                 fileGallery.fileList(files)
@@ -159,7 +165,7 @@
                 data: {
                     jenis: 'foto',
                     foreign_field: 'id',
-                    foreign_id: true,
+                    foreign_id: <?= isset($inventaris) ? $inventaris->id : 'null' ?>,
                     foreign_table: 'inventaris'
                 },
             }).then((files) => {
@@ -443,14 +449,7 @@
         funcGetFotoFileList()
         funcGetDokumenFileList()
         
-    </script>
 
-    @if (isset($inventaris))
-    <script>
-        App.Helpers.defaultSelect2($('#satuan'), "<?= url('api/satuanbarangs', [$inventaris->satuan]) ?>","id","nama")
-        $(".baranglookup").LookupTable().setValAjax("<?= url('api/barangs', [$inventaris->pidbarang]) ?>").then((d) => {
-            funcBarangSelect(d)
-        })
         const form = document.querySelector('#form-inventaris')
         form.addEventListener('submit', (ev) => {
             ev.preventDefault()
@@ -474,7 +473,7 @@
                     formData.append(`dokumen_metadata_${key}[${index}]`, d[key])
                 })                
                 
-                formData.append(`dokumen_metadata_id_inventaris[${index}]`, <?= $inventaris->id ?>)
+                formData.append(`dokumen_metadata_id_inventaris[${index}]`, <?= isset($inventaris) ? $inventaris->id: 'null' ?>)
             }
 
             foto.fileList().forEach((d, index) => {
@@ -492,32 +491,51 @@
                     }
                     formData.append(`foto_metadata_${key}[${index}]`, d[key])
                 })                
+
                 
-                formData.append(`foto_metadata_id_inventaris[${index}]`, <?= $inventaris->id ?>)
+                
+                formData.append(`foto_metadata_id_inventaris[${index}]`, <?= isset($inventaris) ? $inventaris->id: 'null' ?>)
                 
                 return d.rawFile
             })
             
+            formData.append(`kib`, JSON.stringify(viewModel.data[viewModel.data.tipeKib()]()))
+
             __ajax({
                 method: 'POST',
-                url: "<?= url('api/inventaris', [$inventaris->id]) ?>",
+                url: "<?= url('api/inventaris', isset($inventaris) ? [$inventaris->id] : []) ?>",
                 data: formData,
                 processData: false,
                 contentType: false,
-            }).then((d) => {
-                funcGetFotoFileList()
-                funcGetDokumenFileList()
+            }).then((d, resp) => {
+                swal.fire({
+                    type: "success",
+                    text: "Berhasil menyimpan data!",
+                    onClose: () => {
+                        window.location = `${$('[base-path]').val()}/inventaris`
+                    }
+                })
+                
             })
         })
+    </script>
+
+    @if (isset($inventaris))
+    <script>
+        
+        
+        App.Helpers.defaultSelect2($('#satuan'), "<?= url('api/satuanbarangs', [$inventaris->satuan]) ?>","id","nama")
+        $(".baranglookup").LookupTable().setValAjax("<?= url('api/barangs', [$inventaris->pidbarang]) ?>").then((d) => {
+            viewModel.data.pidinventaris = <?= $inventaris->id ?>;
+            funcBarangSelect(d)
+        })
+        
     </script>
     @endif
 @endsection
 
+@include('inventaris.formkib')
 
-
-<div class="form-group btn btn-default">
-    Tampilkan KIB
-</div>  
 
 @if(!isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1)
 <!-- Submit Field -->

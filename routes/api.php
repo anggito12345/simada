@@ -19,6 +19,8 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('/barangs/get', 'barangAPIController@lookup');
 
+Route::get('/detiltanahsget/{pidinventaris}', 'detiltanahAPIController@byinventaris');
+
 Route::resource('barangs', 'barangAPIController');
 
 Route::resource('organisasis', 'organisasiAPIController');

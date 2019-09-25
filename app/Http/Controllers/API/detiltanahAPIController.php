@@ -26,6 +26,20 @@ class detiltanahAPIController extends AppBaseController
     }
 
     /**
+     * Display a list detiltanah by pidinventaris.
+     * GET|HEAD /detiltanahs
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function byinventaris($pidinvetaris)
+    {
+        $detiltanahs = \App\Models\detiltanah::where('pidinventaris', $pidinvetaris)->first();
+
+        return $this->sendResponse($detiltanahs, 'Detiltanahs retrieved successfully');
+    }
+
+    /**
      * Display a listing of the detiltanah.
      * GET|HEAD /detiltanahs
      *
