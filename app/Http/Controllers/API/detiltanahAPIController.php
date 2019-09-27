@@ -34,7 +34,9 @@ class detiltanahAPIController extends AppBaseController
      */
     public function byinventaris($pidinvetaris)
     {
-        $detiltanahs = \App\Models\detiltanah::where('pidinventaris', $pidinvetaris)->first();
+
+
+        $detiltanahs = \App\Models\detiltanah::where(['pidinventaris' => $pidinvetaris])->first();
 
         return $this->sendResponse($detiltanahs, 'Detiltanahs retrieved successfully');
     }

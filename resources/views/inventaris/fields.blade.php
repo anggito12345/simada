@@ -136,7 +136,7 @@
 
             __ajax({
                 method: 'GET',
-                url: `<?= url('api/jenisbarangs') ?>/${d.kode_jenis}`,
+                url: `<?= url('api/jenisbarangsget/getbykode') ?>/${d.kode_jenis}`,
                 dataType: 'json'
             }).then((response) => {
                 viewModel.data.tipeKib(`KIB ${response.kelompok_kib}`);
@@ -500,6 +500,7 @@
             })
             
             formData.append(`kib`, JSON.stringify(viewModel.data[viewModel.data.tipeKib()]()))
+            formData.append('tipe_kib', viewModel.data.tipeKib().replace(/KIB /g,""))
 
             __ajax({
                 method: 'POST',

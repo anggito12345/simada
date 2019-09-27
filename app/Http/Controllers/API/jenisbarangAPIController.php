@@ -60,6 +60,27 @@ class jenisbarangAPIController extends AppBaseController
         return $this->sendResponse($jenisbarang->toArray(), 'Jenisbarang saved successfully');
     }
 
+
+    /**
+     * Display the specified jenisbarang.
+     * GET|HEAD /jenisbarangsget/getbykode/{id}
+     *
+     * @param int $id
+     *
+     * @return Response
+     */
+    public function getbykode($id)
+    {
+        /** @var jenisbarang $jenisbarang */
+        $jenisbarang = \App\models\jenisbarang::where('kode', $id)->first();
+
+        if (empty($jenisbarang)) {
+            return $this->sendError('Jenisbarang not found');
+        }
+
+        return $this->sendResponse($jenisbarang->toArray(), 'Jenisbarang retrieved successfully');
+    }
+
     /**
      * Display the specified jenisbarang.
      * GET|HEAD /jenisbarangs/{id}

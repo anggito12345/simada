@@ -42,7 +42,11 @@
     <link rel="stylesheet" href="<?= url('css/thirdparty/responsive.dataTables.min.css') ?>">
 
     <link rel="stylesheet" href="<?= url('css/thirdparty/ol.css') ?>">
+
+    <script src="<?= url('js/thirdparty/knockout-3.5.0.js') ?>"></script>
    
+    <script src="<?= url('js/app.ko.js?key='.sha1(time())) ?>"></script>
+
     @include('layouts.datatables_css')
 
     @yield('css')
@@ -313,7 +317,7 @@
     <script src="<?= url('js/thirdparty/ol.js') ?>"></script>
 
     <!-- jQuery 3.1.1 -->
-    <script src="<?= url('js/thirdparty/knockout-3.5.0.js') ?>"></script>
+    
     <script src="<?= url('js/thirdparty/jquery.min.js') ?>"></script>
     <script src="<?= url('js/thirdparty/jquery.mask.min.js') ?>"></script>
 
@@ -334,7 +338,7 @@
 
     <script src="<?= url('js/public.js?key='.sha1(time())) ?>"></script>
 
-    <script src="<?= url('js/app.ko.js?key='.sha1(time())) ?>"></script>
+    
     <script src="<?= url('js/plugins/inlinedatepicker.plugin.js?key='.sha1(time())) ?>"></script>
     <script>
 
@@ -392,8 +396,9 @@
     @include('layouts.pages')
 
 
-    <script>
+    <script>        
         ko.applyBindings(viewModel)
+        
     </script>
 </body>
 </html>

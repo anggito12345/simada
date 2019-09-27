@@ -19,7 +19,13 @@ Route::middleware('auth:api')->get('/user', function (Request $request) {
 
 Route::get('/barangs/get', 'barangAPIController@lookup');
 
-Route::get('/detiltanahsget/{pidinventaris}', 'detiltanahAPIController@byinventaris');
+Route::get('/detilkibaget/{pidinventaris}', 'detiltanahAPIController@byinventaris');
+Route::get('/detilkibbget/{pidinventaris}', 'detilmesinAPIController@byinventaris');
+Route::get('/detilkibcget/{pidinventaris}', 'detilbangunanAPIController@byinventaris');
+
+
+Route::get('/jenisbarangsget/getbykode/{id}', 'jenisbarangAPIController@getbykode');
+
 
 Route::resource('barangs', 'barangAPIController');
 

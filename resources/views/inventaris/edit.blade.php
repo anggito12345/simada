@@ -17,5 +17,9 @@
                </div>
            </div>
        </div>
+       <?php 
+            $idPostfix = rand(1, 1000000)."ajax";
+        ?>
+       @include('inventaris.modal')
    </div>
 @endsection

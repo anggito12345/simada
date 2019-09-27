@@ -104,8 +104,10 @@
 @endif
 
 
-@section(strpos($idPostfix, 'non-ajax') > -1 ? 'scripts' : 'scripts_2')
-    <script type="text/javascript">       
+<script type="text/javascript"> 
+    
+    viewModel.jsLoaded.subscribe((newVal) => {    
+        // document is ready. Do your stuff here
         const googleMapKoordinatLokasi = new GoogleMapInput(document.getElementById('koordinatlokasi'), {})
 
         const mapTanah = new GoogleMapInput(document.getElementById('koordinattanah'), {
@@ -244,62 +246,6 @@
                 $('<?=  "#pidinventaris-".$idPostfix ?>').val("").trigger("change")
             }
         });
-        
+    })
+</script>
 
-        // handler modal section here
-        // this function will available if implement modal section
-        function saveJson() {
-
-            $.ajax({
-                url: "<?= url('api/inventaris') ?>",
-                dataType: "json",
-                method: "POST",
-                data: App.Helpers.getFormData($("#form-modal-inventaris")),
-                success: (response) => {
-                    if (response.success) {
-                        Swal.fire({
-                            type: 'success',
-                            text: 'Data berhasil disimpan',
-                        })
-                    } else {
-                        Swal.fire({
-                            type: 'error',
-                            text: 'Data gagal disimpan',
-                        })
-                    }
-                   
-                    $("#modal-inventaris").modal("hide")
-                },
-                error: (response) => {                    
-                    Swal.fire({
-                        type: 'error',
-                        text: 'Data gagal disimpan',
-                    })
-                }
-            })
-        }
-    </script>
-    @if (isset($detiltanah))
-    <script>
-        App.Helpers.defaultSelect2($('<?=  "#pidinventaris-".$idPostfix ?>'), "<?= url('api/inventaris', [$detiltanah->pidinventaris]) ?>","id","noreg")
-        App.Helpers.defaultSelect2(
-                $("#idkota"), "<?= url('api/alamats', [$detiltanah->idkota]) ?>",
-                "id",
-                "nama",
-                () => {
-                    App.Helpers.defaultSelect2(
-                        $("#idkecamatan"), 
-                        "<?= url('api/alamats', [$detiltanah->idkecamatan]) ?>",
-                        "id",
-                        "nama",
-                        () => {
-                            App.Helpers.defaultSelect2($("#idkelurahan"), "<?= url('api/alamats', [$detiltanah->idkelurahan]) ?>","id","nama")
-                        }
-                    )
-                }
-            )
-        
-        
-    </script>
-    @endif
-@endsection

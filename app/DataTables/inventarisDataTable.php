@@ -18,7 +18,13 @@ class inventarisDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'inventaris.datatables_actions');
+        return $dataTable
+            ->addColumn('jenis', function($data) {
+                $barang = \App\Models\barang::find($data->pidbarang);
+                $jenisbarang = \App\Models\jenisbarang::where('kode', $barang->kode_jenis)->first();
+                return $jenisbarang->nama . "(".chr(64+$jenisbarang->kode).")";
+            })
+            ->addColumn('action', 'inventaris.datatables_actions');
     }
 
     /**
@@ -29,7 +35,7 @@ class inventarisDataTable extends DataTable
      */
     public function query(inventaris $model)
     {
-        return $model->newQuery();
+        return $model->newQuery()->orderBy('created_at','desc');
     }
 
     /**
@@ -68,7 +74,8 @@ class inventarisDataTable extends DataTable
             'noreg',
             // 'pidbarang',
             // 'pidopd',
-            // 'pidlokasi',            
+            // 'pidlokasi', 
+            'jenis',
             'tgl_sensus',
             'volume',
             // 'pembagi',

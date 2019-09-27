@@ -1,21 +1,15 @@
-<!-- Pidinventaris Field -->
-<div class="form-group col-sm-6 row">
-    {!! Form::label('pidinventaris', __('field.pidinventaris')) !!}
-    {!! Form::select('pidinventaris', [], null, ['class' => 'form-control','id' => 'pidinventaris-'. $idPostfix]) !!}
-</div>
-
 <!-- Konstruksi Field -->
 <div class="form-group col-sm-6 row">
     {!! Form::label('konstruksi', 'Konstruksi:') !!}
-    {!! Form::select('konstruksi', \App\Models\BaseModel::$konstruksiDs, null, ['class' => 'form-control']) !!}
+    {!! Form::select('konstruksi', \App\Models\BaseModel::$konstruksiDs, null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB C"]().konstruksi']) !!}
 </div>
 
 <!-- Bertingkat Field -->
 <div class="form-group col-sm-6 row">
     {!! Form::label('bertingkat', 'Bertingkat:') !!}&nbsp;
     <div class="radio">
-        {!! Form::radio('bertingkat', 1, isset($detilbangunan) ? $detilbangunan->bertingkat == 1 : false) !!} Ya
-        {!! Form::radio('bertingkat', 0, isset($detilbangunan) ? $detilbangunan->bertingkat == 0 : false) !!} Tidak
+        {!! Form::radio('bertingkat', 1, isset($detilbangunan) ? $detilbangunan->bertingkat == 1 : false, ['data-bind' => 'checked: viewModel.data["KIB C"]().bertingkat']) !!} Ya
+        {!! Form::radio('bertingkat', 0, isset($detilbangunan) ? $detilbangunan->bertingkat == 0 : false, ['data-bind' => 'checked: viewModel.data["KIB C"]().bertingkat']) !!} Tidak
     </div>
 </div>
 
@@ -23,62 +17,72 @@
 <div class="form-group col-sm-6 row">
     {!! Form::label('beton', 'Beton:') !!}&nbsp;
     <div class="radio">
-        {!! Form::radio('beton', 1, isset($detilbangunan) ? $detilbangunan->beton == 1 : false) !!} Ya
-        {!! Form::radio('beton', 0, isset($detilbangunan) ? $detilbangunan->beton == 0 : false) !!} Tidak
+        {!! Form::radio('beton', 1, isset($detilbangunan) ? $detilbangunan->beton == 1 : false, ['data-bind' => 'checked: viewModel.data["KIB C"]().beton']) !!} Ya
+        {!! Form::radio('beton', 0, isset($detilbangunan) ? $detilbangunan->beton == 0 : false, ['data-bind' => 'checked: viewModel.data["KIB C"]().beton']) !!} Tidak
     </div>
+</div>
+
+<!-- Luastanah Field -->
+<div class="form-group col-sm-6 row">
+    {!! Form::label('luastanah', 'Luas Total Lantai:') !!}
+    {!! Form::number('luastanah', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB C"]().luastanah']) !!}
+</div>
+
+<!-- Alamat Field -->
+<div class="form-group col-sm-6 row">
+    {!! Form::label('alamat', 'Letak/Alamat:') !!}
+    {!! Form::textarea('alamat', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB C"]().alamat']) !!}
 </div>
 
 <!-- Luasbangunan Field -->
 <div class="form-group col-sm-6 row">
     {!! Form::label('luasbangunan', 'Luas Bangunan:') !!}
-    {!! Form::number('luasbangunan', null, ['class' => 'form-control']) !!}
-</div>
-
-<!-- Alamat Field -->
-<div class="form-group col-sm-6 row">
-    {!! Form::label('alamat', 'Alamat:') !!}
-    {!! Form::textarea('alamat', null, ['class' => 'form-control']) !!}
+    {!! Form::number('luasbangunan', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB C"]().luasbangunan']) !!}
 </div>
 
 <!-- Idkota Field -->
 <div class="form-group col-sm-6 row">
     {!! Form::label('idkota', __('field.idkota')) !!}
-    {!! Form::select('idkota', [], null, ['class' => 'form-control']) !!}
+    {!! Form::select('idkota', [], null, ['class' => 'form-control', 'id' => 'idkota-detilbangunan', 'data-bind' => 'value: viewModel.data["KIB C"]().idkota']) !!}
 </div>
 
 <!-- Idkecamatan Field -->
 <div class="form-group col-sm-6 row">
     {!! Form::label('idkecamatan', __('field.idkecamatan')) !!}
-    {!! Form::select('idkecamatan', [], null, ['class' => 'form-control']) !!}
+    {!! Form::select('idkecamatan', [], null, ['class' => 'form-control', 'id' => 'idkecamatan-detilbangunan', 'data-bind' => 'value: viewModel.data["KIB C"]().idkecamatan']) !!}
 </div>
 
 <!-- Idkelurahan Field -->
 <div class="form-group col-sm-6 row">
     {!! Form::label('idkelurahan', __('field.idkelurahan')) !!}
-    {!! Form::select('idkelurahan', [], null, ['class' => 'form-control']) !!}
+    {!! Form::select('idkelurahan', [], null, ['class' => 'form-control', 'id' => 'idkelurahan-detilbangunan', 'data-bind' => 'value: viewModel.data["KIB C"]().idkelurahan']) !!}
 </div>
 
 <!-- Koordinatlokasi Field -->
 <div class="form-group col-sm-6 row">
     {!! Form::label('koordinatlokasi', 'Koordinat Lokasi:') !!}
-    {!! Form::text('koordinatlokasi', null, ['class' => 'form-control']) !!}
+    {!! Form::text('koordinatlokasi', null, ['class' => 'form-control', 'id' => 'koordinatlokasi-detilbangunan', 'data-bind' => 'value: viewModel.data["KIB C"]().koordinatlokasi']) !!}
 </div>
 
 <!-- Koordinattanah Field -->
 <div class="form-group col-sm-6 row">
     {!! Form::label('koordinattanah', 'Koordinat Tanah:') !!}
-    {!! Form::text('koordinattanah', null, ['class' => 'form-control']) !!}
+    {!! Form::text('koordinattanah', null, ['class' => 'form-control', 'id' => 'koordinattanah-detilbangunan', 'data-bind' => 'value: viewModel.data["KIB C"]().koordinattanah']) !!}
 </div>
 
-<!-- Tgldokumen Field -->
-<div class="form-group col-sm-6 row">
-    {!! Form::label('tgldokumen', 'Tgl Dokumen:') !!}
-    {!! Form::text('tgldokumen', null, ['class' => 'form-control','id'=>'tgldokumen']) !!}
-</div>
 
-@section('scripts')
-    <script type="text/javascript">
-        $('#idkota').select2({
+<script type="text/javascript">
+    viewModel.jsLoaded.subscribe(() => {
+
+        const googleMapKoordinatLokasiBangunan = new GoogleMapInput(document.getElementById('koordinatlokasi-detilbangunan'), {})
+
+        const mapTanahBangunan = new GoogleMapInput(document.getElementById('koordinattanah-detilbangunan'), {
+            draw: true,
+            drawOptions: [
+                'Polygon'
+            ]
+        })
+        $('#idkota-detilbangunan').select2({
             ajax: {
                 url: "<?= url('api/alamats') ?>",
                 dataType: 'json',
@@ -102,12 +106,12 @@
         })
 
 
-        $('#idkota').on('change', function (e) {
-            $("#idkecamatan").val("").trigger("change")
+        $('#idkota-detilbangunan').on('change', function (e) {
+            $("#idkecamatan-detilbangunan").val("").trigger("change")
         });
 
 
-        $('#idkecamatan').select2({
+        $('#idkecamatan-detilbangunan').select2({
             ajax: {
                 url: "<?= url('api/alamats') ?>",
                 dataType: 'json',
@@ -116,7 +120,7 @@
                         q: params.term,                                           
                         addWhere: [
                             "jenis = 'Kecamatan'",
-                            "pid = " + $("#idkota").val()
+                            "pid = " + $("#idkota-detilbangunan").val()
                         ]
                     }                    
 
@@ -132,11 +136,11 @@
             theme: 'bootstrap' ,
         })
 
-        $('#idkecamatan').on('change', function (e) {
-            $("#idkelurahan").val("").trigger("change")
+        $('#idkecamatan-detilbangunan').on('change', function (e) {
+            $("#idkelurahan-detilbangunan").val("").trigger("change")
         });
 
-        $('#idkelurahan').select2({
+        $('#idkelurahan-detilbangunan').select2({
             ajax: {
                 url: "<?= url('api/alamats') ?>",
                 dataType: 'json',
@@ -145,7 +149,7 @@
                         q: params.term,                                           
                         addWhere: [
                             "jenis = 'Kelurahan/Desa'",
-                            "pid = " + $("#idkecamatan").val()
+                            "pid = " + $("#idkecamatan-detilbangunan").val()
                         ]
                     }                    
 
@@ -160,75 +164,7 @@
             },
             theme: 'bootstrap' ,
         })
-
-        $('<?=  "#pidinventaris-".$idPostfix ?>').select2({
-            ajax: {
-                url: "<?= url('api/inventaris') ?>",
-                dataType: 'json',
-                processResults: function (data) {
-
-                    let options = {
-                        id: "-",
-                        text: "<div class='text-gray'>Tambah Inventaris Baru</div>"
-                    }
-                    let id = '<?=  "#pidinventaris-".$idPostfix ?>'
-                    if (id.indexOf("non-ajax") > -1) {
-                        data.data.unshift(options)
-                    }                    
-                    return {
-                        results: data.data
-                    };
-                }
-            },
-            templateResult: function (d) {                 
-                return $("<span>"+d.text+"</span>"); 
-            },
-            templateSelection: function (d) { return $("<span>"+d.text+"</span>"); },
-            theme: 'bootstrap' ,
-        })
-
-        $('<?=  "#pidinventaris-".$idPostfix ?>').on('select2:select', function (e) {
-            var data = e.params.data;
-            if (data.id == "-") {
-                $("#modal-inventaris").modal("show")
-                $('<?=  "#pidinventaris-".$idPostfix ?>').val("").trigger("change")
-            }
-        });
-        
-
-        // handler modal section here
-        // this function will available if implement modal section
-        function saveJson() {
-
-            $.ajax({
-                url: "<?= url('api/inventaris') ?>",
-                dataType: "json",
-                method: "POST",
-                data: App.Helpers.getFormData($("#form-modal-inventaris")),
-                success: (response) => {
-                    if (response.success) {
-                        Swal.fire({
-                            type: 'success',
-                            text: 'Data berhasil disimpan',
-                        })
-                    } else {
-                        Swal.fire({
-                            type: 'error',
-                            text: 'Data gagal disimpan',
-                        })
-                    }
-                    
-                    $("#modal-inventaris").modal("hide")
-                },
-                error: (response) => {                    
-                    Swal.fire({
-                        type: 'error',
-                        text: 'Data gagal disimpan',
-                    })
-                }
-            })
-        }
-
+       
         $('#statustanah').select2({
             ajax: {
                 url: "<?= url('api/statustanahs') ?>",
@@ -257,62 +193,50 @@
             theme: 'bootstrap' , 
         })
 
-        $('#tgldokumen').datepicker({
-            format: "yyyy-mm-dd",
-            autoClose: true
-        }).on('changeDate', function (ev) {
-            $(this).datepicker('hide');
+
+        new inlineDatepicker(document.getElementById('tgldokumen'), {
+            format: 'DD-MM-YYYY',
+            buttonClear: true,
         });
-    </script>
-    @if (isset($detilbangunan))
-    <script>
-        App.Helpers.defaultSelect2($('#statustanah'), "<?= url('api/statustanahs', [$detilbangunan->statustanah]) ?>","id","nama")
-        App.Helpers.defaultSelect2($('#kodetanah'), "<?= url('api/detiltanahs', [$detilbangunan->kodetanah]) ?>","id",["nama_kota",", ", "nama_kecamatan", ", ", "nama_sertifikat"])
-        App.Helpers.defaultSelect2($('<?=  "#pidinventaris-".$idPostfix ?>'), "<?= url('api/inventaris', [$detilbangunan->pidinventaris]) ?>","id","noreg")
-        App.Helpers.defaultSelect2(
-                $("#idkota"), "<?= url('api/alamats', [$detilbangunan->idkota]) ?>",
-                "id",
-                "nama",
-                () => {
-                    App.Helpers.defaultSelect2(
-                        $("#idkecamatan"), 
-                        "<?= url('api/alamats', [$detilbangunan->idkecamatan]) ?>",
-                        "id",
-                        "nama",
-                        () => {
-                            App.Helpers.defaultSelect2($("#idkelurahan"), "<?= url('api/alamats', [$detilbangunan->idkelurahan]) ?>","id","nama")
-                        }
-                    )
-                }
-            )
-        
-        
-    </script>
-    @endif
-@endsection
+    })
+</script>
 
-<!-- Nodokumen Field -->
-<div class="form-group col-sm-6 row">
-    {!! Form::label('nodokumen', 'No Dokumen:') !!}
-    {!! Form::text('nodokumen', null, ['class' => 'form-control']) !!}
-</div>
 
-<!-- Luastanah Field -->
-<div class="form-group col-sm-6 row">
-    {!! Form::label('luastanah', 'Luas Tanah:') !!}
-    {!! Form::number('luastanah', null, ['class' => 'form-control']) !!}
+
+<div class="box box-primary">
+    <div class="box-header bg-blue" >
+        <div class="collapse-toggle" data-toggle="collapse" data-target="#documentdetail" >
+            Dokumen Gedung
+        </div>
+    </div>    
+    <div class="box-body collapse" id="documentdetail">
+        <div class="container">
+            <!-- Tgldokumen Field -->
+            <div class="form-group col-sm-6 row">
+                {!! Form::label('tgldokumen', 'Tgl Dokumen:') !!}
+                {!! Form::text('tgldokumen', null, ['class' => 'form-control','id'=>'tgldokumen', 'data-bind' => 'value: viewModel.data["KIB C"]().tgldokumen']) !!}
+            </div>
+
+            <!-- Nodokumen Field -->
+            <div class="form-group col-sm-6 row">
+                {!! Form::label('nodokumen', 'No Dokumen:') !!}
+                {!! Form::text('nodokumen', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB C"]().nodokumen']) !!}
+            </div>
+        </div>
+        
+    </div>
 </div>
 
 <!-- Statustanah Field -->
 <div class="form-group col-sm-6 row">
     {!! Form::label('statustanah', 'Status Tanah:') !!}
-    {!! Form::select('statustanah', [], null, ['class' => 'form-control']) !!}
+    {!! Form::select('statustanah', [], null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB C"]().statustanah']) !!}
 </div>
 
 <!-- Kodetanah Field -->
 <div class="form-group col-sm-6 row">
     {!! Form::label('kodetanah', 'Kode Tanah:') !!}
-    {!! Form::select('kodetanah', [], null, ['class' => 'form-control']) !!}
+    {!! Form::select('kodetanah', [], null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB C"]().kodetanah']) !!}
 </div>
 
 <!-- Dokumen Field -->
@@ -324,7 +248,7 @@
 <!-- Keterangan Field -->
 <div class="form-group col-sm-6 row">
     {!! Form::label('keterangan', 'Keterangan:') !!}
-    {!! Form::textarea('keterangan', null, ['class' => 'form-control']) !!}
+    {!! Form::textarea('keterangan', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB C"]().keterangan']) !!}
 </div>
 
 <!-- Foto Field -->
@@ -334,7 +258,9 @@
 </div> -->
 
 <!-- Submit Field -->
-<div class="form-group col-sm-12">
-    {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-    <a href="{!! route('detilbangunans.index') !!}" class="btn btn-default">Cancel</a>
-</div>
+@if(!isset($notShowSubmit))
+    <div class="form-group col-sm-12">
+        {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
+        <a href="{!! route('detilbangunans.index') !!}" class="btn btn-default">Cancel</a>
+    </div>
+@endif

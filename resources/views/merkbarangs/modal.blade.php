@@ -13,9 +13,44 @@
         </form>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" onclick="saveJsonMerkBarang()">Save changes</button>
+        <button type="button" class="btn btn-primary" onclick="viewModel.modal.saveJsonMerkBarang()">Save changes</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
       </div>
     </div>
   </div>
 </div>
+
+
+<script>
+  viewModel.jsLoaded.subscribe(() => {
+    viewModel.modal.saveJsonMerkBarang = () => {
+            $.ajax({
+                url: "<?= url('api/merkbarangs') ?>",
+                dataType: "json",
+                method: "POST",
+                data: App.Helpers.getFormData($("#form-modal-merkbarang")),
+                success: (response) => {
+                    if (response.success) {
+                        Swal.fire({
+                            type: 'success',
+                            text: 'Data berhasil disimpan',
+                        })
+                    } else {
+                        Swal.fire({
+                            type: 'error',
+                            text: 'Data gagal disimpan',
+                        })
+                    }
+                    
+                    $("#modal-merkbarang").modal("hide")
+                },
+                error: (response) => {                    
+                    Swal.fire({
+                        type: 'error',
+                        text: 'Data gagal disimpan',
+                    })
+                }
+            })
+        }
+  })
+</script>

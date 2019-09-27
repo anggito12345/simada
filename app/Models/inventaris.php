@@ -126,7 +126,47 @@ class inventaris extends Model
 
                 DB::table('detil_tanah')->insert($dataKib);
                 break;
-            
+            case 'B':
+                $rules = \App\Models\detiltanah::$rules;
+                $validator = Validator::make($dataKib, $rules);
+
+                if ($validator->fails()) {
+                    throw new \Exception($validator);
+                    return;
+                }
+
+                if (isset($dataKib['pidinventaris']) && $dataKib['pidinventaris'] != null && $dataKib['pidinventaris'] != "") {                    
+                    $exist = DB::table('detil_mesin')->where('pidinventaris', $dataKib['pidinventaris'])->count();
+                    
+                    if ($exist > 0 ) {
+                        DB::table('detil_mesin')->where('pidinventaris', $dataKib['pidinventaris'])->update($dataKib);
+                        break;
+                    }
+                } 
+
+                DB::table('detil_mesin')->insert($dataKib);
+            case 'C':
+                $rules = \App\Models\detilbangunan::$rules;
+                $validator = Validator::make($dataKib, $rules);
+
+                if ($validator->fails()) {
+                    throw new \Exception($validator);
+                    return;
+                }
+
+                if (isset($dataKib['pidinventaris']) && $dataKib['pidinventaris'] != null && $dataKib['pidinventaris'] != "") {                    
+                    $exist = DB::table('detil_bangunan')->where('pidinventaris', $dataKib['pidinventaris'])->count();
+                    if(is_array($dataKib['koordinattanah'])) {
+                        $dataKib['koordinattanah'] = json_encode($dataKib['koordinattanah']);
+                    }
+                    if ($exist > 0 ) {
+                        DB::table('detil_bangunan')->where('pidinventaris', $dataKib['pidinventaris'])->update($dataKib);
+                        break;
+                    }
+                } 
+
+                DB::table('detil_bangunan')->insert($dataKib);
+                break;
             default:
                 break;
         }

@@ -26,6 +26,22 @@ class detilmesinAPIController extends AppBaseController
     }
 
     /**
+     * Display a list detilmesin by pidinventaris.
+     * GET|HEAD /detilmesinsget
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function byinventaris($pidinvetaris)
+    {
+
+        $detilmesins = \App\Models\detilmesin::where(['pidinventaris' => $pidinvetaris])->first();
+
+        return $this->sendResponse($detilmesins, 'Detiltanahs retrieved successfully');
+    }
+
+
+    /**
      * Display a listing of the detilmesin.
      * GET|HEAD /detilmesins
      *

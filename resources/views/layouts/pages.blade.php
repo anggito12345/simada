@@ -5,9 +5,14 @@
         $controllerName = explode(".",$controllerName)[0];
     }
     
+    
 ?>
 
 @if($controllerName != "")
     <script src="<?= url('js/pages/'.$controllerName.'.ko.js?key='.sha1(time())) ?>"></script>
 @endif
 
+
+<script>
+    viewModel.jsLoaded(true)
+</script>

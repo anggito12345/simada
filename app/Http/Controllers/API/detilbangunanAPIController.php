@@ -26,6 +26,20 @@ class detilbangunanAPIController extends AppBaseController
     }
 
     /**
+     * Display a list detilbangunan by pidinventaris.
+     * GET|HEAD /detilkibcget
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function byinventaris($pidinvetaris)
+    {     
+        $detilbangunans = \App\Models\detilbangunan::where(['pidinventaris' => $pidinvetaris])->first();
+
+        return $this->sendResponse($detilbangunans, 'detilbangunans retrieved successfully');
+    }
+
+    /**
      * Display a listing of the detilbangunan.
      * GET|HEAD /detilbangunans
      *
