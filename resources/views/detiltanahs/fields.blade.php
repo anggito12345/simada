@@ -45,50 +45,43 @@
     {!! Form::text('koordinattanah', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB A"]().koordinattanah']) !!}
 </div>
 
-<div class="box box-primary">
-    <div class="box-header bg-blue">
-        Status Tanah:
+<u class="col-md-12 no-padding">Status Tanah:</u>
+
+<div class="col-md-12">
+    <!-- Hak Field -->
+    <div class="form-group col-sm-6 row">
+        {!! Form::label('hak', 'Hak:') !!}
+        {!! Form::select('hak', \App\Models\BaseModel::$hakDs, null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB A"]().hak']) !!}
     </div>
-    <div class="box-body">
-        <!-- Hak Field -->
-        <div class="form-group col-sm-6 row">
-            {!! Form::label('hak', 'Hak:') !!}
-            {!! Form::text('hak', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB A"]().hak']) !!}
-        </div>
 
-        <!-- Status Sertifikat Field -->
-        <div class="form-group col-sm-6 row">
-            {!! Form::label('status_sertifikat', 'Status Sertifikat:') !!}
-            {!! Form::select('status_sertifikat',[
-                'Belum Sertifikat' => 'Belum Sertifikat',
-                'Sudah Sertifikat' => 'Sudah Sertifikat',
-            ], null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB A"]().status_sertifikat']) !!}
-        </div>
+    <!-- Status Sertifikat Field -->
+    <div class="form-group col-sm-6 row">
+        {!! Form::label('status_sertifikat', 'Status Sertifikat:') !!}
+        {!! Form::select('status_sertifikat', \App\Models\BaseModel::$sertifikatDs, null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB A"]().status_sertifikat']) !!}
+    </div>
 
-        <!-- Tgl Sertifikat Field -->
-        <div class="form-group col-sm-6 row">
-            {!! Form::label('tgl_sertifikat', 'Tgl Sertifikat:') !!}
-            {!! Form::text('tgl_sertifikat', null, ['class' => 'form-control','id'=>'tgl_sertifikat', 'data-bind' => 'value: viewModel.data["KIB A"]().tgl_sertifikat']) !!}
-        </div>
+    <!-- Tgl Sertifikat Field -->
+    <div class="form-group col-sm-6 row">
+        {!! Form::label('tgl_sertifikat', 'Tgl Sertifikat:') !!}
+        {!! Form::text('tgl_sertifikat', null, ['class' => 'form-control','id'=>'tgl_sertifikat', 'data-bind' => 'value: viewModel.data["KIB A"]().tgl_sertifikat']) !!}
+    </div>
 
-        <!-- Nama Sertifikat Field -->
-        <div class="form-group col-sm-6 row">
-            {!! Form::label('nama_sertifikat', 'Nomor Sertifikat:') !!}
-            {!! Form::text('nama_sertifikat', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB A"]().nama_sertifikat']) !!}
-        </div>
+    <!-- Nama Sertifikat Field -->
+    <div class="form-group col-sm-6 row">
+        {!! Form::label('nama_sertifikat', 'Nomor Sertifikat:') !!}
+        {!! Form::text('nama_sertifikat', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB A"]().nama_sertifikat']) !!}
+    </div>
 
-        <!-- Penggunaan Field -->
-        <div class="form-group col-sm-6 row">
-            {!! Form::label('penggunaan', 'Penggunaan:') !!}
-            {!! Form::text('penggunaan', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB A"]().penggunaan']) !!}
-        </div>
+    <!-- Penggunaan Field -->
+    <div class="form-group col-sm-6 row">
+        {!! Form::label('penggunaan', 'Penggunaan:') !!}
+        {!! Form::text('penggunaan', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB A"]().penggunaan']) !!}
+    </div>
 
-        <!-- Keterangan Field -->
-        <div class="form-group col-sm-6 row">
-            {!! Form::label('keterangan', 'Keterangan:') !!}
-            {!! Form::textarea('keterangan', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB A"]().keterangan']) !!}
-        </div>
-
+    <!-- Keterangan Field -->
+    <div class="form-group col-sm-6 row">
+        {!! Form::label('keterangan', 'Keterangan:') !!}
+        {!! Form::textarea('keterangan', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB A"]().keterangan']) !!}
     </div>
 </div>
 
@@ -204,48 +197,7 @@
             },
             theme: 'bootstrap' ,
         })
-
-
-        $('#tgl_sertifikat').datepicker({
-            format: "yyyy-mm-dd",
-            autoClose: true
-        }).on('changeDate', function (ev) {
-            $(this).datepicker('hide');
-        });
-
-        $('<?=  "#pidinventaris-".$idPostfix ?>').select2({
-            ajax: {
-                url: "<?= url('api/inventaris') ?>",
-                dataType: 'json',
-                processResults: function (data) {
-
-                    let options = {
-                        id: "-",
-                        text: "<div class='text-gray'>Tambah Inventaris Baru</div>"
-                    }
-                    let id = '<?=  "#pidinventaris-".$idPostfix ?>'
-                    if (id.indexOf("non-ajax") > -1) {
-                        data.data.unshift(options)
-                    }                    
-                    return {
-                        results: data.data
-                    };
-                }
-            },
-            templateResult: function (d) {                 
-                return $("<span>"+d.text+"</span>"); 
-            },
-            templateSelection: function (d) { return $("<span>"+d.text+"</span>"); },
-            theme: 'bootstrap' ,
-        })
-
-        $('<?=  "#pidinventaris-".$idPostfix ?>').on('select2:select', function (e) {
-            var data = e.params.data;
-            if (data.id == "-") {
-                $("#modal-inventaris").modal("show")
-                $('<?=  "#pidinventaris-".$idPostfix ?>').val("").trigger("change")
-            }
-        });
+        
     })
 </script>
 

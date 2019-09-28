@@ -4,23 +4,31 @@
     {!! Form::select('konstruksi', \App\Models\BaseModel::$konstruksiDs, null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB C"]().konstruksi']) !!}
 </div>
 
-<!-- Bertingkat Field -->
-<div class="form-group col-sm-6 row">
-    {!! Form::label('bertingkat', 'Bertingkat:') !!}&nbsp;
-    <div class="radio">
-        {!! Form::radio('bertingkat', 1, isset($detilbangunan) ? $detilbangunan->bertingkat == 1 : false, ['data-bind' => 'checked: viewModel.data["KIB C"]().bertingkat']) !!} Ya
-        {!! Form::radio('bertingkat', 0, isset($detilbangunan) ? $detilbangunan->bertingkat == 0 : false, ['data-bind' => 'checked: viewModel.data["KIB C"]().bertingkat']) !!} Tidak
+
+<u class="col-md-12 no-padding">Kontruksi Bangunan</u>
+
+<div class="col-md-12">
+    
+    <!-- Bertingkat Field -->
+    <div class="form-group col-sm-6 row">
+        {!! Form::label('bertingkat', 'Bertingkat:') !!}&nbsp;
+        <div class="radio">
+            {!! Form::radio('bertingkat', 1, isset($detilbangunan) ? $detilbangunan->bertingkat == 1 : false, ['data-bind' => 'checked: viewModel.data["KIB C"]().bertingkat']) !!} Ya
+            {!! Form::radio('bertingkat', 0, isset($detilbangunan) ? $detilbangunan->bertingkat == 0 : false, ['data-bind' => 'checked: viewModel.data["KIB C"]().bertingkat']) !!} Tidak
+        </div>
+    </div>
+
+    <!-- Beton Field -->
+    <div class="form-group col-sm-6 row">
+        {!! Form::label('beton', 'Beton:') !!}&nbsp;
+        <div class="radio">
+            {!! Form::radio('beton', 1, isset($detilbangunan) ? $detilbangunan->beton == 1 : false, ['data-bind' => 'checked: viewModel.data["KIB C"]().beton']) !!} Ya
+            {!! Form::radio('beton', 0, isset($detilbangunan) ? $detilbangunan->beton == 0 : false, ['data-bind' => 'checked: viewModel.data["KIB C"]().beton']) !!} Tidak
+        </div>
     </div>
 </div>
 
-<!-- Beton Field -->
-<div class="form-group col-sm-6 row">
-    {!! Form::label('beton', 'Beton:') !!}&nbsp;
-    <div class="radio">
-        {!! Form::radio('beton', 1, isset($detilbangunan) ? $detilbangunan->beton == 1 : false, ['data-bind' => 'checked: viewModel.data["KIB C"]().beton']) !!} Ya
-        {!! Form::radio('beton', 0, isset($detilbangunan) ? $detilbangunan->beton == 0 : false, ['data-bind' => 'checked: viewModel.data["KIB C"]().beton']) !!} Tidak
-    </div>
-</div>
+
 
 <!-- Luastanah Field -->
 <div class="form-group col-sm-6 row">
@@ -202,28 +210,19 @@
 </script>
 
 
+<u class="col-md-12 no-padding">Dokumen</u>
 
-<div class="box box-primary">
-    <div class="box-header bg-blue" >
-        <div class="collapse-toggle" data-toggle="collapse" data-target="#documentdetail" >
-            Dokumen Gedung
-        </div>
-    </div>    
-    <div class="box-body collapse" id="documentdetail">
-        <div class="container">
-            <!-- Tgldokumen Field -->
-            <div class="form-group col-sm-6 row">
-                {!! Form::label('tgldokumen', 'Tgl Dokumen:') !!}
-                {!! Form::text('tgldokumen', null, ['class' => 'form-control','id'=>'tgldokumen', 'data-bind' => 'value: viewModel.data["KIB C"]().tgldokumen']) !!}
-            </div>
+<div class="col-md-12">
+    <!-- Tgldokumen Field -->
+    <div class="form-group col-sm-6 row">
+        {!! Form::label('tgldokumen', 'Tanggal:') !!}
+        {!! Form::text('tgldokumen', null, ['class' => 'form-control','id'=>'tgldokumen', 'data-bind' => 'value: viewModel.data["KIB C"]().tgldokumen']) !!}
+    </div>
 
-            <!-- Nodokumen Field -->
-            <div class="form-group col-sm-6 row">
-                {!! Form::label('nodokumen', 'No Dokumen:') !!}
-                {!! Form::text('nodokumen', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB C"]().nodokumen']) !!}
-            </div>
-        </div>
-        
+    <!-- Nodokumen Field -->
+    <div class="form-group col-sm-6 row">
+        {!! Form::label('nodokumen', 'Nomor:') !!}
+        {!! Form::text('nodokumen', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB C"]().nodokumen']) !!}
     </div>
 </div>
 

@@ -8,8 +8,8 @@
 8. Ternak diganti aset biologis.
 9. upload gambar dan dokumen ada di KIB A (ditanyakan)
 KIB A :
-10. Pakai/Pengelolaan/Milik
-11. Sertifikat ada/tidak
+10. Pakai/Pengelolaan/Milik *
+11. Sertifikat ada/tidak *
 12. Penggunaan di masterkan
 KIB B :
 13. No Pabrik dihilangkan. *

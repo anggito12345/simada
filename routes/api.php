@@ -22,6 +22,9 @@ Route::get('/barangs/get', 'barangAPIController@lookup');
 Route::get('/detilkibaget/{pidinventaris}', 'detiltanahAPIController@byinventaris');
 Route::get('/detilkibbget/{pidinventaris}', 'detilmesinAPIController@byinventaris');
 Route::get('/detilkibcget/{pidinventaris}', 'detilbangunanAPIController@byinventaris');
+Route::get('/detilkibdget/{pidinventaris}', 'detiljalanAPIController@byinventaris');
+Route::get('/detilkibeget/{pidinventaris}', 'detilasetAPIController@byinventaris');
+Route::get('/detilkibfget/{pidinventaris}', 'detilkonstruksiAPIController@byinventaris');
 
 
 Route::get('/jenisbarangsget/getbykode/{id}', 'jenisbarangAPIController@getbykode');
@@ -64,3 +67,7 @@ Route::resource('statustanahs', 'statustanahAPIController');
 Route::resource('detiljalans', 'detiljalanAPIController');
 
 Route::resource('system_uploads', 'system_uploadAPIController');
+
+Route::resource('detilasets', 'detilasetAPIController');
+
+Route::resource('detilkonstruksis', 'detilkonstruksiAPIController');

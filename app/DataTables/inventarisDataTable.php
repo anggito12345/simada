@@ -8,6 +8,8 @@ use Yajra\DataTables\EloquentDataTable;
 
 class inventarisDataTable extends DataTable
 {
+
+    public $printPreview = "inventaris.print";
     /**
      * Build DataTable class.
      *
@@ -24,6 +26,39 @@ class inventarisDataTable extends DataTable
                 $jenisbarang = \App\Models\jenisbarang::where('kode', $barang->kode_jenis)->first();
                 return $jenisbarang->nama . "(".chr(64+$jenisbarang->kode).")";
             })
+            ->addColumn('kode_barang', function($data) {
+                $barang = \App\Models\barang::find($data->pidbarang);
+                $kode = "";
+                if ($barang->kode_akun != null) {
+                    $kode .= $barang->kode_akun;
+                }
+
+                if ($barang->kode_kelompok != null) {
+                    $kode .= ".".$barang->kode_kelompok;
+                }
+
+                if ($barang->kode_jenis != null) {
+                    $kode .= ".".$barang->kode_jenis;
+                }
+
+                if ($barang->kode_objek != null) {
+                    $kode .= ".".$barang->kode_objek;
+                }
+
+                if ($barang->kode_rincian_objek != null) {
+                    $kode .= ".".$barang->kode_rincian_objek;
+                }
+
+                if ($barang->kode_sub_rincian_objek != null) {
+                    $kode .= ".".$barang->kode_sub_rincian_objek;
+                }
+
+                if ($barang->kode_sub_sub_rincian_objek != null) {
+                    $kode .= ".".$barang->kode_sub_sub_rincian_objek;
+                }
+
+                return $kode;
+            })
             ->addColumn('action', 'inventaris.datatables_actions');
     }
 
@@ -35,7 +70,12 @@ class inventarisDataTable extends DataTable
      */
     public function query(inventaris $model)
     {
-        return $model->newQuery()->orderBy('created_at','desc');
+        return $model->newQuery()
+            ->select([
+                "inventaris.*",
+                "m_barang.nama_rek_aset"
+            ])
+            ->join("m_barang", "m_barang.id", "inventaris.pidbarang");
     }
 
     /**
@@ -50,6 +90,7 @@ class inventarisDataTable extends DataTable
             ->minifiedAjax()
             ->addAction(['width' => '120px', 'printable' => false])
             ->parameters([
+                'drawCallback' => 'function(e) { onLoadDataTable(e) }',
                 'dom'       => 'Bfrtip',
                 'stateSave' => true,
                 'order'     => [[0, 'desc']],
@@ -71,11 +112,16 @@ class inventarisDataTable extends DataTable
     protected function getColumns()
     {
         return [
+            'kode_barang',
             'noreg',
+            'nama_rek_aset' => [
+                'title' => 'Nama/Jenis Barang',
+                'name' => 'm_barang.nama_rek_aset'
+            ],
             // 'pidbarang',
             // 'pidopd',
             // 'pidlokasi', 
-            'jenis',
+            
             'tgl_sensus',
             'volume',
             // 'pembagi',

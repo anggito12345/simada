@@ -113,11 +113,13 @@ class inventaris extends Model
                     return;
                 }
 
+                if(is_array($dataKib['koordinattanah'])) {
+                    $dataKib['koordinattanah'] = json_encode($dataKib['koordinattanah']);
+                }
+
                 if (isset($dataKib['pidinventaris']) && $dataKib['pidinventaris'] != null && $dataKib['pidinventaris'] != "") {                    
                     $exist = DB::table('detil_tanah')->where('pidinventaris', $dataKib['pidinventaris'])->count();
-                    if(is_array($dataKib['koordinattanah'])) {
-                        $dataKib['koordinattanah'] = json_encode($dataKib['koordinattanah']);
-                    }
+                    
                     if ($exist > 0 ) {
                         DB::table('detil_tanah')->where('pidinventaris', $dataKib['pidinventaris'])->update($dataKib);
                         break;
@@ -154,11 +156,13 @@ class inventaris extends Model
                     return;
                 }
 
+                if(is_array($dataKib['koordinattanah'])) {
+                    $dataKib['koordinattanah'] = json_encode($dataKib['koordinattanah']);
+                }
+
                 if (isset($dataKib['pidinventaris']) && $dataKib['pidinventaris'] != null && $dataKib['pidinventaris'] != "") {                    
                     $exist = DB::table('detil_bangunan')->where('pidinventaris', $dataKib['pidinventaris'])->count();
-                    if(is_array($dataKib['koordinattanah'])) {
-                        $dataKib['koordinattanah'] = json_encode($dataKib['koordinattanah']);
-                    }
+                    
                     if ($exist > 0 ) {
                         DB::table('detil_bangunan')->where('pidinventaris', $dataKib['pidinventaris'])->update($dataKib);
                         break;
@@ -167,6 +171,74 @@ class inventaris extends Model
 
                 DB::table('detil_bangunan')->insert($dataKib);
                 break;
+            case 'D':
+                $rules = \App\Models\detiljalan::$rules;
+                $validator = Validator::make($dataKib, $rules);
+
+                if ($validator->fails()) {
+                    throw new \Exception($validator);
+                    return;
+                }
+
+                $dataKib['panjang'] = str_replace('.', '', $dataKib['panjang']);
+                $dataKib['lebar'] = str_replace('.', '', $dataKib['lebar']);
+                $dataKib['luas'] = str_replace('.', '', $dataKib['luas']);
+
+                if (isset($dataKib['pidinventaris']) && $dataKib['pidinventaris'] != null && $dataKib['pidinventaris'] != "") {                    
+                    $exist = DB::table('detil_jalan')->where('pidinventaris', $dataKib['pidinventaris'])->count();
+                    
+                    if ($exist > 0 ) {
+                        DB::table('detil_jalan')->where('pidinventaris', $dataKib['pidinventaris'])->update($dataKib);
+                        break;
+                    }
+                } 
+
+                DB::table('detil_jalan')->insert($dataKib);
+            case 'E':
+                $rules = \App\Models\detiljalan::$rules;
+                $validator = Validator::make($dataKib, $rules);
+
+                if ($validator->fails()) {
+                    throw new \Exception($validator);
+                    return;
+                }
+
+                if (isset($dataKib['pidinventaris']) && $dataKib['pidinventaris'] != null && $dataKib['pidinventaris'] != "") {                    
+                    $exist = DB::table('detil_aset_lainnya')->where('pidinventaris', $dataKib['pidinventaris'])->count();
+                    
+                    if ($exist > 0 ) {
+                        DB::table('detil_aset_lainnya')->where('pidinventaris', $dataKib['pidinventaris'])->update($dataKib);
+                        break;
+                    }
+                } 
+
+                DB::table('detil_aset_lainnya')->insert($dataKib);
+            case 'F':
+                $rules = \App\Models\detilkonstruksi::$rules;
+                $validator = Validator::make($dataKib, $rules);
+
+                if ($validator->fails()) {
+                    throw new \Exception($validator);
+                    return;
+                }
+
+                $dataKib['luasbangunan'] = str_replace('.', '', $dataKib['luasbangunan']);
+
+                if(is_array($dataKib['koordinattanah'])) {
+                    $dataKib['koordinattanah'] = json_encode($dataKib['koordinattanah']);
+                }
+
+                if (isset($dataKib['pidinventaris']) && $dataKib['pidinventaris'] != null && $dataKib['pidinventaris'] != "") {                    
+                    $exist = DB::table('detil_konstruksi')->where('pidinventaris', $dataKib['pidinventaris'])->count();
+                    
+                    
+                    if ($exist > 0 ) {
+                        DB::table('detil_konstruksi')->where('pidinventaris', $dataKib['pidinventaris'])->update($dataKib);
+                        break;
+                    }
+                } 
+
+                DB::table('detil_konstruksi')->insert($dataKib);
             default:
                 break;
         }

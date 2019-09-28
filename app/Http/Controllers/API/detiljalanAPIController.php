@@ -26,6 +26,21 @@ class detiljalanAPIController extends AppBaseController
     }
 
     /**
+     * Display a list detiljalan by pidinventaris.
+     * GET|HEAD /detilkibdsget
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function byinventaris($pidinvetaris)
+    {
+
+        $detiljalans = \App\Models\detiljalan::where(['pidinventaris' => $pidinvetaris])->first();
+
+        return $this->sendResponse($detiljalans, 'Detiljalans retrieved successfully');
+    }
+
+    /**
      * Display a listing of the detiljalan.
      * GET|HEAD /detiljalans
      *

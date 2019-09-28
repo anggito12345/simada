@@ -1,128 +1,240 @@
-<!-- Pidinventaris Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('pidinventaris', 'Pidinventaris:') !!}
-    {!! Form::number('pidinventaris', null, ['class' => 'form-control']) !!}
-</div>
 
 <!-- Konstruksi Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('konstruksi', 'Konstruksi:') !!}
-    {!! Form::text('konstruksi', null, ['class' => 'form-control']) !!}
+    {!! Form::text('konstruksi', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB D"]().konstruksi']) !!}
 </div>
 
 <!-- Panjang Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('panjang', 'Panjang:') !!}
-    {!! Form::number('panjang', null, ['class' => 'form-control']) !!}
+    {!! Form::text('panjang', null, ['class' => 'form-control', 'id' => 'panjang-detiljalan', 'data-bind' => 'value: viewModel.data["KIB D"]().panjang']) !!}    
 </div>
 
 <!-- Lebar Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('lebar', 'Lebar:') !!}
-    {!! Form::number('lebar', null, ['class' => 'form-control']) !!}
+    {!! Form::text('lebar', null, ['class' => 'form-control', 'id' => 'lebar-detiljalan' ,'data-bind' => 'value: viewModel.data["KIB D"]().lebar']) !!}
 </div>
 
 <!-- Luas Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('luas', 'Luas:') !!}
-    {!! Form::number('luas', null, ['class' => 'form-control']) !!}
+    {!! Form::text('luas', null, ['class' => 'form-control', 'id' => 'luas-detiljalan' ,'data-bind' => 'value: viewModel.data["KIB D"]().luas']) !!}
 </div>
 
 <!-- Alamat Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('alamat', 'Alamat:') !!}
-    {!! Form::text('alamat', null, ['class' => 'form-control']) !!}
+    {!! Form::label('alamat', 'Letak/Alamat:') !!}
+    {!! Form::textarea('alamat', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB D"]().alamat']) !!}
 </div>
 
 <!-- Idkota Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('idkota', 'Idkota:') !!}
-    {!! Form::number('idkota', null, ['class' => 'form-control']) !!}
+    {!! Form::label('idkota', 'Kota:') !!}
+    {!! Form::select('idkota',[] , null, ['class' => 'form-control', 'id' => 'idkota-detiljalan', 'data-bind' => 'value: viewModel.data["KIB D"]().idkota']) !!}
 </div>
 
 <!-- Idkecamatan Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('idkecamatan', 'Idkecamatan:') !!}
-    {!! Form::number('idkecamatan', null, ['class' => 'form-control']) !!}
+    {!! Form::label('idkecamatan', 'Kecamatan:') !!}
+    {!! Form::select('idkecamatan', [], null, ['class' => 'form-control', 'id' => 'idkecamatan-detiljalan', 'data-bind' => 'value: viewModel.data["KIB D"]().idkecamatan']) !!}
 </div>
 
 <!-- Idkelurahan Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('idkelurahan', 'Idkelurahan:') !!}
-    {!! Form::number('idkelurahan', null, ['class' => 'form-control']) !!}
+    {!! Form::label('idkelurahan', 'Kelurahan:') !!}
+    {!! Form::select('idkelurahan', [], null, ['class' => 'form-control', 'id' => 'idkelurahan-detiljalan', 'data-bind' => 'value: viewModel.data["KIB D"]().idkelurahan']) !!}
 </div>
 
 <!-- Koordinatlokasi Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('koordinatlokasi', 'Koordinatlokasi:') !!}
-    {!! Form::text('koordinatlokasi', null, ['class' => 'form-control']) !!}
+    {!! Form::text('koordinatlokasi', null, ['class' => 'form-control', 'id' => 'koordinatlokasi-detiljalan', 'data-bind' => 'value: viewModel.data["KIB D"]().koordinatlokasi']) !!}
 </div>
 
 <!-- Koordinattanah Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('koordinattanah', 'Koordinattanah:') !!}
-    {!! Form::text('koordinattanah', null, ['class' => 'form-control']) !!}
+    {!! Form::text('koordinattanah', null, ['class' => 'form-control', 'id' => 'koordinattanah-detiljalan', 'data-bind' => 'value: viewModel.data["KIB D"]().koordinattanah']) !!}
 </div>
 
-<!-- Tgldokumen Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('tgldokumen', 'Tgldokumen:') !!}
-    {!! Form::date('tgldokumen', null, ['class' => 'form-control','id'=>'tgldokumen']) !!}
+<u class="col-md-12">Dokumen</u>
+
+<div class="col-md-12">
+    
+    <!-- Tgldokumen Field -->
+    <div class="form-group col-sm-6">
+        {!! Form::label('tgldokumen', 'Tanggal:') !!}
+        {!! Form::text('tgldokumen', null, ['class' => 'form-control','id'=>'tgldokumen-detiljalan', 'data-bind' => 'value: viewModel.data["KIB D"]().tgldokumen']) !!}
+    </div>
+
+    <!-- Nodokumen Field -->
+    <div class="form-group col-sm-6">
+        {!! Form::label('nodokumen', 'Nomor:') !!}
+        {!! Form::text('nodokumen', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB D"]().nodokumen']) !!}
+    </div>
 </div>
 
-@section('scripts')
-    <script type="text/javascript">
-        $('#tgldokumen').datetimepicker({
-            format: 'YYYY-MM-DD HH:mm:ss',
-            useCurrent: false
-        })
-    </script>
-@endsection
-
-<!-- Nodokumen Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('nodokumen', 'Nodokumen:') !!}
-    {!! Form::text('nodokumen', null, ['class' => 'form-control']) !!}
-</div>
-
-<!-- Luastanah Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('luastanah', 'Luastanah:') !!}
-    {!! Form::text('luastanah', null, ['class' => 'form-control']) !!}
-</div>
 
 <!-- Statustanah Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('statustanah', 'Statustanah:') !!}
-    {!! Form::text('statustanah', null, ['class' => 'form-control']) !!}
+    {!! Form::label('statustanah', 'Status Tanah:') !!}
+    {!! Form::select('statustanah', [], null, ['class' => 'form-control', 'id' => 'statustanah-detiljalan', 'data-bind' => 'value: viewModel.data["KIB D"]().statustanah']) !!}
 </div>
 
 <!-- Kodetanah Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('kodetanah', 'Kodetanah:') !!}
-    {!! Form::text('kodetanah', null, ['class' => 'form-control']) !!}
+    {!! Form::label('kodetanah', 'Kode Tanah:') !!}
+    {!! Form::select('kodetanah', [], null, ['class' => 'form-control', 'id' => 'kodetanah-detiljalan', 'data-bind' => 'value: viewModel.data["KIB D"]().kodetanah']) !!}
 </div>
 
 <!-- Keterangan Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('keterangan', 'Keterangan:') !!}
-    {!! Form::text('keterangan', null, ['class' => 'form-control']) !!}
+    {!! Form::textarea('keterangan', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB D"]().keterangan']) !!}
 </div>
 
-<!-- Dokumen Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('dokumen', 'Dokumen:') !!}
-    {!! Form::text('dokumen', null, ['class' => 'form-control']) !!}
-</div>
-
-<!-- Foto Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('foto', 'Foto:') !!}
-    {!! Form::text('foto', null, ['class' => 'form-control']) !!}
-</div>
 
 <!-- Submit Field -->
+@if(!isset($notShowSubmit))
 <div class="form-group col-sm-12">
     {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
     <a href="{!! route('detiljalans.index') !!}" class="btn btn-default">Cancel</a>
 </div>
+@endif
+
+<script>
+    viewModel.jsLoaded.subscribe(() => {
+
+        const googleMapKoordinatLokasiJalan = new GoogleMapInput(document.getElementById('koordinatlokasi-detiljalan'), {})
+
+        const mapTanahJalan = new GoogleMapInput(document.getElementById('koordinattanah-detiljalan'), {
+            draw: true,
+            drawOptions: [
+                'Polygon'
+            ]
+        })
+
+        $('#panjang-detiljalan').mask("#.##0", {reverse: true});
+        $('#lebar-detiljalan').mask("#.##0", {reverse: true});
+        $('#luas-detiljalan').mask("#.##0", {reverse: true});
+
+        new inlineDatepicker(document.getElementById('tgldokumen-detiljalan'), {
+            format: 'DD-MM-YYYY',
+            buttonClear: true,
+        });
+
+        $('#statustanah-detiljalan').select2({
+            ajax: {
+                url: "<?= url('api/statustanahs') ?>",
+                dataType: 'json',
+                processResults: function (data) {
+                // Transforms the top-level key of the response object from 'items' to 'results'
+                return {
+                    results: data.data
+                };
+                }
+            },
+            theme: 'bootstrap' , 
+        })
+
+        $('#kodetanah-detiljalan').select2({
+            ajax: {
+                url: "<?= url('api/detiltanahs') ?>",
+                dataType: 'json',
+                processResults: function (data) {
+                // Transforms the top-level key of the response object from 'items' to 'results'
+                return {
+                    results: data.data
+                };
+                }
+            },
+            theme: 'bootstrap' , 
+        })
+
+
+        $('#idkota-detiljalan').select2({
+            ajax: {
+                url: "<?= url('api/alamats') ?>",
+                dataType: 'json',
+                data: function (params) {
+                    var query = {
+                        q: params.term,                                           
+                        addWhere: [
+                            "jenis = 'Kota'"
+                        ]
+                    } 
+                    return query;
+                },
+                processResults: function (data) {
+                    // Transforms the top-level key of the response object from 'items' to 'results'
+                    return {
+                        results: data.data
+                    };
+                }
+            },
+            theme: 'bootstrap' ,
+        })
+
+
+        $('#idkota-detiljalan').on('change', function (e) {
+            $("#idkecamatan-detiljalan").val("").trigger("change")
+        });
+
+
+        $('#idkecamatan-detiljalan').select2({
+            ajax: {
+                url: "<?= url('api/alamats') ?>",
+                dataType: 'json',
+                data: function (params) {
+                    var query = {
+                        q: params.term,                                           
+                        addWhere: [
+                            "jenis = 'Kecamatan'",
+                            "pid = " + $("#idkota-detiljalan").val()
+                        ]
+                    }                    
+
+                    return query;
+                },
+                processResults: function (data) {
+                    // Transforms the top-level key of the response object from 'items' to 'results'
+                    return {
+                        results: data.data
+                    };
+                }
+            },
+            theme: 'bootstrap' ,
+        })
+
+        $('#idkecamatan-detiljalan').on('change', function (e) {
+            $("#idkelurahan-detiljalan").val("").trigger("change")
+        });
+
+        $('#idkelurahan-detiljalan').select2({
+            ajax: {
+                url: "<?= url('api/alamats') ?>",
+                dataType: 'json',
+                data: function (params) {
+                    var query = {
+                        q: params.term,                                           
+                        addWhere: [
+                            "jenis = 'Kelurahan/Desa'",
+                            "pid = " + $("#idkecamatan-detiljalan").val()
+                        ]
+                    }                    
+
+                    return query;
+                },
+                processResults: function (data) {
+                    // Transforms the top-level key of the response object from 'items' to 'results'
+                    return {
+                        results: data.data
+                    };
+                }
+            },
+            theme: 'bootstrap' ,
+        })
+    })
+</script>

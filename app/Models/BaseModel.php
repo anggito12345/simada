@@ -53,6 +53,16 @@ class BaseModel extends Model {
         '0' => 'Tidak'
     ];
 
+    public static $sertifikatDs = [
+        'Ada' => 'Ada',
+        'Tidak Ada' => 'Tidak Ada',
+    ];
+
+    public static $hakDs = [
+        'Pakai' => 'Pakai',
+        'Pengelolaan' => 'Pengelolaan',
+        'Milik' => 'Milik',
+    ];
 
     public static $kondisiDs = [
         'Baik' => 'Baik',

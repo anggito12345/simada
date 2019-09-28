@@ -60,3 +60,7 @@ Route::resource('statustanahs', 'statustanahController');
 Route::resource('detiljalans', 'detiljalanController');
 
 Route::resource('systemUploads', 'system_uploadController');
+
+Route::resource('detilasets', 'detilasetController');
+
+Route::resource('detilkonstruksis', 'detilkonstruksiController');
