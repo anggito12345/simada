@@ -132,7 +132,7 @@
         "inIndex": true
     },
     {
-        "name": "nama_sertifikat",
+        "name": "nomor_sertifikat",
         "dbType": "string",
         "htmlType": "text",
         "validations": null,

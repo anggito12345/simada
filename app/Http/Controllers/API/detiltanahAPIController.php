@@ -52,7 +52,7 @@ class detiltanahAPIController extends AppBaseController
     {
        
 
-        $fieldText = "concat(al_kota.nama, ', ', al_kecamatan.nama, ', ', detil_tanah.nama_sertifikat)";
+        $fieldText = "concat(al_kota.nama, ', ', al_kecamatan.nama, ', ', detil_tanah.nomor_sertifikat)";
 
         if ($request->__isset("fieldText")) {
             $fieldText = $request->input("fieldText");
@@ -63,10 +63,14 @@ class detiltanahAPIController extends AppBaseController
         ")
         ->leftJoin('m_alamat as al_kota', 'al_kota.id', 'detil_tanah.idkota')
         ->leftJoin('m_alamat as al_kecamatan', 'al_kecamatan.id', 'detil_tanah.idkecamatan')
-        ->leftJoin('inventaris', 'inventaris.id', 'detil_tanah.pidinventaris')
-        ->whereRaw("al_kota.nama like '%".$request->input("q")."%'")
-        ->orWhereRaw("al_kecamatan.nama like '%".$request->input("q")."%'")
-        ->orWhereRaw("nama_sertifikat like '%".$request->input("q")."%'");
+        ->leftJoin('inventaris', 'inventaris.id', 'detil_tanah.pidinventaris');
+        
+
+        if ($request->__isset("q")) {
+            $query = $query->whereRaw("al_kota.nama like '%".$request->input("q")."%'")
+            ->orWhereRaw("al_kecamatan.nama like '%".$request->input("q")."%'")
+            ->orWhereRaw("nomor_sertifikat like '%".$request->input("q")."%'");
+        }
         
 
         if ($request->__isset("addWhere")) {

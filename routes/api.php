@@ -26,6 +26,8 @@ Route::get('/detilkibdget/{pidinventaris}', 'detiljalanAPIController@byinventari
 Route::get('/detilkibeget/{pidinventaris}', 'detilasetAPIController@byinventaris');
 Route::get('/detilkibfget/{pidinventaris}', 'detilkonstruksiAPIController@byinventaris');
 
+Route::post('/mutasiinventaris/{id}', 'inventarisAPIController@mutasi');
+Route::resource('inventaris', 'inventarisAPIController');
 
 Route::get('/jenisbarangsget/getbykode/{id}', 'jenisbarangAPIController@getbykode');
 
@@ -38,7 +40,7 @@ Route::resource('lokasis', 'lokasiAPIController');
 
 Route::resource('satuan_barangs', 'satuan_barangAPIController');
 
-Route::resource('inventaris', 'inventarisAPIController');
+
 
 Route::resource('alamats', 'alamatAPIController');
 

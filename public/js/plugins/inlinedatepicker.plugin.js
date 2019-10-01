@@ -101,7 +101,7 @@ let inlineDatepicker = function(element, config) {
             return
         }
         
-        element.dispatchEvent(new Event('change'))
+        setTimeout(() => {element.dispatchEvent(new Event('change'))}, 1000)
     }
 
     const attributeJson = function(element) {
@@ -191,7 +191,7 @@ let inlineDatepicker = function(element, config) {
         let DateEle = new Date()
         if (element.value != null && element.value != "" ) {
             DateEle = moment(element.value,defaultConfig.formatDefault).toDate()
-        }    
+        } 
     
     
         yearPicker.value = DateEle.getFullYear()

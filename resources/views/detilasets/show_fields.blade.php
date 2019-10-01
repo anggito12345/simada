@@ -1,72 +1,65 @@
-<!-- Id Field -->
-<div class="form-group">
-    {!! Form::label('id', 'Id:') !!}
-    <p>{!! $detilaset->id !!}</p>
+<div class="row container bg-white">
+    <u>Buku Perpustakaan</u>
+    <!-- Buku Judul Field -->
+    <div class="row">
+        {!! Form::label('buku_judul', 'Judul/Pencipta:' , ["class" => 'col-md-4 item-view']) !!}
+        <p class="col-md-8 item-view">{!! $detilaset->buku_judul !!}</p>
+    </div>
+
+    <!-- Buku Spesifikasi Field -->
+    <div class="row">
+        {!! Form::label('buku_spesifikasi', 'Spesifikasi:' , ["class" => 'col-md-4 item-view']) !!}
+        <p class="col-md-8 item-view">{!! $detilaset->buku_spesifikasi !!}</p>
+    </div>
 </div>
 
-<!-- Pidinventaris Field -->
-<div class="form-group">
-    {!! Form::label('pidinventaris', 'Pidinventaris:') !!}
-    <p>{!! $detilaset->pidinventaris !!}</p>
+
+<div class="row container bg-white">
+    <u>Barang bercorak Kesenian/Kebudayaan</u>
+    <!-- Seni Asal Field -->
+    <div class="row">
+        {!! Form::label('seni_asal', __('field.seni_asal') , ["class" => 'col-md-4 item-view']) !!}
+        <p class="col-md-8 item-view">{!! $detilaset->seni_asal !!}</p>
+    </div>
+
+    <!-- Seni Pencipta Field -->
+    <div class="row">
+        {!! Form::label('seni_pencipta', __('field.seni_pencipta') , ["class" => 'col-md-4 item-view']) !!}
+        <p class="col-md-8 item-view">{!! $detilaset->seni_pencipta !!}</p>
+    </div>
+
+    <!-- Seni Bahan Field -->
+    <div class="row">
+        {!! Form::label('seni_bahan', __('field.seni_bahan') , ["class" => 'col-md-4 item-view']) !!}
+        <p class="col-md-8 item-view">{!! $detilaset->seni_bahan !!}</p>
+    </div>
 </div>
 
-<!-- Buku Judul Field -->
-<div class="form-group">
-    {!! Form::label('buku_judul', 'Buku Judul:') !!}
-    <p>{!! $detilaset->buku_judul !!}</p>
+<div class="row container bg-white">
+    <u>Hewan Ternak</u>
+
+    <!-- Ternak Jenis Field -->
+    <div class="row">
+        {!! Form::label('ternak_jenis', __('field.ternak_jenis') , ["class" => 'col-md-4 item-view']) !!}
+        <p class="col-md-8 item-view">{!! $detilaset->ternak_jenis !!}</p>
+    </div>
+
+    <!-- Ternak Ukuran Field -->
+    <div class="row">
+        {!! Form::label('ternak_ukuran', __('field.ternak_ukuran'), ["class" => 'col-md-4 item-view']) !!}
+        <p class="col-md-8 item-view">{!! $detilaset->ternak_ukuran !!}</p>
+    </div>
+
+    <!-- Keterangan Field -->
+    <div class="row">
+        {!! Form::label('keterangan', 'Keterangan:' , ["class" => 'col-md-4 item-view']) !!}
+        <p class="col-md-8 item-view">{!! $detilaset->keterangan !!}</p>
+    </div>
 </div>
 
-<!-- Buku Spesifikasi Field -->
-<div class="form-group">
-    {!! Form::label('buku_spesifikasi', 'Buku Spesifikasi:') !!}
-    <p>{!! $detilaset->buku_spesifikasi !!}</p>
-</div>
 
-<!-- Seni Asal Field -->
-<div class="form-group">
-    {!! Form::label('seni_asal', 'Seni Asal:') !!}
-    <p>{!! $detilaset->seni_asal !!}</p>
-</div>
 
-<!-- Seni Pencipta Field -->
-<div class="form-group">
-    {!! Form::label('seni_pencipta', 'Seni Pencipta:') !!}
-    <p>{!! $detilaset->seni_pencipta !!}</p>
-</div>
 
-<!-- Seni Bahan Field -->
-<div class="form-group">
-    {!! Form::label('seni_bahan', 'Seni Bahan:') !!}
-    <p>{!! $detilaset->seni_bahan !!}</p>
-</div>
 
-<!-- Ternak Jenis Field -->
-<div class="form-group">
-    {!! Form::label('ternak_jenis', 'Ternak Jenis:') !!}
-    <p>{!! $detilaset->ternak_jenis !!}</p>
-</div>
 
-<!-- Ternak Ukuran Field -->
-<div class="form-group">
-    {!! Form::label('ternak_ukuran', 'Ternak Ukuran:') !!}
-    <p>{!! $detilaset->ternak_ukuran !!}</p>
-</div>
-
-<!-- Keterangan Field -->
-<div class="form-group">
-    {!! Form::label('keterangan', 'Keterangan:') !!}
-    <p>{!! $detilaset->keterangan !!}</p>
-</div>
-
-<!-- Dokumen Field -->
-<div class="form-group">
-    {!! Form::label('dokumen', 'Dokumen:') !!}
-    <p>{!! $detilaset->dokumen !!}</p>
-</div>
-
-<!-- Foto Field -->
-<div class="form-group">
-    {!! Form::label('foto', 'Foto:') !!}
-    <p>{!! $detilaset->foto !!}</p>
-</div>
 

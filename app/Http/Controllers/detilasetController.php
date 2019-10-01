@@ -18,6 +18,7 @@ class detilasetController extends AppBaseController
 
     public function __construct(detilasetRepository $detilasetRepo)
     {
+        parent::__construct();
         $this->detilasetRepository = $detilasetRepo;
     }
 

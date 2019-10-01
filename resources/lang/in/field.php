@@ -16,5 +16,10 @@ return [
     'idkecamatan' => 'Kecamatan',
     'idkelurahan' => 'Kelurahan/Desa',
     'bpkb' => 'Nomor BPKB',
-    'perolehan' => 'Asal Usul/Cara Perolehan'
+    'perolehan' => 'Asal Usul/Cara Perolehan',
+    'seni_pencipta' => 'Pencipta',
+    'seni_asal' => 'Asal Daerah',
+    'seni_bahan' => 'Bahan',
+    'ternak_jenis' => 'Jenis',
+    'ternak_ukuran' => 'Ukuran'
 ];

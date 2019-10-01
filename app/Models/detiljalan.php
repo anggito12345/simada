@@ -60,8 +60,7 @@ class detiljalan extends Model
         'statustanah',
         'kodetanah',
         'keterangan',
-        'dokumen',
-        'foto'
+        
     ];
 
     /**
@@ -103,6 +102,10 @@ class detiljalan extends Model
 
     public function setTgldokumenAttribute($value)
     {
+        if ($value == null) {
+            $value = date("d-m-Y");
+        }
+
         $value = date("d-m-Y", strtotime($value));
         $this->attributes['tgldokumen'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
     }
@@ -114,5 +117,31 @@ class detiljalan extends Model
         }
 
         return date("d/m/Y", strtotime($value));
+    }
+
+
+    public function Kota()
+    {
+        return $this->hasOne('App\Models\alamat', 'id', 'idkota');
+    }
+
+    public function Kecamatan()
+    {
+        return $this->hasOne('App\Models\alamat', 'id', 'idkecamatan');
+    }
+
+    public function Kelurahan()
+    {
+        return $this->hasOne('App\Models\alamat', 'id', 'idkelurahan');
+    }
+
+    public function Statustanah()
+    {
+        return $this->hasOne('App\Models\statustanah', 'id', 'statustanah');
+    }
+
+    public function Kodetanah()
+    {
+        return $this->hasOne('App\Models\detil_tanah', 'id', 'kodetanah');
     }
 }

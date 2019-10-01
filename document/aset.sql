@@ -172,7 +172,7 @@ CREATE TABLE `detil_tanah` (
   `hak` varchar(255) DEFAULT NULL,
   `status_sertifikat` varchar(255) DEFAULT NULL,
   `tgl_sertifikat` date DEFAULT NULL,
-  `nama_sertifikat` varchar(255) DEFAULT NULL,
+  `nomor_sertifikat` varchar(255) DEFAULT NULL,
   `penggunaan` varchar(255) DEFAULT NULL,
   `keterangan` varchar(500) DEFAULT NULL,
   `dokumen` varchar(255) DEFAULT NULL,

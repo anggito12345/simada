@@ -58,10 +58,8 @@ class detilbangunan extends Model
         'nodokumen',
         'luastanah',
         'statustanah',
-        'kodetanah',
-        'dokumen',
-        'keterangan',
-        'foto'
+        'kodetanah',        
+        'keterangan',        
     ];
 
     /**
@@ -129,5 +127,23 @@ class detilbangunan extends Model
     public function Kodetanah()
     {
         return $this->hasOne('App\Models\detil_tanah', 'id', 'kodetanah');
+    }
+
+    public function setTgldokumenAttribute($value)
+    {
+        if ($value == null) {
+            $value = date("d-m-Y");
+        }
+        $value = date("d-m-Y", strtotime($value));
+        $this->attributes['tgldokumen'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
+    }
+
+    public function getTgldokumenAttribute($value)
+    {
+        if ($value == "") {
+            return "";
+        }
+
+        return date("d/m/Y", strtotime($value));
     }
 }

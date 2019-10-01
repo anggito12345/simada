@@ -5,8 +5,8 @@
 5. Thn 2019 0001.
 6. Kode Lokasi diotomatiskan
 7. Lokasi detil tanah, bangunan dan peralatan tdk bergerak
-8. Ternak diganti aset biologis.
-9. upload gambar dan dokumen ada di KIB A (ditanyakan)
+8. Ternak diganti aset biologis. (ditanyakan)
+9. upload gambar dan dokumen ada di KIB A *
 KIB A :
 10. Pakai/Pengelolaan/Milik *
 11. Sertifikat ada/tidak *

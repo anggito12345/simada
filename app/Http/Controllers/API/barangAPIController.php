@@ -30,10 +30,14 @@ class barangAPIController extends AppBaseController
 
         $query =  new \App\Models\barang();
 
+
         $queryFiltered = $query;
         $queryFiltered = \App\Helpers\LookupHelper::build($queryFiltered, $request);
+        $queryFiltered = $queryFiltered->whereRaw('kode_sub_sub_rincian_objek IS NOT NULL');        
 
-        $barangs = $queryFiltered->skip($request->input('start'))        
+        
+        $barangs = $queryFiltered->skip($request->input('start'))     
+           
         ->limit($request->input('length'))->get();
         return json_encode([
             'data' => $barangs->toArray(),
@@ -79,9 +83,10 @@ class barangAPIController extends AppBaseController
             $queryBarangFinal = $queryBarangFinal->whereRaw("nama_rek_aset ~* '.*".$request->input("term").".*'");
         }
 
-       
         
-        $barangs = $queryBarangFinal->limit(10)
+        
+        $barangs = $queryBarangFinal        
+        ->limit(10)
         ->get();
 
         return $this->sendResponse($barangs->toArray(), 'Barangs retrieved successfully');

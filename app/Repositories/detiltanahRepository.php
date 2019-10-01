@@ -28,7 +28,7 @@ class detiltanahRepository extends BaseRepository
         'hak',
         'status_sertifikat',
         'tgl_sertifikat',
-        'nama_sertifikat',
+        'nomor_sertifikat',
         'penggunaan',
         'keterangan',
         'dokumen',

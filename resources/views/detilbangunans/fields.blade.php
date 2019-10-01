@@ -82,9 +82,9 @@
 <script type="text/javascript">
     viewModel.jsLoaded.subscribe(() => {
 
-        const googleMapKoordinatLokasiBangunan = new GoogleMapInput(document.getElementById('koordinatlokasi-detilbangunan'), {})
+        const googleMapKoordinatLokasiBangunan = new MapInput(document.getElementById('koordinatlokasi-detilbangunan'), {})
 
-        const mapTanahBangunan = new GoogleMapInput(document.getElementById('koordinattanah-detilbangunan'), {
+        const mapTanahBangunan = new MapInput(document.getElementById('koordinattanah-detilbangunan'), {
             draw: true,
             drawOptions: [
                 'Polygon'

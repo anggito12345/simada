@@ -21,7 +21,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string hak
  * @property string status_sertifikat
  * @property string tgl_sertifikat
- * @property string nama_sertifikat
+ * @property string nomor_sertifikat
  * @property string penggunaan
  * @property string keterangan
  * @property string dokumen
@@ -51,11 +51,9 @@ class detiltanah extends Model
         'hak',
         'status_sertifikat',
         'tgl_sertifikat',
-        'nama_sertifikat',
+        'nomor_sertifikat',
         'penggunaan',
         'keterangan',
-        'dokumen',
-        'foto'
     ];
 
     /**
@@ -76,7 +74,7 @@ class detiltanah extends Model
         'hak' => 'string',
         'status_sertifikat' => 'string',
         'tgl_sertifikat' => 'date',
-        'nama_sertifikat' => 'string',
+        'nomor_sertifikat' => 'string',
         'penggunaan' => 'string',
         'keterangan' => 'string',
         'dokumen' => 'string',
@@ -94,6 +92,10 @@ class detiltanah extends Model
 
     public function setTglSertifikatAttribute($value)
     {
+        if ($value == null) {
+            $value = date("d-m-Y");
+        }
+        
         $value = date("d-m-Y", strtotime($value));
         $this->attributes['tgl_sertifikat'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
     }

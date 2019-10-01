@@ -10,6 +10,7 @@ use App\Repositories\inventarisRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 
 class inventarisController extends AppBaseController
@@ -159,6 +160,20 @@ class inventarisController extends AppBaseController
         }
 
         $this->inventarisRepository->delete($id);
+
+        $querySystemUpload = \App\Models\system_upload::where([
+            'foreign_table' => 'inventaris',
+            'foreign_id' => $id,
+        ]);
+
+
+        $dataSystemUploads = $querySystemUpload->get();
+
+        foreach ($dataSystemUploads as $key => $value) {
+            Storage::delete($value->path);
+        }
+
+        $querySystemUpload->delete();
 
         Flash::success('Inventaris deleted successfully.');
 

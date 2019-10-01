@@ -1,11 +1,4 @@
 
-
-<!-- Pidinventaris Field -->
-<div class="row">
-    {!! Form::label('pidinventaris', 'Pidinventaris:', ["class" => 'col-md-4 item-view']) !!}
-    <p class="col-md-8 item-view">{!! \App\Models\BaseModel::getRelationData($detilmesin->inventaris, "noreg", "") !!}</p>
-</div>
-
 <!-- Merk Field -->
 <div class="row">
     {!! Form::label('merk', 'Merk:', ["class" => 'col-md-4 item-view']) !!}

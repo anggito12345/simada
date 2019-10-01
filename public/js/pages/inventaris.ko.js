@@ -1,13 +1,28 @@
 viewModel.data = Object.assign(viewModel.data, {
     pidinventaris: "",
+
+    // mutasi data
+    mutasiKe: ko.observable("A"),
+    mutasiFFields: ko.observableArray([]),
+    mutasiToFields: ko.observableArray([]),
+    valuesMutasi: ko.observableArray([]),
+    valueTemplate: {
+        To: "",
+        Type: "",
+        From: ""
+    },      
+
     tipeKib: ko.observable(),
     "KIB F": ko.observable({
         koordinatlokasi: '',
         koordinattanah: {},
-        idkota: "",
+        idkota: null,
         idkecamatan: null,
         idkelurahan: null,
         beton: 0,
+        luasbangunan: 0,
+        tglmulai: moment().format('YYYY-MM-DD'),
+        tgldokumen: moment().format('YYYY-MM-DD'),
         bertingkat: 0,
     }),
     "KIB E": ko.observable({
@@ -15,14 +30,14 @@ viewModel.data = Object.assign(viewModel.data, {
     "KIB D": ko.observable({
         koordinatlokasi: '',
         koordinattanah: {},
-        idkota: "",
+        idkota: null,
         idkecamatan: null,
         idkelurahan: null,
     }),
     "KIB C": ko.observable({
         koordinatlokasi: '',
         koordinattanah: {},
-        idkota: "",
+        idkota: null,
         idkecamatan: null,
         idkelurahan: null,
         beton: 0,
@@ -33,6 +48,7 @@ viewModel.data = Object.assign(viewModel.data, {
     "KIB A": ko.observable({
         idkota: null,
         idkecamatan: null,
+        idkelurahan: null,
         alamat: '',
         luas: 0,
         koordinatlokasi: '',
@@ -55,7 +71,7 @@ viewModel.data.tipeKib.subscribe((newVal) => {
     }).then((response) => {
         if (response == null) {
             response = {}
-        }
+        }        
         
         if (newVal == 'KIB A') {
             const tglSertifikat = document.getElementById('tgl_sertifikat')
@@ -183,3 +199,5 @@ viewModel.data.tipeKib.subscribe((newVal) => {
         }
     })
 })
+
+

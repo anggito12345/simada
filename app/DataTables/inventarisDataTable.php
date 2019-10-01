@@ -21,10 +21,26 @@ class inventarisDataTable extends DataTable
         $dataTable = new EloquentDataTable($query);
 
         return $dataTable
+            ->filterColumn('nomor', function($query, $keyword) {
+                $sql = 'CONCAT(detil_tanah.nomor_sertifikat,\'/\',detil_mesin.nopabrik, \'/\', detil_mesin.norangka, \'/\', detil_mesin.nomesin) like ?';
+                $query->whereRaw($sql, ["%{$keyword}%"]);
+            })
+            ->filterColumn('barang', function($query, $keyword) {                
+            })
+            ->editColumn('harga_satuan', function($data) {
+                return number_format($data->harga_satuan, 2);
+            })
+            ->editColumn('keterangan', function($data) {
+
+                return strlen($data->keterangan) > 30 ? $data->keterangan . "..." : $data->keterangan;
+            })
             ->addColumn('jenis', function($data) {
                 $barang = \App\Models\barang::find($data->pidbarang);
                 $jenisbarang = \App\Models\jenisbarang::where('kode', $barang->kode_jenis)->first();
                 return $jenisbarang->nama . "(".chr(64+$jenisbarang->kode).")";
+            })
+            ->addColumn('detail', function($data) {
+                return "<i class='fa fa-plus-circle text-success'></i>";
             })
             ->addColumn('kode_barang', function($data) {
                 $barang = \App\Models\barang::find($data->pidbarang);
@@ -59,7 +75,8 @@ class inventarisDataTable extends DataTable
 
                 return $kode;
             })
-            ->addColumn('action', 'inventaris.datatables_actions');
+            ->addColumn('action', 'inventaris.datatables_actions')
+            ->rawColumns(['detail', 'action']);
     }
 
     /**
@@ -73,9 +90,19 @@ class inventarisDataTable extends DataTable
         return $model->newQuery()
             ->select([
                 "inventaris.*",
-                "m_barang.nama_rek_aset"
+                "m_barang.nama_rek_aset",
+                "m_merk_barang.nama as merk",
+                "m_jenis_barang.kelompok_kib",
+                "detil_mesin.bahan as bahan"                
             ])
-            ->join("m_barang", "m_barang.id", "inventaris.pidbarang");
+            ->selectRaw('CONCAT(detil_tanah.nomor_sertifikat,\'/\',detil_mesin.nopabrik,\'/\', detil_mesin.norangka,\'/\', detil_mesin.nomesin) as nomor')            
+            ->selectRaw('CONCAT(\'1 \',m_satuan_barang.nama) as barang')             
+            ->join("m_barang", "m_barang.id", "inventaris.pidbarang")
+            ->join("m_jenis_barang", "m_jenis_barang.kode", "m_barang.kode_jenis")
+            ->leftJoin("detil_tanah", "detil_tanah.pidinventaris", "inventaris.id")
+            ->leftJoin("m_satuan_barang", "m_satuan_barang.id", "inventaris.satuan")
+            ->leftJoin("detil_mesin", "detil_mesin.pidinventaris", "inventaris.id")
+            ->leftJoin("m_merk_barang", "m_merk_barang.id", "detil_mesin.merk");
     }
 
     /**
@@ -93,7 +120,7 @@ class inventarisDataTable extends DataTable
                 'drawCallback' => 'function(e) { onLoadDataTable(e) }',
                 'dom'       => 'Bfrtip',
                 'stateSave' => true,
-                'order'     => [[0, 'desc']],
+                'order'     => [[3, 'desc']],
                 'buttons'   => [
                     ['extend' => 'create', 'className' => 'btn btn-default btn-sm no-corner'],
                     ['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner', 'buttons' => [ 'csv', 'excel']],
@@ -112,26 +139,54 @@ class inventarisDataTable extends DataTable
     protected function getColumns()
     {
         return [
+            
+            [
+                'className' => 'details-control',
+                'orderable' => false,
+                'title' => '',
+                'data' => 'detail',                
+                "defaultContent" =>''
+            ],
             'kode_barang',
-            'noreg',
+            'noreg',        
             'nama_rek_aset' => [
                 'title' => 'Nama/Jenis Barang',
-                'name' => 'm_barang.nama_rek_aset'
+                'name' => 'm_barang.nama_rek_aset',
+                
             ],
+            'merk' => [
+                'title' => 'Merk/Tipe',
+                'name' => 'm_merk_barang.nama'
+            ],
+            // 'nomor',
+            // 'bahan' => [
+            //     'title' => 'Bahan',
+            //     'name' => 'detil_mesin.bahan'
+            // ],
+            'perolehan' => [
+                'title' => 'Cara Perolehan',
+            ],
+            'tahun_perolehan',
+            'kondisi' => [
+                'title' => 'Keadaan Barang'
+            ], 
+            // 'barang',
+            'harga_satuan',
+            // 'keterangan'
             // 'pidbarang',
             // 'pidopd',
             // 'pidlokasi', 
             
-            'tgl_sensus',
-            'volume',
+            // 'tgl_sensus',
+            // 'volume',
             // 'pembagi',
             // 'satuan',
-            'harga_satuan',
-            'perolehan',
-            'kondisi',
+            
+            
+            
             // 'lokasi_detil',
-            'umur_ekonomis',
-            // 'keterangan'
+            // 'umur_ekonomis',
+            
         ];
     }
 

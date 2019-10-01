@@ -19,7 +19,7 @@ $factory->define(detiltanah::class, function (Faker $faker) {
         'hak' => $faker->word,
         'status_sertifikat' => $faker->word,
         'tgl_sertifikat' => $faker->word,
-        'nama_sertifikat' => $faker->word,
+        'nomor_sertifikat' => $faker->word,
         'penggunaan' => $faker->word,
         'keterangan' => $faker->word,
         'dokumen' => $faker->word,

@@ -18,6 +18,7 @@ class detiljalanController extends AppBaseController
 
     public function __construct(detiljalanRepository $detiljalanRepo)
     {
+        parent::__construct();
         $this->detiljalanRepository = $detiljalanRepo;
     }
 

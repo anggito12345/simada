@@ -1,120 +1,132 @@
-<!-- Id Field -->
-<div class="form-group">
-    {!! Form::label('id', 'Id:') !!}
-    <p>{!! $detiljalan->id !!}</p>
-</div>
 
-<!-- Pidinventaris Field -->
-<div class="form-group">
-    {!! Form::label('pidinventaris', 'Pidinventaris:') !!}
-    <p>{!! $detiljalan->pidinventaris !!}</p>
-</div>
+<?php 
+    $uniqId = uniqid()
+?>
 
 <!-- Konstruksi Field -->
-<div class="form-group">
-    {!! Form::label('konstruksi', 'Konstruksi:') !!}
-    <p>{!! $detiljalan->konstruksi !!}</p>
+<div class="row">
+    {!! Form::label('konstruksi', 'Konstruksi:' , ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $detiljalan->konstruksi !!}</p>
 </div>
 
 <!-- Panjang Field -->
-<div class="form-group">
-    {!! Form::label('panjang', 'Panjang:') !!}
-    <p>{!! $detiljalan->panjang !!}</p>
+<div class="row">
+    {!! Form::label('panjang', 'Panjang:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $detiljalan->panjang !!}</p>
 </div>
 
 <!-- Lebar Field -->
-<div class="form-group">
-    {!! Form::label('lebar', 'Lebar:') !!}
-    <p>{!! $detiljalan->lebar !!}</p>
+<div class="row">
+    {!! Form::label('lebar', 'Lebar:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $detiljalan->lebar !!}</p>
 </div>
 
 <!-- Luas Field -->
-<div class="form-group">
-    {!! Form::label('luas', 'Luas:') !!}
-    <p>{!! $detiljalan->luas !!}</p>
+<div class="row">
+    {!! Form::label('luas', 'Luas:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $detiljalan->luas !!}</p>
 </div>
 
 <!-- Alamat Field -->
-<div class="form-group">
-    {!! Form::label('alamat', 'Alamat:') !!}
-    <p>{!! $detiljalan->alamat !!}</p>
+<div class="row">
+    {!! Form::label('alamat', 'Alamat:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $detiljalan->alamat !!}</p>
 </div>
 
 <!-- Idkota Field -->
-<div class="form-group">
-    {!! Form::label('idkota', 'Idkota:') !!}
-    <p>{!! $detiljalan->idkota !!}</p>
+<div class="row">
+    {!! Form::label('idkota', __('field.idkota'), ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! \App\Models\BaseModel::getRelationData($detiljalan->kota, "nama", "") !!}</p>
 </div>
 
 <!-- Idkecamatan Field -->
-<div class="form-group">
-    {!! Form::label('idkecamatan', 'Idkecamatan:') !!}
-    <p>{!! $detiljalan->idkecamatan !!}</p>
+<div class="row">
+    {!! Form::label('idkecamatan', __('field.idkecamatan'), ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! \App\Models\BaseModel::getRelationData($detiljalan->kecamatan, "nama", "") !!}</p>
 </div>
 
 <!-- Idkelurahan Field -->
-<div class="form-group">
-    {!! Form::label('idkelurahan', 'Idkelurahan:') !!}
-    <p>{!! $detiljalan->idkelurahan !!}</p>
+<div class="row">
+    {!! Form::label('idkelurahan', __('field.idkelurahan'), ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! \App\Models\BaseModel::getRelationData($detiljalan->kelurahan, "nama", "") !!}</p>
 </div>
 
 <!-- Koordinatlokasi Field -->
-<div class="form-group">
-    {!! Form::label('koordinatlokasi', 'Koordinatlokasi:') !!}
-    <p>{!! $detiljalan->koordinatlokasi !!}</p>
+<div class="row">
+    {!! Form::label('koordinatlokasi', 'Koordinat Lokasi:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view map-non-draw-<?= $uniqId ?>">{!! $detiljalan->koordinatlokasi !!}</p>
 </div>
 
 <!-- Koordinattanah Field -->
-<div class="form-group">
-    {!! Form::label('koordinattanah', 'Koordinattanah:') !!}
-    <p>{!! $detiljalan->koordinattanah !!}</p>
+<div class="row">
+    {!! Form::label('koordinattanah', 'Koordinat Tanah:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view map-<?= $uniqId ?>">{!! $detiljalan->koordinattanah !!}</p>
 </div>
 
 <!-- Tgldokumen Field -->
-<div class="form-group">
-    {!! Form::label('tgldokumen', 'Tgldokumen:') !!}
-    <p>{!! $detiljalan->tgldokumen !!}</p>
+<div class="row">
+    {!! Form::label('tgldokumen', 'Tanggal Dokumen:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $detiljalan->tgldokumen !!}</p>
 </div>
 
 <!-- Nodokumen Field -->
-<div class="form-group">
-    {!! Form::label('nodokumen', 'Nodokumen:') !!}
-    <p>{!! $detiljalan->nodokumen !!}</p>
+<div class="row">
+    {!! Form::label('nodokumen', 'Nomor Dokumen:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $detiljalan->nodokumen !!}</p>
 </div>
 
 <!-- Luastanah Field -->
-<div class="form-group">
-    {!! Form::label('luastanah', 'Luastanah:') !!}
-    <p>{!! $detiljalan->luastanah !!}</p>
+<div class="row">
+    {!! Form::label('luastanah', 'Luas Tanah:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $detiljalan->luastanah !!}</p>
 </div>
 
 <!-- Statustanah Field -->
-<div class="form-group">
-    {!! Form::label('statustanah', 'Statustanah:') !!}
-    <p>{!! $detiljalan->statustanah !!}</p>
+<div class="row">
+    {!! Form::label('statustanah', 'Status Tanah:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $detiljalan->statustanah !!}</p>
 </div>
 
 <!-- Kodetanah Field -->
-<div class="form-group">
-    {!! Form::label('kodetanah', 'Kodetanah:') !!}
-    <p>{!! $detiljalan->kodetanah !!}</p>
+<div class="row">
+    {!! Form::label('kodetanah', 'Kode Tanah:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $detiljalan->kodetanah !!}</p>
 </div>
+
+<div class="row container bg-white">
+    <u>KIB A:</u>
+    <?php 
+        $detiltanah = \App\Models\detiltanah::find($detiljalan->kodetanah)
+    ?>
+    @if($detiltanah != null)
+        @include('detiltanahs.show_fields')
+    @endif
+</div>
+
 
 <!-- Keterangan Field -->
-<div class="form-group">
-    {!! Form::label('keterangan', 'Keterangan:') !!}
-    <p>{!! $detiljalan->keterangan !!}</p>
+<div class="row">
+    {!! Form::label('keterangan', 'Keterangan:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $detiljalan->keterangan !!}</p>
 </div>
 
-<!-- Dokumen Field -->
-<div class="form-group">
-    {!! Form::label('dokumen', 'Dokumen:') !!}
-    <p>{!! $detiljalan->dokumen !!}</p>
-</div>
+<script>
 
-<!-- Foto Field -->
-<div class="form-group">
-    {!! Form::label('foto', 'Foto:') !!}
-    <p>{!! $detiljalan->foto !!}</p>
-</div>
+    window["map-<?= $uniqId ?>"] = () => {
+        new MapInput(document.getElementsByClassName("map-<?= $uniqId ?>")[0], {
+            value : <?= $detiljalan->koordinattanah ?>,
+            draw: true,
+        })
 
+        new MapInput(document.getElementsByClassName("map-non-draw-<?= $uniqId ?>")[0], {
+            value : "<?= $detiljalan->koordinatlokasi ?>",
+            draw: false,
+        })
+    }
+    
+    // viewModel.jsLoaded.subscribe(() => {
+    //     mainShow()
+    // })
+
+    window["map-<?= $uniqId ?>"]()
+</script>

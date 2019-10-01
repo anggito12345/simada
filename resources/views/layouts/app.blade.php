@@ -128,7 +128,16 @@
 
         body {
             font-family: mainfont !important;
+            /* font-size: 11px !important; */
         }
+/* 
+        .fa {
+            font-size: 11px !important;
+        }
+
+        .treeview-menu>li>a {
+            font-size: 11px !important;
+        } */
 
         .collapse-toggle {
             width: 100%;
@@ -316,6 +325,8 @@
 
     <script src="<?= url('js/thirdparty/ol.js') ?>"></script>
 
+    <script src="<?= url('js/thirdparty/handlebars-v4.3.1.js') ?>"></script>
+
     <!-- jQuery 3.1.1 -->
     
     <script src="<?= url('js/thirdparty/jquery.min.js') ?>"></script>
@@ -340,6 +351,10 @@
 
     
     <script src="<?= url('js/plugins/inlinedatepicker.plugin.js?key='.sha1(time())) ?>"></script>
+
+    <script src="<?= url('js/plugins/mapinput.plugin.js?key='.sha1(time())) ?>"></script>
+
+    
     <script>
 
         $.fn.datepicker.defaults.language = 'in'
@@ -397,7 +412,7 @@
 
 
     <script>        
-        ko.applyBindings(viewModel)
+        
         
     </script>
 </body>

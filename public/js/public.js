@@ -46,6 +46,10 @@ var App = {
                     callbackDone();
                 }                
 
+            }, () => {
+                if (callbackDone != null) {
+                    callbackDone();
+                }     
             });
         },
         downloadFile : (path) => {
@@ -161,7 +165,7 @@ jQuery.fn.extend({
         const idButtonSaveAndClose = "button-save-and-close-" + idlookup
 
         if (!$.fn.customLookup[idlookup].autoClose) {
-            buttonSaveAndClose = '<button id=\''+idButtonSaveAndClose+'\' type="button" class="btn btn-primary" >Save</button>'
+            buttonSaveAndClose = '<button id=\''+idButtonSaveAndClose+'\' type="button" class="btn btn-primary" >Pilih</button>'
         }
 
         let filtersHTML = ""
@@ -197,7 +201,7 @@ jQuery.fn.extend({
                 </div>
                 <div class="modal-footer">
                     `+buttonSaveAndClose+`
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Close</button>
+                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
                 </div>
                 </div>
             </div>
@@ -661,7 +665,7 @@ let FileGallery = function(element, config) {
             </div>
             <div class="modal-footer">
             <button type="button" class="btn btn-primary" id="${buttonSaveId}">Simpan</button>
-            <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+            <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
             </div>
         </div>
         </div>
@@ -677,7 +681,7 @@ let FileGallery = function(element, config) {
                 <img src=""  id="${containerPreviewImage}"/>
             </div>
             <div class="modal-footer">            
-                <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
             </div>
         </div>
         </div>
@@ -942,288 +946,10 @@ let FileGallery = function(element, config) {
     })
 
     FileGalleryGenerated++
-
+    
 }
 
-let GoogleMapInputIncrement = 1;
-let GoogleMapInput = function(element, config) {
-    const GoogleMapInputCurrentInc = GoogleMapInputIncrement
-    const self = this
 
-    GoogleMapInputIncrement++
-
-    if (element == undefined) {
-        console.error('Error when rendering GoogleMapInput');
-        return false;
-    }
-
-    if (element.length > 0) {
-        element = element[0]        
-    }
-
-    if (!navigator.geolocation) {
-        console.error('Geolocation not supported on this browser!')
-        return false
-    }
-
-    this.defaultConfig = {
-        autoClose: true,
-        draw: false,
-        drawOptions: [
-            'Polygon',
-            'Line'
-        ]
-    }
-
-    let position
-
-    navigator.geolocation.getCurrentPosition((pos) => {
-        position = pos
-
-    })
-
-    if  (config != null) {
-        self.defaultConfig = Object.assign(self.defaultConfig, config)
-    }
-
-    
-
-    new Promise((resolve, reject) => {
-        let TIMEOUT = 10
-        let intervalTicking = setInterval(function() {
-            if (TIMEOUT < 0) {
-                console.error('Oopss please include google map apis javascript')
-                reject(false)
-                clearInterval(intervalTicking)                
-            }
-            if (ol != undefined) {
-                resolve(true)
-                clearInterval(intervalTicking)
-            }
-            TIMEOUT--
-        },1000)
-        
-    }).then(() => {
-        element.style.display = "none"
-
-        
-
-        const containerInputGroup = document.createElement('div')
-        containerInputGroup.className = 'input-group'
-    
-        let inputMaskingElement
-
-        if (!self.defaultConfig.draw) {
-            inputMaskingElement = element.cloneNode(true)
-            inputMaskingElement.style.display = 'block'
-        } else {
-            inputMaskingElement = document.createElement('textarea')
-            inputMaskingElement.style.display = 'block'
-        }
-        
-    
-        const inputGroupAppend = document.createElement('div')
-        inputGroupAppend.className = 'input-group-append'
-    
-        const inputGroupText = document.createElement('div')
-        inputGroupText.className = 'input-group-text'
-        
-        const inputGroupTextButton = document.createElement('i')
-        inputGroupTextButton.className = 'fa fa-globe'
-
-        let selectOption = document.createElement('select')        
-        for (let i = 0 ; i < self.defaultConfig.drawOptions.length; i ++ ) {
-            var drawOption = document.createElement('option')
-            drawOption.appendChild(document.createTextNode(self.defaultConfig.drawOptions[i]))
-            drawOption.value = self.defaultConfig.drawOptions[i]
-            selectOption.appendChild(drawOption)
-        }
-
-        if (!self.defaultConfig.draw) {                        
-            selectOption = null           
-        }
-    
-        this.marker
-        this.markerVectorLayer
-        this.draw
-        this.lastFeature
-
-        inputMaskingElement.disabled = true
-    
-        containerInputGroup.appendChild(inputMaskingElement)
-        inputGroupText.appendChild(inputGroupTextButton)
-        inputGroupAppend.appendChild(inputGroupText)
-        containerInputGroup.appendChild(inputGroupAppend)
-        
-
-        const addInteraction = function() {
-            var value = selectOption.value;
-            if (value !== 'None') {
-              self.draw = new ol.interaction.Draw({
-                source: source,
-                type: value
-              });
-
-              self.draw.on('drawstart', function(ev) {
-
-                if (self.lastFeature)
-                     source.removeFeature(self.lastFeature);
-
-              })
-
-              self.draw.on('drawend', function(ev) {
-
-                ev.feature.setId(new IDGenerator().generate());
-                
-                self.lastFeature = ev.feature
-
-                let format = new ol.format['GeoJSON']()
-
-                setTimeout(() => {
-                    let data = format.writeFeatures(vector.getSource().getFeatures())
-
-                    inputMaskingElement.value = JSON.stringify(data, null, 4)
-                    inputMaskingElement.dispatchEvent(new Event('change'))
-                },1000)
-                
-
-              })
-              self.map.addInteraction(self.draw);
-            }
-        }
-
-        const createLayer = (LonLat) => {
-            self.marker = new ol.Feature({
-                geometry: new ol.geom.Point(
-                  ol.proj.fromLonLat([parseFloat(LonLat[0]),parseFloat(LonLat[1])])
-                ),  // Cordinates of New York's Town Hall
-            });
-
-
-            source.addFeature(self.marker)
-        }
-    
-        inputGroupText.addEventListener('click', (ev) => {            
-            $(`#${modalIdGoogleMap}`).modal('show')
-        })        
-
-        inputMaskingElement.addEventListener('change', (ev) => {
-            element.value = ev.target.value
-            element.dispatchEvent(new Event('change'))
-        })
-    
-        
-        const mapId = `google-map-${GoogleMapInputCurrentInc}`
-        const modalIdGoogleMap = `google-map-id-${GoogleMapInputCurrentInc}`
-        
-        const modalMapPicker = `<div class="modal fade" id="${modalIdGoogleMap}" tabindex="-1" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-                <div class="modal-body">     
-                    <div id='${mapId}' style='width:100%; height:300px'>
-                    </div>           
-                    ${selectOption != null ? selectOption.outerHTML : ''}
-                </div>
-                <div class="modal-footer">            
-                    <button type="button" class="btn btn-secondary" data-dismiss="modal">Batal</button>
-                </div>
-            </div>
-            </div>
-        </div>`
-        
-        $('body').append(modalMapPicker)
-
-
-        $(`#${modalIdGoogleMap}`).on('shown.bs.modal', function () {
-            self.map.updateSize();
-
-            if (element.value != "" && element.value != null && !self.defaultConfig.draw) {
-                let splittedValue = element.value.split(",")
-                if (splittedValue.length < 2) {
-                    console.error("doesn't support fomat value!")
-                    return;
-                }
-                
-                self.map.setView(
-                    new ol.View({
-                        center: ol.proj.fromLonLat([parseFloat(splittedValue[0]), parseFloat(splittedValue[1])]),                         
-                        zoom: 12
-                    })
-                );
-
-                if (self.marker != null) {
-                    source.removeFeature(self.marker)
-                }
-                createLayer(splittedValue)
-            } else if (element.value != "" && element.value != null) {
-                // if (self.marker != null) {
-                //     source.removeFeature(self.marker)
-                // }
-
-                let values = JSON.parse(element.value);
-                if (typeof values != 'object') 
-                    values = JSON.parse(values)
-                let coordinatesDraws = []
-                let currentCoord = values.features[0].geometry.coordinates[0]
-                for (let n = 0; n < currentCoord.length; n ++) {
-                    coordinatesDraws.push(ol.proj.transform(currentCoord[n], 'EPSG:4326', 'EPSG:3857'))
-                }
-                let things = new ol.geom.Polygon(
-                    [ values.features[0].geometry.coordinates[0].concat([values.features[0].geometry.coordinates[0][0]]) ]
-                )
-                self.lastFeature = new ol.Feature({
-                    geometry: things
-                })
-                source.addFeature(self.lastFeature)
-            }
-        })
-
-        let raster =  new ol.layer.Tile({
-            source: new ol.source.OSM()
-        })
-    
-        let source = new ol.source.Vector({wrapX: false});
-    
-        let vector = new ol.layer.Vector({
-            source: source
-        });
-
-        this.loadMap = () => {
-            $("#mapId").html('')
-
-            let mapConfig = {
-                target: mapId,
-                layers: [
-                  raster, vector
-                ],
-                view: new ol.View({
-                  center: ol.proj.fromLonLat([position.coords.longitude, position.coords.latitude]),
-                  zoom: 12
-                })
-            }
-        
-            self.map =  new ol.Map(mapConfig);
-    
-            if (!self.defaultConfig.draw) {
-                self.map.on('click', (ev) => {
-                    const coord = ol.proj.transform(ev.coordinate, 'EPSG:3857', 'EPSG:4326');
-                    inputMaskingElement.value = `${coord[0]},${coord[1]}`
-                    inputMaskingElement.dispatchEvent(new Event('change'))
-        
-                    if (self.defaultConfig.autoClose) {
-                        $(`#${modalIdGoogleMap}`).modal('hide')
-                    }
-                })
-            } else {
-                addInteraction()
-            }
-        }
-
-        self.loadMap();
-
-        element.parentNode.insertBefore(containerInputGroup, element.nextSibling)
-    })
-}
 
 const __ajax = (config) => {
    

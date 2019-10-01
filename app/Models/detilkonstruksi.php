@@ -63,8 +63,6 @@ class detilkonstruksi extends Model
         'statustanah',
         'kodetanah',
         'keterangan',
-        'dokumen',
-        'foto'
     ];
 
     /**
@@ -92,8 +90,6 @@ class detilkonstruksi extends Model
         'statustanah' => 'string',
         'kodetanah' => 'string',
         'keterangan' => 'string',
-        'dokumen' => 'string',
-        'foto' => 'string'
     ];
 
     /**
@@ -107,6 +103,10 @@ class detilkonstruksi extends Model
 
     public function setTgldokumenAttribute($value)
     {
+        if ($value == null) {
+            $value = date("d-m-Y");
+        }
+
         $value = date("d-m-Y", strtotime($value));
         $this->attributes['tgldokumen'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
     }
@@ -122,6 +122,10 @@ class detilkonstruksi extends Model
 
     public function setTglmulaiAttribute($value)
     {
+        if ($value == null) {
+            $value = date("d-m-Y");
+        }
+
         $value = date("d-m-Y", strtotime($value));
         $this->attributes['tglmulai'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
     }
@@ -135,4 +139,28 @@ class detilkonstruksi extends Model
         return date("d/m/Y", strtotime($value));
     }
     
+    public function Kota()
+    {
+        return $this->hasOne('App\Models\alamat', 'id', 'idkota');
+    }
+
+    public function Kecamatan()
+    {
+        return $this->hasOne('App\Models\alamat', 'id', 'idkecamatan');
+    }
+
+    public function Kelurahan()
+    {
+        return $this->hasOne('App\Models\alamat', 'id', 'idkelurahan');
+    }
+
+    public function Statustanah()
+    {
+        return $this->hasOne('App\Models\statustanah', 'id', 'statustanah');
+    }
+
+    public function Detiltanah()
+    {
+        return $this->hasOne('App\Models\detil_tanah', 'id', 'kodetanah');
+    }
 }

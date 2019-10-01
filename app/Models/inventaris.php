@@ -75,7 +75,7 @@ class inventaris extends Model
         'tgl_sensus' => 'date',
         'volume' => 'integer',
         'pembagi' => 'integer',
-        'satuan' => 'string',
+        'satuan' => 'integer',
         'harga_satuan' => 'integer',
         'perolehan' => 'string',
         'kondisi' => 'string',

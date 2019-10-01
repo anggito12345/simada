@@ -107,12 +107,13 @@
 <script>
     viewModel.jsLoaded.subscribe(() => {
 
-        const googleMapKoordinatLokasiJalan = new GoogleMapInput(document.getElementById('koordinatlokasi-detiljalan'), {})
+        const googleMapKoordinatLokasiJalan = new MapInput(document.getElementById('koordinatlokasi-detiljalan'), {})
 
-        const mapTanahJalan = new GoogleMapInput(document.getElementById('koordinattanah-detiljalan'), {
+        const mapTanahJalan = new MapInput(document.getElementById('koordinattanah-detiljalan'), {
             draw: true,
             drawOptions: [
-                'Polygon'
+                'Polygon',
+                'LineString'
             ]
         })
 

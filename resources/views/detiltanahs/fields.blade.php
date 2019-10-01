@@ -68,8 +68,8 @@
 
     <!-- Nama Sertifikat Field -->
     <div class="form-group col-sm-6 row">
-        {!! Form::label('nama_sertifikat', 'Nomor Sertifikat:') !!}
-        {!! Form::text('nama_sertifikat', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB A"]().nama_sertifikat']) !!}
+        {!! Form::label('nomor_sertifikat', 'Nomor Sertifikat:') !!}
+        {!! Form::text('nomor_sertifikat', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB A"]().nomor_sertifikat']) !!}
     </div>
 
     <!-- Penggunaan Field -->
@@ -101,9 +101,9 @@
     
     viewModel.jsLoaded.subscribe((newVal) => {    
         // document is ready. Do your stuff here
-        const googleMapKoordinatLokasi = new GoogleMapInput(document.getElementById('koordinatlokasi'), {})
+        const googleMapKoordinatLokasi = new MapInput(document.getElementById('koordinatlokasi'), {})
 
-        const mapTanah = new GoogleMapInput(document.getElementById('koordinattanah'), {
+        const mapTanah = new MapInput(document.getElementById('koordinattanah'), {
             draw: true,
             drawOptions: [
                 'Polygon'

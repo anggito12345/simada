@@ -1,8 +1,7 @@
-<!-- Pidinventaris Field -->
-<div class="row">
-    {!! Form::label('pidinventaris', __('field.pidinventaris'), ["class" => 'col-md-4 item-view']) !!}
-    <p class="col-md-8 item-view">{!! \App\Models\BaseModel::getRelationData($detiltanah->inventaris, "noreg", "") !!}</p>
-</div>
+
+<?php 
+    $uniqId = uniqid()
+?>
 
 <!-- Luas Field -->
 <div class="row">
@@ -37,13 +36,13 @@
 <!-- Koordinatlokasi Field -->
 <div class="row">
     {!! Form::label('koordinatlokasi', 'Koordinat lokasi:', ["class" => 'col-md-4 item-view']) !!}
-    <p class="col-md-8 item-view">{!! $detiltanah->koordinatlokasi !!}</p>
+    <p class="col-md-8 item-view map-non-draw-<?= $uniqId ?>"></p>
 </div>
 
 <!-- Koordinattanah Field -->
 <div class="row">
     {!! Form::label('koordinattanah', 'Koordinat tanah:', ["class" => 'col-md-4 item-view']) !!}
-    <p class="col-md-8 item-view">{!! $detiltanah->koordinattanah !!}</p>
+    <p class="col-md-8 item-view map-<?= $uniqId ?>"></p>
 </div>
 
 <!-- Hak Field -->
@@ -66,8 +65,8 @@
 
 <!-- Nama Sertifikat Field -->
 <div class="row">
-    {!! Form::label('nama_sertifikat', 'Nama Sertifikat:', ["class" => 'col-md-4 item-view']) !!}
-    <p class="col-md-8 item-view">{!! $detiltanah->nama_sertifikat !!}</p>
+    {!! Form::label('nomor_sertifikat', 'Nama Sertifikat:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $detiltanah->nomor_sertifikat !!}</p>
 </div>
 
 <!-- Penggunaan Field -->
@@ -82,15 +81,23 @@
     <p class="col-md-8 item-view">{!! $detiltanah->keterangan !!}</p>
 </div>
 
-<!-- Dokumen Field -->
-<div class="row">
-    {!! Form::label('dokumen', 'Dokumen:', ["class" => 'col-md-4 item-view']) !!}
-    <p class="col-md-8 item-view">{!! \App\Helpers\FileHelpers::showFile(url("") . "" . Storage::url($detiltanah->dokumen)) !!}</p>
-</div>
+<script>
 
-<!-- Foto Field -->
-<div class="row">
-    {!! Form::label('foto', 'Foto:', ["class" => 'col-md-4 item-view']) !!}
-    <p class="col-md-8 item-view">{!! \App\Helpers\FileHelpers::showFile(url("") . "" . Storage::url($detiltanah->foto)) !!}</p>
-</div>
+    window["map-<?= $uniqId ?>"] = () => {
+        new MapInput(document.getElementsByClassName("map-<?= $uniqId ?>")[0], {
+            value : <?= $detiltanah->koordinattanah ?>,
+            draw: true,
+        })
 
+        new MapInput(document.getElementsByClassName("map-non-draw-<?= $uniqId ?>")[0], {
+            value : "<?= $detiltanah->koordinatlokasi ?>",
+            draw: false,
+        })
+    }
+    
+    // viewModel.jsLoaded.subscribe(() => {
+    //     mainShow()
+    // })
+
+    window["map-<?= $uniqId ?>"]()
+</script>

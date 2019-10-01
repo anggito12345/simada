@@ -24,18 +24,18 @@
     
     <!-- Seni Asal Field -->
     <div class="form-group col-sm-6">
-        {!! Form::label('seni_asal', 'Asal Daerah:') !!}
+        {!! Form::label('seni_asal', __('field.seni_asal')) !!}
         {!! Form::text('seni_asal', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB E"]().seni_asal']) !!}
     </div>
 
     <!-- Seni Pencipta Field -->
     <div class="form-group col-sm-6">
-        {!! Form::label('seni_pencipta', 'Pencipta:') !!}
+        {!! Form::label('seni_pencipta', __('field.seni_pencipta')) !!}
         {!! Form::text('seni_pencipta', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB E"]().seni_pencipta']) !!}
     </div>
     <!-- Seni Bahan Field -->
     <div class="form-group col-sm-6">
-        {!! Form::label('seni_bahan', 'Bahan:') !!}
+        {!! Form::label('seni_bahan', __('field.seni_bahan')) !!}
         {!! Form::text('seni_bahan', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB E"]().seni_bahan']) !!}
     </div>
 </div>
@@ -48,13 +48,13 @@
     
     <!-- Ternak Jenis Field -->
     <div class="form-group col-sm-6">
-        {!! Form::label('ternak_jenis', 'Jenis:') !!}
+        {!! Form::label('ternak_jenis', __('field.ternak_jenis')) !!}
         {!! Form::text('ternak_jenis', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB E"]().ternak_jenis']) !!}
     </div>
 
     <!-- Ternak Ukuran Field -->
     <div class="form-group col-sm-6">
-        {!! Form::label('ternak_ukuran', 'Ukuran:') !!}
+        {!! Form::label('ternak_ukuran', __('field.ternak_ukuran')) !!}
         {!! Form::number('ternak_ukuran', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB E"]().ternak_ukuran']) !!}
     </div>
 
