@@ -1,104 +1,56 @@
-<!-- Pidinventaris Field -->
-<div class="form-group col-sm-6 row">
-    {!! Form::label('pidinventaris', __('field.pidinventaris')) !!}
-    {!! Form::select('pidinventaris', [], null, ['class' => 'form-control']) !!}
-</div>
-
 <!-- Tgl Field -->
-<div class="form-group col-sm-6 row">
-    {!! Form::label('tgl', 'Tanggal:') !!}
-    {!! Form::text('tgl', null, ['class' => 'form-control','id'=>'tgl']) !!}
+<div class="form-group col-sm-12">
+    {!! Form::label('tgl', 'Tanggal Buku Pemeliharaan:') !!}
+    {!! Form::date('tgl', null, ['class' => 'form-control','id'=>'tgl']) !!}
 </div>
-
-@section('scripts')
-    <script type="text/javascript">
-        $('#pidinventaris').select2({
-            ajax: {
-                url: "<?= url('api/inventaris') ?>",
-                dataType: 'json',
-                processResults: function (data) {
-                // Transforms the top-level key of the response object from 'items' to 'results'
-                return {
-                    results: data.data
-                };
-                }
-            },
-            theme: 'bootstrap' ,
-        })
-        
-        $('#tgl').datepicker({
-            format: "yyyy-mm-dd",
-            autoClose: true
-        }).on('changeDate', function (ev) {
-            $(this).datepicker('hide');
-        });
-
-        $('#tglkontrak').datepicker({
-            format: "yyyy-mm-dd",
-            autoClose: true
-        }).on('changeDate', function (ev) {
-            $(this).datepicker('hide');
-        });
-
-    </script>
-
-    @if (isset($pemeliharaan))
-    <script>
-        App.Helpers.defaultSelect2($('#pidinventaris'), "<?= url('api/inventaris', [$pemeliharaan->pidinventaris]) ?>","id","noreg")
-    </script>
-    @endif
-@endsection
 
 <!-- Uraian Field -->
-<div class="form-group col-sm-6 row">
+<div class="form-group col-sm-12">
     {!! Form::label('uraian', 'Uraian:') !!}
-    {!! Form::textarea('uraian', null, ['class' => 'form-control']) !!}
+    {!! Form::text('uraian', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Persh Field -->
-<div class="form-group col-sm-6 row">
-    {!! Form::label('persh', __('field.persh')) !!}
+<div class="form-group col-sm-12">
+    {!! Form::label('persh', 'Persh:') !!}
     {!! Form::text('persh', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Alamat Field -->
-<div class="form-group col-sm-6 row">
+<div class="form-group col-sm-12">
     {!! Form::label('alamat', 'Alamat:') !!}
     {!! Form::text('alamat', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Nokontrak Field -->
-<div class="form-group col-sm-6 row">
-    {!! Form::label('nokontrak', 'No Kontrak:') !!}
+<div class="form-group col-sm-12">
+    {!! Form::label('nokontrak', 'Nokontrak:') !!}
     {!! Form::text('nokontrak', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Tglkontrak Field -->
-<div class="form-group col-sm-6 row">
-    {!! Form::label('tglkontrak', 'Tgl kontrak:') !!}
-    {!! Form::text('tglkontrak', null, ['class' => 'form-control','id'=>'tglkontrak']) !!}
+<div class="form-group col-sm-12">
+    {!! Form::label('tglkontrak', 'Tglkontrak:') !!}
+    {!! Form::date('tglkontrak', null, ['class' => 'form-control','id'=>'tglkontrak']) !!}
 </div>
 
 
 <!-- Biaya Field -->
-<div class="form-group col-sm-6 row">
+<div class="form-group col-sm-12">
     {!! Form::label('biaya', 'Biaya:') !!}
     {!! Form::number('biaya', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Menambah Field -->
-<div class="form-group col-sm-6 row">
+<div class="form-group col-sm-12">
     {!! Form::label('menambah', 'Menambah:') !!}
-    <div class="radio">
-        {!! Form::radio('menambah', 1, isset($pemeliharaan) ? $pemeliharaan->menambah == 1 : false) !!} Ya
-        {!! Form::radio('menambah', 0, isset($pemeliharaan) ? $pemeliharaan->menambah == 0 : false) !!} Tidak
-    </div>    
+    {!! Form::number('menambah', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Keterangan Field -->
-<div class="form-group col-sm-6 row">
+<div class="form-group col-sm-12">
     {!! Form::label('keterangan', 'Keterangan:') !!}
-    {!! Form::textarea('keterangan', null, ['class' => 'form-control']) !!}
+    {!! Form::text('keterangan', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Submit Field -->

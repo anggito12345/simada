@@ -451,75 +451,93 @@
         funcGetFotoFileList()
         funcGetDokumenFileList()
         
+        const onSave = (isDraft) => {
+            Swal.fire({
+                    title: 'Anda yakin?',
+                    html: `Data akan tersimpan <b>${isDraft ? "" : "tidak"} sebagai draft</b>`,
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Ya!'
+                }).then((result) => {
+                    if (result.value) {
+                        let formData = new FormData($('#form-inventaris')[0])
+            
+                        formData.append(`draft`, isDraft)
+
+                        for (let index =0 ; index < fileGallery.fileList().length; index ++) {
+                            const d = fileGallery.fileList()[index]
+                            if (d.rawFile) {
+                                formData.append(`dokumen[${index}]`, d.rawFile)
+                            } else {
+                                formData.append(`dokumen[${index}]`, false)
+                            }
+
+                            let keys = Object.keys(d)
+
+                            keys.forEach((key) => {
+                                if (key == 'rawFile') {
+                                    return
+                                }
+                                formData.append(`dokumen_metadata_${key}[${index}]`, d[key])
+                            })                
+                            
+                            formData.append(`dokumen_metadata_id_inventaris[${index}]`, <?= isset($inventaris) ? $inventaris->id: 'null' ?>)
+                        }
+
+                        foto.fileList().forEach((d, index) => {
+                            if (d.rawFile) {
+                                formData.append(`foto[${index}]`, d.rawFile)
+                            } else {
+                                formData.append(`foto[${index}]`, false)
+                            }
+
+                            let keys = Object.keys(d)
+
+                            keys.forEach((key) => {
+                                if (key == 'rawFile') {
+                                    return
+                                }
+                                formData.append(`foto_metadata_${key}[${index}]`, d[key])
+                            })                
+
+                            
+                            
+                            formData.append(`foto_metadata_id_inventaris[${index}]`, <?= isset($inventaris) ? $inventaris->id: 'null' ?>)
+                            
+                            return d.rawFile
+                        })
+                        
+                        formData.append(`kib`, JSON.stringify(viewModel.data[viewModel.data.tipeKib()]()))
+                        formData.append('tipe_kib', viewModel.data.tipeKib().replace(/KIB /g,""))
+
+                        __ajax({
+                            method: 'POST',
+                            url: "<?= url('api/inventaris', isset($inventaris) ? [$inventaris->id] : []) ?>",
+                            data: formData,
+                            processData: false,
+                            contentType: false,
+                        }).then((d, resp) => {
+                            swal.fire({
+                                type: "success",
+                                text: "Berhasil menyimpan data!",
+                                onClose: () => {
+                                    window.location = `${$('[base-path]').val()}/inventaris`
+                                }
+                            })
+                            
+                        })          
+                    }
+            })
+            
+        }
 
         const form = document.querySelector('#form-inventaris')
         form.addEventListener('submit', (ev) => {
             ev.preventDefault()
 
-            let formData = new FormData($('#form-inventaris')[0])
-            
-            for (let index =0 ; index < fileGallery.fileList().length; index ++) {
-                const d = fileGallery.fileList()[index]
-                if (d.rawFile) {
-                    formData.append(`dokumen[${index}]`, d.rawFile)
-                } else {
-                    formData.append(`dokumen[${index}]`, false)
-                }
-
-                let keys = Object.keys(d)
-
-                keys.forEach((key) => {
-                    if (key == 'rawFile') {
-                        return
-                    }
-                    formData.append(`dokumen_metadata_${key}[${index}]`, d[key])
-                })                
-                
-                formData.append(`dokumen_metadata_id_inventaris[${index}]`, <?= isset($inventaris) ? $inventaris->id: 'null' ?>)
-            }
-
-            foto.fileList().forEach((d, index) => {
-                if (d.rawFile) {
-                    formData.append(`foto[${index}]`, d.rawFile)
-                } else {
-                    formData.append(`foto[${index}]`, false)
-                }
-
-                let keys = Object.keys(d)
-
-                keys.forEach((key) => {
-                    if (key == 'rawFile') {
-                        return
-                    }
-                    formData.append(`foto_metadata_${key}[${index}]`, d[key])
-                })                
-
-                
-                
-                formData.append(`foto_metadata_id_inventaris[${index}]`, <?= isset($inventaris) ? $inventaris->id: 'null' ?>)
-                
-                return d.rawFile
-            })
-            
-            formData.append(`kib`, JSON.stringify(viewModel.data[viewModel.data.tipeKib()]()))
-            formData.append('tipe_kib', viewModel.data.tipeKib().replace(/KIB /g,""))
-
-            __ajax({
-                method: 'POST',
-                url: "<?= url('api/inventaris', isset($inventaris) ? [$inventaris->id] : []) ?>",
-                data: formData,
-                processData: false,
-                contentType: false,
-            }).then((d, resp) => {
-                swal.fire({
-                    type: "success",
-                    text: "Berhasil menyimpan data!",
-                    onClose: () => {
-                        window.location = `${$('[base-path]').val()}/inventaris`
-                    }
-                })
-                
-            })
+            onSave(false)            
         })
     </script>
 
@@ -544,6 +562,10 @@
 <!-- Submit Field -->
 <div class="form-group col-sm-12">
     {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
+
+    @if ((isset($inventaris) && !$inventaris->draft) || !isset($inventaris))
+        <div class="btn btn-primary" onclick="onSave(true)">Draft</div>
+    @endif
     <a href="{!! route('inventaris.index') !!}" class="btn btn-default">Cancel</a>
 </div>
 @endif

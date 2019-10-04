@@ -58,6 +58,7 @@ class inventaris extends Model
         'keterangan',
         'jumlah',
         'tgl_dibukukan',
+        'draft'
     ];
 
     /**
@@ -147,6 +148,8 @@ class inventaris extends Model
                 } 
 
                 DB::table('detil_mesin')->insert($dataKib);
+
+                break;
             case 'C':
                 $rules = \App\Models\detilbangunan::$rules;
                 $validator = Validator::make($dataKib, $rules);

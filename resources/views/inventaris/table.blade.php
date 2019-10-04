@@ -2,10 +2,8 @@
     @include('layouts.datatables_css')
 @endsection
 
+
 {!! $dataTable->table(['id' => 'table-inventaris', 'width' => '100%', 'class' => 'table table-striped table-bordered']) !!}
-
-
-
 
 @section('scripts')
     
@@ -18,6 +16,75 @@
         }
 
         let isReady = false
+   
+        function onPemeliharaan() {
+            if (viewModel.data.checkedItem.length != 1 ) {
+                swal.fire({
+                    type: 'error',
+                    text: 'Silahkan pilih 1',
+                    title: 'Pemeliharaan'
+                })
+            } else {
+                $("#modal-pemeliharaan").modal('show')
+            }
+        }
+
+        function onEdit() {
+            if (viewModel.data.checkedItem.length != 1 ) {
+                swal.fire({
+                    type: 'error',
+                    text: 'Silahkan pilih 1 yang ingin diubah',
+                    title: 'Ubah'
+                })
+            } else {
+                window.location = `${$("[base-path]").val()}/inventaris/${viewModel.data.checkedItem[0]}/edit`
+            }
+        }
+
+        function onDelete() {
+            if (viewModel.data.checkedItem.length < 1 ) {
+                swal.fire({
+                    type: 'error',
+                    text: 'Silahkan pilih minimal 1 yang ingin dihapus',
+                    title: 'Ubah'
+                })
+            } else {
+                Swal.fire({
+                    title: 'Anda yakin?',
+                    text: "Anda tidak akan bisa mengembalikan data yang telah terhapus",
+                    type: 'warning',
+                    showCancelButton: true,
+                    confirmButtonColor: '#3085d6',
+                    cancelButtonColor: '#d33',
+                    confirmButtonText: 'Hapus!'
+                }).then((result) => {
+                    if (result.value) {
+                        __ajax({
+                            method: "DELETE",
+                            url: `${$("[base-path]").val()}/api/inventaris/${viewModel.data.checkedItem.join("|")}`
+                        }).then(function() {
+                            swal.fire({
+                                type: 'success',
+                                text: 'Data berhasil dihapus',
+                                title: 'Hapus',
+                                onClose: () => {
+                                    $("#table-inventaris").DataTable().ajax.reload();
+                                }
+                            })
+                        })          
+                    }
+                })
+                
+            }
+        }
+
+        function onLoadRowDataTable(e) {
+            if (viewModel.data.checkedItem.indexOf($(e).find("td input[type=checkbox]").attr('value')) > -1) {
+                $(e).find("td input[type=checkbox]").prop('checked', true)
+            } else {
+                $(e).find("td input[type=checkbox]").prop('checked', false)
+            }
+        }
         
         function onLoadDataTable(e) {
 

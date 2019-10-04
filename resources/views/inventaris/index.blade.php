@@ -12,7 +12,14 @@
 
         @include('flash::message')
 
+        <div class="box box-primary">
+            <div class="box-body">
+                    @include('inventaris.table_filter')
+            </div>
+        </div>
+
         <div class="clearfix"></div>
+        
         <div class="box box-primary">
             <div class="box-body">
                     @include('inventaris.table')
@@ -47,9 +54,36 @@
   </div>
 </div>
 
+
+<div class="modal" id="modal-pemeliharaan"  role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Mutasi</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        @include('pemeliharaans.fields')
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="viewModel.clickEvent.confirmMutasiSwal()">Simpan</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 @section('scripts_2')
 <script>
-  viewModel.clickEvent = Object.assign(viewModel.clickEvent, {
+  viewModel.changeEvent = Object.assign(viewModel.changeEvent, {
+    // ....
+    changeRefreshGrid: () => {
+      $("#table-inventaris").DataTable().ajax.reload();
+    }
+  })
+  viewModel.clickEvent = Object.assign(viewModel.clickEvent, {      
       showModalMutasi: ($id, $barangInfo) => {               
           // try to match each default field to and from          
 

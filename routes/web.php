@@ -64,3 +64,7 @@ Route::resource('systemUploads', 'system_uploadController');
 Route::resource('detilasets', 'detilasetController');
 
 Route::resource('detilkonstruksis', 'detilkonstruksiController');
+
+Route::resource('pemeliharaans', 'pemeliharaanController');
+
+Route::resource('penghapusans', 'penghapusanController');

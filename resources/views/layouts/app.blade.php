@@ -194,6 +194,14 @@
             opacity: 1;
             transform: scale(1);
         }
+
+        .dt-button-collection.dropdown-menu {
+            padding: 10px;
+        }
+
+        .dt-buttons .btn-sm {
+            padding: 10px !important;
+        }
     </style>
 </head>
 

@@ -18,7 +18,6 @@ class pemeliharaanController extends AppBaseController
 
     public function __construct(pemeliharaanRepository $pemeliharaanRepo)
     {
-        parent::__construct();
         $this->pemeliharaanRepository = $pemeliharaanRepo;
     }
 

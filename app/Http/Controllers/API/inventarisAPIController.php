@@ -201,19 +201,41 @@ class inventarisAPIController extends AppBaseController
             $tipe_kib = chr(64+(int)$input['tipe_kib']);
 
             if ($tipe_kib == 'A') {
-                $prepreSave = $detilKontruksiArray;                
+                $prepareSave = $detilKontruksiArray;               
 
-                if(isset($detilKontruksi->detiltanah)) {
-                    $detilTanahFromForeign = $detilKontruksi->detiltanah;
-                    $prepreSave['hak'] = $detilTanahFromForeign['hak'];
-                    $prepreSave['luas'] = $detilTanahFromForeign['luas'];
-                    $prepreSave['status_sertifikat'] = $detilTanahFromForeign['status_sertifikat'];
-                    $prepreSave['tgl_sertifikat'] = $detilTanahFromForeign['tgl_sertifikat'];
-                    $prepreSave['nomor_sertifikat'] = $detilTanahFromForeign['nomor_sertifikat'];
-                    $prepreSave['penggunaan'] = $detilTanahFromForeign['penggunaan'];
+                if(isset($detilKontruksiArray['kodetanah'])) {       
+
+                    $detilTanahFromForeign = \App\Models\detiltanah::find($detilKontruksiArray['kodetanah'])->toArray();
+                    $prepareSave['hak'] = $detilTanahFromForeign['hak'];
+                    $prepareSave['luas'] = $detilTanahFromForeign['luas'];
+                    $prepareSave['status_sertifikat'] = $detilTanahFromForeign['status_sertifikat'];
+                    $prepareSave['tgl_sertifikat'] = $detilTanahFromForeign['tgl_sertifikat'];
+                    $prepareSave['nomor_sertifikat'] = $detilTanahFromForeign['nomor_sertifikat'];
+                    $prepareSave['penggunaan'] = $detilTanahFromForeign['penggunaan'];
                 }
                 
-                DB::table('detil_tanah')->insert($detilKontruksiArray);
+                
+                DB::table('detil_tanah')->insert([
+                    'pidinventaris' => $prepareSave['pidinventaris'],
+                    'luas' => $prepareSave['luasbangunan'],
+                    'alamat' => $prepareSave['alamat'],
+                    'idkota' => $prepareSave['idkota'],
+                    'idkecamatan' => $prepareSave['idkecamatan'],
+                    'idkelurahan' => $prepareSave['idkelurahan'],
+                    'koordinatlokasi' => $prepareSave['koordinatlokasi'],
+                    'koordinattanah' => $prepareSave['koordinattanah'],
+                    'hak' => $prepareSave['hak'],
+                    'status_sertifikat' => $prepareSave['status_sertifikat'],
+                    'tgl_sertifikat' => $prepareSave['tgl_sertifikat'],
+                    'nomor_sertifikat' => $prepareSave['nomor_sertifikat'],
+                    'penggunaan' => $prepareSave['penggunaan'],
+                    'keterangan' => $prepareSave['keterangan'],
+                ]);
+            } else if ($tipe_kib == 'B') {
+                DB::table('detil_mesin')->insert([
+                    'pidinventaris' => $detilKontruksiArray['pidinventaris'],                  
+                    'keterangan' => $detilKontruksiArray['keterangan'],   
+                ]);
             } else if ($tipe_kib == 'C') {
                 DB::table('detil_bangunan')->insert([
                     'pidinventaris' => $detilKontruksiArray['pidinventaris'],
@@ -251,6 +273,11 @@ class inventarisAPIController extends AppBaseController
                     'statustanah' => $detilKontruksiArray['statustanah'],
                     'kodetanah' => $detilKontruksiArray['kodetanah'],        
                     'keterangan' => $detilKontruksiArray['keterangan'],                       
+                ]);
+            } else if ($tipe_kib == 'E') {
+                DB::table('detil_aset_lainnya')->insert([
+                    'pidinventaris' => $detilKontruksiArray['pidinventaris'],                  
+                    'keterangan' => $detilKontruksiArray['keterangan'],   
                 ]);
             }
 
@@ -376,16 +403,45 @@ class inventarisAPIController extends AppBaseController
      * @return Response
      */
     public function destroy($id)
-    {
-        /** @var inventaris $inventaris */
-        $inventaris = $this->inventarisRepository->find($id);
+    {   
+        $ids = explode("|",$id);
+        
+        foreach ($ids as $key => $id) {
+            # code...
+             /** @var inventaris $inventaris */
 
-        if (empty($inventaris)) {
-            return $this->sendError('Inventaris not found');
+            DB::beginTransaction();
+            try {
+                $inventaris = $this->inventarisRepository->find($id);
+                if (empty($inventaris)) {
+                    return $this->sendError('Inventaris not found');
+                }
+
+                $querySystemUpload = \App\Models\system_upload::where([
+                    'foreign_table' => 'inventaris',
+                    'foreign_id' => $id,
+                ]);
+        
+        
+                $dataSystemUploads = $querySystemUpload->get();
+        
+                foreach ($dataSystemUploads as $key => $value) {
+                    Storage::delete($value->path);
+                }
+        
+                $querySystemUpload->delete();
+    
+                $inventaris->delete();
+                
+                DB::commit(); 
+            } catch(\Exception $e) {
+                DB::rollBack();
+            }
+            
+
         }
 
-        $inventaris->delete();
-
+       
         return $this->sendResponse($id, 'Inventaris deleted successfully');
     }
 }

@@ -11,7 +11,7 @@
         <div class="box box-primary">
 
             <div class="box-body">
-                <div class="">
+                <div class="row">
                     {!! Form::open(['route' => 'pemeliharaans.store']) !!}
 
                         @include('pemeliharaans.fields')

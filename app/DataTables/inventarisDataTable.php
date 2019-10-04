@@ -30,9 +30,9 @@ class inventarisDataTable extends DataTable
             ->editColumn('harga_satuan', function($data) {
                 return number_format($data->harga_satuan, 2);
             })
-            ->editColumn('keterangan', function($data) {
+            ->editColumn('checkbox', function($data) {
 
-                return strlen($data->keterangan) > 30 ? $data->keterangan . "..." : $data->keterangan;
+                return "<input type='checkbox' onclick='viewModel.clickEvent.checkItem(this)'  value={$data->id} />";
             })
             ->addColumn('jenis', function($data) {
                 $barang = \App\Models\barang::find($data->pidbarang);
@@ -76,7 +76,7 @@ class inventarisDataTable extends DataTable
                 return $kode;
             })
             ->addColumn('action', 'inventaris.datatables_actions')
-            ->rawColumns(['detail', 'action']);
+            ->rawColumns(['detail', 'action', 'checkbox']);
     }
 
     /**
@@ -102,7 +102,8 @@ class inventarisDataTable extends DataTable
             ->leftJoin("detil_tanah", "detil_tanah.pidinventaris", "inventaris.id")
             ->leftJoin("m_satuan_barang", "m_satuan_barang.id", "inventaris.satuan")
             ->leftJoin("detil_mesin", "detil_mesin.pidinventaris", "inventaris.id")
-            ->leftJoin("m_merk_barang", "m_merk_barang.id", "detil_mesin.merk");
+            ->leftJoin("m_merk_barang", "m_merk_barang.id", "detil_mesin.merk")
+            ->where('inventaris.draft', isset($_GET['draft']) ? $_GET['draft'] == "1" : false);
     }
 
     /**
@@ -113,20 +114,42 @@ class inventarisDataTable extends DataTable
     public function html()
     {
         return $this->builder()
+            ->pageLength(25)
             ->columns($this->getColumns())
-            ->minifiedAjax()
-            ->addAction(['width' => '120px', 'printable' => false])
+            // ->minifiedAjax()
+            ->ajax([
+                'url' => route('inventaris.index'),
+                'type' => 'GET',
+                'dataType' => 'json',
+                'data' => 'function(d) { 
+                    d.draft = $("[name=draft]").val()                    
+                }',
+            ])
+            
+            // ->addAction(['width' => '120px', 'printable' => false])
             ->parameters([
+                'lengthMenu' => [
+                    [ 10, 25, 50, -1 ],
+                    [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+                ],    
                 'drawCallback' => 'function(e) { onLoadDataTable(e) }',
+                'rowCallback' => 'function(e) { onLoadRowDataTable(e) }',
                 'dom'       => 'Bfrtip',
                 'stateSave' => true,
                 'order'     => [[3, 'desc']],
                 'buttons'   => [
-                    ['extend' => 'create', 'className' => 'btn btn-default btn-sm no-corner'],
+                    ['pageLength'],                
+                    
+                    ['extend' => 'collection', 'text' => 'Action', 'className' => 'btn btn-default btn-sm no-corner',  'buttons' => [                        
+                        ['extend' => 'create'],  
+                        ['text' => '<i class="fa fa-edit"></i> Edit', 'action' => 'function(){onEdit()}', ],                        
+                        ['text' => '<i class="fa fa-trash"></i> Hapus', 'action' => 'function(){onDelete()}', ],
+                        ['text' => '<hr />'],
+                        ['text' => '<i class="fa fa-wrench"></i> Pemeliharaan', 'action' => 'function(){onPemeliharaan()}', ],
+                        ['text' => '<i class="fa fa-eraser"></i> Penghapusan', 'action' => 'function(){onDelete()}', ],
+                    ]],                    
                     ['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner', 'buttons' => [ 'csv', 'excel']],
-                    ['extend' => 'print', 'className' => 'btn btn-default btn-sm no-corner'],
-                    ['extend' => 'reset', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'reload', 'className' => 'btn btn-default btn-sm no-corner',],
+                    ['extend' => 'print', 'className' => 'btn btn-default btn-sm no-corner'],                                        
                 ],
             ]);
     }
@@ -139,7 +162,9 @@ class inventarisDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            
+            'checkbox' => [
+                'title' => '',
+            ],
             [
                 'className' => 'details-control',
                 'orderable' => false,

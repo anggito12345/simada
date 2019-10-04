@@ -88,7 +88,7 @@ class detilkonstruksi extends Model
         'nodokumen' => 'string',
         'luastanah' => 'integer',
         'statustanah' => 'string',
-        'kodetanah' => 'string',
+        'kodetanah' => 'integer',
         'keterangan' => 'string',
     ];
 

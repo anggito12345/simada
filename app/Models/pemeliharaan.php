@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Class pemeliharaan
  * @package App\Models
- * @version September 5, 2019, 2:21 pm UTC
+ * @version October 2, 2019, 4:29 pm UTC
  *
  * @property integer pidinventaris
  * @property string tgl
@@ -23,8 +23,13 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class pemeliharaan extends Model
 {
+    use SoftDeletes;
 
     public $table = 'pemeliharaan';
+    
+    const CREATED_AT = 'created_at';
+    const UPDATED_AT = 'updated_at';
+
 
     protected $dates = ['deleted_at'];
 
@@ -69,24 +74,6 @@ class pemeliharaan extends Model
     public static $rules = [
         
     ];
-
-
-    public function setTglAttribute($value)
-    {
-        $value = date("Y-m-d", strtotime($value));
-        $this->attributes['tgl'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
-    }
-
-    public function setTglkontrakAttribute($value)
-    {
-        $value = date("Y-m-d", strtotime($value));
-        $this->attributes['tglkontrak'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
-    }
-
-    public function Inventaris()
-    {
-        return $this->hasOne('App\Models\inventaris', 'id', 'pidinventaris');
-    }
 
     
 }

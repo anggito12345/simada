@@ -29,10 +29,7 @@ class penghapusanDataTable extends DataTable
      */
     public function query(penghapusan $model)
     {
-        return $model->newQuery()->select([
-            'penghapusan.*',
-            'inventaris.noreg as noreg_inv'
-        ])->join('inventaris','inventaris.id','penghapusan.pidinventaris');
+        return $model->newQuery();
     }
 
     /**
@@ -68,24 +65,17 @@ class penghapusanDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'noreg_inv' => [
-                'title' => __('field.noreg') . ' inventaris',
-                'name' => 'inventaris.noreg'
-            ],
-            'noreg' => [
-                'title' => __('field.noreg'),
-            ],
-            'tglhapus' => [
-                'title' => __('field.tglhapus'),
-            ],
+            'pidinventaris',
+            'noreg',
+            'tglhapus',
             'kriteria',
-            // 'kondisi',
+            'kondisi',
             'harga_apprisal',
-            // 'dokumen',
-            // 'foto',
-            // 'nosk',
-            // 'tglsk',
-            // 'keterangan'
+            'dokumen',
+            'foto',
+            'nosk',
+            'tglsk',
+            'keterangan'
         ];
     }
 

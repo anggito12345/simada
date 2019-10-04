@@ -18,6 +18,8 @@ $factory->define(penghapusan::class, function (Faker $faker) {
         'foto' => $faker->word,
         'nosk' => $faker->word,
         'tglsk' => $faker->word,
-        'keterangan' => $faker->word
+        'keterangan' => $faker->word,
+        'updated_at' => $faker->word,
+        'created_at' => $faker->word
     ];
 });

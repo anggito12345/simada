@@ -73,3 +73,7 @@ Route::resource('system_uploads', 'system_uploadAPIController');
 Route::resource('detilasets', 'detilasetAPIController');
 
 Route::resource('detilkonstruksis', 'detilkonstruksiAPIController');
+
+Route::resource('pemeliharaans', 'pemeliharaanAPIController');
+
+Route::resource('penghapusans', 'penghapusanAPIController');

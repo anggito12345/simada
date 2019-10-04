@@ -18,8 +18,7 @@ class pemeliharaanDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable
-            ->addColumn('action', 'pemeliharaans.datatables_actions');
+        return $dataTable->addColumn('action', 'pemeliharaans.datatables_actions');
     }
 
     /**
@@ -30,10 +29,7 @@ class pemeliharaanDataTable extends DataTable
      */
     public function query(pemeliharaan $model)
     {
-        return $model->newQuery()->select([
-            'pemeliharaan.*',
-            'inventaris.noreg as noreg'
-        ])->join('inventaris','inventaris.id','pemeliharaan.pidinventaris');
+        return $model->newQuery();
     }
 
     /**
@@ -53,7 +49,7 @@ class pemeliharaanDataTable extends DataTable
                 'order'     => [[0, 'desc']],
                 'buttons'   => [
                     ['extend' => 'create', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner', 'buttons' => [ 'csv', 'excel']],
+                    ['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner',],
                     ['extend' => 'print', 'className' => 'btn btn-default btn-sm no-corner',],
                     ['extend' => 'reset', 'className' => 'btn btn-default btn-sm no-corner',],
                     ['extend' => 'reload', 'className' => 'btn btn-default btn-sm no-corner',],
@@ -69,21 +65,16 @@ class pemeliharaanDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'noreg' => [
-                'title' => __('field.noreg'),
-                'name' => 'inventaris.noreg'
-            ],
+            'pidinventaris',
             'tgl',
-            // 'uraian',
-            'persh' => [
-                'title' => __('field.persh')
-            ],
+            'uraian',
+            'persh',
             'alamat',
             'nokontrak',
             'tglkontrak',
             'biaya',
-            // 'menambah',
-            // 'keterangan'
+            'menambah',
+            'keterangan'
         ];
     }
 

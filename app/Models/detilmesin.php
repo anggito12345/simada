@@ -47,8 +47,6 @@ class detilmesin extends Model
         'nopol',
         'bpkb',
         'keterangan',
-        'dokumen',
-        'foto'
     ];
 
     /**

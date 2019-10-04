@@ -9,11 +9,10 @@
     <div class="content">
         <div class="box box-primary">
             <div class="box-body">
-                <div class="container container-view" style="padding-left: 20px">
+                <div class="row" style="padding-left: 20px">
                     @include('penghapusans.show_fields')
-                    
+                    <a href="{!! route('penghapusans.index') !!}" class="btn btn-default">Back</a>
                 </div>
-                <a href="{!! route('penghapusans.index') !!}" class="btn btn-default">Back</a>
             </div>
         </div>
     </div>

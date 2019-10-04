@@ -8,7 +8,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 /**
  * Class penghapusan
  * @package App\Models
- * @version September 6, 2019, 1:21 pm UTC
+ * @version October 2, 2019, 4:30 pm UTC
  *
  * @property integer pidinventaris
  * @property string noreg
@@ -24,9 +24,10 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class penghapusan extends Model
 {
+    use SoftDeletes;
 
-    public $table = "penghapusan";
-
+    public $table = 'penghapusan';
+    
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
@@ -77,10 +78,5 @@ class penghapusan extends Model
         
     ];
 
-
-    public function Inventaris()
-    {
-        return $this->hasOne('App\Models\inventaris', 'id', 'pidinventaris');
-    }
     
 }

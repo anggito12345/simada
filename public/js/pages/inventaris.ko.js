@@ -1,6 +1,9 @@
 viewModel.data = Object.assign(viewModel.data, {
     pidinventaris: "",
 
+    // 
+    checkedItem: [],
+
     // mutasi data
     mutasiKe: ko.observable("A"),
     mutasiFFields: ko.observableArray([]),
@@ -42,6 +45,7 @@ viewModel.data = Object.assign(viewModel.data, {
         idkelurahan: null,
         beton: 0,
         bertingkat: 0,
+        tgldokumen: moment().format('YYYY-MM-DD'),
     }),
     "KIB B": ko.observable({
     }),
@@ -201,3 +205,17 @@ viewModel.data.tipeKib.subscribe((newVal) => {
 })
 
 
+viewModel.clickEvent = Object.assign(viewModel.clickEvent, {
+    checkItem: (e) => {
+        let index = viewModel.data.checkedItem.indexOf($(e).attr('value'))
+        if ($(e).prop('checked')) {               
+            if ( index > -1) {
+                viewModel.data.checkedItem.splice(index, 1)
+            } else {
+                viewModel.data.checkedItem.push($(e).attr('value'))
+            }
+        } else {
+            viewModel.data.checkedItem.splice(index, 1)
+        }
+    }
+})

@@ -17,6 +17,8 @@ $factory->define(pemeliharaan::class, function (Faker $faker) {
         'tglkontrak' => $faker->word,
         'biaya' => $faker->randomDigitNotNull,
         'menambah' => $faker->randomDigitNotNull,
-        'keterangan' => $faker->word
+        'keterangan' => $faker->word,
+        'updated_at' => $faker->word,
+        'created_at' => $faker->word
     ];
 });

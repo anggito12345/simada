@@ -11,8 +11,8 @@
         <div class="box box-primary">
 
             <div class="box-body">
-                <div class="">
-                    {!! Form::open(['route' => 'penghapusans.store', "enctype" => "multipart/form-data"]) !!}
+                <div class="row">
+                    {!! Form::open(['route' => 'penghapusans.store']) !!}
 
                         @include('penghapusans.fields')
 

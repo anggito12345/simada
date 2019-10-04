@@ -44,8 +44,6 @@ class detilaset extends Model
         'ternak_jenis',
         'ternak_ukuran',
         'keterangan',
-        'dokumen',
-        'foto'
     ];
 
     /**

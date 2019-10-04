@@ -124,3 +124,11 @@
     </ul>
 </li>
 
+<li class="{{ Request::is('pemeliharaans*') ? 'active' : '' }}">
+    <a href="{!! route('pemeliharaans.index') !!}"><i class="fa fa-edit"></i><span>Pemeliharaans</span></a>
+</li>
+
+<li class="{{ Request::is('penghapusans*') ? 'active' : '' }}">
+    <a href="{!! route('penghapusans.index') !!}"><i class="fa fa-edit"></i><span>Penghapusans</span></a>
+</li>
+

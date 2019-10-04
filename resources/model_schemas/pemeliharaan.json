@@ -119,5 +119,27 @@
         "primary": false,
         "inForm": true,
         "inIndex": true
+    },
+    {
+        "name": "updated_at",
+        "dbType": "date",
+        "htmlType": "date",
+        "validations": null,
+        "searchable": false,
+        "fillable": false,
+        "primary": false,
+        "inForm": false,
+        "inIndex": false
+    },
+    {
+        "name": "created_at",
+        "dbType": "date",
+        "htmlType": "date",
+        "validations": null,
+        "searchable": false,
+        "fillable": false,
+        "primary": false,
+        "inForm": false,
+        "inIndex": false
     }
 ]

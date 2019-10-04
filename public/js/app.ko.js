@@ -46,6 +46,10 @@ let viewModel = {
     clickEvent: {
 
     },
+
+    changeEvent: {
+
+    },
     
     collections: {
 
