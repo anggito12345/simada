@@ -1,13 +1,12 @@
 <?php
 
-namespace App\Http\Requests;
+namespace App\Http\Requests\API;
 
-use Illuminate\Foundation\Http\FormRequest;
-use App\Models\users;
+use App\Models\role;
+use InfyOm\Generator\Request\APIRequest;
 
-class UpdateusersRequest extends FormRequest
+class UpdateroleAPIRequest extends APIRequest
 {
-
     /**
      * Determine if the user is authorized to make this request.
      *
@@ -25,7 +24,6 @@ class UpdateusersRequest extends FormRequest
      */
     public function rules()
     {
-        // no rules
-        return [];
+        return role::$rules;
     }
 }

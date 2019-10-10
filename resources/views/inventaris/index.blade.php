@@ -31,6 +31,10 @@
     </div>
 @endsection
 
+
+
+@section('scripts_2')
+
 <div class="modal" id="modal-mutasi"  role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -59,7 +63,7 @@
   <div class="modal-dialog" role="document">
     <div class="modal-content">
       <div class="modal-header">
-        <h5 class="modal-title">Mutasi</h5>
+        <h5 class="modal-title">Pemeliharaan</h5>
         <button type="button" class="close" data-dismiss="modal" aria-label="Close">
           <span aria-hidden="true">&times;</span>
         </button>
@@ -68,14 +72,12 @@
         @include('pemeliharaans.fields')
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" onclick="viewModel.clickEvent.confirmMutasiSwal()">Simpan</button>
+        <button type="button" class="btn btn-primary" onclick="viewModel.clickEvent.savePemeliharaan()">Simpan</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
       </div>
     </div>
   </div>
 </div>
-
-@section('scripts_2')
 <script>
   viewModel.changeEvent = Object.assign(viewModel.changeEvent, {
     // ....
@@ -83,7 +85,40 @@
       $("#table-inventaris").DataTable().ajax.reload();
     }
   })
-  viewModel.clickEvent = Object.assign(viewModel.clickEvent, {      
+  viewModel.clickEvent = Object.assign(viewModel.clickEvent, {  
+      savePemeliharaan: () => {
+        let url = $("[base-path]").val() + "/api/pemeliharaans"
+        let method = "POST"
+        if($('#modal-pemeliharaan').attr('is_mode_insert') == 'false') {
+          url += "/" + viewModel.data.formPemeliharaan().id
+          method = "patch"
+        }
+
+
+        __ajax({
+          url: url,
+          method: method,
+          dataType: "json",
+          data: viewModel.data.formPemeliharaan(),
+        }).then((d) => {
+          swal.fire({
+            type: "success",
+            text: "Berhasil menyimpan data pemeliaraan!",
+            onClose: () => {
+              $("#modal-pemeliharaan").modal('hide')
+              
+              if ($('#modal-pemeliharaan').attr('callback') != undefined) {
+
+                let funcCallbackAndParam = $('#modal-pemeliharaan').attr('callback').split("|")
+                window[funcCallbackAndParam[0]](funcCallbackAndParam[1])
+                $('#modal-pemeliharaan').removeAttr('callback')
+                return;
+              }
+              $("#table-inventaris").DataTable().ajax.reload();
+            }
+          })
+        })
+      },
       showModalMutasi: ($id, $barangInfo) => {               
           // try to match each default field to and from          
 

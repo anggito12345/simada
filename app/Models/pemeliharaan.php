@@ -23,7 +23,6 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class pemeliharaan extends Model
 {
-    use SoftDeletes;
 
     public $table = 'pemeliharaan';
     
@@ -74,6 +73,38 @@ class pemeliharaan extends Model
     public static $rules = [
         
     ];
+
+
+    public function setTglAttribute($value)
+    {
+        $value = date("d-m-Y", strtotime($value));
+        $this->attributes['tgl'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
+    }
+
+    public function getTglAttribute($value)
+    {
+        if ($value == "") {
+            return "";
+        }
+
+        return date("d/m/Y", strtotime($value));
+    }
+
+    public function setTglkontrakAttribute($value)
+    {
+        $value = date("d-m-Y", strtotime($value));
+        $this->attributes['tglkontrak'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
+    }
+
+    public function getTglkontrakAttribute($value)
+    {
+        if ($value == "") {
+            return "";
+        }
+
+        return date("d/m/Y", strtotime($value));
+    }
+
 
     
 }

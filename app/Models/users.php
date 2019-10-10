@@ -34,7 +34,16 @@ class users extends Model
         'email',
         'email_verified_at',
         'password',
-        'remember_token'
+        'remember_token',
+        'nip',
+        'no_hp',
+        'tgl_lahir',
+        'jabatan',
+        'jenis_kelamin',
+        'username',
+        'pid_organisasi',
+        'aktif',
+        'email_verification_code'
     ];
 
     /**
@@ -45,7 +54,8 @@ class users extends Model
     protected $casts = [
         'id' => 'integer',
         'name' => 'string',
-        'email' => 'string',
+        'email' => 'string|unique',
+        'username' => 'string|unique',
         'email_verified_at' => 'datetime',
         'password' => 'string',
         'remember_token' => 'string'
@@ -61,6 +71,22 @@ class users extends Model
         'email' => 'required',
         'password' => 'required|confirmed|min:6'
     ];
+
+
+    public function setTglLahirAttribute($value)
+    {
+        $value = date("d-m-Y", strtotime($value));
+        $this->attributes['tgl_lahir'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
+    }
+
+    public function getTglLahirAttribute($value)
+    {
+        if ($value == "") {
+            return "";
+        }
+
+        return date("d/m/Y", strtotime($value));
+    }
 
     
 }

@@ -47,6 +47,15 @@ class BaseModel extends Model {
         return isset($data) ? $data->$keyToObtain : $defaultValue;
     }
 
+    public static $LevelDs = [
+        -1,0,1,2,3
+    ];
+
+    public static $JenisKelaminDs = [
+        'L' => 'Laki - Laki',
+        'P' => 'Perempuan'
+    ];
+
 
     public static $YesNoDs = [
         '1' => 'Ya',

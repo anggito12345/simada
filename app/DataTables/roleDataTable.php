@@ -2,11 +2,11 @@
 
 namespace App\DataTables;
 
-use App\Models\pemeliharaan;
+use App\Models\role;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 
-class pemeliharaanDataTable extends DataTable
+class roleDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -18,24 +18,18 @@ class pemeliharaanDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'pemeliharaans.datatables_actions');
+        return $dataTable->addColumn('action', 'roles.datatables_actions');
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\pemeliharaan $model
+     * @param \App\Models\role $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(pemeliharaan $model)
+    public function query(role $model)
     {
-        $query = $model->newQuery();
-
-        if (isset($_GET['pidinventaris'])) {
-            $query = $query->where('pidinventaris', $_GET['pidinventaris']);
-        }
-
-        return $query;
+        return $model->newQuery();
     }
 
     /**
@@ -71,16 +65,8 @@ class pemeliharaanDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'pidinventaris',
-            'tgl',
-            'uraian',
-            'persh',
-            'alamat',
-            'nokontrak',
-            'tglkontrak',
-            'biaya',
-            'menambah',
-            'keterangan'
+            'nama',
+            'level'
         ];
     }
 
@@ -91,6 +77,6 @@ class pemeliharaanDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'pemeliharaansdatatable_' . time();
+        return 'rolesdatatable_' . time();
     }
 }

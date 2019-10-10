@@ -43,6 +43,8 @@
 
     <link rel="stylesheet" href="<?= url('css/thirdparty/ol.css') ?>">
 
+    <link rel="stylesheet" href="<?= url('css/thirdparty/select.dataTables.min.css') ?>">
+
     <script src="<?= url('js/thirdparty/knockout-3.5.0.js') ?>"></script>
    
     <script src="<?= url('js/app.ko.js?key='.sha1(time())) ?>"></script>
@@ -202,6 +204,19 @@
         .dt-buttons .btn-sm {
             padding: 10px !important;
         }
+
+        .padding-notif {
+            display: inline;
+            padding: .2em .6em .3em;
+            font-size: 75%;
+            font-weight: 700;
+            line-height: 1;
+            color: #fff;
+            text-align: center;
+            white-space: nowrap;
+            vertical-align: baseline;
+            border-radius: .25em;
+        }
     </style>
 </head>
 
@@ -209,7 +224,7 @@
 <input type="text" value="<?= Storage::url('') ?>" base-storage style="display:none" />
 <input type="text" value="<?= public_path('') ?>" base-http style="display:none" />
 
-<body class="skin-green-light sidebar-mini">
+<body class="skin-blue sidebar-mini">
 @if (!Auth::guest())
     <div class="wrapper">
         <!-- Main Header -->
@@ -341,6 +356,8 @@
     <script src="<?= url('js/thirdparty/jquery.mask.min.js') ?>"></script>
 
     @include('layouts.datatables_js')        
+
+    <script src="<?= url('js/thirdparty/dataTables.select.min.js') ?>"></script>
 
     <script src="<?= url('js/thirdparty/moment.min.js') ?>"></script>
     <script src="<?= url('js/thirdparty/bootstrap.min.js') ?>"></script>

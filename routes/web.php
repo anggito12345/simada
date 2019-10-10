@@ -15,11 +15,10 @@ Route::get('/', function () {
     return redirect('login');
 });
 
+Route::get('/activation/{activationcode}', 'usersController@activate');
 Route::get('/home', 'HomeController@index');
 Auth::routes();
 
-
-Route::resource('users', 'usersController');
 
 Route::resource('users', 'usersController');
 
@@ -68,3 +67,5 @@ Route::resource('detilkonstruksis', 'detilkonstruksiController');
 Route::resource('pemeliharaans', 'pemeliharaanController');
 
 Route::resource('penghapusans', 'penghapusanController');
+
+Route::resource('roles', 'roleController');

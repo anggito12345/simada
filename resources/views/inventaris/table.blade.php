@@ -16,15 +16,27 @@
         }
 
         let isReady = false
+
+        function onCallbackPemeliharaanTab(tableId) {
+            $(tableId).DataTable().ajax.reload();
+        }
    
-        function onPemeliharaan() {
-            if (viewModel.data.checkedItem.length != 1 ) {
+        function onPemeliharaan(currentData, param) {
+            if (currentData == null && viewModel.data.checkedItem.length != 1 ) {
                 swal.fire({
                     type: 'error',
                     text: 'Silahkan pilih 1',
                     title: 'Pemeliharaan'
                 })
             } else {
+                viewModel.data.formPemeliharaan().pidinventaris = viewModel.data.checkedItem[0]
+                $("#modal-pemeliharaan").attr('is_mode_insert', true)
+                if(currentData != null) {
+                    viewModel.data.formPemeliharaan(currentData)
+                    $("#modal-pemeliharaan").attr('is_mode_insert', false)
+                    $("#modal-pemeliharaan").attr('callback', 'onCallbackPemeliharaanTab|'+param)            
+                }                
+                
                 $("#modal-pemeliharaan").modal('show')
             }
         }
@@ -79,6 +91,10 @@
         }
 
         function onLoadRowDataTable(e) {
+            if (viewModel.data.checkedItem == undefined) {
+                return
+            }
+
             if (viewModel.data.checkedItem.indexOf($(e).find("td input[type=checkbox]").attr('value')) > -1) {
                 $(e).find("td input[type=checkbox]").prop('checked', true)
             } else {
@@ -156,25 +172,214 @@
 
             // var template = Handlebars.compile($("#details-template").html())
 
-            $('#table-inventaris tbody').on('click', 'td .fa-plus-circle', function () {
+            const tabItems = [
+                "Detail",
+                "Pemeliharaan",
+                // "Penghapusan"
+            ]
+
+            
+            let selectEvent = 0
+            $('#table-inventaris tbody').on('click', 'td.details-control i', function (i, n) {                                            
+
+                const self = this
+
+                selectEvent++
+
+                let ulTabs = document.createElement('ul')
+                ulTabs.className = "nav nav-tabs"
+                ulTabs.id = `idTab-<?= uniqid() ?>${selectEvent}`
+                ulTabs.setAttribute('role', 'tablist')
+
+
+                let navItem = document.createElement("li")
+                navItem.className = "nav-item"
+
+                let aNavItem = document.createElement("a")
+                aNavItem.className = "nav-link"
+                aNavItem.setAttribute('data-toggle', 'tab')
+                aNavItem.setAttribute('role', 'tab')
+                aNavItem.setAttribute('arial-selected', true)
+
+                let tabContent = document.createElement("div")
+                tabContent.className = "tab-content"
+
+                let tabPane = document.createElement("div")
+                tabPane.className = "tab-pane fade p-2"
+                tabPane.setAttribute('role', 'tab')
+
+
+                <?php             
+                    $uniqId = uniqid() . sha1(time());
+                ?>
+
+                for (let index = 0; index < tabItems.length; index++) {
+                    const tabItem = tabItems[index];
+                    const aNavItemReadyForInit = aNavItem.cloneNode(true)
+                    const navItemReadyForInit = navItem.cloneNode(true)
+                    aNavItemReadyForInit.id = `${tabItem}-tab-${selectEvent}`
+                    aNavItemReadyForInit.setAttribute("href", `#${tabItem}-${selectEvent}`)
+                    aNavItemReadyForInit.setAttribute("aria-controls", `${tabItem}-${selectEvent}`)
+
+                    aNavItemReadyForInit.textContent = tabItem
+
+                    if (index == 0) {
+                        aNavItemReadyForInit.className += " active"
+                    }
+
+                    navItemReadyForInit.appendChild(aNavItemReadyForInit)                                                
+
+                    ulTabs.appendChild(navItemReadyForInit)
+
+                    // --- tab-content
+
+                    const tabPaneReadyForInit = tabPane.cloneNode(true)
+                    if (index == 0) {
+                        tabPaneReadyForInit.className += " show active  "
+                    }
+
+                    tabPaneReadyForInit.id = `${tabItem}-${selectEvent}`
+                    tabPaneReadyForInit.setAttribute("aria-labelledby", `${tabItem}-${selectEvent}`)
+
+                    tabContent.appendChild(tabPaneReadyForInit)
+                }
+
+
                 var tr = $(this).closest('tr');
                 var row = $("#table-inventaris").DataTable().row( tr );
 
                 if ( row.child.isShown() ) {
                     // This row is already open - close it
+                    $(this).attr('class',$(this).attr('class').replace('minus-circle', 'plus-circle'))
+
                     row.child.hide();
                     tr.removeClass('shown');
                 }
                 else {
+                    $(this).attr('class',$(this).attr('class').replace('plus-circle', 'minus-circle'))
+                    
                     let kib = "kib"+row.data().kelompok_kib
                     $.get(`${$("[base-path]").val()}${viewModel.data.urlEachKIB("kib"+row.data().kelompok_kib)}/${row.data().id}`).then((data) => {
                                                 
                         let url = viewModel.data.informations[kib].url
 
-                        $.get(`${$("[base-path]").val()}/${url}/${data.data.id}?isAjax=true`).then((html) => {                            
-                            row.child($(`<tr style="background:white"><td colspan="${allHeader.length}">${$(html).find(".container-view")[0].outerHTML}</td>/tr>`)).show();
-                            tr.addClass('shown');
+                        row.child($(`<tr style="background:white" class="detail-pemeliharaan"><td colspan="${allHeader.length}">${ulTabs.outerHTML}${tabContent.outerHTML}</td>/tr>`)).show();
+
+                        tr.addClass('shown');
+
+                        $.get(`${$("[base-path]").val()}/${url}/${data.data.id}?isAjax=true`).then((html) => {                                                        
+                            document.querySelector(`#Detail-${selectEvent}`).innerHTML = $(html).find(".container-view")[0].outerHTML
                         })
+                                                                         
+                        document.querySelector(`#Pemeliharaan-${selectEvent}`).innerHTML = `<table class='mt-2 table table-bordered table-striped' id='table-pemeliharaan-<?= $uniqId ?>${selectEvent}'>
+                            <thead>
+                                <tr>
+                                    <th>Uraian</th>
+                                    <th>Tanggal Pemakaian</th>
+                                    <th>Tanggal Kontrak</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>`
+
+                        let table = $(`#table-pemeliharaan-<?= $uniqId ?>${selectEvent}`).DataTable({
+                            ajax: {
+                                url: `${$("[base-path]").val()}/pemeliharaans`,
+                                dataType: "json",
+                                data: (d) => {
+                                    d.pidinventaris = row.data().id
+                                }
+                            },
+                            order : [[ 1, "asc"]],
+                            dom: 'Bfrtip',
+                            buttons: [
+                                {
+                                    extend: 'collection',
+                                    text: 'Action',
+                                    buttons: [
+                                        {
+                                            text: "Edit",
+                                            action: function () {
+                                                var count = table.rows('.selected').count();
+                            
+                                                if (count != 1) {
+                                                    swal.fire({
+                                                        type: 'error',
+                                                        text: 'Silahkan pilih 1 data',
+                                                        title: 'Pemeliharaan'
+                                                    })
+                                                    return
+                                                }
+
+                                                onPemeliharaan(table.rows('.selected').data()[0], `#table-pemeliharaan-<?= $uniqId ?>${selectEvent}`)
+                                            }
+                                        },
+                                        {
+                                            text: "Delete",
+                                            action: function () {
+                                                var count = table.rows('.selected').count();
+                            
+                                                if (count < 1) {
+                                                    swal.fire({
+                                                        type: 'error',
+                                                        text: 'Silahkan pilih minimal 1 data',
+                                                        title: 'Pemeliharaan'
+                                                    })
+                                                    return
+                                                }
+
+                                                __ajax({
+                                                    url : $("[base-path]").val() + "/api/pemeliharaans/" + table.rows('.selected').data().map((d) => {
+                                                    return d.id
+                                                }).join(','),
+                                                    data: {
+                                                        _token: "<?php csrf_token() ?>"
+                                                    },
+                                                    method: "DELETE",
+                                                    dataType: "json"
+                                                }).then(() => {
+                                                    swal.fire({
+                                                        type: 'success',
+                                                        text: 'Data berhasil dihapus',
+                                                        title: 'Hapus',
+                                                        onClose: () => {
+                                                            table.ajax.reload();
+                                                        }
+                                                    })
+                                                })
+                                            }
+                                        }
+                                    ]
+                                    
+                                }
+                            ],
+                            columns: [
+                                {
+                                    data: 'uraian'
+                                },
+                                {
+                                    data: 'tgl'
+                                },
+                                {                                    
+                                    data: 'tglkontrak'
+                                }
+                            ],
+                            'columnDefs': [
+                                {
+                                    'targets': 0,
+                                    'checkboxes': {
+                                    'selectRow': true
+                                    }
+                                }
+                            ],
+                            'select': {
+                                'style': 'multi'
+                            },
+                            "processing": true,
+                            "serverSide": true,
+                        })
+                        
                     })
                     
                 }

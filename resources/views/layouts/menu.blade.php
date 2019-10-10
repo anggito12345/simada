@@ -1,34 +1,4 @@
-
-
-<!-- <li class="treeview {{ Request::is('detiltanahs*') 
-    || Request::is('detilmesins*') 
-    || Request::is('detilbangunans*')
-    || Request::is('detiljalans*') ? 'active' : '' }}">
-    <a href="#">
-        <i class="fa fa-edit"></i>
-        <span>Kelompok Aset</span>
-        <span class="pull-right-container">
-            <i class="fa fa-angle-left pull-right"></i>
-        </span>
-    </a>
-   
-    <ul class="treeview-menu">
-        <li class="{{ Request::is('detiltanahs*') ? 'active' : '' }}">
-            <a href="{!! route('detiltanahs.index') !!}"><i class="fa fa-edit"></i><span>KIB A</span></a>
-        </li>
-        <li class="{{ Request::is('detilmesins*') ? 'active' : '' }}">
-            <a href="{!! route('detilmesins.index') !!}"><i class="fa fa-edit"></i><span>KIB B</span></a>
-        </li>
-        <li class="{{ Request::is('detilbangunans*') ? 'active' : '' }}">
-            <a href="{!! route('detilbangunans.index') !!}"><i class="fa fa-edit"></i><span>KIB C</span></a>
-        </li>
-        <li class="{{ Request::is('detiljalans*') ? 'active' : '' }}">
-            <a href="{!! route('detiljalans.index') !!}"><i class="fa fa-edit"></i><span>KIB D</span></a>
-        </li>
-    </ul>
-</li> -->
-
-<!-- <li class="treeview {{ Request::is('inventaris*') || Request::is('pemeliharaans*') || Request::is('penghapusans*')? 'active' : '' }}">
+<li class="treeview {{ Request::is('inventaris*') || Request::is('pemeliharaans*') || Request::is('penghapusans*')? 'active' : '' }}">
     <a href="#">
         <i class="fa fa-edit"></i>
         <span>Transaksi</span>
@@ -39,7 +9,7 @@
    
     <ul class="treeview-menu">
         <li class="{{ Request::is('inventaris*') ? 'active' : '' }}">
-            <a href="{!! route('inventaris.index') !!}"><i class="fa fa-edit"></i><span>Inventaris</span></a>
+            <a href="{!! route('inventaris.index') !!}"><i class="fa fa-edit"></i><span>Penata Usahaan</span></a>
         </li>
         <li class="{{ Request::is('pemeliharaans*') ? 'active' : '' }}">
             <a href="{!! route('pemeliharaans.index') !!}"><i class="fa fa-edit"></i><span>Pemeliharaan</span></a>
@@ -49,15 +19,13 @@
             <a href="{!! route('penghapusans.index') !!}"><i class="fa fa-edit"></i><span>Penghapusan</span></a>
         </li>
     </ul>
-</li> -->
-<li class="{{ Request::is('inventaris*') ? 'active' : '' }}">
-    <a href="{!! route('inventaris.index') !!}"><i class="fa fa-edit"></i><span>Penata Usahaan</span></a>
 </li>
+
 <li class="{{ Request::is('barangs*') ? 'active' : '' }}">
     <a href="{!! route('barangs.index') !!}"><i class="fa fa-car"></i><span>Master Barang</span></a>
 </li>
 
-<!-- <li class="treeview {{ Request::is('alamats*') 
+<li class="treeview {{ Request::is('alamats*') 
     || Request::is('jenisbarangs*') 
     || Request::is('kondisis*') 
     || Request::is('lokasis*') 
@@ -107,28 +75,38 @@
             <a href="{!! route('statustanahs.index') !!}"><i class="fa fa-edit"></i><span>Status Tanah</span></a>
         </li>
     </ul>
-</li> -->
+</li>
+
+<?php 
+    $countUserNeedOtor = \App\Models\users::where('aktif',0)->count();
+?>
 
 <li class="treeview {{ Request::is('users*')? 'active' : '' }}">
     <a href="#">
         <i class="fa fa-wrench"></i>
         <span>Pengaturan</span>
+        <span class="bg-green padding-notif"><?= $countUserNeedOtor ?></span>
         <span class="pull-right-container">
+            
             <i class="fa fa-angle-left pull-right"></i>
         </span>
     </a>   
     <ul class="treeview-menu">
         <li class="{{ Request::is('users*') ? 'active' : '' }}">
-            <a href="{!! route('users.index') !!}"><i class="fa fa-users"></i><span>Users</span></a>
+            <a href="{!! route('users.index') !!}">
+                <i class="fa fa-users"></i>
+                <span>Users</span>
+                <div class="pull-right-container">
+                    <div class="bg-green padding-notif"><?= $countUserNeedOtor ?></div>
+                </div>
+            </a>
         </li>
+        <li class="{{ Request::is('roles*') ? 'active' : '' }}">
+            <a href="{!! route('roles.index') !!}"><i class="fa fa-edit"></i><span>Roles</span></a>
+        </li>
+
     </ul>
 </li>
 
-<li class="{{ Request::is('pemeliharaans*') ? 'active' : '' }}">
-    <a href="{!! route('pemeliharaans.index') !!}"><i class="fa fa-edit"></i><span>Pemeliharaans</span></a>
-</li>
 
-<li class="{{ Request::is('penghapusans*') ? 'active' : '' }}">
-    <a href="{!! route('penghapusans.index') !!}"><i class="fa fa-edit"></i><span>Penghapusans</span></a>
-</li>
 

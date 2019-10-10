@@ -118,7 +118,7 @@ class pemeliharaanAPIController extends AppBaseController
     public function destroy($id)
     {
         /** @var pemeliharaan $pemeliharaan */
-        $pemeliharaan = $this->pemeliharaanRepository->find($id);
+        $pemeliharaan = \App\Models\pemeliharaan::whereRaw("id IN ({$id})");
 
         if (empty($pemeliharaan)) {
             return $this->sendError('Pemeliharaan not found');

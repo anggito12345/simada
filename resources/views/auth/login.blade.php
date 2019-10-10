@@ -45,12 +45,18 @@
         <form method="post" action="{{ url('/login') }}">
             {!! csrf_field() !!}
 
+            @if(isset($_GET['verificationCallback']))
+                <div class='alert alert-<?= $_GET['verificationCallback'] == '1' ? 'success' : 'error' ?>'>
+                    <?= $_GET['verificationCallback'] == '1' ? 'User telah berhasil diaktivasi' : 'Link telah expired' ?>
+                </div>
+            @endif
+
             <div class="form-group has-feedback {{ $errors->has('email') ? ' has-error' : '' }}">
-                <input type="email" class="form-control" name="email" value="{{ old('email') }}" placeholder="Email">
+                <input type="text" class="form-control" name="username" value="{{ old('email') }}" placeholder="Email">
                 <span class="glyphicon glyphicon-envelope form-control-feedback"></span>
-                @if ($errors->has('email'))
+                @if ($errors->has('username'))
                     <span class="help-block">
-                    <strong>{{ $errors->first('email') }}</strong>
+                    <strong>{{ $errors->first('username') }}</strong>
                 </span>
                 @endif
             </div>
@@ -67,8 +73,15 @@
             </div>
             <div class="row">                
                 <!-- /.col -->
-                <div class="col-md-4">
-                    <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>
+                <div class="col-md-12">
+                    <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>                    
+                </div>
+                <!-- /.col -->
+            </div>
+            <div class="row pt-1">                
+                <!-- /.col -->
+                <div class="col-md-12">
+                    <button type="button" onclick="window.location='<?= url('') ?>/register'" class="btn btn-primary btn-block btn-flat">Register</button>                    
                 </div>
                 <!-- /.col -->
             </div>

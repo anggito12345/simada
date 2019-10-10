@@ -77,3 +77,5 @@ Route::resource('detilkonstruksis', 'detilkonstruksiAPIController');
 Route::resource('pemeliharaans', 'pemeliharaanAPIController');
 
 Route::resource('penghapusans', 'penghapusanAPIController');
+
+Route::resource('roles', 'roleAPIController');

@@ -3,17 +3,26 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\usersDataTable;
-use App\Http\Requests;
+use Illuminate\Http\Request;
 use App\Http\Requests\CreateusersRequest;
 use App\Http\Requests\UpdateusersRequest;
 use App\Repositories\usersRepository;
 use Illuminate\Support\Facades\Hash;
 use Flash;
+use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\AppBaseController;
+use Illuminate\Support\Facades\Auth;
 use Response;
+use Illuminate\Foundation\Auth\AuthenticatesUsers;
+
+
 
 class usersController extends AppBaseController
 {
+    use AuthenticatesUsers {
+        logout as performLogout;
+    }
+
     /** @var  usersRepository */
     private $usersRepository;
 
@@ -54,12 +63,18 @@ class usersController extends AppBaseController
     public function store(CreateusersRequest $request)
     {
         $input = $request->all();
+        
 
         $input['password'] = Hash::make($request->password);
 
         $users = $this->usersRepository->create($input);
 
         Flash::success('Users saved successfully.');
+
+
+        if (isset($input['from-login'])) {
+            return redirect(route('login'));
+        }
 
         return redirect(route('users.index'));
     }
@@ -124,9 +139,25 @@ class usersController extends AppBaseController
 
         $input = $request->all();
 
-        $input['password'] = Hash::make($request->password);
+        if (isset($input['password']) && $input['password'] != "") {
+            $input['password'] = Hash::make($request->password);
+        } else {
+            $input['password'] = $users->password;
+        }
+        
+        if (isset($input['username']) && $input['username'] == "") {
+            $input['username'] = $users->username;
+        }
+
+        if (isset($input['from_aktif_process'])) {
+            $input['email_verification_code'] = sha1(date('Y-m-d') . uniqid() . $users->username);
+        }
 
         $users = $this->usersRepository->update($input, $id);
+
+        if (isset($input['from_aktif_process'])) {
+            Mail::to($users->email)->send(new \App\Mail\ActivationUser($users));
+        }
 
         Flash::success('Users updated successfully.');
 
@@ -155,5 +186,39 @@ class usersController extends AppBaseController
         Flash::success('Users deleted successfully.');
 
         return redirect(route('users.index'));
+    }
+
+    public function activate($activationcode, Request $request)
+    {
+        $userByVerificationCode = \App\Models\users::where('email_verification_code', $activationcode)->first();
+
+        if (empty($userByVerificationCode)) {
+            
+            Flash::error('Link telah expired atau tidak valid!');
+            if (!Auth::guest()) {
+            
+                $this->performLogout($request);
+            }
+    
+            return redirect('login?verificationCallback=0');
+        }
+
+        $userByVerificationCode->email_verification_code = '';
+
+        $userByVerificationCode->aktif = '1';
+
+        $userByVerificationCode->save();
+
+        Flash::success('User berhasil diaktivasi!.');
+
+        if (!Auth::guest()) {
+            
+            $this->performLogout($request);
+        }
+
+        return redirect('login?verificationCallback=1');
+
+
+        
     }
 }

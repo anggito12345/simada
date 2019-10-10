@@ -59,6 +59,15 @@ viewModel.data = Object.assign(viewModel.data, {
         koordinattanah:'',
         tgl_sertifikat: moment().format("DD-MM-YYYY")
     }),
+
+    formPemeliharaan: ko.observable({
+        tgl: moment().format("DD-MM-YYYY"),
+        uraian: "",
+        persh: "",
+        alamat: "",
+        nokontrak: "",
+        tglkontrak: moment().format("DD-MM-YYYY"),
+    }),
     urlEachKIB: (newVal) => {
         return `/api/detil${newVal.replace(/ /g,"").toLowerCase()}get`
     }
@@ -149,7 +158,6 @@ viewModel.data.tipeKib.subscribe((newVal) => {
                         "id",
                         "nama",
                         (t) => {
-                            console.log(t)
                             App.Helpers.defaultSelect2(
                                 $("#idkecamatan-detiljalan"), 
                                 `${$('[base-path]').val()}/api/alamats/${response.idkecamatan}`,
