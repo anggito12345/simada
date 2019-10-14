@@ -73,7 +73,7 @@ class usersController extends AppBaseController
 
 
         if (isset($input['from-login'])) {
-            return redirect(route('login'));
+            return redirect('login?successRegister=1');
         }
 
         return redirect(route('users.index'));

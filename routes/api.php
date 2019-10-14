@@ -27,6 +27,7 @@ Route::get('/detilkibeget/{pidinventaris}', 'detilasetAPIController@byinventaris
 Route::get('/detilkibfget/{pidinventaris}', 'detilkonstruksiAPIController@byinventaris');
 
 Route::post('/mutasiinventaris/{id}', 'inventarisAPIController@mutasi');
+Route::post('penghapusans/edit/{id}', 'penghapusanAPIController@editCustom');
 Route::resource('inventaris', 'inventarisAPIController');
 
 Route::get('/jenisbarangsget/getbykode/{id}', 'jenisbarangAPIController@getbykode');

@@ -700,7 +700,7 @@ let FileGallery = function(element, config) {
 
         let file = $(`#${fileTempId}`)[0].files[0]
 
-        if (!file.type.match(new RegExp(defaultConfig.accept))) {
+        if (file != undefined && !file.type.match(new RegExp(defaultConfig.accept))) {
             swal.fire({
                 type: 'error',
                 text: 'type file tidak diperbolehkan'
@@ -708,7 +708,7 @@ let FileGallery = function(element, config) {
             return
         }
 
-        if (file.size > defaultConfig.maxSize) {
+        if (file != undefined && file.size > defaultConfig.maxSize) {
             swal.fire({
                 type: 'error',
                 text: `Ukuran file melebihi ukuran maksimal ${(defaultConfig.maxSize/1000000).toFixed(1)} MB`

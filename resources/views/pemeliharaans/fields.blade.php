@@ -39,7 +39,7 @@
     <!-- Tglkontrak Field -->
     <div class="form-group col-sm-12">
         {!! Form::label('tglkontrak', 'Tanggal:') !!}
-        {!! Form::date('tglkontrak', null, ['class' => 'form-control','id'=>'tglkontrak', 'data-bind' => 'value: viewModel.data.formPemeliharaan().tglkontrak']) !!}
+        {!! Form::text('tglkontrak', null, ['class' => 'form-control','id'=>'tglkontrak', 'data-bind' => 'value: viewModel.data.formPemeliharaan().tglkontrak']) !!}
     </div>
 </div>
 
@@ -52,7 +52,7 @@
 <!-- Menambah Field -->
 <div class="form-group col-sm-12">
     {!! Form::label('menambah', 'Menambah Aset:') !!}
-    {!! Form::checkbox('menambah', null, ['class' => 'form-control', 'value' => 1, 'data-bind' => 'checked: viewModel.data.formPemeliharaan().menambah']) !!} Ya
+    {!! Form::checkbox('menambah', null, [  'class' => 'form-control', 'value' => 1, 'data-bind' => 'checked: viewModel.data.formPemeliharaan().menambah']) !!} Ya
 </div>
 
 <!-- Keterangan Field -->

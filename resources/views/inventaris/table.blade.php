@@ -15,7 +15,9 @@
             },
         }
 
-        let isReady = false
+        let isReady = {
+            
+        }
 
         function onCallbackPemeliharaanTab(tableId) {
             $(tableId).DataTable().ajax.reload();
@@ -33,11 +35,115 @@
                 $("#modal-pemeliharaan").attr('is_mode_insert', true)
                 if(currentData != null) {
                     viewModel.data.formPemeliharaan(currentData)
+
+
+                    const tgl = document.getElementById('tgl')
+                    tgl.value = currentData.tgl
+                    tgl.dispatchEvent(new Event('change'))
+
+                    const tglkontrak = document.getElementById('tglkontrak')
+                    tglkontrak.value = currentData.tglkontrak
+                    tglkontrak.dispatchEvent(new Event('change'))
+
                     $("#modal-pemeliharaan").attr('is_mode_insert', false)
                     $("#modal-pemeliharaan").attr('callback', 'onCallbackPemeliharaanTab|'+param)            
                 }                
                 
                 $("#modal-pemeliharaan").modal('show')
+            }
+        }
+
+        function onDeletePenghapusan() {
+            let table = $('#table-penghapusan').DataTable()
+            var count = table.rows('.selected').count();
+                            
+            if (count < 1) {
+                swal.fire({
+                    type: 'error',
+                    text: 'Silahkan pilih minimal 1 data',
+                    title: 'Pemeliharaan'
+                })
+                return
+            }
+
+            __ajax({
+                url : $("[base-path]").val() + "/api/penghapusans/" + table.rows('.selected').data().map((d) => {
+                return d.id
+            }).join(','),
+                data: {
+                    _token: "<?php csrf_token() ?>"
+                },
+                method: "DELETE",
+                dataType: "json"
+            }).then(() => {
+                swal.fire({
+                    type: 'success',
+                    text: 'Data berhasil dihapus',
+                    title: 'Hapus',
+                    onClose: () => {
+                        table.ajax.reload();
+                    }
+                })
+            })
+        }
+
+
+        function onPenghapusan(currentData, param) {
+            if (currentData == null && viewModel.data.checkedItem.length != 1 ) {
+                swal.fire({
+                    type: 'error',
+                    text: 'Silahkan pilih 1',
+                    title: 'Penghapusan'
+                })
+            } else {
+
+                $("#modal-penghapusan").attr('is_mode_insert', true)
+                if(currentData != null) {
+                    viewModel.data.formPenghapusan(currentData)
+                    $("#modal-penghapusan").attr('is_mode_insert', false)
+                    $("#modal-penghapusan").attr('callback', 'onCallbackPemeliharaanTab|'+param)       
+                    __ajax({
+                        method: 'GET',
+                        url: "<?= url('api/system_uploads') ?>",
+                        data: {
+                            jenis: 'dokumen',
+                            foreign_field: 'id',
+                            foreign_id: currentData.id,
+                            foreign_table: 'penghapusan',                    
+                        },  
+                    }).then((files) => {                
+                        fileGallery.fileList(files)
+                        __ajax({
+                            method: 'GET',
+                            url: "<?= url('api/system_uploads') ?>",
+                            data: {
+                                jenis: 'foto',
+                                foreign_field: 'id',
+                                foreign_id: currentData.id,
+                                foreign_table: 'penghapusan'
+                            },
+                        }).then((files) => {
+                            foto.fileList(files)
+
+                            const tglhapus = document.getElementById('tglhapus')
+                            tglhapus.value = currentData.tglhapus
+                            tglhapus.dispatchEvent(new Event('change'))
+
+                            const tglsk = document.getElementById('tglsk')
+                            tglsk.value = currentData.tglsk
+                            tglsk.dispatchEvent(new Event('change'))
+
+                            $("#modal-penghapusan").modal('show')
+                        })
+                    })      
+                } else {
+                    fileGallery.fileList([])
+                    foto.fileList([])
+                    $("#modal-penghapusan").modal('show')
+                }               
+                
+                
+                
             }
         }
 
@@ -103,8 +209,8 @@
         }
         
         function onLoadDataTable(e) {
-
-            if (isReady) {
+            
+            if (isReady[e.sTableId]) {
                 return
             }
 
@@ -164,7 +270,7 @@
 
             }
 
-            isReady = true
+            isReady[e.sTableId] = true
 
             let element = $(e.nTHead).find("tr")[0]
 
@@ -178,9 +284,8 @@
                 // "Penghapusan"
             ]
 
-            
             let selectEvent = 0
-            $('#table-inventaris tbody').on('click', 'td.details-control i', function (i, n) {                                            
+            $(`#${e.sTableId} tbody`).on('click', 'td.details-control i', function (i, n) {                                            
 
                 const self = this
 
@@ -246,7 +351,7 @@
 
 
                 var tr = $(this).closest('tr');
-                var row = $("#table-inventaris").DataTable().row( tr );
+                var row = $(`#${e.sTableId}`).DataTable().row( tr );
 
                 if ( row.child.isShown() ) {
                     // This row is already open - close it
@@ -259,7 +364,7 @@
                     $(this).attr('class',$(this).attr('class').replace('plus-circle', 'minus-circle'))
                     
                     let kib = "kib"+row.data().kelompok_kib
-                    $.get(`${$("[base-path]").val()}${viewModel.data.urlEachKIB("kib"+row.data().kelompok_kib)}/${row.data().id}`).then((data) => {
+                    $.get(`${$("[base-path]").val()}${viewModel.data.urlEachKIB("kib"+row.data().kelompok_kib)}/${row.data().pidinventaris == undefined ? row.data().id : row.data().pidinventaris}`).then((data) => {
                                                 
                         let url = viewModel.data.informations[kib].url
 

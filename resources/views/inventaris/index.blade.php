@@ -14,17 +14,36 @@
 
         <div class="box box-primary">
             <div class="box-body">
-                    @include('inventaris.table_filter')
+              <ul class="nav nav-tabs" id="myTab" role="tablist">
+                <li class="nav-item">
+                  <a class="nav-link active" id="inventaris-tab" data-toggle="tab" href="#inventaris" role="tab" aria-controls="inventaris" aria-selected="true">Inventaris</a>
+                </li>
+                <li class="nav-item">
+                  <a class="nav-link" id="penghapusan-tab" data-toggle="tab" href="#penghapusan" role="tab" aria-controls="penghapusan" aria-selected="false">Penghapusan</a>
+                </li>                
+              </ul>
+              <div class="tab-content" id="myTabContent">
+                <div class="tab-pane fade show active" id="inventaris" role="tabpanel" aria-labelledby="inventaris-tab">
+                  @include('inventaris.table_filter')
+                  <div class="clearfix"></div>
+        
+                  <div class="box box-primary">
+                      <div class="box-body">
+                            @include('inventaris.table')
+                      </div>
+                  </div>
+                </div>
+                <div class="tab-pane fade p-1" id="penghapusan" role="tabpanel" aria-labelledby="penghapusan-tab">
+                  <table id="table-penghapusan"  class="table table-bordered  table-striped " >
+                    <thead>                     
+                    </thead>
+                  </table>
+                </div>                
+              </div>                    
             </div>
         </div>
 
-        <div class="clearfix"></div>
         
-        <div class="box box-primary">
-            <div class="box-body">
-                    @include('inventaris.table')
-            </div>
-        </div>
         <div class="text-center">
         
         </div>
@@ -78,7 +97,94 @@
     </div>
   </div>
 </div>
+
+<div class="modal" id="modal-penghapusan"  role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Penghapusan</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {!! Form::open(['id' => 'form-penghapusan']) !!}
+          @include('penghapusans.fields')
+        {!! Form::close() !!}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="viewModel.clickEvent.savePenghapusan()">Simpan</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script>
+  viewModel.jsLoaded.subscribe(() => {
+    $("#table-penghapusan").DataTable({
+      ajax: `${$("[base-path]").val()}/penghapusans`,
+      dom: 'Bfrtip',
+      columns: [
+        {
+          'orderable': false,
+          "className": "details-control",
+          "render": function ( data, type, row ) {
+              return '<i class="fa fa-plus-circle text-success"></i>'
+          },
+          data: "id",
+        },
+        {
+          title: 'Kode Barang',
+          data: 'kode_barang'
+        },
+        {
+          title: 'Tahun Perolehan',
+          data: 'tahun_perolehan'
+        },
+        {
+          title: 'Kondisi',
+          data: 'kondisi'
+        },
+        {
+          title: 'Kriteria',
+          data: 'kriteria'
+        },
+      ],
+      'drawCallback': onLoadDataTable,
+      'select': {
+          'style': 'multi'
+      },
+      "processing": true,
+      "serverSide": true,
+      'order': [[1, 'desc']],
+      buttons: [
+        {
+          extend: 'collection',
+          text: 'Action',
+          buttons: [
+            { text: 'Edit', action: () => {
+              var count = $("#table-penghapusan").DataTable().rows('.selected').count();
+                            
+              if (count != 1) {
+                  swal.fire({
+                      type: 'error',
+                      text: 'Silahkan pilih 1 data',
+                      title: 'Pemeliharaan'
+                  })
+                  return
+              }
+
+              onPenghapusan($("#table-penghapusan").DataTable().rows('.selected').data()[0], `#table-penghapusan`)
+            }},
+            { text: 'delete', action: () => {
+              onDeletePenghapusan()
+            }},
+          ]
+        }
+      ]
+    })
+  })
   viewModel.changeEvent = Object.assign(viewModel.changeEvent, {
     // ....
     changeRefreshGrid: () => {
@@ -118,6 +224,88 @@
             }
           })
         })
+      },
+      savePenghapusan: () => {
+        let url = $("[base-path]").val() + "/api/penghapusans"
+        let formData = new FormData($('#form-penghapusan')[0])
+        let method = "POST"
+
+        for (let index =0 ; index < fileGallery.fileList().length; index ++) {
+          const d = fileGallery.fileList()[index]
+          if (d.rawFile) {
+              formData.append(`dokumen[${index}]`, d.rawFile)
+          } else {
+              formData.append(`dokumen[${index}]`, false)
+          }
+
+          let keys = Object.keys(d)
+
+          keys.forEach((key) => {
+              if (key == 'rawFile') {
+                  return
+              }
+              formData.append(`dokumen_metadata_${key}[${index}]`, d[key])
+          })                
+          
+          formData.append(`dokumen_metadata_id_inventaris[${index}]`, viewModel.data.checkedItem[0])
+        }
+
+        foto.fileList().forEach((d, index) => {
+          if (d.rawFile) {
+              formData.append(`foto[${index}]`, d.rawFile)
+          } else {
+              formData.append(`foto[${index}]`, false)
+          }
+
+          let keys = Object.keys(d)
+
+          keys.forEach((key) => {
+              if (key == 'rawFile') {
+                  return
+              }
+              formData.append(`foto_metadata_${key}[${index}]`, d[key])
+          })                
+
+          formData.append(`foto_metadata_id_inventaris[${index}]`, viewModel.data.checkedItem[0])
+          
+          return d.rawFile
+        })
+
+       
+
+        if($('#modal-penghapusan').attr('is_mode_insert') == 'false') {
+          formData.append(`pidinventaris`, viewModel.data.formPenghapusan().pidinventaris)
+          url = $("[base-path]").val() + "/api/penghapusans" + "/edit/" + viewModel.data.formPenghapusan().id
+          method = "POST"
+        } else {
+          formData.append(`pidinventaris`, viewModel.data.checkedItem[0])
+        }
+        
+        __ajax({
+          method: method,
+          url: url,
+          data: formData,
+          processData: false,
+          contentType: false,
+        }).then((d, resp) => {
+          swal.fire({
+              type: "success",
+              text: "Berhasil menyimpan data!",
+              onClose: () => {
+                if($('#modal-penghapusan').attr('is_mode_insert') == 'false') {
+                  $("#table-penghapusan").DataTable().ajax.reload();
+                } else {
+                  viewModel.data.checkedItem = []
+                  $("#table-inventaris").DataTable().ajax.reload();
+                  
+                }
+                                
+                $("#modal-penghapusan").modal('hide')
+
+              }
+          })
+            
+        })          
       },
       showModalMutasi: ($id, $barangInfo) => {               
           // try to match each default field to and from          

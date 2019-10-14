@@ -9,6 +9,7 @@ use App\Repositories\inventarisRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Auth;
 
@@ -135,7 +136,7 @@ class inventarisAPIController extends AppBaseController
                 DB::rollBack();
                 \App\Helpers\FileHelpers::deleteAll($fileDokumens);
                 \App\Helpers\FileHelpers::deleteAll($fileFotos);
-                \App\models\inventaris::find($inventaris->id)->delete();
+                \App\Models\inventaris::find($inventaris->id)->delete();
                 return $this->sendError($e->getMessage() . $e->getTraceAsString());
             }
 
@@ -431,7 +432,7 @@ class inventarisAPIController extends AppBaseController
         
                 $querySystemUpload->delete();
     
-                $inventaris->delete();
+                $inventaris->forceDelete();
                 
                 DB::commit(); 
             } catch(\Exception $e) {

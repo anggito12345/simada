@@ -56,7 +56,7 @@ class system_uploadAPIController extends AppBaseController
         if ($request->input('foreign_field') && $request->input('foreign_id')) {
             $query = $query->join($request->input('foreign_table'), $request->input('foreign_table') . '.' . $request->input('foreign_field'), 'system_upload.foreign_id');
         }
-
+        
         $systemUploads = $query->get();
 
         return $this->sendResponse($systemUploads->toArray(), 'System Uploads retrieved successfully');

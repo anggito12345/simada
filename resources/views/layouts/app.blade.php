@@ -55,6 +55,10 @@
 
     <style>
 
+        .modal {
+            overflow-y:auto;
+        }
+
         
         .navbar {
             padding: 0px;

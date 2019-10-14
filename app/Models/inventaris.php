@@ -31,6 +31,8 @@ use Illuminate\Support\Facades\DB;
 class inventaris extends Model
 {
 
+    use SoftDeletes;
+
     public $table = 'inventaris';
     
     const CREATED_AT = 'created_at';
