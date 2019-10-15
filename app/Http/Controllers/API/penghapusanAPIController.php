@@ -145,69 +145,69 @@ class penghapusanAPIController extends AppBaseController
      *
      * @return Response
      */
-    public function update($id, UpdatepenghapusanAPIRequest $request)
-    {
-        $input = $request->all();
+    // public function update($id, UpdatepenghapusanAPIRequest $request)
+    // {
+    //     $input = $request->all();
 
-        $fileDokumens = [];
-        $fileFotos = [];
+    //     $fileDokumens = [];
+    //     $fileFotos = [];
 
-        /** @var penghapusan $penghapusan */
-        $penghapusan = $this->penghapusanRepository->find($id);
+    //     /** @var penghapusan $penghapusan */
+    //     $penghapusan = $this->penghapusanRepository->find($id);
 
-        if (empty($penghapusan)) {
-            return $this->sendError('Penghapusan not found');
-        }
+    //     if (empty($penghapusan)) {
+    //         return $this->sendError('Penghapusan not found');
+    //     }
 
-        DB::beginTransaction();
-        try {
+    //     DB::beginTransaction();
+    //     try {
             
-            $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen', $request, "penghapusan", function($metadatas, $index, $systemUpload) {
-                if (isset($metadatas['dokumen_metadata_keterangan'][$index]) && $metadatas['dokumen_metadata_keterangan'][$index] != null) {
-                    $systemUpload->keterangan = $metadatas['dokumen_metadata_keterangan'][$index];
-                }
+    //         $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen', $request, "penghapusan", function($metadatas, $index, $systemUpload) {
+    //             if (isset($metadatas['dokumen_metadata_keterangan'][$index]) && $metadatas['dokumen_metadata_keterangan'][$index] != null) {
+    //                 $systemUpload->keterangan = $metadatas['dokumen_metadata_keterangan'][$index];
+    //             }
                 
-                $systemUpload->uid = $metadatas['dokumen_metadata_uid'][$index];             
-                $systemUpload->foreign_field = 'id';
-                $systemUpload->jenis = 'dokumen';
-                $systemUpload->foreign_table = 'penghapusan';
-                $systemUpload->foreign_id = $metadatas['id'];                   
+    //             $systemUpload->uid = $metadatas['dokumen_metadata_uid'][$index];             
+    //             $systemUpload->foreign_field = 'id';
+    //             $systemUpload->jenis = 'dokumen';
+    //             $systemUpload->foreign_table = 'penghapusan';
+    //             $systemUpload->foreign_id = $metadatas['id'];                   
 
-                return $systemUpload;
-            });
+    //             return $systemUpload;
+    //         });
 
 
-            $fileFotos = \App\Helpers\FileHelpers::uploadMultiple('foto', $request, "penghapusan", function($metadatas, $index, $systemUpload) {
-                if (isset($metadatas['foto_metadata_keterangan'][$index]) && $metadatas['foto_metadata_keterangan'][$index] != null) {
-                    $systemUpload->keterangan = $metadatas['foto_metadata_keterangan'][$index];
-                }
-                $systemUpload->uid = $metadatas['foto_metadata_uid'][$index];             
-                $systemUpload->foreign_field = 'id';
-                $systemUpload->jenis = 'foto';
-                $systemUpload->foreign_table = 'penghapusan';
-                $systemUpload->foreign_id = $metadatas['id'];
+    //         $fileFotos = \App\Helpers\FileHelpers::uploadMultiple('foto', $request, "penghapusan", function($metadatas, $index, $systemUpload) {
+    //             if (isset($metadatas['foto_metadata_keterangan'][$index]) && $metadatas['foto_metadata_keterangan'][$index] != null) {
+    //                 $systemUpload->keterangan = $metadatas['foto_metadata_keterangan'][$index];
+    //             }
+    //             $systemUpload->uid = $metadatas['foto_metadata_uid'][$index];             
+    //             $systemUpload->foreign_field = 'id';
+    //             $systemUpload->jenis = 'foto';
+    //             $systemUpload->foreign_table = 'penghapusan';
+    //             $systemUpload->foreign_id = $metadatas['id'];
                                 
 
-                return $systemUpload;
-            });                
+    //             return $systemUpload;
+    //         });                
 
-            $penghapusan = $this->penghapusanRepository->update($input, $id);
+    //         $penghapusan = $this->penghapusanRepository->update($input, $id);
 
-            \App\Models\inventaris::find($input['pidinventaris'])->restore();
+    //         \App\Models\inventaris::find($input['pidinventaris'])->restore();
 
-            DB::commit();   
+    //         DB::commit();   
 
-        } catch(\Exception $e) {
-            DB::rollBack();
-            \App\Helpers\FileHelpers::deleteAll($fileDokumens);
-            \App\Helpers\FileHelpers::deleteAll($fileFotos);              
-            return $this->sendError($e->getMessage() . $e->getTraceAsString() . $e->getFile() . $e->getLine());
-        }
+    //     } catch(\Exception $e) {
+    //         DB::rollBack();
+    //         \App\Helpers\FileHelpers::deleteAll($fileDokumens);
+    //         \App\Helpers\FileHelpers::deleteAll($fileFotos);              
+    //         return $this->sendError($e->getMessage() . $e->getTraceAsString() . $e->getFile() . $e->getLine());
+    //     }
 
         
 
-        return $this->sendResponse($penghapusan->toArray(), 'penghapusan updated successfully');
-    }
+    //     return $this->sendResponse($penghapusan->toArray(), 'penghapusan updated successfully');
+    // }
 
     
 

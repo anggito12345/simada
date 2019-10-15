@@ -118,7 +118,7 @@
                             }),
                     }).then((d) => {
                         resolve(true)
-                        funcGetDokumenFileList()
+                        onPenghapusanGetFiles(checkIfIdExist[0].foreign_id, () => {})
                     })
                 })
             }
@@ -144,7 +144,7 @@
                             }),
                     }).then((d) => {
                         resolve(true)
-                        funcGetDokumenFileList()
+                        onPenghapusanGetFiles(checkIfIdExist[0].foreign_id, () => {})
                     })
                 })
             }

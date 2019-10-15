@@ -28,6 +28,7 @@ Route::get('/detilkibfget/{pidinventaris}', 'detilkonstruksiAPIController@byinve
 
 Route::post('/mutasiinventaris/{id}', 'inventarisAPIController@mutasi');
 Route::post('penghapusans/edit/{id}', 'penghapusanAPIController@editCustom');
+Route::post('pemanfaatans/edit/{id}', 'pemanfaatanAPIController@editCustom');
 Route::resource('inventaris', 'inventarisAPIController');
 
 Route::get('/jenisbarangsget/getbykode/{id}', 'jenisbarangAPIController@getbykode');
@@ -80,3 +81,5 @@ Route::resource('pemeliharaans', 'pemeliharaanAPIController');
 Route::resource('penghapusans', 'penghapusanAPIController');
 
 Route::resource('roles', 'roleAPIController');
+
+Route::resource('pemanfaatans', 'pemanfaatanAPIController');

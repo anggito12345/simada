@@ -146,6 +146,7 @@ class inventarisDataTable extends DataTable
                         ['text' => '<i class="fa fa-trash"></i> Hapus', 'action' => 'function(){onDelete()}', ],
                         ['text' => '<hr />'],
                         ['text' => '<i class="fa fa-wrench"></i> Pemeliharaan', 'action' => 'function(){onPemeliharaan()}', ],
+                        ['text' => '<i class="fa fa-envelope"></i> Pemanfaatan', 'action' => 'function(){onPemanfaatan()}', ],
                         ['text' => '<i class="fa fa-eraser"></i> Penghapusan', 'action' => 'function(){onPenghapusan()}', ],
                     ]],                    
                     ['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner', 'buttons' => [ 'csv', 'excel']],

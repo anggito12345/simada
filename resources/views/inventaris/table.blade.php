@@ -22,6 +22,11 @@
         function onCallbackPemeliharaanTab(tableId) {
             $(tableId).DataTable().ajax.reload();
         }
+
+
+        function onCallbackPemanfaatanTab(tableId) {
+            $(tableId).DataTable().ajax.reload();
+        }
    
         function onPemeliharaan(currentData, param) {
             if (currentData == null && viewModel.data.checkedItem.length != 1 ) {
@@ -82,11 +87,104 @@
                     title: 'Hapus',
                     onClose: () => {
                         table.ajax.reload();
+                        $('#table-inventaris').DataTable().ajax.reload();
                     }
                 })
             })
         }
 
+
+        function onPemanfaatanGetFiles(foreignId, callback) {
+            return __ajax({
+                method: 'GET',
+                url: "<?= url('api/system_uploads') ?>",
+                data: {
+                    jenis: 'dokumen',
+                    foreign_field: 'id',
+                    foreign_id: foreignId,
+                    foreign_table: 'pemanfaatan',                    
+                },  
+            }).then((files) => {                
+                fileGalleryPemanfaatan.fileList(files)
+                __ajax({
+                    method: 'GET',
+                    url: "<?= url('api/system_uploads') ?>",
+                    data: {
+                        jenis: 'foto',
+                        foreign_field: 'id',
+                        foreign_id: foreignId,
+                        foreign_table: 'pemanfaatan'
+                    },
+                }).then((files) => {
+                    fotoPemanfaatan.fileList(files)
+
+                    callback();
+                })
+            })
+        }
+
+        function onPemanfaatan(currentData, param) {
+            if (currentData == null && viewModel.data.checkedItem.length != 1 ) {
+                swal.fire({
+                    type: 'error',
+                    text: 'Silahkan pilih 1',
+                    title: 'Pemanfaatan'
+                })
+            } else {
+
+                $("#modal-pemanfaatan").attr('is_mode_insert', true)
+                if(currentData != null) {
+                    viewModel.data.formPemanfaatan(currentData)
+                    $("#modal-pemanfaatan").attr('is_mode_insert', false)
+                    $("#modal-pemanfaatan").attr('callback', 'onCallbackPemanfaatanTab|'+param)       
+                    onPemanfaatanGetFiles(currentData.id, () => {                    
+
+                        const tgl_mulai = document.getElementById('tgl_mulai')
+                        tgl_mulai.value = currentData.tgl_mulai
+                        tgl_mulai.dispatchEvent(new Event('change'))
+
+                        const tgl_akhir = document.getElementById('tgl_akhir')
+                        tgl_akhir.value = currentData.tgl_akhir
+                        tgl_akhir.dispatchEvent(new Event('change'))
+
+                        $("#modal-pemanfaatan").modal('show')
+                    })    
+                } else {
+                    fileGalleryPemanfaatan.fileList([])
+                    fotoPemanfaatan.fileList([])
+                    $("#modal-pemanfaatan").modal('show')
+                }   
+            }
+        }
+
+        function onPenghapusanGetFiles(foreignId,callback) {
+            return __ajax({
+                method: 'GET',
+                url: "<?= url('api/system_uploads') ?>",
+                data: {
+                    jenis: 'dokumen',
+                    foreign_field: 'id',
+                    foreign_id: foreignId,
+                    foreign_table: 'penghapusan',                    
+                },  
+            }).then((files) => {                
+                fileGallery.fileList(files)
+                __ajax({
+                    method: 'GET',
+                    url: "<?= url('api/system_uploads') ?>",
+                    data: {
+                        jenis: 'foto',
+                        foreign_field: 'id',
+                        foreign_id: foreignId,
+                        foreign_table: 'penghapusan'
+                    },
+                }).then((files) => {
+                    foto.fileList(files)
+
+                    callback();
+                })
+            })
+        }
 
         function onPenghapusan(currentData, param) {
             if (currentData == null && viewModel.data.checkedItem.length != 1 ) {
@@ -96,54 +194,32 @@
                     title: 'Penghapusan'
                 })
             } else {
+                viewModel.data.formPenghapusan().kode_barang = 
 
                 $("#modal-penghapusan").attr('is_mode_insert', true)
                 if(currentData != null) {
                     viewModel.data.formPenghapusan(currentData)
                     $("#modal-penghapusan").attr('is_mode_insert', false)
                     $("#modal-penghapusan").attr('callback', 'onCallbackPemeliharaanTab|'+param)       
-                    __ajax({
-                        method: 'GET',
-                        url: "<?= url('api/system_uploads') ?>",
-                        data: {
-                            jenis: 'dokumen',
-                            foreign_field: 'id',
-                            foreign_id: currentData.id,
-                            foreign_table: 'penghapusan',                    
-                        },  
-                    }).then((files) => {                
-                        fileGallery.fileList(files)
-                        __ajax({
-                            method: 'GET',
-                            url: "<?= url('api/system_uploads') ?>",
-                            data: {
-                                jenis: 'foto',
-                                foreign_field: 'id',
-                                foreign_id: currentData.id,
-                                foreign_table: 'penghapusan'
-                            },
-                        }).then((files) => {
-                            foto.fileList(files)
+                    onPenghapusanGetFiles(currentData.id,function(){
+                        const tglhapus = document.getElementById('tglhapus')
+                        tglhapus.value = currentData.tglhapus
+                        tglhapus.dispatchEvent(new Event('change'))
 
-                            const tglhapus = document.getElementById('tglhapus')
-                            tglhapus.value = currentData.tglhapus
-                            tglhapus.dispatchEvent(new Event('change'))
+                        const tglsk = document.getElementById('tglsk')
+                        tglsk.value = currentData.tglsk
+                        tglsk.dispatchEvent(new Event('change'))
 
-                            const tglsk = document.getElementById('tglsk')
-                            tglsk.value = currentData.tglsk
-                            tglsk.dispatchEvent(new Event('change'))
-
-                            $("#modal-penghapusan").modal('show')
-                        })
-                    })      
+                        $("#modal-penghapusan").modal('show')
+                    })
                 } else {
+                    viewModel.data.formPenghapusan($("#table-inventaris").DataTable().rows().data().toArray().find((d) => {
+                        return d.id == viewModel.data.checkedItem[0]
+                    })) 
                     fileGallery.fileList([])
                     foto.fileList([])
                     $("#modal-penghapusan").modal('show')
-                }               
-                
-                
-                
+                }   
             }
         }
 
@@ -219,56 +295,56 @@
             createdMerge.setAttribute("row-cloned" ,true)
             let headerByPass = 0
             
-            for (let i = 0; i < allHeader.length ; i ++) {
-                const col = allHeader[i]
-                let th = document.createElement("th")
-                let title = col.getAttribute('title')
-                if (colspan[title] != undefined && headerByPass == 0) {
+            // for (let i = 0; i < allHeader.length ; i ++) {
+            //     const col = allHeader[i]
+            //     let th = document.createElement("th")
+            //     let title = col.getAttribute('title')
+            //     if (colspan[title] != undefined && headerByPass == 0) {
                     
-                    th.setAttribute("colspan",2)
-                    th.innerHTML = colspan[title].title
-                    th.style.textAlign = "center"
+            //         th.setAttribute("colspan",2)
+            //         th.innerHTML = colspan[title].title
+            //         th.style.textAlign = "center"
                     
-                    createdMerge.appendChild(th)
-                    headerByPass = colspan[title].value                    
-                }
+            //         createdMerge.appendChild(th)
+            //         headerByPass = colspan[title].value                    
+            //     }
 
-                if (headerByPass > 0) {                    
-                    headerByPass--
-                } else {
+            //     if (headerByPass > 0) {                    
+            //         headerByPass--
+            //     } else {
 
-                    th = col.cloneNode(true)
+            //         th = col.cloneNode(true)
 
-                    th.setAttribute("rowspan",2)
+            //         th.setAttribute("rowspan",2)
 
-                    th.addEventListener("click", (ev) => {
-                        col.click();     
-                        let currentClassname = ev.target.className                   
+            //         th.addEventListener("click", (ev) => {
+            //             col.click();     
+            //             let currentClassname = ev.target.className                   
 
-                        $("[row-cloned] th[col-cloned]").attr("class", "sorting")
+            //             $("[row-cloned] th[col-cloned]").attr("class", "sorting")
 
-                        if ( currentClassname  == "sorting_asc") {
-                            ev.target.className = "sorting_desc"
-                        } else {
-                            ev.target.className = "sorting_asc"
-                        }
+            //             if ( currentClassname  == "sorting_asc") {
+            //                 ev.target.className = "sorting_desc"
+            //             } else {
+            //                 ev.target.className = "sorting_asc"
+            //             }
                         
-                    })
+            //         })
 
-                    if (th.className.indexOf("sorting_disabled") < 0) {
-                        th.setAttribute("col-cloned", true)
-                    }
+            //         if (th.className.indexOf("sorting_disabled") < 0) {
+            //             th.setAttribute("col-cloned", true)
+            //         }
                     
 
-                    th.style.verticalAlign = "middle"
-                    createdMerge.appendChild(th)
+            //         th.style.verticalAlign = "middle"
+            //         createdMerge.appendChild(th)
 
-                    col.style.display = "none"
+            //         col.style.display = "none"
 
-                }
+            //     }
 
 
-            }
+            // }
 
             isReady[e.sTableId] = true
 
@@ -282,6 +358,7 @@
                 "Detail",
                 "Pemeliharaan",
                 // "Penghapusan"
+                "Pemanfaatan"
             ]
 
             let selectEvent = 0
@@ -477,6 +554,96 @@
                                     'selectRow': true
                                     }
                                 }
+                            ],
+                            'select': {
+                                'style': 'multi'
+                            },
+                            "processing": true,
+                            "serverSide": true,
+                        })
+
+
+                        document.querySelector(`#Pemanfaatan-${selectEvent}`).innerHTML = `<table class='mt-2 table table-bordered table-striped' id='table-pemanfaatan-<?= $uniqId ?>${selectEvent}'>
+                            <thead>                           
+                            </thead>
+                        </table>`
+
+                        let tablePemanfaatan = $(`#table-pemanfaatan-<?= $uniqId ?>${selectEvent}`).DataTable({
+                            ajax: {
+                                url: `${$("[base-path]").val()}/pemanfaatans`,
+                                dataType: "json",
+                                data: (d) => {
+                                    d.pidinventaris = row.data().id
+                                }
+                            },
+                            order : [[ 0, "asc"]],
+                            dom: 'Bfrtip',
+                            buttons: [
+                                {
+                                    extend: 'collection',
+                                    text: 'Action',
+                                    buttons: [
+                                        {
+                                            text: "Edit",
+                                            action: function () {
+                                                var count = tablePemanfaatan.rows('.selected').count();
+                            
+                                                if (count != 1) {
+                                                    swal.fire({
+                                                        type: 'error',
+                                                        text: 'Silahkan pilih 1 data',
+                                                        title: 'Pemanfaatan'
+                                                    })
+                                                    return
+                                                }
+
+                                                onPemanfaatan(tablePemanfaatan.rows('.selected').data()[0], `#table-pemanfaatan-${selectEvent}`)
+                                            }
+                                        },
+                                        {
+                                            text: "Delete",
+                                            action: function () {
+                                                var count = tablePemanfaatan.rows('.selected').count();
+                            
+                                                if (count < 1) {
+                                                    swal.fire({
+                                                        type: 'error',
+                                                        text: 'Silahkan pilih minimal 1 data',
+                                                        title: 'Pemanfaatan'
+                                                    })
+                                                    return
+                                                }
+
+                                                __ajax({
+                                                    url : $("[base-path]").val() + "/api/pemanfaatans/" + tablePemanfaatan.rows('.selected').data().map((d) => {
+                                                    return d.id
+                                                }).join(','),
+                                                    data: {
+                                                        _token: "<?php csrf_token() ?>"
+                                                    },
+                                                    method: "DELETE",
+                                                    dataType: "json"
+                                                }).then(() => {
+                                                    swal.fire({
+                                                        type: 'success',
+                                                        text: 'Data berhasil dihapus',
+                                                        title: 'Hapus',
+                                                        onClose: () => {
+                                                            tablePemanfaatan.ajax.reload();
+                                                        }
+                                                    })
+                                                })
+                                            }
+                                        }
+                                    ]
+                                    
+                                }
+                            ],
+                            columns: [
+                                {
+                                    title: 'Peruntukan',
+                                    data: 'peruntukan'
+                                },
                             ],
                             'select': {
                                 'style': 'multi'

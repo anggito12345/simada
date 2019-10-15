@@ -98,6 +98,28 @@
   </div>
 </div>
 
+<div class="modal" id="modal-pemanfaatan"  role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Pemanfaatan</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        {!! Form::open(['id' => 'form-pemanfaatan']) !!}
+          @include('pemanfaatans.fields')
+        {!! Form::close() !!}
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="viewModel.clickEvent.savePemanfaatan()">Simpan</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <div class="modal" id="modal-penghapusan"  role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -292,15 +314,98 @@
               type: "success",
               text: "Berhasil menyimpan data!",
               onClose: () => {
-                if($('#modal-penghapusan').attr('is_mode_insert') == 'false') {
-                  $("#table-penghapusan").DataTable().ajax.reload();
-                } else {
+                if($('#modal-penghapusan').attr('is_mode_insert') != 'false') {
                   viewModel.data.checkedItem = []
                   $("#table-inventaris").DataTable().ajax.reload();
                   
                 }
+
+                $("#table-penghapusan").DataTable().ajax.reload();
                                 
                 $("#modal-penghapusan").modal('hide')
+
+              }
+          })
+            
+        })          
+      },
+      savePemanfaatan: () => {
+        let url = $("[base-path]").val() + "/api/pemanfaatans"
+        let formData = new FormData($('#form-pemanfaatan')[0])
+        let method = "POST"
+
+        for (let index =0 ; index < fileGalleryPemanfaatan.fileList().length; index ++) {
+          const d = fileGalleryPemanfaatan.fileList()[index]
+          if (d.rawFile) {
+              formData.append(`dokumen[${index}]`, d.rawFile)
+          } else {
+              formData.append(`dokumen[${index}]`, false)
+          }
+
+          let keys = Object.keys(d)
+
+          keys.forEach((key) => {
+              if (key == 'rawFile') {
+                  return
+              }
+              formData.append(`dokumen_metadata_${key}[${index}]`, d[key])
+          })                
+          
+          formData.append(`dokumen_metadata_id_inventaris[${index}]`, viewModel.data.checkedItem[0])
+        }
+
+        fotoPemanfaatan.fileList().forEach((d, index) => {
+          if (d.rawFile) {
+              formData.append(`foto[${index}]`, d.rawFile)
+          } else {
+              formData.append(`foto[${index}]`, false)
+          }
+
+          let keys = Object.keys(d)
+
+          keys.forEach((key) => {
+              if (key == 'rawFile') {
+                  return
+              }
+              formData.append(`foto_metadata_${key}[${index}]`, d[key])
+          })                
+
+          formData.append(`foto_metadata_id_inventaris[${index}]`, viewModel.data.checkedItem[0])
+          
+          return d.rawFile
+        })
+
+       
+
+        if($('#modal-pemanfaatan').attr('is_mode_insert') == 'false') {
+          formData.append(`pidinventaris`, viewModel.data.formPemanfaatan().pidinventaris)
+          url = $("[base-path]").val() + "/api/pemanfaatans" + "/edit/" + viewModel.data.formPemanfaatan().id
+          method = "POST"
+        } else {
+          formData.append(`pidinventaris`, viewModel.data.checkedItem[0])
+        }
+        
+        __ajax({
+          method: method,
+          url: url,
+          data: formData,
+          processData: false,
+          contentType: false,
+        }).then((d, resp) => {
+          swal.fire({
+              type: "success",
+              text: "Berhasil menyimpan data!",
+              onClose: () => {
+                $("#modal-pemanfaatan").modal('hide')
+              
+                if ($('#modal-pemanfaatan').attr('callback') != undefined) {
+
+                  let funcCallbackAndParam = $('#modal-pemanfaatan').attr('callback').split("|")
+                  window[funcCallbackAndParam[0]](funcCallbackAndParam[1])
+                  $('#modal-pemanfaatan').removeAttr('callback')
+                  return;
+                }
+                $("#table-inventaris").DataTable().ajax.reload();
 
               }
           })
