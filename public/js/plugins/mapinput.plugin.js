@@ -31,7 +31,9 @@ let MapInput = function(element, config) {
         value: null,
     }
 
-    let position
+    let position = {
+      coords: {langitude: 0, longitude:0}
+    }
 
     navigator.geolocation.getCurrentPosition((pos) => {
         position = pos
