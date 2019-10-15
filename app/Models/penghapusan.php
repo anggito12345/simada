@@ -24,7 +24,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class penghapusan extends Model
 {
-    use SoftDeletes;
+    // use SoftDeletes;
 
     public $table = 'penghapusan';
     
@@ -42,8 +42,8 @@ class penghapusan extends Model
         'kriteria',
         'kondisi',
         'harga_apprisal',
-        'dokumen',
-        'foto',
+        // 'dokumen',
+        // 'foto',
         'nosk',
         'tglsk',
         'keterangan'
@@ -62,8 +62,8 @@ class penghapusan extends Model
         'kriteria' => 'string',
         'kondisi' => 'string',
         'harga_apprisal' => 'string',
-        'dokumen' => 'string',
-        'foto' => 'string',
+        // 'dokumen' => 'string',
+        // 'foto' => 'string',
         'nosk' => 'string',
         'tglsk' => 'date',
         'keterangan' => 'string'
@@ -78,5 +78,35 @@ class penghapusan extends Model
         
     ];
 
+
+    public function setTglskAttribute($value)
+    {
+        $value = date("d-m-Y", strtotime($value));
+        $this->attributes['tglsk'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
+    }
+
+    public function getTglskAttribute($value)
+    {
+        if ($value == "") {
+            return "";
+        }
+
+        return date("d/m/Y", strtotime($value));
+    }
+
+    public function setTglhapusAttribute($value)
+    {
+        $value = date("d-m-Y", strtotime($value));
+        $this->attributes['tglhapus'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
+    }
+
+    public function getTglhapusAttribute($value)
+    {
+        if ($value == "") {
+            return "";
+        }
+
+        return date("d/m/Y", strtotime($value));
+    }
     
 }

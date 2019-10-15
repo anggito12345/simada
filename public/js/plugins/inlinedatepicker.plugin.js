@@ -4,7 +4,7 @@ let inlineDatepicker = function(element, config) {
         format: 'YYYY-MM-DD',
         startYear: 2010,
         formatDefault: 'DD/MM/YYYY',
-        buttonClear: false
+        buttonClear: false,
     }
 
     const monthNames = [
@@ -100,8 +100,9 @@ let inlineDatepicker = function(element, config) {
         if (poke != null) {
             return
         }
+
         
-        setTimeout(() => {element.dispatchEvent(new Event('change'))}, 1000)
+        element.dispatchEvent(new Event('change'))
     }
 
     const attributeJson = function(element) {
@@ -182,18 +183,25 @@ let inlineDatepicker = function(element, config) {
 
     element.addEventListener('change', (ev) => {
         
-        showValue()
+        if(ev.target.value != "")
+            showValue()
     })
 
     buildingUi(element)
 
-    const showValue = () => {
+    const showValue = (defaultValue) => {
+        let value = element.value
+
         let DateEle = new Date()
-        if (element.value != null && element.value != "" ) {
-            DateEle = moment(element.value,defaultConfig.formatDefault).toDate()
-        } 
-    
-    
+
+        if (defaultValue != null) {
+            value = defaultValue
+        }
+        
+        if (value != null && value != "" ) {
+            DateEle = moment(value,defaultConfig.formatDefault).toDate()
+        }             
+
         yearPicker.value = DateEle.getFullYear()
         monthPicker.value = DateEle.getMonth() + 1
         dayPicker.value = DateEle.getDate()

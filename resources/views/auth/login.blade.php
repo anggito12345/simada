@@ -51,6 +51,12 @@
                 </div>
             @endif
 
+            @if(isset($_GET['successRegister']))
+                <div class='alert alert-<?= $_GET['successRegister'] == '1' ? 'success' : 'error' ?>'>
+                    <?= $_GET['successRegister'] == '1' ? 'Mohon tunggu persetujuan dari pihak admin' : 'Gagal!' ?>
+                </div>
+            @endif
+
             <div class="form-group has-feedback {{ $errors->has('email') ? ' has-error' : '' }}">
                 <input type="text" class="form-control" name="username" value="{{ old('email') }}" placeholder="Email">
                 <span class="glyphicon glyphicon-envelope form-control-feedback"></span>

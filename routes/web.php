@@ -69,3 +69,5 @@ Route::resource('pemeliharaans', 'pemeliharaanController');
 Route::resource('penghapusans', 'penghapusanController');
 
 Route::resource('roles', 'roleController');
+
+Route::resource('pemanfaatans', 'pemanfaatanController');

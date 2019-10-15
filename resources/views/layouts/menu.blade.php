@@ -11,13 +11,13 @@
         <li class="{{ Request::is('inventaris*') ? 'active' : '' }}">
             <a href="{!! route('inventaris.index') !!}"><i class="fa fa-edit"></i><span>Penata Usahaan</span></a>
         </li>
-        <li class="{{ Request::is('pemeliharaans*') ? 'active' : '' }}">
+        <!-- <li class="{{ Request::is('pemeliharaans*') ? 'active' : '' }}">
             <a href="{!! route('pemeliharaans.index') !!}"><i class="fa fa-edit"></i><span>Pemeliharaan</span></a>
         </li>
 
         <li class="{{ Request::is('penghapusans*') ? 'active' : '' }}">
             <a href="{!! route('penghapusans.index') !!}"><i class="fa fa-edit"></i><span>Penghapusan</span></a>
-        </li>
+        </li> -->
     </ul>
 </li>
 
@@ -78,7 +78,7 @@
 </li>
 
 <?php 
-    $countUserNeedOtor = \App\Models\users::where('aktif',0)->count();
+    $countUserNeedOtor = \App\Models\users::where('aktif','0')->count();
 ?>
 
 <li class="treeview {{ Request::is('users*')? 'active' : '' }}">
@@ -107,6 +107,3 @@
 
     </ul>
 </li>
-
-
-

@@ -68,6 +68,31 @@ viewModel.data = Object.assign(viewModel.data, {
         nokontrak: "",
         tglkontrak: moment().format("DD-MM-YYYY"),
     }),
+
+    formPemanfaatan: ko.observable({
+        peruntukan: "",
+        umur: 0,
+        no_perjanjian: "",
+        tgl_mulai: moment().format("DD-MM-YYYY"),
+        tgl_akhir: moment().format("DD-MM-YYYY"),
+        mitra: -1,
+        tipe_kontribusi: "",
+        jumlah_kontribusi: 0,
+        pegawai: -1,
+    }),
+
+    formPenghapusan: ko.observable({
+        kodebarang: "",
+        namabarang: "",
+        noreg: "",
+        tglhapus: moment().format("DD-MM-YYYY"),
+        kriteria: "",
+        kondisi: "",
+        harga_apprisal: "",
+        nosk: "",
+        tglsk: moment().format("DD-MM-YYYY"),
+        keterangan: "",
+    }),
     urlEachKIB: (newVal) => {
         return `/api/detil${newVal.replace(/ /g,"").toLowerCase()}get`
     }
