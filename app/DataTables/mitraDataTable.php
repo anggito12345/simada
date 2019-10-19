@@ -2,11 +2,11 @@
 
 namespace App\DataTables;
 
-use App\Models\organisasi;
+use App\Models\mitra;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 
-class organisasiDataTable extends DataTable
+class mitraDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -18,26 +18,18 @@ class organisasiDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable
-            // ->editColumn('aktif', ' {{  \App\Models\BaseModel::$YesNoDs[$aktif] }}')
-            ->addColumn('action', 'organisasis.datatables_actions');
+        return $dataTable->addColumn('action', 'mitras.datatables_actions');
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\organisasi $model
+     * @param \App\Models\mitra $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(organisasi $model)
+    public function query(mitra $model)
     {
-        return $model
-            ->newQuery()
-            ->select([
-                'm_organisasi.*',
-                'm_jenis_opd.nama as jenis_nama'
-            ])
-            ->join('m_jenis_opd', 'm_jenis_opd.id', 'm_organisasi.jenis');
+        return $model->newQuery();
     }
 
     /**
@@ -73,16 +65,18 @@ class organisasiDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            // 'pid',
-            'kode',
+            'npwp',
+            'siup_tdp',
             'nama',
-            'jenis_nama' => [
-                'name' => 'm_jenis_opd.nama',
-                'title' => 'Jenis'
-            ],
-            // 'jenis',
-            // 'alamat',
-            // 'aktif'
+            'alamat',
+            'telp',
+            'email',
+            'jenis_usaha',
+            // 'pic',
+            // 'jabatan_pic',
+            // 'hp_pic',
+            // 'email_pic',
+            // 'aktf'
         ];
     }
 
@@ -93,6 +87,6 @@ class organisasiDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'organisasisdatatable_' . time();
+        return 'mitrasdatatable_' . time();
     }
 }

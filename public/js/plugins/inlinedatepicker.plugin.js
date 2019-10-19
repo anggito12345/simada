@@ -1,8 +1,13 @@
 let inlineDatepicker = function(element, config) {
 
+    const self = this
+
+    this.isReady = false
+
     defaultConfig = {
         format: 'YYYY-MM-DD',
-        startYear: 2010,
+        minYear: 2010,
+        maxYear: new Date().getFullYear(),
         formatDefault: 'DD/MM/YYYY',
         buttonClear: false,
     }
@@ -77,10 +82,14 @@ let inlineDatepicker = function(element, config) {
     }
 
     const yearPopulate = (yearSelectElement) => {
-        for(let yearStart = defaultConfig.startYear; yearStart <= new Date().getFullYear(); yearStart++) {
+        for(let yearStart = defaultConfig.minYear; yearStart <= 2019; yearStart++) {
             const yearOption = document.createElement('option')
             yearOption.appendChild( document.createTextNode(yearStart) );
             yearOption.value = yearStart;
+
+            if (defaultConfig.maxYear == yearStart) {
+                yearOption.setAttribute('selected', true)
+            }
 
             yearSelectElement.appendChild(yearOption)
         }
@@ -91,8 +100,8 @@ let inlineDatepicker = function(element, config) {
     }
 
     const creatingResult = (poke) => {
-        let stringValue = moment(yearPicker.value + "-" + monthPicker.value + "-" + dayPicker.value, "YYYY-MM-DD").format(defaultConfig.format)
-
+        let stringValue = moment(yearPicker.value + "-" + monthPicker.value + "-" + dayPicker.value, "YYYY-MM-DD").format(defaultConfig.format)        
+        
         element.value = stringValue
 
         element.setAttribute('value', stringValue)
@@ -136,7 +145,7 @@ let inlineDatepicker = function(element, config) {
             buttonClear.className = 'btn btn-default'
             buttonClear.textContent = 'Clear'
             buttonClear.addEventListener('click', (ev) => {
-                yearPicker.value = defaultConfig.startYear
+                yearPicker.value = defaultConfig.minYear
                 monthPicker.value = 1
                 dayPicker.value = 1
             })
@@ -166,13 +175,13 @@ let inlineDatepicker = function(element, config) {
 
     // initialize event
     yearPicker.addEventListener('change', (ev) => {
-        dayPopulate(dayPicker)
+        dayPopulate(dayPicker)        
 
         creatingResult()
     })
 
     monthPicker.addEventListener('change', (ev) => {
-        dayPopulate(dayPicker)
+        dayPopulate(dayPicker)        
 
         creatingResult()
     })
@@ -184,7 +193,7 @@ let inlineDatepicker = function(element, config) {
     element.addEventListener('change', (ev) => {
         
         if(ev.target.value != "")
-            showValue()
+            showValue(ev.target.value)
     })
 
     buildingUi(element)
@@ -202,9 +211,14 @@ let inlineDatepicker = function(element, config) {
             DateEle = moment(value,defaultConfig.formatDefault).toDate()
         }             
 
-        yearPicker.value = DateEle.getFullYear()
+        yearPicker.value = self.isReady ? DateEle.getFullYear() : defaultConfig.maxYear
         monthPicker.value = DateEle.getMonth() + 1
         dayPicker.value = DateEle.getDate()
+
+        if (!self.isReady) {
+            self.isReady = true
+        }
+        
     }
 
     showValue()

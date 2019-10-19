@@ -83,3 +83,7 @@ Route::resource('penghapusans', 'penghapusanAPIController');
 Route::resource('roles', 'roleAPIController');
 
 Route::resource('pemanfaatans', 'pemanfaatanAPIController');
+
+Route::resource('mitras', 'mitraAPIController');
+
+Route::resource('jabatans', 'jabatanAPIController');

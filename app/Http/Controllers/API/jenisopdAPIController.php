@@ -34,11 +34,19 @@ class jenisopdAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $jenisopds = $this->jenisopdRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
+        $querys = \App\Models\jenisopd::select([
+            'nama as text',
+            'id'
+        ])
+        ->whereRaw("nama like '%".$request->input("q")."%'");
+
+        if ($request->has("level") && $request->input("level") != "") {
+            $querys = $querys->where('level', '>', $request->input("level"));
+        }
+
+
+        $jenisopds = $querys->limit(10)
+        ->get();
 
         return $this->sendResponse($jenisopds->toArray(), 'Jenisopds retrieved successfully');
     }

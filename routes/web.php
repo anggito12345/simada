@@ -71,3 +71,7 @@ Route::resource('penghapusans', 'penghapusanController');
 Route::resource('roles', 'roleController');
 
 Route::resource('pemanfaatans', 'pemanfaatanController');
+
+Route::resource('mitras', 'mitraController');
+
+Route::resource('jabatans', 'jabatanController');

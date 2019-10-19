@@ -147,6 +147,10 @@
                         tgl_akhir.value = currentData.tgl_akhir
                         tgl_akhir.dispatchEvent(new Event('change'))
 
+                        App.Helpers.defaultSelect2($("#mitra"), `${$('[base-path]').val()}/api/mitras/${viewModel.data.formPemanfaatan().mitra}`,"id","nama", (response) => {
+                            
+                        })
+
                         $("#modal-pemanfaatan").modal('show')
                     })    
                 } else {

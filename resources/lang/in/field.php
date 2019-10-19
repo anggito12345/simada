@@ -21,5 +21,7 @@ return [
     'seni_asal' => 'Asal Daerah',
     'seni_bahan' => 'Bahan',
     'ternak_jenis' => 'Jenis',
-    'ternak_ukuran' => 'Ukuran'
+    'ternak_ukuran' => 'Ukuran',
+    'peruntukan' => 'Jenis Pemanfaatan',
+    'umur' => 'Jangka Waktu'
 ];

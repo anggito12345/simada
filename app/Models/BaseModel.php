@@ -97,4 +97,20 @@ class BaseModel extends Model {
         'Lainnya' => 'Lainnya',
         'Mutasi' => 'Mutasi',
     ];
+
+    public static $peruntukanDs = [
+        'Retribusi' => 'Retribusi',
+        // 'Pinjam Pakai' => 'Pinjam Pakai',
+        'Sewa' => 'Sewa',
+        'BGS' => 'BGS',
+        'BSG' => 'BSG',
+        'KSP' => 'KSP',
+        'KSPI' => 'KSPI',
+    ];
+
+    public static $tipeKontribusiDs = [
+        '0' => 'Tetap',
+        '1' => 'Bagi Hasil',
+        '2' => 'Tetap dan Bagi Hasil',
+    ];
 }

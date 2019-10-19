@@ -35,10 +35,12 @@ class organisasiAPIController extends AppBaseController
     public function index(Request $request)
     {
         $organisasis = \App\Models\organisasi::select([
-            'nama as text',
-            'id'
+            'm_organisasi.nama as text',
+            'm_organisasi.id',      
+            'm_jenis_opd.level'      
         ])
-        ->whereRaw("nama like '%".$request->input("q")."%'")
+        ->join('m_jenis_opd', 'm_jenis_opd.id', 'm_organisasi.jenis')
+        ->whereRaw("m_organisasi.nama like '%".$request->input("q")."%'")        
         ->limit(10)
         ->get();
 

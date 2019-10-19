@@ -6,19 +6,18 @@ use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
 /**
- * Class organisasi
+ * Class jabatan
  * @package App\Models
- * @version September 8, 2019, 2:00 am UTC
+ * @version October 19, 2019, 2:50 pm UTC
  *
- * @property integer pid
  * @property string nama
- * @property string jenis
- * @property string alamat
- * @property integer aktif
+ * @property integer jenis
  */
-class organisasi extends Model
+class jabatan extends Model
 {
-    public $table = 'm_organisasi';
+    // use SoftDeletes;
+
+    public $table = 'm_jabatan';
     
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
@@ -28,11 +27,8 @@ class organisasi extends Model
 
 
     public $fillable = [
-        'pid',
         'nama',
-        'jenis',
-        'alamat',
-        'aktif'
+        'jenis'
     ];
 
     /**
@@ -42,11 +38,8 @@ class organisasi extends Model
      */
     protected $casts = [
         'id' => 'integer',
-        'pid' => 'integer',
         'nama' => 'string',
-        'jenis' => 'integer',
-        'alamat' => 'string',
-        'aktif' => 'integer'
+        'jenis' => 'integer'
     ];
 
     /**

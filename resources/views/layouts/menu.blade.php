@@ -34,6 +34,8 @@
     || Request::is('perolehans*') 
     || Request::is('satuanbarangs*') 
     || Request::is('jenisopds*')
+    || Request::is('mitras*')
+    || Request::is('jabatans*')
     || Request::is('statustanahs*') ? 'active' : '' }}">
     <a href="#">
         <i class="fa fa-edit"></i>
@@ -74,6 +76,12 @@
         <li class="{{ Request::is('statustanahs*') ? 'active' : '' }}">
             <a href="{!! route('statustanahs.index') !!}"><i class="fa fa-edit"></i><span>Status Tanah</span></a>
         </li>
+        <li class="{{ Request::is('mitras*') ? 'active' : '' }}">
+            <a href="{!! route('mitras.index') !!}"><i class="fa fa-edit"></i><span>Mitra</span></a>
+        </li>
+        <li class="{{ Request::is('jabatans*') ? 'active' : '' }}">
+            <a href="{!! route('jabatans.index') !!}"><i class="fa fa-edit"></i><span>Jabatan</span></a>
+        </li>
     </ul>
 </li>
 
@@ -107,3 +115,7 @@
 
     </ul>
 </li>
+
+
+
+

@@ -35,7 +35,13 @@
         .register-box-body {
             width: 450px;
         }
+
+        .login-box, .register-box {
+            width: 460px;
+            /* margin: 7% auto; */
+        }
     </style>
+    @include('layouts.css')
 </head>
 <body class="hold-transition register-page">
 <div class="register-box">
@@ -90,6 +96,8 @@
     new inlineDatepicker(document.getElementById('tgl_lahir'), {
         format: 'DD-MM-YYYY',
         buttonClear: true,
+        minYear: 1940,
+        maxYear: new Date().getFullYear() - 20
     });
 
 

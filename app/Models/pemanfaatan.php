@@ -46,7 +46,9 @@ class pemanfaatan extends Model
         'tipe_kontribusi',
         'jumlah_kontribusi',
         'pegawai',
-        'aktif'
+        'aktif',
+        'tetap',
+        'bagi_hasil',
     ];
 
     /**

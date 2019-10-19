@@ -2,11 +2,11 @@
 
 namespace App\DataTables;
 
-use App\Models\organisasi;
+use App\Models\jabatan;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 
-class organisasiDataTable extends DataTable
+class jabatanDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -18,26 +18,18 @@ class organisasiDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable
-            // ->editColumn('aktif', ' {{  \App\Models\BaseModel::$YesNoDs[$aktif] }}')
-            ->addColumn('action', 'organisasis.datatables_actions');
+        return $dataTable->addColumn('action', 'jabatans.datatables_actions');
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\organisasi $model
+     * @param \App\Models\jabatan $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(organisasi $model)
+    public function query(jabatan $model)
     {
-        return $model
-            ->newQuery()
-            ->select([
-                'm_organisasi.*',
-                'm_jenis_opd.nama as jenis_nama'
-            ])
-            ->join('m_jenis_opd', 'm_jenis_opd.id', 'm_organisasi.jenis');
+        return $model->newQuery();
     }
 
     /**
@@ -73,16 +65,8 @@ class organisasiDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            // 'pid',
-            'kode',
             'nama',
-            'jenis_nama' => [
-                'name' => 'm_jenis_opd.nama',
-                'title' => 'Jenis'
-            ],
-            // 'jenis',
-            // 'alamat',
-            // 'aktif'
+            'jenis'
         ];
     }
 
@@ -93,6 +77,6 @@ class organisasiDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'organisasisdatatable_' . time();
+        return 'jabatansdatatable_' . time();
     }
 }
