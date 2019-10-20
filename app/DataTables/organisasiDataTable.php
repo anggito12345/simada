@@ -20,6 +20,9 @@ class organisasiDataTable extends DataTable
 
         return $dataTable
             // ->editColumn('aktif', ' {{  \App\Models\BaseModel::$YesNoDs[$aktif] }}')
+            ->addColumn('level', function($data){
+                return \App\Models\BaseModel::$levelOrganisasiDs[$data->level];
+            })
             ->addColumn('action', 'organisasis.datatables_actions');
     }
 
@@ -35,9 +38,8 @@ class organisasiDataTable extends DataTable
             ->newQuery()
             ->select([
                 'm_organisasi.*',
-                'm_jenis_opd.nama as jenis_nama'
-            ])
-            ->join('m_jenis_opd', 'm_jenis_opd.id', 'm_organisasi.jenis');
+                // 'm_jenis_opd.nama as jenis_nama'
+            ]);
     }
 
     /**
@@ -76,10 +78,7 @@ class organisasiDataTable extends DataTable
             // 'pid',
             'kode',
             'nama',
-            'jenis_nama' => [
-                'name' => 'm_jenis_opd.nama',
-                'title' => 'Jenis'
-            ],
+            'level'
             // 'jenis',
             // 'alamat',
             // 'aktif'

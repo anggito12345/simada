@@ -87,3 +87,5 @@ Route::resource('pemanfaatans', 'pemanfaatanAPIController');
 Route::resource('mitras', 'mitraAPIController');
 
 Route::resource('jabatans', 'jabatanAPIController');
+
+Route::resource('settings', 'settingAPIController');

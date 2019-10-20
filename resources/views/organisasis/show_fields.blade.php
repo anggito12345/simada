@@ -2,8 +2,8 @@
 
 <!-- Pid Field -->
 <div class="row">
-    {!! Form::label('pid', 'Pid:', ["class" => 'col-md-4 item-view']) !!}
-    <p class="col-md-8 item-view">{!! $organisasi->pid !!}</p>
+    {!! Form::label('pid', 'Induk Organisasi:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! \App\Models\BaseModel::getRelationData($organisasi->organisasi, "nama", "") !!}</p>
 </div>
 
 <!-- Nama Field -->
@@ -14,8 +14,8 @@
 
 <!-- Jenis Field -->
 <div class="row">
-    {!! Form::label('jenis', 'Jenis:', ["class" => 'col-md-4 item-view']) !!}
-    <p class="col-md-8 item-view">{!! $organisasi->jenis !!}</p>
+    {!! Form::label('jenis', 'Level:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! \App\Models\BaseModel::$levelOrganisasiDs[$organisasi->level] !!}</p>
 </div>
 
 <!-- Alamat Field -->

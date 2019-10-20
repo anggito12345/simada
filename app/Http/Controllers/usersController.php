@@ -40,6 +40,7 @@ class usersController extends AppBaseController
      */
     public function index(usersDataTable $usersDataTable)
     {
+        $this->middleware('auth');
         return $usersDataTable->render('users.index');
     }
 
@@ -88,6 +89,7 @@ class usersController extends AppBaseController
      */
     public function show($id)
     {
+        $this->middleware('auth');
         $users = $this->usersRepository->find($id);
 
         if (empty($users)) {
@@ -155,8 +157,9 @@ class usersController extends AppBaseController
 
         $users = $this->usersRepository->update($input, $id);
 
-        if (isset($input['from_aktif_process'])) {
-            Mail::to($users->email)->send(new \App\Mail\ActivationUser($users));
+        if (isset($input['from_aktif_process'])) {            
+            Mail::to($users->email)->send(new \App\Mail\ActivationUser($users));            
+            return redirect(route('users.index') . '?IsSent=true');
         }
 
         Flash::success('Users updated successfully.');
@@ -173,6 +176,7 @@ class usersController extends AppBaseController
      */
     public function destroy($id)
     {
+        $this->middleware('auth');
         $users = $this->usersRepository->find($id);
 
         if (empty($users)) {

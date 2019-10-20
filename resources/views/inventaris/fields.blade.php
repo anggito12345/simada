@@ -85,7 +85,23 @@
     {!! Form::text('tgl_sensus', null, ['class' => 'form-control tgl_sensus','id'=>'tgl_sensus']) !!}
 </div>
 
+<!-- pid opd Field -->
+<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
+    {!! Form::label('pidopd', 'Pengguna Barang') !!} <span class="text-danger">*</span>
+    {!! Form::select('pidopd', [] , "", ['class' => 'form-control', 'required' => true]) !!}
+</div>
 
+<!-- pid opd cabang Field -->
+<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
+    {!! Form::label('pidopd_cabang', 'Kuasa Pengguna Barang') !!} <span class="text-danger">*</span>
+    {!! Form::select('pidopd_cabang', [] , null, ['class' => 'form-control', 'required' => true]) !!}
+</div>
+
+<!-- pid upt Field -->
+<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
+    {!! Form::label('pidupt', 'Sub Kuasa Pengguna Barang') !!} <span class="text-danger">*</span>
+    {!! Form::select('pidupt', [] , null, ['class' => 'form-control', 'required' => true]) !!}
+</div>
 
 <div data-bind='visible:viewModel.data.tipeKib() == "KIB A"' class="form-group col-sm-12 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-12' : 'col-md-12' ?> row">
     {!! Form::file('dokumen', ['class' => 'form-control','id'=>'dokumen', 'name' => 'dummy', 'multiple' => true]) !!}
@@ -346,6 +362,56 @@
             ajax: {
                 url: "<?= url('api/organisasis') ?>",
                 dataType: 'json',
+                data: function(d) {
+                    d.level = 0
+                    return d
+                },
+                processResults: function (data) {            
+                // Transforms the top-level key of the response object from 'items' to 'results'
+                return {
+                    results: data.data
+                };
+                }
+            },
+            theme: 'bootstrap' ,
+        })
+
+        $('#pidopd').on('change', function (e) {
+            $("#pidopd_cabang").val("").trigger("change")
+        });
+
+        $('#pidopd_cabang').select2({
+            ajax: {
+                url: "<?= url('api/organisasis') ?>",
+                dataType: 'json',
+                data: function(d) {
+                    d.level = 1
+                    d.pid = $('#pidopd').select2('val')
+                    return d
+                },
+                processResults: function (data) {
+                // Transforms the top-level key of the response object from 'items' to 'results'
+                return {
+                    results: data.data
+                };
+                }
+            },
+            theme: 'bootstrap' ,
+        })
+
+        $('#pidopd_cabang').on('change', function (e) {
+            $("#pidupt").val("").trigger("change")
+        });
+
+        $('#pidupt').select2({
+            ajax: {
+                url: "<?= url('api/organisasis') ?>",
+                dataType: 'json',
+                data: function(d) {
+                    d.level = 2
+                    d.pid = $('#pidopd_cabang').select2('val')
+                    return d
+                },
                 processResults: function (data) {
                 // Transforms the top-level key of the response object from 'items' to 'results'
                 return {

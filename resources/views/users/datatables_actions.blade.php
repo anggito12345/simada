@@ -14,17 +14,17 @@
         ]) !!}    
     {!! Form::close() !!}
     {!! Form::open(['route' => ['users.update', $id], 'method' => 'PATCH', 'class' => 'pull-right']) !!}
-        {!! Form::hidden('from_aktif_process', '1', []) !!}
+        
         @if($aktif == 0)
-            {!! Form::hidden('aktif', '1', []) !!}
-            {!! Form::button($aktif == 1 ? 'Aktif' : 'Aktifkan', [
+            {!! Form::hidden('from_aktif_process', '1', []) !!}
+            {!! Form::button($email_verification_code != '' ? 'Kirim Ulang Email' : 'Kirim Email', [
                 'type' => 'submit',
                 'class' => 'btn btn-primary btn-sm ml-1',
                 'onclick' => "return confirm('Anda Yakin?')"
             ]) !!}
         @else 
             {!! Form::hidden('aktif', '0', []) !!}
-            {!! Form::button($aktif == 1 ? 'Non Aktifkan' : 'Aktifkan', [
+            {!! Form::button('Non Aktifkan', [
                 'type' => 'submit',
                 'class' => 'btn btn-danger btn-sm ml-1',
                 'onclick' => "return confirm('Anda Yakin?')"

@@ -11,7 +11,7 @@
         <div class="box box-primary">
 
             <div class="box-body">
-                <div class="row">
+                <div class="">
                     {!! Form::open(['route' => 'jabatans.store']) !!}
 
                         @include('jabatans.fields')

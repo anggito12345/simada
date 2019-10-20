@@ -67,9 +67,9 @@ class detiltanahAPIController extends AppBaseController
         
 
         if ($request->__isset("q")) {
-            $query = $query->whereRaw("al_kota.nama like '%".$request->input("q")."%'")
-            ->orWhereRaw("al_kecamatan.nama like '%".$request->input("q")."%'")
-            ->orWhereRaw("nomor_sertifikat like '%".$request->input("q")."%'");
+            $query = $query->whereRaw("al_kota.nama like '%".$request->input("term")."%'")
+            ->orWhereRaw("al_kecamatan.nama like '%".$request->input("term")."%'")
+            ->orWhereRaw("nomor_sertifikat like '%".$request->input("term")."%'");
         }
         
 

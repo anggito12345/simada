@@ -1,3 +1,9 @@
+<!-- Kode Field -->
+<div class="form-group col-sm-6 row">
+    {!! Form::label('kode', 'Kode:') !!}
+    {!! Form::text('kode', null, ['class' => 'form-control']) !!}
+</div>
+
 <!-- Pid Field -->
 <div class="form-group col-sm-6 row">
     {!! Form::label('pid', 'Induk Organisasi:') !!}
@@ -12,8 +18,8 @@
 
 <!-- Jenis Field -->
 <div class="form-group col-sm-6 row">
-    {!! Form::label('jenis', 'Jenis:') !!}
-    {!! Form::select('jenis', [], null, ['class' => 'form-control']) !!}
+    {!! Form::label('level', 'Level:') !!}
+    {!! Form::select('level', \App\Models\BaseModel::$levelOrganisasiDs, null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Alamat Field -->
@@ -53,33 +59,13 @@
         },
         theme: 'bootstrap' ,
     })
-
-    $('#jenis').select2({
-        ajax: {
-            url: "<?= url('api/jenisopds') ?>",
-            dataType: 'json',
-            data: function(d) {
-                let pidSelect2 = $("#pid").select2("data")
-                d.isFromOrganisasiItSelf = true
-                d.level = pidSelect2.length > 0 ? pidSelect2[0].level : null
-                return d
-            },
-            processResults: function (data) {
-            // Transforms the top-level key of the response object from 'items' to 'results'
-            return {
-                results: data.data
-            };
-            }
-        },
-        theme: 'bootstrap' ,
-    })
+    
+  
 </script>
 
 @if(isset($organisasi))
 <script>
-    App.Helpers.defaultSelect2($('#pid'), `${$('[base-path]').val()}/api/organisasis/<?= $organisasi->pid ?>`,"id","nama",() => {
-        App.Helpers.defaultSelect2($('#jenis'), `${$('[base-path]').val()}/api/jenisopds/<?= $organisasi->jenis ?>`,"id","nama",() => {            
-        })
+    App.Helpers.defaultSelect2($('#pid'), `${$('[base-path]').val()}/api/organisasis/<?= $organisasi->pid ?>`,"id","nama",() => {  
     })
 </script>
 @endif

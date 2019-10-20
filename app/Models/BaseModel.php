@@ -113,4 +113,10 @@ class BaseModel extends Model {
         '1' => 'Bagi Hasil',
         '2' => 'Tetap dan Bagi Hasil',
     ];
+
+    public static $levelOrganisasiDs = [
+        '0' => 'Pengguna Barang',
+        '1' => 'Kuasa Pengguna Barang',
+        '2' => 'Sub Pengguna Barang'
+    ];
 }

@@ -51,5 +51,9 @@ class jabatan extends Model
         
     ];
 
+    public function Jenisopd()
+    {
+        return $this->hasOne('App\Models\jenisopd', 'id', 'jenis');
+    }
     
 }

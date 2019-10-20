@@ -82,7 +82,7 @@ let inlineDatepicker = function(element, config) {
     }
 
     const yearPopulate = (yearSelectElement) => {
-        for(let yearStart = defaultConfig.minYear; yearStart <= 2019; yearStart++) {
+        for(let yearStart = defaultConfig.minYear; yearStart <= defaultConfig.maxYear; yearStart++) {
             const yearOption = document.createElement('option')
             yearOption.appendChild( document.createTextNode(yearStart) );
             yearOption.value = yearStart;
@@ -211,7 +211,7 @@ let inlineDatepicker = function(element, config) {
             DateEle = moment(value,defaultConfig.formatDefault).toDate()
         }             
 
-        yearPicker.value = self.isReady ? DateEle.getFullYear() : defaultConfig.maxYear
+        yearPicker.value = self.isReady || value != "" ? DateEle.getFullYear() : defaultConfig.maxYear
         monthPicker.value = DateEle.getMonth() + 1
         dayPicker.value = DateEle.getDate()
 

@@ -60,6 +60,8 @@ class inventaris extends Model
         'keterangan',
         'jumlah',
         'tgl_dibukukan',
+        'pidopd_cabang',
+        'pidupt',
         'draft'
     ];
 

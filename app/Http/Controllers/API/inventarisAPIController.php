@@ -41,7 +41,7 @@ class inventarisAPIController extends AppBaseController
             'noreg as text',
             'id'
         ])
-        ->whereRaw("noreg like '%".$request->input("q")."%'")
+        ->whereRaw("noreg like '%".$request->input("term")."%'")
         ->limit(10)
         ->get();
 

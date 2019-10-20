@@ -54,8 +54,8 @@ class users extends Model
     protected $casts = [
         'id' => 'integer',
         'name' => 'string',
-        'email' => 'string|unique',
-        'username' => 'string|unique',
+        'email' => 'string',
+        'username' => 'string',
         'email_verified_at' => 'datetime',
         'password' => 'string',
         'remember_token' => 'string'
@@ -68,7 +68,8 @@ class users extends Model
      */
     public static $rules = [
         'name' => 'required',
-        'email' => 'required',
+        'email' => 'required|unique:users,email',
+        'username' => 'required|unique:users,username',
         'password' => 'required|confirmed|min:6'
     ];
 
@@ -88,5 +89,8 @@ class users extends Model
         return date("d/m/Y", strtotime($value));
     }
 
-    
+    public function Organisasi()
+    {
+        return $this->hasOne('App\Models\organisasi', 'id', 'pid_organisasi');
+    }
 }

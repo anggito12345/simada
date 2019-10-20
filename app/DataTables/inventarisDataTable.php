@@ -30,7 +30,7 @@ class inventarisDataTable extends DataTable
             ->editColumn('harga_satuan', function($data) {
                 return number_format($data->harga_satuan, 2);
             })
-            ->editColumn('checkbox', function($data) {
+            ->addColumn('checkbox', function($data) {
 
                 return "<input type='checkbox' onclick='viewModel.clickEvent.checkItem(this)'  value={$data->id} />";
             })
@@ -163,8 +163,11 @@ class inventarisDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'checkbox' => [
+            [
+                'orderable' => false,
                 'title' => '',
+                'data' => 'checkbox',                
+                "defaultContent" =>''
             ],
             [
                 'className' => 'details-control',

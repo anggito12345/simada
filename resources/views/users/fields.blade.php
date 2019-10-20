@@ -1,27 +1,27 @@
 <!-- Name Field -->
 <div class="form-group <?=  isset($isFromRegister) ? 'col-md-12' : 'col-md-6' ?>">
-    {!! Form::label('nip', 'Nip:') !!}
-    {!! Form::text('nip', null, ['class' => 'form-control']) !!}
+    {!! Form::label('nip', 'NIP:') !!} <span class='text text-danger'>*</span>
+    {!! Form::text('nip', null, ['class' => 'form-control', 'maxlength' => '18', 'minlength' => '18']) !!}
 </div>
 
 <div class="form-group <?=  isset($isFromRegister) ? 'col-md-12' : 'col-md-6' ?>">
-    {!! Form::label('name', 'Nama:') !!}
+    {!! Form::label('name', 'Nama:') !!} <span class='text text-danger'>*</span>
     {!! Form::text('name', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Email Field -->
 <div class="form-group <?=  isset($isFromRegister) ? 'col-md-12' : 'col-md-6' ?>">
-    {!! Form::label('email', 'Email:') !!}
-    {!! Form::text('email', null, ['class' => 'form-control']) !!}
+    {!! Form::label('email', 'Email:') !!} <span class='text text-danger'>*</span>
+    {!! Form::email('email', null, ['class' => 'form-control']) !!}
 </div>
 
 <div class="form-group <?=  isset($isFromRegister) ? 'col-md-12' : 'col-md-6' ?>">
-    {!! Form::label('no_hp', 'HP:') !!}
+    {!! Form::label('no_hp', 'HP:') !!} <span class='text text-danger'>*</span>
     {!! Form::text('no_hp', null, ['class' => 'form-control']) !!}
 </div>
 
 <div class="form-group <?=  isset($isFromRegister) ? 'col-md-12' : 'col-md-6' ?>">
-    {!! Form::label('tgl_lahir', 'Tanggal Lahir:') !!}
+    {!! Form::label('tgl_lahir', 'Tanggal Lahir:') !!} <span class='text text-danger'>*</span>
     {!! Form::text('tgl_lahir', null, ['class' => 'form-control']) !!}
 </div>
 
@@ -35,13 +35,13 @@
 </div>
 
 <div class="form-group <?=  isset($isFromRegister) ? 'col-md-12' : 'col-md-6' ?>">
-    {!! Form::label('pid_organisasi', 'Organisasi:') !!}
+    {!! Form::label('pid_organisasi', 'Organisasi:') !!} <span class='text text-danger'>*</span>
     {!! Form::select('pid_organisasi', [], null, ['class' => 'form-control']) !!}
 </div>
 
 <div class="form-group <?=  isset($isFromRegister) ? 'col-md-12' : 'col-md-6' ?>">
-    {!! Form::label('jabatan', 'Jabatan:') !!}
-    {!! Form::text('jabatan', null, ['class' => 'form-control']) !!}
+    {!! Form::label('jabatan', 'Jabatan:') !!} <span class='text text-danger'>*</span>
+    {!! Form::select('jabatan', [], null, ['class' => 'form-control']) !!}
 </div>
 <!-- Email Verified At Field
 <div class="form-group <?=  isset($isFromRegister) ? 'col-md-12' : 'col-md-6' ?>">
@@ -58,18 +58,18 @@
 @endsection -->
 
 <div class="form-group <?=  isset($isFromRegister) ? 'col-md-12' : 'col-md-6' ?>">
-    {!! Form::label('username', 'Username:') !!}
+    {!! Form::label('username', 'Username:') !!} <span class='text text-danger'>*</span>
     {!! Form::text('username', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Password Field -->
 <div class="form-group <?=  isset($isFromRegister) ? 'col-md-12' : 'col-md-6' ?>">
-    {!! Form::label('password', 'Password:') !!}
+    {!! Form::label('password', 'Password:') !!} <span class='text text-danger'>*</span>
     {!! Form::password('password', ['class' => 'form-control']) !!}
 </div>
 
 <div class="form-group <?=  isset($isFromRegister) ? 'col-md-12' : 'col-md-6' ?>">
-    {!! Form::label('password_confirmation', 'Konfirmasi Password:') !!}
+    {!! Form::label('password_confirmation', 'Konfirmasi Password:') !!} <span class='text text-danger'>*</span>
     {!! Form::password('password_confirmation', ['class' => 'form-control']) !!}
 </div>
 <!-- Remember Token Field
@@ -87,39 +87,5 @@
 @endif
 
 @section('scripts_2')
-<script>
-new inlineDatepicker(document.getElementById('tgl_lahir'), {
-    format: 'DD-MM-YYYY',
-    buttonClear: true,
-});
-
-
-$('#pid_organisasi').select2({
-    ajax: {
-        url: "<?= url('api/organisasis') ?>",
-        dataType: 'json',
-        processResults: function (data) {
-        // Transforms the top-level key of the response object from 'items' to 'results'
-            return {
-                results: data.data
-            };
-        }
-    },
-    theme: 'bootstrap' , 
-})
-</script>
-
-@if(isset($users))
-<script>
-
-App.Helpers.defaultSelect2(
-    $("#pid_organisasi"), 
-        `${$('[base-path]').val()}/api/organisasis/${<?= $users->pid_organisasi ?>}`,
-        "id",
-        "nama",
-        () => {
-    }
-)
-</script>
-@endif
+    @include('users.script')
 @endsection

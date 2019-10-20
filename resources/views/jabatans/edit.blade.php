@@ -10,7 +10,7 @@
        @include('adminlte-templates::common.errors')
        <div class="box box-primary">
            <div class="box-body">
-               <div class="row">
+               <div class="">
                    {!! Form::model($jabatan, ['route' => ['jabatans.update', $jabatan->id], 'method' => 'patch']) !!}
 
                         @include('jabatans.fields')

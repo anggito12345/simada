@@ -34,11 +34,22 @@ class jabatanAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $jabatans = $this->jabatanRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
+        $querys = \App\Models\jabatan::select([
+            'm_jabatan.nama as text',
+            'm_jabatan.id',
+            'm_jenis_opd.level'
+        ])->join("m_jenis_opd", 'm_jenis_opd.id', 'm_jabatan.jenis');
+
+        if ($request->has('level') && $request->input('level') != "") {
+            $querys = $querys                
+                ->where('m_jenis_opd.level', '=', $request->input('level'));
+        }
+
+        $jabatans = $querys->whereRaw("m_jabatan.nama like '%".$request->input("term")."%'")
+        ->limit(10)
+        ->get();
+
+        
 
         return $this->sendResponse($jabatans->toArray(), 'Jabatans retrieved successfully');
     }

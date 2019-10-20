@@ -75,3 +75,7 @@ Route::resource('pemanfaatans', 'pemanfaatanController');
 Route::resource('mitras', 'mitraController');
 
 Route::resource('jabatans', 'jabatanController');
+
+Route::resource('settings', 'settingController');
+
+// Route::get('/settings/environment', 'settingController@environment');

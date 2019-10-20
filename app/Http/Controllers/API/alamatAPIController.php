@@ -43,7 +43,7 @@ class alamatAPIController extends AppBaseController
         $query = \App\Models\alamat::selectRaw(
             $fieldText." as text, id
         ")
-        ->whereRaw("nama like '%".$request->input("q")."%'");
+        ->whereRaw("nama like '%".$request->input("term")."%'");
         
 
         if ($request->__isset("addWhere")) {

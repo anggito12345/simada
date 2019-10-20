@@ -100,7 +100,10 @@
         </span>
     </a>   
     <ul class="treeview-menu">
-        <li class="{{ Request::is('users*') ? 'active' : '' }}">
+        <li class="{{ Request::is('users*') 
+        || Request::is('roles*')
+        || Request::is('settings*')
+        ? 'active' : '' }}">
             <a href="{!! route('users.index') !!}">
                 <i class="fa fa-users"></i>
                 <span>Users</span>
@@ -112,9 +115,14 @@
         <li class="{{ Request::is('roles*') ? 'active' : '' }}">
             <a href="{!! route('roles.index') !!}"><i class="fa fa-edit"></i><span>Roles</span></a>
         </li>
+        <li class="{{ Request::is('settings*') ? 'active' : '' }}">
+            <a href="{!! route('settings.index') !!}"><i class="fa fa-edit"></i><span>Setting</span></a>
+        </li>
 
     </ul>
 </li>
+
+
 
 
 

@@ -38,7 +38,7 @@ class statustanahAPIController extends AppBaseController
             'nama as text',
             'id'
         ])
-        ->whereRaw("nama like '%".$request->input("q")."%'")
+        ->whereRaw("nama like '%".$request->input("term")."%'")
         ->limit(10)
         ->get();
 

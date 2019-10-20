@@ -34,11 +34,10 @@ class jenisbarangAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $jenisbarangs = $this->jenisbarangRepository->all(
-            $request->except(['skip', 'limit']),
-            $request->get('skip'),
-            $request->get('limit')
-        );
+        $jenisbarangs = \App\Models\jenisbarang::
+        whereRaw("nama like '%".$request->input("term")."%'")
+        ->limit(10)
+        ->get();
 
         return $this->sendResponse($jenisbarangs->toArray(), 'Jenisbarangs retrieved successfully');
     }

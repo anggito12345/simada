@@ -92,28 +92,6 @@
 
 <!-- AdminLTE App -->
 <script src="<?= url('js/thirdparty/adminlte.min.js') ?>"></script>
-<script>
-    new inlineDatepicker(document.getElementById('tgl_lahir'), {
-        format: 'DD-MM-YYYY',
-        buttonClear: true,
-        minYear: 1940,
-        maxYear: new Date().getFullYear() - 20
-    });
-
-
-    $('#pid_organisasi').select2({
-        ajax: {
-            url: "<?= url('api/organisasis') ?>",
-            dataType: 'json',
-            processResults: function (data) {
-            // Transforms the top-level key of the response object from 'items' to 'results'
-                return {
-                    results: data.data
-                };
-            }
-        },
-        theme: 'bootstrap' , 
-    })
-</script>
+@include('users.script')
 </body>
 </html>

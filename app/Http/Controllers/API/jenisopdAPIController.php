@@ -38,7 +38,7 @@ class jenisopdAPIController extends AppBaseController
             'nama as text',
             'id'
         ])
-        ->whereRaw("nama like '%".$request->input("q")."%'");
+        ->whereRaw("nama like '%".$request->input("term")."%'");
 
         if ($request->has("level") && $request->input("level") != "") {
             $querys = $querys->where('level', '>', $request->input("level"));

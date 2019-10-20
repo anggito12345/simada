@@ -30,7 +30,8 @@ class organisasi extends Model
     public $fillable = [
         'pid',
         'nama',
-        'jenis',
+        'kode',
+        'level',
         'alamat',
         'aktif'
     ];
@@ -44,9 +45,10 @@ class organisasi extends Model
         'id' => 'integer',
         'pid' => 'integer',
         'nama' => 'string',
-        'jenis' => 'integer',
+        'level' => 'integer',
         'alamat' => 'string',
-        'aktif' => 'integer'
+        'aktif' => 'integer',
+        
     ];
 
     /**
@@ -55,8 +57,16 @@ class organisasi extends Model
      * @var array
      */
     public static $rules = [
-        
+        // 'kode' => 'unique:m_organisasi,kode'
     ];
 
-    
+    public function Organisasi()
+    {
+        return $this->hasOne('App\Models\organisasi', 'id', 'pid');
+    }
+
+    public function Jenisorganisasi()
+    {
+        return $this->hasOne('App\Models\jenisopd', 'id', 'jenis');
+    }
 }

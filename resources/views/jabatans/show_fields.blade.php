@@ -1,30 +1,11 @@
-<!-- Id Field -->
-<div class="form-group">
-    {!! Form::label('id', 'Id:') !!}
-    <p>{!! $jabatan->id !!}</p>
-</div>
-
 <!-- Nama Field -->
-<div class="form-group">
-    {!! Form::label('nama', 'Nama:') !!}
-    <p>{!! $jabatan->nama !!}</p>
+<div class="row">
+    {!! Form::label('nama', 'Nama:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $jabatan->nama !!}</p>
 </div>
 
 <!-- Jenis Field -->
-<div class="form-group">
-    {!! Form::label('jenis', 'Jenis:') !!}
-    <p>{!! $jabatan->jenis !!}</p>
+<div class="row">
+    {!! Form::label('jenis', 'Jenis:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! \App\Models\BaseModel::getRelationData($jabatan->jenisopd, "nama", "") !!}</p>
 </div>
-
-<!-- Created At Field -->
-<div class="form-group">
-    {!! Form::label('created_at', 'Created At:') !!}
-    <p>{!! $jabatan->created_at !!}</p>
-</div>
-
-<!-- Updated At Field -->
-<div class="form-group">
-    {!! Form::label('updated_at', 'Updated At:') !!}
-    <p>{!! $jabatan->updated_at !!}</p>
-</div>
-

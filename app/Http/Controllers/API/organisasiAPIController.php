@@ -34,15 +34,26 @@ class organisasiAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $organisasis = \App\Models\organisasi::select([
+        $querys = \App\Models\organisasi::select([
             'm_organisasi.nama as text',
             'm_organisasi.id',      
-            'm_jenis_opd.level'      
+            'm_organisasi.level'      
         ])
-        ->join('m_jenis_opd', 'm_jenis_opd.id', 'm_organisasi.jenis')
-        ->whereRaw("m_organisasi.nama like '%".$request->input("q")."%'")        
-        ->limit(10)
+        // ->join('m_jenis_opd', 'm_jenis_opd.id', 'm_organisasi.jenis')
+        ->whereRaw("m_organisasi.nama like '%".$request->input("term")."%'");
+        
+        if ($request->has('level') && $request->input('level') != "") {
+            $querys = $querys->where('m_organisasi.level', $request->input('level'));
+        }
+
+        if ($request->has('pid') && $request->input('pid') != "") {
+            $querys = $querys->where('m_organisasi.pid', $request->input('pid'));
+        }
+        
+
+        $organisasis = $querys->limit(10)
         ->get();
+
 
         return $this->sendResponse($organisasis->toArray(), 'Organisasis retrieved successfully');
     }
