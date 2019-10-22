@@ -87,7 +87,7 @@ class inventarisDataTable extends DataTable
      */
     public function query(inventaris $model)
     {
-        return $model->newQuery()
+        $buildingModel = $model->newQuery()
             ->select([
                 "inventaris.*",
                 "m_barang.nama_rek_aset",
@@ -104,6 +104,25 @@ class inventarisDataTable extends DataTable
             ->leftJoin("detil_mesin", "detil_mesin.pidinventaris", "inventaris.id")
             ->leftJoin("m_merk_barang", "m_merk_barang.id", "detil_mesin.merk")
             ->where('inventaris.draft', isset($_GET['draft']) ? $_GET['draft'] == "1" : false);
+        
+        if (isset($_GET['jenisbarangs']) && $_GET['jenisbarangs'] != "" && $_GET['jenisbarangs'] != null) {
+            $buildingModel = $buildingModel->where('m_jenis_barang.id', $_GET['jenisbarangs']);
+        }
+
+        if (isset($_GET['kodeobjek']) && $_GET['kodeobjek'] != "" && $_GET['kodeobjek'] != null) {
+            $buildingModel = $buildingModel->where('m_barang.kode_objek', $_GET['kodeobjek']);
+        }
+
+        if (isset($_GET['koderincianobjek']) && $_GET['koderincianobjek'] != "" && $_GET['koderincianobjek'] != null) {
+            $buildingModel = $buildingModel->where('m_barang.kode_rincian_objek', $_GET['koderincianobjek']);
+        }
+
+        if (isset($_GET['kodesubrincianobjek']) && $_GET['kodesubrincianobjek'] != "" && $_GET['kodesubrincianobjek'] != null) {
+            $buildingModel = $buildingModel->where('m_barang.kode_sub_rincian_objek', $_GET['kodesubrincianobjek']);
+        }
+        
+        return  $buildingModel->orderBy('inventaris.updated_at', 'desc')
+            ->orderBy('inventaris.id', 'desc');
     }
 
     /**
@@ -122,7 +141,19 @@ class inventarisDataTable extends DataTable
                 'type' => 'GET',
                 'dataType' => 'json',
                 'data' => 'function(d) { 
-                    d.draft = $("[name=draft]").val()                    
+                    d.draft = $("[name=draft]").val()           
+                    if ($("[name=jenisbarangs_filter]").data("select2"))             
+                        d.jenisbarangs = $("[name=jenisbarangs_filter]").select2("val")
+
+                    if ($("[name=kodeobjek_filter]").data("select2") && $("[name=kodeobjek_filter]").select2("data").length > 0)             
+                        d.kodeobjek = $("[name=kodeobjek_filter]").select2("data")[0].kode_objek
+
+                    if ($("[name=koderincianobjek_filter]").data("select2") && $("[name=koderincianobjek_filter]").select2("data").length > 0)             
+                        d.koderincianobjek = $("[name=koderincianobjek_filter]").select2("data")[0].kode_rincian_objek
+
+                    if ($("[name=kodesubrincianobjek_filter]").data("select2") && $("[name=kodesubrincianobjek_filter]").select2("data").length > 0)             
+                        d.kodesubrincianobjek = $("[name=kodesubrincianobjek_filter]").select2("data")[0].kode_sub_rincian_objek
+                        
                 }',
             ])
             
@@ -183,10 +214,10 @@ class inventarisDataTable extends DataTable
                 'name' => 'm_barang.nama_rek_aset',
                 
             ],
-            'merk' => [
-                'title' => 'Merk/Tipe',
-                'name' => 'm_merk_barang.nama'
-            ],
+            // 'merk' => [
+            //     'title' => 'Merk/Tipe',
+            //     'name' => 'm_merk_barang.nama'
+            // ],
             // 'nomor',
             // 'bahan' => [
             //     'title' => 'Bahan',

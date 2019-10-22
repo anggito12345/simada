@@ -51,6 +51,10 @@
 @endsection
 
 
+<?php 
+  $isInventarisPage = true;
+?>
+
 
 @section('scripts_2')
 
@@ -221,7 +225,6 @@
           url += "/" + viewModel.data.formPemeliharaan().id
           method = "patch"
         }
-
 
         __ajax({
           url: url,

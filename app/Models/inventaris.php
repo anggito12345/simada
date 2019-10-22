@@ -55,6 +55,7 @@ class inventaris extends Model
         'harga_satuan',
         'perolehan',
         'kondisi',
+        'kode_lokasi',
         'lokasi_detil',
         'umur_ekonomis',
         'keterangan',
@@ -304,6 +305,16 @@ class inventaris extends Model
     public function Organisasi()
     {
         return $this->hasOne('App\Models\organisasi', 'id', 'pidopd');
+    }
+
+    public function Organisasicabang()
+    {
+        return $this->hasOne('App\Models\organisasi', 'id', 'pidopd_cabang');
+    }
+
+    public function Organisasiupt()
+    {
+        return $this->hasOne('App\Models\organisasi', 'id', 'pidupt');
     }
 
     

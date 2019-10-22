@@ -20,8 +20,15 @@ class settingDataTable extends DataTable
 
         return $dataTable
             ->editColumn('nilai', function($d) {
-                return '<input type="text" value="'.$d->nilai.'" onkeyup="stageChange(this)" onchange="updateEnv('.$d->id.', this)" />
-                <span class="fa fa-circle text-success"></span>'; 
+                $disabled = '';
+
+                if (!$d->editable) {
+                    $disabled = 'disabled'; 
+                }
+
+                return '<input type="text" '.$disabled.' value="'.$d->nilai.'" onkeyup="stageChange(this)" />
+                <span class="fa fa-save btn btn-success" onclick="updateEnv('.$d->id.', this)"></span>
+                '; 
             })
             ->addColumn('status_save', function(){
                 return '<div class="label label-success"></div>';
@@ -38,7 +45,8 @@ class settingDataTable extends DataTable
      */
     public function query(setting $model)
     {
-        return $model->newQuery();
+        return $model->newQuery()
+            ->orderBy('id', 'desc');
     }
 
     /**

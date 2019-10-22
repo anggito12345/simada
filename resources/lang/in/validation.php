@@ -30,7 +30,7 @@ return [
         'array' => 'The :attribute must have between :min and :max items.',
     ],
     'boolean' => 'The :attribute field must be true or false.',
-    'confirmed' => 'The :attribute confirmation does not match.',
+    'confirmed' => ':attribute tidak sama dengan konfirmasi :attribute ',
     'date' => 'The :attribute is not a valid date.',
     'date_equals' => 'The :attribute must be a date equal to :date.',
     'date_format' => 'The :attribute does not match the format :format.',
@@ -94,7 +94,7 @@ return [
     'numeric' => 'The :attribute must be a number.',
     'present' => 'The :attribute field must be present.',
     'regex' => 'The :attribute format is invalid.',
-    'required' => 'The :attribute field is required.',
+    'required' => ':attribute tidak boleh kosong',
     'required_if' => 'The :attribute field is required when :other is :value.',
     'required_unless' => 'The :attribute field is required unless :other is in :values.',
     'required_with' => 'The :attribute field is required when :values is present.',
@@ -144,6 +144,31 @@ return [
     |
     */
 
-    'attributes' => [],
+    'attributes' => [
+        'noreg' => 'Register',
+        'pidbarang' => 'Nama Barang',
+        'pidopd' => 'OPD',
+        'pidopd_cabang' => 'Cabang OPD',
+        'pidupt' => 'UPT',
+        'pidlokasi' => 'Lokasi',
+        'kode_lokasi' => 'Kode Lokasi',
+        'pidinventaris' => 'Inventaris',
+        'persh' => 'Perusahaan',
+        'tglhapus' => 'Tanggal Penghapusan',
+        'pid' => 'Induk',
+        'nama_rek_aset' => 'Nama Barang',
+        'idkota' => 'Kota',
+        'idkecamatan' => 'Kecamatan',
+        'idkelurahan' => 'Kelurahan/Desa',
+        'bpkb' => 'Nomor BPKB',
+        'perolehan' => 'Asal Usul/Cara Perolehan',
+        'seni_pencipta' => 'Pencipta',
+        'seni_asal' => 'Asal Daerah',
+        'seni_bahan' => 'Bahan',
+        'ternak_jenis' => 'Jenis',
+        'ternak_ukuran' => 'Ukuran',
+        'peruntukan' => 'Jenis Pemanfaatan',
+        'umur' => 'Jangka Waktu'
+    ],
 
 ];

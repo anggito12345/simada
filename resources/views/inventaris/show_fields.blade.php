@@ -6,6 +6,40 @@
     <p class="col-md-8 item-view">{!! $inventaris->noreg !!}</p>
 </div>
 
+<!-- kode propinsi Field -->
+<div class="row">
+    {!! Form::label('noreg', 'Kode Lokasi:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">
+        <?php  
+            echo \App\Models\setting::where('nama', 'KODE_LOKASI_STATUS')->first()->nilai;
+        ?>
+    </p>
+</div>
+
+<!-- kode propinsi Field -->
+<div class="row">
+    {!! Form::label('noreg', 'Kode dan Nama Propinsi:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">
+        <?php  
+            echo \App\Models\setting::where('nama', 'KODE_PROPINSI')->first()->nilai;
+            echo " / ";
+            echo \App\Models\setting::where('nama', 'NAMA_PROPINSI')->first()->nilai;
+        ?>
+    </p>
+</div>
+
+<!-- Kode dan Nama kota Field -->
+<div class="row">
+    {!! Form::label('noreg', 'Kode dan Nama Kota:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">
+        <?php  
+            echo \App\Models\setting::where('nama', 'KODE_KOTA')->first()->nilai;
+            echo " / ";
+            echo \App\Models\setting::where('nama', 'NAMA_KOTA')->first()->nilai;
+        ?>
+    </p>
+</div>
+
 <!-- Pidbarang Field -->
 <div class="row">
     {!! Form::label('pidbarang', __('field.pidbarang'), ["class" => 'col-md-4 item-view']) !!}
@@ -18,16 +52,28 @@
     <p class="col-md-8 item-view">{!! \App\Models\BaseModel::getRelationData($inventaris->organisasi, "nama", "") !!}</p>
 </div>
 
-<!-- Pidlokasi Field -->
+<!-- Pidopd Cabang Field -->
 <div class="row">
-    {!! Form::label('pidlokasi', __('field.pidlokasi'), ["class" => 'col-md-4 item-view']) !!}
-    <p class="col-md-8 item-view">{!! \App\Models\BaseModel::getRelationData($inventaris->lokasi, "nama", "") !!}</p>
+    {!! Form::label('pidopd', __('field.pidopd_cabang'), ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! \App\Models\BaseModel::getRelationData($inventaris->organisasicabang, "nama", "") !!}</p>
 </div>
 
-<!-- Tgl Perolehan Field -->
+<!-- PidUPT Field -->
+<div class="row">
+    {!! Form::label('pidopd', __('field.pidupt'), ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! \App\Models\BaseModel::getRelationData($inventaris->organisasiupt, "nama", "") !!}</p>
+</div>
+
+<!-- Tahun Perolehan Field -->
 <div class="row">
     {!! Form::label('tahun_perolehan', 'Tahun Perolehan:', ["class" => 'col-md-4 item-view']) !!}
     <p class="col-md-8 item-view">{!! $inventaris->tahun_perolehan !!}</p>
+</div>
+
+<!-- Kode Lokasi Field -->
+<div class="row">
+    {!! Form::label('pidlokasi', __('field.kode_lokasi'), ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $inventaris->kode_lokasi !!}</p>
 </div>
 
 <!-- Tgl Sensus Field -->

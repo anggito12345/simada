@@ -71,7 +71,7 @@ class pemeliharaan extends Model
      * @var array
      */
     public static $rules = [
-        
+        'pidinventaris' => 'required'
     ];
 
 

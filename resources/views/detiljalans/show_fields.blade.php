@@ -1,7 +1,14 @@
-
 <?php 
-    $uniqId = uniqid()
+    $uniqId = uniqid();
+    $inventaris = \App\Models\inventaris::find($detiljalan->pidinventaris);
 ?>
+
+@include('inventaris.show_fields')
+
+<!-- Separator Field -->
+<div class="row">
+    {!! Form::label('luas', 'DETIl KIB', ["class" => 'col-md-12 item-view text-left']) !!}
+</div>
 
 <!-- Konstruksi Field -->
 <div class="row">

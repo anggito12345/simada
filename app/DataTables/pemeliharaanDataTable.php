@@ -29,10 +29,15 @@ class pemeliharaanDataTable extends DataTable
      */
     public function query(pemeliharaan $model)
     {
-        $query = $model->newQuery();
+        $query = $model->newQuery()
+            ->select([
+                'pemeliharaan.*',
+                'inventaris.noreg'
+            ])
+            ->join('inventaris', 'inventaris.id', 'pemeliharaan.pidinventaris');
 
         if (isset($_GET['pidinventaris'])) {
-            $query = $query->where('pidinventaris', $_GET['pidinventaris']);
+            $query = $query->where('pemeliharaan.pidinventaris', $_GET['pidinventaris']);
         }
 
         return $query;
@@ -71,16 +76,19 @@ class pemeliharaanDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'pidinventaris',
+            'noreg' => [
+                'name' => 'inventaris.noreg',
+                'title' => 'No Registrasi'
+            ],
             'tgl',
             'uraian',
-            'persh',
-            'alamat',
-            'nokontrak',
-            'tglkontrak',
-            'biaya',
-            'menambah',
-            'keterangan'
+            // 'persh',
+            // 'alamat',
+            // 'nokontrak',
+            // 'tglkontrak',
+            // 'biaya',
+            // 'menambah',
+            // 'keterangan'
         ];
     }
 

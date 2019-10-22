@@ -26,21 +26,30 @@ var App = {
                         return data[textFieldParam]
                     }
                 }
+
+                
                 // create the option and append to Select2
                 var option = new Option(generateText(data.data, textField), 
                         data.data[valueField], 
                     true, 
-                    true);
+                    true);  
+
+                for (let d in data.data) {
+                    option.dataset[d] = data.data[d]
+                }        
 
                 select2Ele.append(option).trigger('change');
 
-                // manually trigger the `select2:select` event
+                // manually trigger the `select2:select` event                
+
                 select2Ele.trigger({
                     type: 'select2:select',
                     params: {
-                        data: data
+                        data: data.data
                     }
-                });
+                });         
+
+
 
                 if (callbackDone != null) {
                     callbackDone();

@@ -1,3 +1,15 @@
+<?php 
+    $uniqId = uniqid();
+    $inventaris = \App\Models\inventaris::find($detilaset->pidinventaris);
+?>
+
+@include('inventaris.show_fields')
+
+<!-- Separator Field -->
+<div class="row">
+    {!! Form::label('luas', 'DETIl KIB', ["class" => 'col-md-12 item-view text-left']) !!}
+</div>
+
 <div class="row container bg-white">
     <u>Buku Perpustakaan</u>
     <!-- Buku Judul Field -->

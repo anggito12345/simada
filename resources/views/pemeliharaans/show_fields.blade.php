@@ -1,78 +1,73 @@
-<!-- Id Field -->
-<div class="form-group">
-    {!! Form::label('id', 'Id:') !!}
-    <p>{!! $pemeliharaan->id !!}</p>
-</div>
-
 <!-- Pidinventaris Field -->
-<div class="form-group">
-    {!! Form::label('pidinventaris', 'Pidinventaris:') !!}
-    <p>{!! $pemeliharaan->pidinventaris !!}</p>
+<?php 
+    $inventaris = \App\Models\inventaris::join('m_barang','m_barang.id', 'inventaris.pidbarang')->find($pemeliharaan->pidinventaris)
+?>
+<div class="row">
+    {!! Form::label('pidinventaris', 'Inventaris No Registrasi:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $inventaris->noreg !!}</p>
 </div>
 
+
+<div class="row">
+    {!! Form::label('pidinventaris', 'Inventaris Tahun Perolehan:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $inventaris->tahun_perolehan !!}</p>
+</div>
+
+<div class="row">
+    {!! Form::label('pidinventaris', 'Inventaris Nama Barang:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $inventaris->nama_rek_aset !!}</p>
+</div>
 <!-- Tgl Field -->
-<div class="form-group">
-    {!! Form::label('tgl', 'Tgl:') !!}
-    <p>{!! $pemeliharaan->tgl !!}</p>
+<div class="row">
+    {!! Form::label('tgl', 'Tanggal:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $pemeliharaan->tgl !!}</p>
 </div>
 
 <!-- Uraian Field -->
-<div class="form-group">
-    {!! Form::label('uraian', 'Uraian:') !!}
-    <p>{!! $pemeliharaan->uraian !!}</p>
+<div class="row">
+    {!! Form::label('uraian', 'Uraian:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $pemeliharaan->uraian !!}</p>
 </div>
 
 <!-- Persh Field -->
-<div class="form-group">
-    {!! Form::label('persh', 'Persh:') !!}
-    <p>{!! $pemeliharaan->persh !!}</p>
+<div class="row">
+    {!! Form::label('persh', 'Perusahaan:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $pemeliharaan->persh !!}</p>
 </div>
 
 <!-- Alamat Field -->
-<div class="form-group">
-    {!! Form::label('alamat', 'Alamat:') !!}
-    <p>{!! $pemeliharaan->alamat !!}</p>
+<div class="row">
+    {!! Form::label('alamat', 'Alamat:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $pemeliharaan->alamat !!}</p>
 </div>
 
 <!-- Nokontrak Field -->
-<div class="form-group">
-    {!! Form::label('nokontrak', 'Nokontrak:') !!}
-    <p>{!! $pemeliharaan->nokontrak !!}</p>
+<div class="row">
+    {!! Form::label('nokontrak', 'No Kontrak:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $pemeliharaan->nokontrak !!}</p>
 </div>
 
 <!-- Tglkontrak Field -->
-<div class="form-group">
-    {!! Form::label('tglkontrak', 'Tglkontrak:') !!}
-    <p>{!! $pemeliharaan->tglkontrak !!}</p>
+<div class="row">
+    {!! Form::label('tglkontrak', 'Tgl Kontrak:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $pemeliharaan->tglkontrak !!}</p>
 </div>
 
 <!-- Biaya Field -->
-<div class="form-group">
-    {!! Form::label('biaya', 'Biaya:') !!}
-    <p>{!! $pemeliharaan->biaya !!}</p>
+<div class="row">
+    {!! Form::label('biaya', 'Biaya:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $pemeliharaan->biaya !!}</p>
 </div>
 
 <!-- Menambah Field -->
-<div class="form-group">
-    {!! Form::label('menambah', 'Menambah:') !!}
-    <p>{!! $pemeliharaan->menambah !!}</p>
+<div class="row">
+    {!! Form::label('menambah', 'Menambah:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $pemeliharaan->menambah !!}</p>
 </div>
 
 <!-- Keterangan Field -->
-<div class="form-group">
-    {!! Form::label('keterangan', 'Keterangan:') !!}
-    <p>{!! $pemeliharaan->keterangan !!}</p>
-</div>
-
-<!-- Updated At Field -->
-<div class="form-group">
-    {!! Form::label('updated_at', 'Updated At:') !!}
-    <p>{!! $pemeliharaan->updated_at !!}</p>
-</div>
-
-<!-- Created At Field -->
-<div class="form-group">
-    {!! Form::label('created_at', 'Created At:') !!}
-    <p>{!! $pemeliharaan->created_at !!}</p>
+<div class="row">
+    {!! Form::label('keterangan', 'Keterangan:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $pemeliharaan->keterangan !!}</p>
 </div>
 

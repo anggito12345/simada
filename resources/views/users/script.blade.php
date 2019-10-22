@@ -26,8 +26,7 @@ $('#pid_organisasi').on('change', function (e) {
     let jabatanSelect2 = $('#jabatan').select2('data')
     if (levels.length > 0 && jabatanSelect2.length > 0 && levels[0].level != jabatanSelect2[0].level) {
         $("#jabatan").val("").trigger("change")
-    }
-    
+    }    
 });
 
 $('#jabatan').select2({
@@ -58,7 +57,16 @@ App.Helpers.defaultSelect2(
         `${$('[base-path]').val()}/api/organisasis/${<?= $users->pid_organisasi ?>}`,
         "id",
         "nama",
-        () => {
+        () => {        
+        App.Helpers.defaultSelect2(
+            $("#jabatan"),
+            `${$('[base-path]').val()}/api/jabatans/${<?= $users->jabatan ?>}`,
+            "id",
+            "nama",
+            () => {
+                
+            }    
+        )
     }
 )
 </script>

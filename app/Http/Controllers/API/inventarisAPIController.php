@@ -159,7 +159,11 @@ class inventarisAPIController extends AppBaseController
     public function show($id)
     {
         /** @var inventaris $inventaris */
-        $inventaris = $this->inventarisRepository->find($id);
+        $inventaris = \App\Models\inventaris::select([
+            'inventaris.*',
+            'm_barang.nama_rek_aset'
+        ])->join('m_barang', 'm_barang.id', 'inventaris.pidbarang')
+            ->find($id);
 
         if (empty($inventaris)) {
             return $this->sendError('Inventaris not found');
