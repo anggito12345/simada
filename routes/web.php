@@ -79,3 +79,7 @@ Route::resource('jabatans', 'jabatanController');
 Route::resource('settings', 'settingController');
 
 // Route::get('/settings/environment', 'settingController@environment');
+
+Route::resource('mutasis', 'mutasiController');
+
+Route::resource('mutasiDetils', 'mutasi_detilController');

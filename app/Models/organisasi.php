@@ -33,7 +33,8 @@ class organisasi extends Model
         'kode',
         'level',
         'alamat',
-        'aktif'
+        'aktif',
+        'jabatans'
     ];
 
     /**
@@ -48,6 +49,7 @@ class organisasi extends Model
         'level' => 'integer',
         'alamat' => 'string',
         'aktif' => 'integer',
+        'jabatans' => 'string'
         
     ];
 
@@ -68,5 +70,16 @@ class organisasi extends Model
     public function Jenisorganisasi()
     {
         return $this->hasOne('App\Models\jenisopd', 'id', 'jenis');
+    }
+
+    public function setJabatansAttribute($value)
+    {          
+        $this->attributes['jabatans'] = implode(",", $value);
+    }    
+
+    public function getJabatansAttribute($value)
+    {
+
+        return explode(",",$value);
     }
 }

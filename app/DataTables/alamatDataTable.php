@@ -18,7 +18,11 @@ class alamatDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'alamats.datatables_actions');
+        return $dataTable
+            ->editColumn('jenis', function($d) {
+                return \App\Models\BaseModel::$jenisKotaDs[$d->jenis];
+            })
+            ->addColumn('action', 'alamats.datatables_actions');
     }
 
     /**
@@ -29,11 +33,18 @@ class alamatDataTable extends DataTable
      */
     public function query(alamat $model)
     {
-        return $model->newQuery()
-            ->select([
-                "m_alamat.*",        
-                "m_alamat_2.nama as nama_foreign"        
-            ])->leftJoin("m_alamat as m_alamat_2", "m_alamat_2.id", "m_alamat.pid");
+        $query = $model->newQuery()
+        ->select([
+            "m_alamat.*",        
+            "m_alamat_2.nama as nama_foreign"        
+        ])->leftJoin("m_alamat as m_alamat_2", "m_alamat_2.id", "m_alamat.pid");
+
+        if (isset($_GET['jenis'])) {
+            $query = $query->where([
+                'm_alamat.jenis' => $_GET['jenis']
+            ]);
+        }
+        return $query;
     }
 
     /**
@@ -45,7 +56,16 @@ class alamatDataTable extends DataTable
     {
         return $this->builder()
             ->columns($this->getColumns())
-            ->minifiedAjax()
+            ->ajax([
+                'url' => route('alamats.index'),
+                'type' => 'GET',
+                'dataType' => 'json',
+                'data' => 'function(d) {         
+                    if ($("[name=jenis]").val())             
+                        d.jenis = $("[name=jenis]").val()
+                        
+                }',
+            ])
             ->addAction(['width' => '120px', 'printable' => false])
             ->parameters([
                 'dom'       => 'Bfrtip',
@@ -73,9 +93,9 @@ class alamatDataTable extends DataTable
                 "name" => "m_alamat_2.nama",
                 "title" => __('field.pid')
             ],
+            'kode',
             'nama',
             'jenis',
-            'kodepos'
         ];
     }
 

@@ -50,6 +50,10 @@
         border-radius: 0px;
     }
 
+    .select2-selection__choice {
+        color: black !important;
+    }
+
     .container-view {
         margin-bottom: 20px;
     }        

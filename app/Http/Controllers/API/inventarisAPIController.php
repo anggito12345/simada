@@ -148,6 +148,20 @@ class inventarisAPIController extends AppBaseController
 
     }
 
+    /** bridge to calculating the value is intra or ekstra
+     * 
+     * 
+     */
+
+    public function intraorekstra(Request $request) {
+        try {
+            $calculated = \App\Models\inventaris::CalculateIsIntraOrEkstra($request->tahun_perolehan, (int)str_replace(".","",$request->harga_satuan));
+            return $this->sendResponse($calculated, 'success');
+        } catch (\Exception $e) {
+            return $this->sendError($e->getMessage());
+        }
+    }
+
     /**
      * Display the specified inventaris.
      * GET|HEAD /inventaris/{id}

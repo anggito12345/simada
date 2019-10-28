@@ -25,6 +25,9 @@ class CreatealamatRequest extends FormRequest
      */
     public function rules()
     {
-        return alamat::$rules;
+        $al = new \App\Models\alamat();
+        $al->kode = $this->kode;
+        $al->jenis = $this->jenis;
+        return $al->rules();
     }
 }

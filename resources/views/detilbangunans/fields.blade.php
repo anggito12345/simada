@@ -98,7 +98,7 @@
                     var query = {
                         q: params.term,                                           
                         addWhere: [
-                            "jenis = 'Kota'"
+                            "jenis = '1'"
                         ]
                     } 
                     return query;
@@ -127,7 +127,7 @@
                     var query = {
                         q: params.term,                                           
                         addWhere: [
-                            "jenis = 'Kecamatan'",
+                            "jenis = '2'",
                             "pid = " + $("#idkota-detilbangunan").val()
                         ]
                     }                    
@@ -156,7 +156,7 @@
                     var query = {
                         q: params.term,                                           
                         addWhere: [
-                            "jenis = 'Kelurahan/Desa'",
+                            "jenis = '3'",
                             "pid = " + $("#idkecamatan-detilbangunan").val()
                         ]
                     }                    

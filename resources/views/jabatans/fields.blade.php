@@ -1,14 +1,31 @@
 <!-- Nama Field -->
 <div class="form-group col-sm-6 row">
-    {!! Form::label('nama', 'Nama:') !!}
+    {!! Form::label('nama', 'Nama Jabatan Aset:') !!}
     {!! Form::text('nama', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Jenis Field -->
+<!-- Nama Jabatan -->
 <div class="form-group col-sm-6 row">
-    {!! Form::label('jenis', 'Jenis:') !!}
-    {!! Form::select('jenis',[], null, ['class' => 'form-control']) !!}
+    {!! Form::label('nama_jabatan', 'Nama Jabatan:') !!}
+    {!! Form::text('nama_jabatan', null, ['class' => 'form-control']) !!}
 </div>
+
+<!-- Kelompok Jabatan -->
+<div class="form-group col-sm-6 row">
+    {!! Form::label('kelompok', 'Kelompok Jabatan:') !!}
+    {!! Form::select('kelompok', \App\Models\BaseModel::$kelompokJabatanDs, null, ['class' => 'form-control', 'placeholder' => 'Mohon Pilih']) !!}
+</div>
+
+<!-- Nama Jabatan -->
+<div class="form-group col-sm-6 row">
+    {!! Form::label('level', 'Level:') !!}
+    {!! Form::number('level', null, ['class' => 'form-control']) !!}
+    <div class="alert alert-info">
+        <i class="fa fa-info" ></i>
+        Level yang lebih besar tidak bisa melihat level yang lebih kecil!
+    </div>
+</div>
+
 
 <!-- Submit Field -->
 <div class="form-group col-sm-12">

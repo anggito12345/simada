@@ -19,10 +19,6 @@ class organisasiDataTable extends DataTable
         $dataTable = new EloquentDataTable($query);
 
         return $dataTable
-            // ->editColumn('aktif', ' {{  \App\Models\BaseModel::$YesNoDs[$aktif] }}')
-            ->addColumn('level', function($data){
-                return \App\Models\BaseModel::$levelOrganisasiDs[$data->level];
-            })
             ->addColumn('action', 'organisasis.datatables_actions');
     }
 
@@ -39,7 +35,7 @@ class organisasiDataTable extends DataTable
             ->select([
                 'm_organisasi.*',
                 // 'm_jenis_opd.nama as jenis_nama'
-            ]);
+            ])->orderBy('updated_at', 'desc');
     }
 
     /**
@@ -56,7 +52,7 @@ class organisasiDataTable extends DataTable
             ->parameters([
                 'dom'       => 'Bfrtip',
                 'stateSave' => true,
-                'order'     => [[0, 'desc']],
+                // 'order'     => [[0, 'desc']],
                 'buttons'   => [
                     ['extend' => 'create', 'className' => 'btn btn-default btn-sm no-corner',],
                     ['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner',],
@@ -78,7 +74,6 @@ class organisasiDataTable extends DataTable
             // 'pid',
             'kode',
             'nama',
-            'level'
             // 'jenis',
             // 'alamat',
             // 'aktif'

@@ -37,16 +37,12 @@ class organisasiAPIController extends AppBaseController
         $querys = \App\Models\organisasi::select([
             'm_organisasi.nama as text',
             'm_organisasi.id',      
-            'm_organisasi.level',      
+            'm_organisasi.jabatans',      
             'm_organisasi.kode',
         ])
         // ->join('m_jenis_opd', 'm_jenis_opd.id', 'm_organisasi.jenis')
         ->whereRaw("m_organisasi.nama like '%".$request->input("term")."%'");
         
-        if ($request->has('level') && $request->input('level') != "") {
-            $querys = $querys->where('m_organisasi.level', $request->input('level'));
-        }
-
         if ($request->has('pid')) {
             if ($request->input('pid') == "") {
                 return $this->sendResponse([], 'Organisasis retrieved successfully');

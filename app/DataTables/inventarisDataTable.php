@@ -163,6 +163,9 @@ class inventarisDataTable extends DataTable
                     [ 10, 25, 50, -1 ],
                     [ '10 rows', '25 rows', '50 rows', 'Show all' ]
                 ],    
+                'select' => [
+                    'style'=> 'multi'
+                ],
                 'drawCallback' => 'function(e) { onLoadDataTable(e) }',
                 'rowCallback' => 'function(e) { onLoadRowDataTable(e) }',
                 'dom'       => 'Bfrtip',
@@ -194,12 +197,6 @@ class inventarisDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            [
-                'orderable' => false,
-                'title' => '',
-                'data' => 'checkbox',                
-                "defaultContent" =>''
-            ],
             [
                 'className' => 'details-control',
                 'orderable' => false,

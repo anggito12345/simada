@@ -80,10 +80,10 @@ class BaseModel extends Model {
     ];
 
     public static $jenisKotaDs = [
-        'Propinsi' => 'Propinsi',
-        'Kota' => 'Kota',
-        'Kecamatan' => 'Kecamatan',
-        'Kelurahan/Desa' => 'Kelurahan/Desa',
+        '0' => 'Provinsi',
+        '1' => 'Kota',
+        '2' => 'Kecamatan',
+        '3' => 'Kelurahan/Desa',
     ];
 
     public static $konstruksiDs = [
@@ -114,9 +114,9 @@ class BaseModel extends Model {
         '2' => 'Tetap dan Bagi Hasil',
     ];
 
-    public static $levelOrganisasiDs = [
-        '0' => 'Pengguna Barang',
-        '1' => 'Kuasa Pengguna Barang',
-        '2' => 'Sub Pengguna Barang'
+    public static $kelompokJabatanDs = [
+        '0' => 'OPD dan atasnya',
+        '1' => 'Cabang OPD',
+        '2' => 'UPT'
     ];
 }

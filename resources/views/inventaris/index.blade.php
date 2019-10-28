@@ -385,7 +385,7 @@
           url = $("[base-path]").val() + "/api/pemanfaatans" + "/edit/" + viewModel.data.formPemanfaatan().id
           method = "POST"
         } else {
-          formData.append(`pidinventaris`, viewModel.data.checkedItem[0])
+          formData.append(`pidinventaris`, viewModel.data.formPemanfaatan().pidinventaris)
         }
         
         __ajax({

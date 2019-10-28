@@ -18,7 +18,11 @@ class pemanfaatanDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'pemanfaatans.datatables_actions');
+        return $dataTable
+            ->editColumn('tipe_kontribusi', function($d) {
+                return \App\Models\BaseModel::$tipeKontribusiDs[$d->tipe_kontribusi];
+            })
+            ->addColumn('action', 'pemanfaatans.datatables_actions');
     }
 
     /**
@@ -29,7 +33,12 @@ class pemanfaatanDataTable extends DataTable
      */
     public function query(pemanfaatan $model)
     {
-        return $model->newQuery();
+        $query = $model->newQuery();
+
+        if (isset($_GET['pidinventaris'])) {
+            $query = $query->where('pidinventaris', $_GET['pidinventaris']);
+        }
+        return $query;
     }
 
     /**

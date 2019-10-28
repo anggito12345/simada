@@ -29,14 +29,14 @@
         }
    
         function onPemeliharaan(currentData, param) {
-            if (currentData == null && viewModel.data.checkedItem.length != 1 ) {
+            if (currentData == null && $("#table-inventaris").DataTable().rows('.selected').count()!= 1 ) {
                 swal.fire({
                     type: 'error',
                     text: 'Silahkan pilih 1',
                     title: 'Pemeliharaan'
                 })
             } else {
-                viewModel.data.formPemeliharaan().pidinventaris = viewModel.data.checkedItem[0]
+                viewModel.data.formPemeliharaan().pidinventaris = $("#table-inventaris").DataTable().rows('.selected').data()[0].id
                 $("#modal-pemeliharaan").attr('is_mode_insert', true)
                 if(currentData != null) {
                     viewModel.data.formPemeliharaan(currentData)
@@ -124,7 +124,7 @@
         }
 
         function onPemanfaatan(currentData, param) {
-            if (currentData == null && viewModel.data.checkedItem.length != 1 ) {
+            if (currentData == null && $("#table-inventaris").DataTable().rows('.selected').count()!= 1 ) {
                 swal.fire({
                     type: 'error',
                     text: 'Silahkan pilih 1',
@@ -154,6 +154,7 @@
                         $("#modal-pemanfaatan").modal('show')
                     })    
                 } else {
+                    viewModel.data.formPemanfaatan().pidinventaris = $("#table-inventaris").DataTable().rows('.selected').data()[0].id
                     fileGalleryPemanfaatan.fileList([])
                     fotoPemanfaatan.fileList([])
                     $("#modal-pemanfaatan").modal('show')
@@ -191,14 +192,13 @@
         }
 
         function onPenghapusan(currentData, param) {
-            if (currentData == null && viewModel.data.checkedItem.length != 1 ) {
+            if (currentData == null && $("#table-inventaris").DataTable().rows('.selected').count()!= 1 ) {
                 swal.fire({
                     type: 'error',
                     text: 'Silahkan pilih 1',
                     title: 'Penghapusan'
                 })
             } else {
-                viewModel.data.formPenghapusan().kode_barang = 
 
                 $("#modal-penghapusan").attr('is_mode_insert', true)
                 if(currentData != null) {
@@ -217,9 +217,7 @@
                         $("#modal-penghapusan").modal('show')
                     })
                 } else {
-                    viewModel.data.formPenghapusan($("#table-inventaris").DataTable().rows().data().toArray().find((d) => {
-                        return d.id == viewModel.data.checkedItem[0]
-                    })) 
+                    viewModel.data.formPenghapusan($("#table-inventaris").DataTable().rows('.selected').data().toArray()[0]) 
                     fileGallery.fileList([])
                     foto.fileList([])
                     $("#modal-penghapusan").modal('show')
@@ -228,19 +226,20 @@
         }
 
         function onEdit() {
-            if (viewModel.data.checkedItem.length != 1 ) {
+            
+            if ($("#table-inventaris").DataTable().rows('.selected').count()!= 1 ) {
                 swal.fire({
                     type: 'error',
                     text: 'Silahkan pilih 1 yang ingin diubah',
                     title: 'Ubah'
                 })
             } else {
-                window.location = `${$("[base-path]").val()}/inventaris/${viewModel.data.checkedItem[0]}/edit`
+                window.location = `${$("[base-path]").val()}/inventaris/${$("#table-inventaris").DataTable().rows('.selected').data()[0].id}/edit`
             }
         }
 
         function onDelete() {
-            if (viewModel.data.checkedItem.length < 1 ) {
+            if ($("#table-inventaris").DataTable().rows('.selected').count() < 1 ) {
                 swal.fire({
                     type: 'error',
                     text: 'Silahkan pilih minimal 1 yang ingin dihapus',
@@ -256,10 +255,13 @@
                     cancelButtonColor: '#d33',
                     confirmButtonText: 'Hapus!'
                 }).then((result) => {
+                    let _ids = $("#table-inventaris").DataTable().rows('.selected').data().toArray().map((d) => {
+                        return d.id
+                    })
                     if (result.value) {
                         __ajax({
                             method: "DELETE",
-                            url: `${$("[base-path]").val()}/api/inventaris/${viewModel.data.checkedItem.join("|")}`
+                            url: `${$("[base-path]").val()}/api/inventaris/${_ids.join("|")}`
                         }).then(function() {
                             swal.fire({
                                 type: 'success',
@@ -645,8 +647,20 @@
                             ],
                             columns: [
                                 {
-                                    title: 'Peruntukan',
+                                    title: 'Jenis Pemanfaatan',
                                     data: 'peruntukan'
+                                },
+                                {
+                                    title: 'Tipe Kontribusi',
+                                    data: 'tipe_kontribusi'
+                                },
+                                {
+                                    title: 'Tanggal Mulai',
+                                    data: 'tgl_mulai'
+                                },
+                                {
+                                    title: 'Tanggal Akhir',
+                                    data: 'tgl_akhir'
                                 },
                             ],
                             'select': {

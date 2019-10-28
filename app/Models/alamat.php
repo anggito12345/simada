@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Validation\Rule; 
 
 /**
  * Class alamat
@@ -31,7 +32,8 @@ class alamat extends Model
         'pid',
         'nama',
         'jenis',
-        'kodepos'
+        'kodepos',
+        'kode'
     ];
 
     /**
@@ -44,7 +46,8 @@ class alamat extends Model
         'pid' => 'integer',
         'nama' => 'string',
         'jenis' => 'string',
-        'kodepos' => 'string'
+        'kodepos' => 'string',
+        'kode' => 'string'
     ];
 
     /**
@@ -52,9 +55,17 @@ class alamat extends Model
      *
      * @var array
      */
-    public static $rules = [
-        
-    ];
+    public function rules() {
+        $self = $this;
+        return  [
+            'kode' => [
+                'required',
+                Rule::unique('m_alamat')->where(function ($query) {
+                    return $query->whereRaw("jenis = '".$this->jenis."' AND kode = '".$this->kode."'");                                         
+                }),
+            ]
+        ];
+    }
 
     public function Alamat()
     {

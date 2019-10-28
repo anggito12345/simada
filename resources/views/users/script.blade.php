@@ -35,7 +35,7 @@ $('#jabatan').select2({
         dataType: 'json',
         data: function(d) {
             let levels = $('#pid_organisasi').select2('data')
-            d.level = levels.length > 0 ? levels[0].level : undefined
+            d.jabatans = levels.length > 0 ? levels[0].jabatans : undefined
             return d
         },
         processResults: function (data) {

@@ -28,7 +28,9 @@ class jabatan extends Model
 
     public $fillable = [
         'nama',
-        'jenis'
+        'level',
+        'nama_jabatan',
+        'kelompok'
     ];
 
     /**
@@ -39,7 +41,10 @@ class jabatan extends Model
     protected $casts = [
         'id' => 'integer',
         'nama' => 'string',
-        'jenis' => 'integer'
+        'level' => 'integer',
+        'nama_jabatan' => 'string',
+        'kelompok' => 'integer'
+
     ];
 
     /**
@@ -50,10 +55,5 @@ class jabatan extends Model
     public static $rules = [
         
     ];
-
-    public function Jenisopd()
-    {
-        return $this->hasOne('App\Models\jenisopd', 'id', 'jenis');
-    }
     
 }

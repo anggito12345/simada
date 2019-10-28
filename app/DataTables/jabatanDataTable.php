@@ -19,9 +19,6 @@ class jabatanDataTable extends DataTable
         $dataTable = new EloquentDataTable($query);
 
         return $dataTable
-            ->editColumn('level', function($data){
-                return \App\Models\BaseModel::$levelOrganisasiDs[$data->level];
-            })
             ->addColumn('action', 'jabatans.datatables_actions');
     }
 
@@ -33,13 +30,7 @@ class jabatanDataTable extends DataTable
      */
     public function query(jabatan $model)
     {
-        return $model->newQuery()
-        ->select([
-            'm_jabatan.*',
-            'm_jenis_opd.nama as jenis_nama',
-            'm_jenis_opd.level as level',
-        ])
-        ->join('m_jenis_opd', 'm_jenis_opd.id', 'm_jabatan.jenis');;
+        return $model->newQuery()->orderBy('level', 'asc');
     }
 
     /**
@@ -76,14 +67,8 @@ class jabatanDataTable extends DataTable
     {
         return [
             'nama',
-            'jenis_nama' => [
-                'name' => 'm_jenis_opd.nama',
-                'title' => 'Jenis'
-            ],
-            'level' => [
-                'name' => 'm_jenis_opd.level',
-                'title' => 'Level'
-            ],
+            'nama_jabatan',
+            'level'
         ];
     }
 

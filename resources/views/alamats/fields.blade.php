@@ -4,6 +4,13 @@
     {!! Form::select('pid', [], null, ['class' => 'form-control', 'id' => 'pid-'. $idPostfix]) !!}
 </div>
 
+<!-- Kode Field -->
+<div class="form-group <?= strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
+    {!! Form::label('kode', 'Kode:') !!}
+    {!! Form::text('kode', null, ['class' => 'form-control']) !!}
+</div>
+
+
 <!-- Nama Field -->
 <div class="form-group <?= strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
     {!! Form::label('nama', 'Nama:') !!}
@@ -34,6 +41,8 @@
 
 @section(strpos($idPostfix, 'non-ajax') > -1 ? 'scripts' : 'scripts_2')
     <script type="text/javascript">        
+        var sourceConstantJenis = <?= json_encode(\App\Models\BaseModel::$jenisKotaDs) ?>;
+        console.log(sourceConstantJenis)
         $('<?=  "#pid-".$idPostfix ?>').select2({
             ajax: {
                 url: "<?= url('api/alamats') ?>",
@@ -57,6 +66,17 @@
                     if (id.indexOf("non-ajax") > -1) {
                         data.data.unshift(options)
                     }
+
+                    data.data.map(function(d) {
+                        let splittedText = d.text.split('-');
+                        if (d.text.indexOf("-") > -1 && sourceConstantJenis[parseInt(splittedText[0])] != undefined) {
+                            
+                            console.log(splittedText);
+                            d.text = sourceConstantJenis[parseInt(splittedText[0])] + ' - ' + splittedText[1]
+                        }                        
+
+                        return d
+                    })
                     
                     // Transforms the top-level key of the response object from 'items' to 'results'
                     return {

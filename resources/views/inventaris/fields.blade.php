@@ -85,6 +85,18 @@
     {!! Form::text('tgl_sensus', null, ['class' => 'form-control tgl_sensus','id'=>'tgl_sensus']) !!}
 </div>
 
+<!-- Provinsi Field -->
+<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
+    {!! Form::label('alamat_propinsi', 'Provinsi:') !!} <span class="text-danger">*</span>
+    {!! Form::select('alamat_propinsi', [] , "", ['class' => 'form-control']) !!}
+</div>
+
+<!-- Kota Field -->
+<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
+    {!! Form::label('alamat_kota', 'Kota:') !!} <span class="text-danger">*</span>
+    {!! Form::select('alamat_kota', [] , "", ['class' => 'form-control']) !!}
+</div>
+
 <!-- pid opd Field -->
 <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
     {!! Form::label('pidopd', 'Pengguna Barang') !!} <span class="text-danger">*</span>
@@ -345,6 +357,60 @@
                     select: funcBarangSelect
                 }
             }
+        })
+
+        $('#alamat_propinsi').select2({
+            ajax: {
+                url: "<?= url('api/alamats') ?>",
+                dataType: 'json',
+                data: function (params) {
+                    var query = {
+                        q: params.term,                                           
+                        addWhere: [
+                            "jenis = '0'"
+                        ]
+                    } 
+                    return query;
+                },
+                processResults: function (data) {
+                    // Transforms the top-level key of the response object from 'items' to 'results'
+                    return {
+                        results: data.data
+                    };
+                }
+            },
+            theme: 'bootstrap' ,
+        })
+
+
+        $('#alamat_propinsi').on('change', function (e) {
+            $("#alamat_kota").val("").trigger("change")
+        });
+
+
+        $('#alamat_kota').select2({
+            ajax: {
+                url: "<?= url('api/alamats') ?>",
+                dataType: 'json',
+                data: function (params) {
+                    var query = {
+                        q: params.term,                                           
+                        addWhere: [
+                            "jenis = '1'",
+                            "pid = " + $("#alamat_propinsi").val()
+                        ]
+                    }                    
+
+                    return query;
+                },
+                processResults: function (data) {
+                    // Transforms the top-level key of the response object from 'items' to 'results'
+                    return {
+                        results: data.data
+                    };
+                }
+            },
+            theme: 'bootstrap' ,
         })
 
         $('#harga_satuan').mask("#.##0", {reverse: true});
@@ -625,7 +691,31 @@
             $kodeKota = \App\Models\setting::where('nama', 'KODE_KOTA')->first()->nilai;
         ?>
 
-        $("#pidbarang, #tahun_perolehan, #harga_satuan, #pidopd, #pidopd_cabang, #pidupt").change(() => {
+        $("#pidbarang, #tahun_perolehan, #harga_satuan, #pidopd, #pidopd_cabang, #pidupt, #alamat_propinsi, #alamat_kota").change(() => {
+
+            let propinsiKode = 0
+            if ($("#alamat_propinsi").select2('val') != null) {
+                propinsiKode = $("#alamat_propinsi").select2('data')[0].kode            
+            }
+
+            if (propinsiKode == undefined && $("#alamat_propinsi").select2('val') != null &&  $("#alamat_propinsi").select2('val') != "") {                
+                propinsiKode = $("#alamat_propinsi").select2('data')[0].element.dataset.kode                
+            }
+
+            if (propinsiKode == undefined)
+                propinsiKode = 0
+
+            let kotaKode = 0
+            if ($("#alamat_kota").select2('val') != null) {
+                kotaKode = $("#alamat_kota").select2('data')[0].kode            
+            }
+
+            if (kotaKode == undefined && $("#alamat_kota").select2('val') != null &&  $("#alamat_kota").select2('val') != "") {                
+                kotaKode = $("#alamat_kota").select2('data')[0].element.dataset.kode                
+            }
+
+            if (kotaKode == undefined)
+                kotaKode = 0
 
             let pidOpd = 0
             if ($("#pidopd").select2('val') != null) {
@@ -664,11 +754,27 @@
                 pidUpt = 0
 
             
-            $("#kode_lokasi").val("<?= $kodeStatus ?>" + "." + "<?= $kodePropinsi ?>" + "." + "<?= $kodeKota ?>" + "." 
-                + pidOpd + "."
-                + pidOpdCabang + "." 
-                + pidUpt + "." 
-                + $("#tahun_perolehan").val() )
+            if ($("#tahun_perolehan").val() != "" && $("#harga_satuan").val() != "") {
+                __ajax({
+                    method:'GET',
+                    url: "<?= url('api/intraorekstra') ?>",
+                    data: {
+                        "tahun_perolehan" : $("#tahun_perolehan").val(),
+                        "harga_satuan": $("#harga_satuan").val()
+                    }
+                }).then(() => {
+                    $("#kode_lokasi").val(
+                        "<?= $kodeStatus ?>" + "." 
+                        + propinsiKode + "." 
+                        + kotaKode + "." 
+                        + pidOpd + "."
+                        + pidOpdCabang + "." 
+                        + pidUpt + "." 
+                        + $("#tahun_perolehan").val() )
+                })
+            } else {
+                $("#kode_lokasi").val("Isi tahun perolehan dan harga satuan terlebih dahulu!")
+            }
                 
         })
     </script>
@@ -676,7 +782,8 @@
     @if (isset($inventaris))
     <script>        
         <?php 
-            $organisasi = \App\Models\organisasi::find(Auth::user()->pid_organisasi);                
+            $organisasi = \App\Models\organisasi::find(Auth::user()->pid_organisasi); 
+            $jabatan = \App\Models\jabatan::find(Auth::user()->jabatan);                      
         ?>
         App.Helpers.defaultSelect2($('#satuan'), "<?= url('api/satuanbarangs', [$inventaris->satuan]) ?>","id","nama")
         $(".baranglookup").LookupTable().setValAjax("<?= url('api/barangs', [$inventaris->pidbarang]) ?>").then((d) => {
@@ -684,14 +791,22 @@
             funcBarangSelect(d)
         })        
         
-        let level = parseInt("<?= $organisasi->level ?>")
+        let kelompok = parseInt("<?= $jabatan->kelompok ?>")
          
-        if (level >= 2)
+        if (kelompok >= 2)
             $('#pidupt').select2('enable', false)
-        if (level >= 1)
+        if (kelompok >= 1)
             $('#pidopd_cabang').select2('enable', false)
-        if (level >= 0)
+        if (kelompok >= 0)
             $('#pidopd').select2('enable', false)
+
+        App.Helpers.defaultSelect2($('#alamat_propinsi'), "<?= url('api/alamats', [$inventaris->alamat_propinsi]) ?>","id","nama", () => {           
+            
+            App.Helpers.defaultSelect2($('#alamat_kota'), "<?= url('api/alamats', [$inventaris->alamat_kota]) ?>","id","nama", () => {              
+                
+            }) 
+        })
+
         App.Helpers.defaultSelect2($('#pidopd'), "<?= url('api/organisasis', [$inventaris->pidopd]) ?>","id","nama", () => {           
             App.Helpers.defaultSelect2($('#pidopd_cabang'), "<?= url('api/organisasis', [$inventaris->pidopd_cabang]) ?>","id","nama", () => {              
                 App.Helpers.defaultSelect2($('#pidupt'), "<?= url('api/organisasis', [$inventaris->pidupt]) ?>","id","nama")
@@ -701,27 +816,28 @@
     @else
         @if(Auth::user()->pid_organisasi)
             <?php 
-                $organisasi = \App\Models\organisasi::find(Auth::user()->pid_organisasi);                
+                $jabatan = \App\Models\jabatan::find(Auth::user()->jabatan);       
+                $organisasi = \App\Models\organisasi::find(Auth::user()->pid_organisasi);
             ?>
-            @if($organisasi->level == 0)
+            @if($jabatan->kelompok == 0)
                 <script>
                     $('#pidopd').select2('enable', false)
                     App.Helpers.defaultSelect2($('#pidopd'), "<?= url('api/organisasis', [$organisasi->id]) ?>","id","nama")
                 </script>
             @endif
-            @if($organisasi->level == 1)
+            @if($jabatan->kelompok == 1)
                 <script>
-                    $('#pidopd').select2('enable', false)
-                    $('#pidopd_cabang').select2('enable', false)
-                    App.Helpers.defaultSelect2($('#pidopd_cabang'), "<?= url('api/organisasis', [$organisasi->id]) ?>","id","nama", () => {                        )
+                        $('#pidopd').select2('enable', false)
+                        $('#pidopd_cabang').select2('enable', false)
+                    App.Helpers.defaultSelect2($('#pidopd'), "<?= url('api/organisasis', [$organisasi->pid]) ?>","id","nama", () => {
                         if ("<?= $organisasi->pid ?>" == "") {
                             return
                         }
-                        App.Helpers.defaultSelect2($('#pid'), "<?= url('api/organisasis', [$organisasi->pid]) ?>","id","nama")
+                        App.Helpers.defaultSelect2($('#pidopd_cabang'), "<?= url('api/organisasis', [$organisasi->id]) ?>","id","nama")
                     })                    
                 </script>
             @endif
-            @if($organisasi->level == 2)
+            @if($jabatan->kelompok == 2)
                 <?php 
                     $pidOrganisasiInduk = "";
                     $organisasiInduk = \App\Models\organisasi::find($organisasi->pid);
@@ -734,15 +850,12 @@
                     $('#pidupt').select2('enable', false)
                     $('#pidopd_cabang').select2('enable', false)
                     $('#pidopd').select2('enable', false)
-                    App.Helpers.defaultSelect2($('#pidupt'), "<?= url('api/organisasis', [$organisasi->id]) ?>","id","nama", () => {
+                    App.Helpers.defaultSelect2($('#pidopd'), "<?= url('api/organisasis', [$pidOrganisasiInduk]) ?>","id","nama", () => {
                         if ("<?= $organisasi->pid ?>" == "") {
                             return
                         }
-                        App.Helpers.defaultSelect2($('#pidopd_cabang'), "<?= url('api/organisasis', [$organisasi->pid]) ?>","id","nama", () => {
-                            if ("<?= $organisasiInduk ?>" == "") {
-                                return
-                            }
-                            App.Helpers.defaultSelect2($('#pid'), "<?= url('api/organisasis', [$pidOrganisasiInduk]) ?>","id","nama")
+                        App.Helpers.defaultSelect2($('#pidopd_cabang'), "<?= url('api/organisasis', [$organisasi->pid]) ?>","id","nama", () => {                        
+                            App.Helpers.defaultSelect2($('#pidupt'), "<?= url('api/organisasis', [$organisasi->id]) ?>","id","nama")
                         }) 
                     })                    
                 </script>

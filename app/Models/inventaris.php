@@ -35,6 +35,8 @@ class inventaris extends Model
 
     public $table = 'inventaris';
     
+    const INTRACODE = "01";
+    const EXTRACODE = "02";
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
@@ -63,7 +65,9 @@ class inventaris extends Model
         'tgl_dibukukan',
         'pidopd_cabang',
         'pidupt',
-        'draft'
+        'draft',
+        'alamat_kota',
+        'alamat_propinsi'
     ];
 
     /**
@@ -250,10 +254,23 @@ class inventaris extends Model
             default:
                 break;
         }
+    }
 
+    public static function CalculateIsIntraOrEkstra($tahun = 2000, $harga = 0) {
         
-
-
+        if ($tahun >= 2015) {
+            if ($harga > 1000000) {
+                return self::INTRACODE;
+            } else {
+                return self::EXTRACODE;
+            }
+        } else if ($tahun >= 2011 && $tahun <= 2014) {
+            if ($harga > 499999) {
+                throw new \Exception("Harga harus dibawah 500rb!");
+            }
+        } else if ($tahun < 2011) {
+            return self::INTRACODE;
+        }
     }
 
     public function setHargaSatuanAttribute($value)

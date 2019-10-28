@@ -37,12 +37,15 @@ class jabatanAPIController extends AppBaseController
         $querys = \App\Models\jabatan::select([
             'm_jabatan.nama as text',
             'm_jabatan.id',
-            'm_jenis_opd.level'
-        ])->join("m_jenis_opd", 'm_jenis_opd.id', 'm_jabatan.jenis');
+        ]);
 
-        if ($request->has('level') && $request->input('level') != "") {
-            $querys = $querys                
-                ->where('m_jenis_opd.level', '=', $request->input('level'));
+        if ($request->has('jabatans') && $request->input('jabatans') != "") {
+            foreach ($request->input('jabatans') as $key => $value) {
+
+                $querys = $querys                
+                    ->orWhere('m_jabatan.id', '=', $value);
+            }
+            
         }
 
         $jabatans = $querys->whereRaw("m_jabatan.nama like '%".$request->input("term")."%'")

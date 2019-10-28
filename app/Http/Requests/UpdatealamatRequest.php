@@ -25,6 +25,7 @@ class UpdatealamatRequest extends FormRequest
      */
     public function rules()
     {
-        return alamat::$rules;
+        $al = new \App\Models\alamat();
+        return $al->rules();
     }
 }

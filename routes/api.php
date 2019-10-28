@@ -27,6 +27,7 @@ Route::get('/detilkibeget/{pidinventaris}', 'detilasetAPIController@byinventaris
 Route::get('/detilkibfget/{pidinventaris}', 'detilkonstruksiAPIController@byinventaris');
 
 Route::post('/mutasiinventaris/{id}', 'inventarisAPIController@mutasi');
+Route::get('/intraorekstra', 'inventarisAPIController@intraorekstra');
 Route::post('penghapusans/edit/{id}', 'penghapusanAPIController@editCustom');
 Route::post('pemanfaatans/edit/{id}', 'pemanfaatanAPIController@editCustom');
 Route::resource('inventaris', 'inventarisAPIController');
@@ -89,3 +90,7 @@ Route::resource('mitras', 'mitraAPIController');
 Route::resource('jabatans', 'jabatanAPIController');
 
 Route::resource('settings', 'settingAPIController');
+
+Route::resource('mutasis', 'mutasiAPIController');
+
+Route::resource('mutasi_detils', 'mutasi_detilAPIController');
