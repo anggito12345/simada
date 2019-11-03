@@ -97,7 +97,8 @@
                                          class="img-circle" alt="User Image"/>
                                     <p>
                                         {!! Auth::user()->name !!}
-                                        <small>Member since {!! Auth::user()->created_at->format('M. Y') !!}</small>
+                                        <small>{!! \App\Models\organisasi::find(Auth::user()->pid_organisasi)->nama !!}</small>
+                                        <small>{!! \App\Models\jabatan::find(Auth::user()->jabatan)->nama !!}</small>
                                     </p>
                                 </li>
                                 <!-- Menu Footer-->
@@ -271,9 +272,26 @@
     @yield('scripts_2')
     @include('layouts.pages')
 
+        
 
     <script>        
         
+        var url_string = window.location.href; //window.location.href
+        var url = new URL(url_string);
+        var api_token = url.searchParams.get("secret");
+        if(api_token) {
+            sessionStorage.setItem("api token", api_token);
+            window.history.pushState("","", url_string.split("?")[0]);
+        }
+
+        $(document).ready(function() {
+            $(window).keydown(function(event){
+                if(event.keyCode == 13) {
+                    event.preventDefault();
+                    return false;
+                }
+            });
+        });
         
     </script>
 </body>

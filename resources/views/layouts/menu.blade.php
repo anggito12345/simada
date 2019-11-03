@@ -15,7 +15,7 @@
             <a href="{!! route('pemeliharaans.index') !!}"><i class="fa fa-edit"></i><span>Pemeliharaan</span></a>
         </li>
         <li class="{{ Request::is('mutasis*') ? 'active' : '' }}">
-            <a href="{!! route('mutasis.index') !!}"><i class="fa fa-edit"></i><span>Mutasi Under Development</span></a>
+            <a href="{!! route('mutasis.index') !!}"><i class="fa fa-edit"></i><span>Mutasi</span></a>
         </li>
 
 

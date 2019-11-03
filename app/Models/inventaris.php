@@ -67,7 +67,9 @@ class inventaris extends Model
         'pidupt',
         'draft',
         'alamat_kota',
-        'alamat_propinsi'
+        'alamat_propinsi',
+        'idpegawai',
+        'pid_organisasi'
     ];
 
     /**
@@ -192,9 +194,17 @@ class inventaris extends Model
                     return;
                 }
 
-                $dataKib['panjang'] = str_replace('.', '', $dataKib['panjang']);
-                $dataKib['lebar'] = str_replace('.', '', $dataKib['lebar']);
-                $dataKib['luas'] = str_replace('.', '', $dataKib['luas']);
+
+                if (isset($dataKib['panjang']))
+                    $dataKib['panjang'] = str_replace('.', '', $dataKib['panjang']);
+                if (isset($dataKib['lebar']))
+                    $dataKib['lebar'] = str_replace('.', '', $dataKib['lebar']);
+                if (isset($dataKib['luas']))
+                    $dataKib['luas'] = str_replace('.', '', $dataKib['luas']);
+
+                if(is_array($dataKib['koordinattanah'])) {
+                    $dataKib['koordinattanah'] = json_encode($dataKib['koordinattanah']);
+                }
 
                 if (isset($dataKib['pidinventaris']) && $dataKib['pidinventaris'] != null && $dataKib['pidinventaris'] != "") {                    
                     $exist = DB::table('detil_jalan')->where('pidinventaris', $dataKib['pidinventaris'])->count();
@@ -204,8 +214,8 @@ class inventaris extends Model
                         break;
                     }
                 } 
-
                 DB::table('detil_jalan')->insert($dataKib);
+                break;
             case 'E':
                 $rules = \App\Models\detiljalan::$rules;
                 $validator = Validator::make($dataKib, $rules);
@@ -225,6 +235,7 @@ class inventaris extends Model
                 } 
 
                 DB::table('detil_aset_lainnya')->insert($dataKib);
+                break;
             case 'F':
                 $rules = \App\Models\detilkonstruksi::$rules;
                 $validator = Validator::make($dataKib, $rules);
@@ -332,6 +343,17 @@ class inventaris extends Model
     public function Organisasiupt()
     {
         return $this->hasOne('App\Models\organisasi', 'id', 'pidupt');
+    }
+
+
+    public function Kota()
+    {
+        return $this->hasOne('App\Models\alamat', 'id', 'alamat_kota');
+    }
+
+    public function Propinsi()
+    {
+        return $this->hasOne('App\Models\alamat', 'id', 'alamat_propinsi');
     }
 
     

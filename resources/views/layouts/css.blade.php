@@ -38,6 +38,10 @@
         margin-right: 1em;
     }
 
+    .select2-results__option {
+        z-index: 9001;
+    }
+
     .select2-selection__rendered {
         line-height: 2;
     }

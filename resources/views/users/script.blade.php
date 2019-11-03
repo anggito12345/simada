@@ -22,11 +22,7 @@ $('#pid_organisasi').select2({
 })
 
 $('#pid_organisasi').on('change', function (e) {
-    let levels = $('#pid_organisasi').select2('data')
-    let jabatanSelect2 = $('#jabatan').select2('data')
-    if (levels.length > 0 && jabatanSelect2.length > 0 && levels[0].level != jabatanSelect2[0].level) {
-        $("#jabatan").val("").trigger("change")
-    }    
+    $("#jabatan").val("").trigger("change") 
 });
 
 $('#jabatan').select2({

@@ -5,6 +5,7 @@ namespace App\DataTables;
 use App\Models\inventaris;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
+use Auth;
 
 class inventarisDataTable extends DataTable
 {
@@ -87,6 +88,8 @@ class inventarisDataTable extends DataTable
      */
     public function query(inventaris $model)
     {
+        $mineJabatan = \App\Models\jabatan::find(Auth::user()->jabatan);
+
         $buildingModel = $model->newQuery()
             ->select([
                 "inventaris.*",
@@ -99,11 +102,18 @@ class inventarisDataTable extends DataTable
             ->selectRaw('CONCAT(\'1 \',m_satuan_barang.nama) as barang')             
             ->join("m_barang", "m_barang.id", "inventaris.pidbarang")
             ->join("m_jenis_barang", "m_jenis_barang.kode", "m_barang.kode_jenis")
+            // role =================
+            ->join("users","users.id", "inventaris.idpegawai")
+            ->join("m_jabatan", "m_jabatan.id", 'users.jabatan')
+            // role end
             ->leftJoin("detil_tanah", "detil_tanah.pidinventaris", "inventaris.id")
             ->leftJoin("m_satuan_barang", "m_satuan_barang.id", "inventaris.satuan")
             ->leftJoin("detil_mesin", "detil_mesin.pidinventaris", "inventaris.id")
             ->leftJoin("m_merk_barang", "m_merk_barang.id", "detil_mesin.merk")
-            ->where('inventaris.draft', isset($_GET['draft']) ? $_GET['draft'] == "1" : false);
+            ->where('inventaris.draft', isset($_GET['draft']) ? $_GET['draft'] == "1" : false)
+            // role =================
+            // ->where('m_jabatan.level', '<=', $mineJabatan->level)
+            ->where('inventaris.pid_organisasi', '=', Auth::user()->pid_organisasi);
         
         if (isset($_GET['jenisbarangs']) && $_GET['jenisbarangs'] != "" && $_GET['jenisbarangs'] != null) {
             $buildingModel = $buildingModel->where('m_jenis_barang.id', $_GET['jenisbarangs']);

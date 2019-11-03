@@ -9,6 +9,8 @@ use App\Repositories\mutasiRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use Illuminate\Support\Facades\Storage;
+use Illuminate\Support\Facades\DB;
 
 /**
  * Class mutasiController
@@ -57,6 +59,48 @@ class mutasiAPIController extends AppBaseController
 
         $mutasi = $this->mutasiRepository->create($input);
 
+        $request->merge(['idmutasi' => $mutasi->id]); 
+
+        DB::beginTransaction();
+        try {
+            
+            $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen', $request, "mutasi", function($metadatas, $index, $systemUpload) {
+                if (isset($metadatas['dokumen_metadata_keterangan'][$index]) && $metadatas['dokumen_metadata_keterangan'][$index] != null) {
+                    $systemUpload->keterangan = $metadatas['dokumen_metadata_keterangan'][$index];
+                }
+                
+                $systemUpload->uid = $metadatas['dokumen_metadata_uid'][$index];             
+                $systemUpload->foreign_field = 'id';
+                $systemUpload->jenis = 'dokumen';
+                $systemUpload->foreign_table = 'mutasi';
+                $systemUpload->foreign_id = $metadatas['idmutasi'];                 
+
+                return $systemUpload;
+            });
+
+            $dataDetils = json_decode($request->input('data-detil'), true);
+
+            foreach ($dataDetils as $dataDetil) {
+                // change OPD 
+                \App\Models\inventaris::where('id', $dataDetil['inventaris'])->update([
+                    'pid_organisasi' => $request->input("opd_tujuan"),
+                ]);
+
+                $dataDetil['pid'] = $request->input('idmutasi');
+                \App\Models\mutasi_detil::create($dataDetil);
+            }
+                             
+
+            DB::commit();   
+
+        } catch(\Exception $e) {
+            DB::rollBack();
+            \App\Helpers\FileHelpers::deleteAll($fileDokumens);
+            \App\Models\mutasi::find($mutasi->id)->delete();             
+            return $this->sendError($e->getMessage() . $e->getTraceAsString() . $e->getFile() . $e->getLine());
+        }
+
+
         return $this->sendResponse($mutasi->toArray(), 'Mutasi saved successfully');
     }
 
@@ -100,7 +144,38 @@ class mutasiAPIController extends AppBaseController
             return $this->sendError('Mutasi not found');
         }
 
-        $mutasi = $this->mutasiRepository->update($input, $id);
+        $request->merge(['id' => $id]); 
+
+        DB::beginTransaction();
+        try {
+            
+            $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen', $request, "penghapusan", function($metadatas, $index, $systemUpload) {
+                if (isset($metadatas['dokumen_metadata_keterangan'][$index]) && $metadatas['dokumen_metadata_keterangan'][$index] != null) {
+                    $systemUpload->keterangan = $metadatas['dokumen_metadata_keterangan'][$index];
+                }
+                
+                $systemUpload->uid = $metadatas['dokumen_metadata_uid'][$index];             
+                $systemUpload->foreign_field = 'id';
+                $systemUpload->jenis = 'dokumen';
+                $systemUpload->foreign_table = 'mutasi';
+                $systemUpload->foreign_id = $metadatas['id'];                   
+
+                return $systemUpload;
+            });             
+
+            $pemanfaatan = $this->mutasiRepository->update($input, $id);
+
+            $dataDetils = json_decode($request->input('data-detil'), true);
+
+                               
+
+            DB::commit();   
+
+        } catch(\Exception $e) {
+            DB::rollBack();
+            \App\Helpers\FileHelpers::deleteAll($fileDokumens);
+            return $this->sendError($e->getMessage() . $e->getTraceAsString() . $e->getFile() . $e->getLine());
+        }
 
         return $this->sendResponse($mutasi->toArray(), 'mutasi updated successfully');
     }
@@ -125,6 +200,20 @@ class mutasiAPIController extends AppBaseController
         }
 
         $mutasi->delete();
+
+        $querySystemUpload = \App\Models\system_upload::where([
+            'foreign_table' => 'mutasi',
+            'foreign_id' => $id,
+        ]);
+
+
+        $dataSystemUploads = $querySystemUpload->get();
+
+        foreach ($dataSystemUploads as $key => $value) {
+            Storage::delete($value->path);
+        }
+
+        $querySystemUpload->delete(); 
 
         return $this->sendResponse($id, 'Mutasi deleted successfully');
     }

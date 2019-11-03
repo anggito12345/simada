@@ -20,7 +20,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class mutasi extends Model
 {
-    use SoftDeletes;
+    // use SoftDeletes;
 
     public $table = 'mutasi';
     
@@ -63,8 +63,32 @@ class mutasi extends Model
      * @var array
      */
     public static $rules = [
-        
+        'opd_asal' => 'required',
+        'opd_tujuan' => 'required'
     ];
 
-    
+    public function setTglBastAttribute($value)
+    {        
+        $value = date("d-m-Y", strtotime($value));
+        $this->attributes['tgl_bast'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
+    }    
+
+    public function getTglBastAttribute($value)
+    {
+        if ($value == "") {
+            return "";
+        }
+
+        return date("d/m/Y", strtotime($value));
+    }
+
+    public function Organisasiasal()
+    {
+        return $this->hasOne('App\Models\organisasi', 'id', 'opd_asal');
+    }
+
+    public function Organisasitujuan()
+    {
+        return $this->hasOne('App\Models\organisasi', 'id', 'opd_tujuan');
+    }
 }

@@ -10,6 +10,7 @@ use App\Repositories\mutasiRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use Illuminate\Support\Facades\Storage;
 
 class mutasiController extends AppBaseController
 {
@@ -81,6 +82,27 @@ class mutasiController extends AppBaseController
     }
 
     /**
+     * Display the partial specified mutasi.
+     *
+     * @param  int $id
+     *
+     * @return Response
+     */
+    public function partialview($id)
+    {
+        $mutasi = $this->mutasiRepository->find($id);
+
+        if (empty($mutasi)) {
+            Flash::error('Mutasi not found');
+
+            return redirect(route('mutasis.index'));
+        }
+
+        return view('mutasis.show_fields')->with('mutasi', $mutasi);
+    }
+
+
+    /**
      * Show the form for editing the specified mutasi.
      *
      * @param  int $id
@@ -143,6 +165,20 @@ class mutasiController extends AppBaseController
         }
 
         $this->mutasiRepository->delete($id);
+
+        $querySystemUpload = \App\Models\system_upload::where([
+            'foreign_table' => 'mutasi',
+            'foreign_id' => $id,
+        ]);
+
+
+        $dataSystemUploads = $querySystemUpload->get();
+
+        foreach ($dataSystemUploads as $key => $value) {
+            Storage::delete($value->path);
+        }
+
+        $querySystemUpload->delete(); 
 
         Flash::success('Mutasi deleted successfully.');
 

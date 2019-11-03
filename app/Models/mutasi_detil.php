@@ -16,7 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class mutasi_detil extends Model
 {
-    use SoftDeletes;
+    // use SoftDeletes;
 
     public $table = 'mutasi_detil';
     

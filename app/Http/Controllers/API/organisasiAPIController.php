@@ -50,6 +50,14 @@ class organisasiAPIController extends AppBaseController
             $querys = $querys->where('m_organisasi.pid', $request->input('pid'));
         }
 
+        if ($request->has('level')) {
+            $querys = $querys->where('m_organisasi.level', $request->input('level'));
+        }
+
+        if ($request->has('q')) {
+            $querys = $querys->where('m_organisasi.nama', 'like' ,'%'.$request->input('q').'%');
+        }
+
         $organisasis = $querys->limit(10)
         ->get();
 

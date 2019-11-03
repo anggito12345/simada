@@ -26,6 +26,7 @@ class inventarisAPIController extends AppBaseController
     public function __construct(inventarisRepository $inventarisRepo)
     {
         $this->inventarisRepository = $inventarisRepo;
+        $this->middleware('auth:api');
     }
 
     /**
@@ -37,13 +38,34 @@ class inventarisAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-        $inventaris = \App\Models\inventaris::select([
-            'noreg as text',
-            'id'
+        $query = \App\Models\inventaris::select([
+            'inventaris.noreg as text',
+            'inventaris.id',
+            'inventaris.tahun_perolehan',
+            'm_barang.nama_rek_aset'
         ])
-        ->whereRaw("noreg like '%".$request->input("term")."%'")
-        ->limit(10)
-        ->get();
+        ->whereRaw("inventaris.noreg like '%".$request->input("term")."%'")
+        ->join('m_barang', 'm_barang.id', 'inventaris.pidbarang');
+        
+
+        if($request->has('own')) {
+            $mineJabatan = \App\Models\jabatan::find(Auth::user()->jabatan);
+
+            $query = $query->join("users","users.id", "inventaris.idpegawai")
+                ->join("m_jabatan", "m_jabatan.id", 'users.jabatan')
+                ->where('m_jabatan.level', '<=', $mineJabatan->level)
+                ->where('inventaris.pid_organisasi', '=', Auth::user()->pid_organisasi);
+        }
+
+
+        if($request->has('nin') && $request->input('nin') != "") {
+            $query = $query->whereRaw('inventaris.id NOT IN ('. $request->input('nin') .')');    
+            
+        }
+        
+        $inventaris = $query
+            ->limit(10)
+            ->get();
 
         return $this->sendResponse($inventaris->toArray(), 'Inventaris retrieved successfully');
     }
@@ -59,6 +81,9 @@ class inventarisAPIController extends AppBaseController
     public function store(CreateinventarisAPIRequest $request)
     {
         $input = $request->all();
+
+        $input['idpegawai'] = $request->user()->id;
+        $input['pid_organisasi'] = $request->user()->pid_organisasi;
 
 
         // generate no register

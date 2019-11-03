@@ -961,6 +961,11 @@ let FileGallery = function(element, config) {
 
 
 const __ajax = (config) => {
+
+    config.headers = {
+        'Authorization':'Bearer ' + sessionStorage.getItem('api token'),
+    }
+
    
     const promise = new Promise((resolve,reject) => {
         let anoErrorFunc = () => {}

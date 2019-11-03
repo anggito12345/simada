@@ -21,9 +21,9 @@
     {!! Form::label('noreg', 'Kode dan Nama Propinsi:', ["class" => 'col-md-4 item-view']) !!}
     <p class="col-md-8 item-view">
         <?php  
-            echo \App\Models\setting::where('nama', 'KODE_PROPINSI')->first()->nilai;
+            echo \App\Models\BaseModel::getRelationData($inventaris->propinsi, "kode", "");
             echo " / ";
-            echo \App\Models\setting::where('nama', 'NAMA_PROPINSI')->first()->nilai;
+            echo \App\Models\BaseModel::getRelationData($inventaris->propinsi, "nama", "");
         ?>
     </p>
 </div>
@@ -33,9 +33,9 @@
     {!! Form::label('noreg', 'Kode dan Nama Kota:', ["class" => 'col-md-4 item-view']) !!}
     <p class="col-md-8 item-view">
         <?php  
-            echo \App\Models\setting::where('nama', 'KODE_KOTA')->first()->nilai;
+            echo \App\Models\BaseModel::getRelationData($inventaris->kota, "kode", "");
             echo " / ";
-            echo \App\Models\setting::where('nama', 'NAMA_KOTA')->first()->nilai;
+            echo \App\Models\BaseModel::getRelationData($inventaris->kota, "nama", "");
         ?>
     </p>
 </div>

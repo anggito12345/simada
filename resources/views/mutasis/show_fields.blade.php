@@ -1,60 +1,93 @@
-<!-- Id Field -->
-<div class="form-group">
-    {!! Form::label('id', 'Id:') !!}
-    <p>{!! $mutasi->id !!}</p>
-</div>
-
 <!-- Opd Asal Field -->
-<div class="form-group">
-    {!! Form::label('opd_asal', 'Opd Asal:') !!}
-    <p>{!! $mutasi->opd_asal !!}</p>
+<div class="row">
+    {!! Form::label('opd_asal', 'Opd Asal:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! \App\Models\BaseModel::getRelationData($mutasi->organisasiasal, "nama", "") !!}</p>
 </div>
 
 <!-- Opd Tujuan Field -->
-<div class="form-group">
-    {!! Form::label('opd_tujuan', 'Opd Tujuan:') !!}
-    <p>{!! $mutasi->opd_tujuan !!}</p>
+<div class="row">
+    {!! Form::label('opd_tujuan', 'Opd Tujuan:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! \App\Models\BaseModel::getRelationData($mutasi->organisasitujuan, "nama", "") !!}</p>
 </div>
 
 <!-- No Bast Field -->
-<div class="form-group">
-    {!! Form::label('no_bast', 'No Bast:') !!}
-    <p>{!! $mutasi->no_bast !!}</p>
+<div class="row">
+    {!! Form::label('no_bast', 'No Bast:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $mutasi->no_bast !!}</p>
 </div>
 
 <!-- Tgl Bast Field -->
-<div class="form-group">
-    {!! Form::label('tgl_bast', 'Tgl Bast:') !!}
-    <p>{!! $mutasi->tgl_bast !!}</p>
-</div>
-
-<!-- Idpegawai Field -->
-<div class="form-group">
-    {!! Form::label('idpegawai', 'Idpegawai:') !!}
-    <p>{!! $mutasi->idpegawai !!}</p>
+<div class="row">
+    {!! Form::label('tgl_bast', 'Tgl Bast:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $mutasi->tgl_bast !!}</p>
 </div>
 
 <!-- Alasan Mutasi Field -->
-<div class="form-group">
-    {!! Form::label('alasan_mutasi', 'Alasan Mutasi:') !!}
-    <p>{!! $mutasi->alasan_mutasi !!}</p>
+<div class="row">
+    {!! Form::label('alasan_mutasi', 'Alasan Mutasi:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $mutasi->alasan_mutasi !!}</p>
 </div>
 
 <!-- Keterangan Field -->
-<div class="form-group">
-    {!! Form::label('keterangan', 'Keterangan:') !!}
-    <p>{!! $mutasi->keterangan !!}</p>
+<div class="row">
+    {!! Form::label('keterangan', 'Keterangan:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $mutasi->keterangan !!}</p>
 </div>
 
-<!-- Updated At Field -->
-<div class="form-group">
-    {!! Form::label('updated_at', 'Updated At:') !!}
-    <p>{!! $mutasi->updated_at !!}</p>
+
+<!-- Keterangan Field -->
+<div class="row">
+    {!! Form::label('keterangan', 'Mutasi List:', ["class" => 'col-md-12 item-view']) !!}
 </div>
 
-<!-- Created At Field -->
-<div class="form-group">
-    {!! Form::label('created_at', 'Created At:') !!}
-    <p>{!! $mutasi->created_at !!}</p>
+<div class="form-group col-sm-12">
+    <table id="table-detil-mutasi" class="table table-striped table-bordered">
+        <thead>
+        </thead>
+    </table>
 </div>
+
+
+<script>
+
+
+if ( ! $.fn.DataTable.isDataTable( '#table-detil-mutasi' ) ) {
+    let dataDetils = JSON.parse('<?= json_encode(\App\Models\mutasi_detil::where('pid', $mutasi->id)
+            ->select([
+                'm_barang.nama_rek_aset as inventarisNama',
+                'mutasi_detil.keterangan',
+                'inventaris.id as inventaris',
+                'mutasi_detil as DT_RowId'
+            ])
+            ->join('inventaris','inventaris.id', 'mutasi_detil.inventaris')
+            ->join('m_barang','m_barang.id', 'inventaris.pidbarang')
+            ->get()) ?>')
+    $('#table-detil-mutasi').DataTable({
+        data: dataDetils,
+        dom: 'Bfrtip',
+        searching: false,
+        "lengthChange": false,
+        "ordering": true,
+        "aaSorting": [[ 0, "desc" ]],
+        select: {
+            style:    'os',
+            selector: 'td:first-child'
+        },
+        columns: [
+            {
+                data: 'inventarisNama',
+                title: 'Barang',
+                orderable: false,
+            },
+            {
+                data: 'keterangan',
+                title: 'Keterangan',
+                className: 'keterangan',    
+                orderable: false,
+            },
+        ],
+    })
+}
+
+</script>
 

@@ -18,7 +18,12 @@ class mutasiDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'mutasis.datatables_actions');
+        return $dataTable
+            ->addColumn('detail', function($data) {
+                return "<i class='fa fa-plus-circle text-success'></i>";
+            })
+            ->addColumn('action', 'mutasis.datatables_actions')
+            ->rawColumns(['detail', 'action']);
     }
 
     /**
@@ -29,7 +34,14 @@ class mutasiDataTable extends DataTable
      */
     public function query(mutasi $model)
     {
-        return $model->newQuery();
+        return $model->newQuery()
+            ->select([
+                'mutasi.*',
+                'mo1.nama as nama_mo1',
+                'mo2.nama as nama_mo2',
+            ])
+            ->join('m_organisasi as mo1', 'mo1.id', 'mutasi.opd_asal')
+            ->join('m_organisasi as mo2', 'mo2.id', 'mutasi.opd_tujuan');
     }
 
     /**
@@ -44,6 +56,7 @@ class mutasiDataTable extends DataTable
             ->minifiedAjax()
             ->addAction(['width' => '120px', 'printable' => false])
             ->parameters([
+                'drawCallback' => 'function(e) { onLoadDataTable(e) }',
                 'dom'       => 'Bfrtip',
                 'stateSave' => true,
                 'order'     => [[0, 'desc']],
@@ -65,11 +78,25 @@ class mutasiDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'opd_asal',
-            'opd_tujuan',
+            [
+                'className' => 'details-control',
+                'orderable' => false,
+                'title' => '',
+                'data' => 'detail',                
+                "defaultContent" =>''
+            ],
+            [
+                'title' => 'Nama OPD Asal',
+                'data' => 'nama_mo1',
+                'name' => 'mo1.nama'
+            ],
+            [
+                'title' => 'Nama OPD Tujuan',
+                'data' => 'nama_mo2',
+                'name' => 'mo2.nama'
+            ],
             'no_bast',
             'tgl_bast',
-            'idpegawai',
             'alasan_mutasi',
             'keterangan'
         ];

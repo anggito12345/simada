@@ -16,6 +16,7 @@ Route::get('/', function () {
 });
 
 Route::get('/activation/{activationcode}', 'usersController@activate');
+Route::get('/partials/view.mutasi/{id}', 'mutasiController@partialview');
 Route::get('/home', 'HomeController@index');
 Auth::routes();
 

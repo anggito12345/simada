@@ -10,8 +10,8 @@
        @include('adminlte-templates::common.errors')
        <div class="box box-primary">
            <div class="box-body">
-               <div class="row">
-                   {!! Form::model($mutasi, ['route' => ['mutasis.update', $mutasi->id], 'method' => 'patch']) !!}
+               <div class="">
+                   {!! Form::model($mutasi, ['route' => ['mutasis.update', $mutasi->id], 'method' => 'patch', 'id' => 'form-mutasi']) !!}
 
                         @include('mutasis.fields')
 

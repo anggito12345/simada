@@ -663,6 +663,7 @@
                             data: formData,
                             processData: false,
                             contentType: false,
+                            
                         }).then((d, resp) => {
                             swal.fire({
                                 type: "success",
