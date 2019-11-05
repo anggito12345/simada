@@ -92,7 +92,7 @@
                 'm_barang.nama_rek_aset as inventarisNama',
                 'mutasi_detil.keterangan',
                 'inventaris.id as inventaris',
-                'mutasi_detil as DT_RowId'
+                'mutasi_detil.id as DT_RowId'
             ])
             ->join('inventaris','inventaris.id', 'mutasi_detil.inventaris')
             ->join('m_barang','m_barang.id', 'inventaris.pidbarang')

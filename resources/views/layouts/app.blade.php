@@ -218,7 +218,8 @@
 
     
     <script>
-
+        $.fn.select2.defaults.set("placeholder", "Silahkan Pilih");
+        $.fn.select2.defaults.set("allow-clear", true);
         $.fn.datepicker.defaults.language = 'in'
         $.fn.datepicker.defaults.autClose = true
         $.fn.datepicker.dates['in'] = {
