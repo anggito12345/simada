@@ -30,8 +30,8 @@ $('#jabatan').select2({
         url: "<?= url('api/jabatans') ?>",
         dataType: 'json',
         data: function(d) {
-            let levels = $('#pid_organisasi').select2('data')
-            d.jabatans = levels.length > 0 ? levels[0].jabatans : undefined
+            // let levels = $('#pid_organisasi').select2('data')
+            // d.jabatans = levels.length > 0 ? levels[0].jabatans : undefined
             return d
         },
         processResults: function (data) {

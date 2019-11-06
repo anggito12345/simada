@@ -52,7 +52,7 @@ class alamatAPIController extends AppBaseController
             }            
         }
 
-        $alamats = $query->limit(10)
+        $alamats = $query 
         ->get();
 
         return $this->sendResponse($alamats->toArray(), 'Alamats retrieved successfully');

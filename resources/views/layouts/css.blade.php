@@ -178,4 +178,8 @@
         vertical-align: baseline;
         border-radius: .25em;
     }
+
+    .select2-dropdown {
+        z-index:99999;
+    }
 </style>

@@ -1,3 +1,7 @@
+<?php 
+    $uniqID = uniqid(time());
+?>
+
 <!-- Opd Asal Field -->
 <div class="row">
     {!! Form::label('opd_asal', 'Opd Asal:', ["class" => 'col-md-4 item-view']) !!}
@@ -41,7 +45,7 @@
 </div>
 
 <div class="form-group col-sm-12">
-    <table id="table-detil-mutasi" class="table table-striped table-bordered">
+    <table id="table-detil-mutasi-<?= $uniqID  ?>" class="table table-striped table-bordered">
         <thead>
         </thead>
     </table>
@@ -51,18 +55,18 @@
 <script>
 
 
-if ( ! $.fn.DataTable.isDataTable( '#table-detil-mutasi' ) ) {
+if ( ! $.fn.DataTable.isDataTable( '#table-detil-mutasi-<?= $uniqID  ?>' ) ) {
     let dataDetils = JSON.parse('<?= json_encode(\App\Models\mutasi_detil::where('pid', $mutasi->id)
             ->select([
                 'm_barang.nama_rek_aset as inventarisNama',
                 'mutasi_detil.keterangan',
                 'inventaris.id as inventaris',
-                'mutasi_detil as DT_RowId'
+                'mutasi_detil.id as DT_RowId'
             ])
             ->join('inventaris','inventaris.id', 'mutasi_detil.inventaris')
             ->join('m_barang','m_barang.id', 'inventaris.pidbarang')
             ->get()) ?>')
-    $('#table-detil-mutasi').DataTable({
+    $('#table-detil-mutasi-<?= $uniqID  ?>').DataTable({
         data: dataDetils,
         dom: 'Bfrtip',
         searching: false,

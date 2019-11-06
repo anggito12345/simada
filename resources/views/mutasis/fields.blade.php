@@ -303,14 +303,11 @@
                 ajax: {
                     url: "<?= url('api/inventaris') ?>",
                     dataType: 'json',
-                    headers: {
-                        'Authorization':'Bearer ' + sessionStorage.getItem('api token'),
-                    },
                     data: function (params) {
                         var query = {
                             q: params.term,                                           
                             level: '0',
-                            own: true,
+                            same_org: true,
                             nin: $("#table-detil-mutasi").DataTable().rows().data().toArray().map((d) => {
                                 return d.inventaris
                             }).join("|")
@@ -380,9 +377,6 @@ buttonsOpt = [
 
 
 <script>
-
-
-
     $('#table-detil-mutasi').DataTable({
         buttons: buttonsOpt,
         data: dataDetils,

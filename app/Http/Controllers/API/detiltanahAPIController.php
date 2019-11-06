@@ -79,7 +79,7 @@ class detiltanahAPIController extends AppBaseController
             }            
         }
 
-        $detiltanahs = $query->limit(10)
+        $detiltanahs = $query 
         ->get();
 
         return $this->sendResponse($detiltanahs->toArray(), 'Detiltanahs retrieved successfully');

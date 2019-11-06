@@ -58,13 +58,18 @@ class inventarisAPIController extends AppBaseController
         }
 
 
+        if($request->has('same_org')) {
+
+            $query = $query
+                ->where('inventaris.pid_organisasi', '=', Auth::user()->pid_organisasi);
+        }
+
         if($request->has('nin') && $request->input('nin') != "") {
             $query = $query->whereRaw('inventaris.id NOT IN ('. $request->input('nin') .')');    
             
         }
         
         $inventaris = $query
-            ->limit(10)
             ->get();
 
         return $this->sendResponse($inventaris->toArray(), 'Inventaris retrieved successfully');

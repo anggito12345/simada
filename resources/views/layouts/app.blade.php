@@ -220,6 +220,10 @@
     <script>
         $.fn.select2.defaults.set("placeholder", "Silahkan Pilih");
         $.fn.select2.defaults.set("allow-clear", true);
+        $.fn.select2.defaults.set("ajax--headers", {
+            'Authorization':'Bearer ' + sessionStorage.getItem('api token'),
+        });
+        
         $.fn.datepicker.defaults.language = 'in'
         $.fn.datepicker.defaults.autClose = true
         $.fn.datepicker.dates['in'] = {
@@ -233,6 +237,9 @@
             format: "dd-mm-yyyy",
             titleFormat: "MM yyyy", /* Leverages same syntax as 'format' */
         };
+        
+
+        $.fn.dataTable.defaults.oLanguage.sUrl = `${$('[base-path]').val()}/i18n/datatables/Indonesian.json`
 
 
         $(function() {

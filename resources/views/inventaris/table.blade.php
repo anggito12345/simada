@@ -454,10 +454,14 @@
                         row.child($(`<tr style="background:white" class="detail-pemeliharaan"><td colspan="${allHeader.length}">${ulTabs.outerHTML}${tabContent.outerHTML}</td>/tr>`)).show();
 
                         tr.addClass('shown');
-
-                        $.get(`${$("[base-path]").val()}/${url}/${data.data.id}?isAjax=true`).then((html) => {                                                        
-                            document.querySelector(`#Detail-${selectEvent}`).innerHTML = $(html).find(".container-view")[0].outerHTML
-                        })
+                        if (data.data == null) {
+                            document.querySelector(`#Detail-${selectEvent}`).innerHTML = '<div class="text-center">Data not found</div>'
+                        } else {
+                            $.get(`${$("[base-path]").val()}/${url}/${data.data.id}?isAjax=true`).then((html) => {                                                        
+                                document.querySelector(`#Detail-${selectEvent}`).innerHTML = $(html).find(".container-view")[0].outerHTML
+                            })
+                        }
+                        
                                                                          
                         document.querySelector(`#Pemeliharaan-${selectEvent}`).innerHTML = `<table class='mt-2 table table-bordered table-striped' id='table-pemeliharaan-<?= $uniqId ?>${selectEvent}'>
                             <thead>

@@ -39,7 +39,7 @@ class satuanbarangAPIController extends AppBaseController
             'id'
         ])
         ->whereRaw("nama like '%".$request->input("term")."%'")
-        ->limit(10)
+         
         ->get();
 
         return $this->sendResponse($satuanbarangs->toArray(), 'Satuanbarangs retrieved successfully');

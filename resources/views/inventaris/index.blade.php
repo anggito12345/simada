@@ -272,7 +272,7 @@
               formData.append(`dokumen_metadata_${key}[${index}]`, d[key])
           })                
           
-          formData.append(`dokumen_metadata_id_inventaris[${index}]`, viewModel.data.checkedItem[0])
+          formData.append(`dokumen_metadata_id_inventaris[${index}]`, $("#table-inventaris").DataTable().rows('.selected').data()[0].id)
         }
 
         foto.fileList().forEach((d, index) => {
@@ -291,7 +291,7 @@
               formData.append(`foto_metadata_${key}[${index}]`, d[key])
           })                
 
-          formData.append(`foto_metadata_id_inventaris[${index}]`, viewModel.data.checkedItem[0])
+          formData.append(`foto_metadata_id_inventaris[${index}]`, $("#table-inventaris").DataTable().rows('.selected').data()[0].id)
           
           return d.rawFile
         })
@@ -303,7 +303,7 @@
           url = $("[base-path]").val() + "/api/penghapusans" + "/edit/" + viewModel.data.formPenghapusan().id
           method = "POST"
         } else {
-          formData.append(`pidinventaris`, viewModel.data.checkedItem[0])
+          formData.append(`pidinventaris`, $("#table-inventaris").DataTable().rows('.selected').data()[0].id)
         }
         
         __ajax({
@@ -354,7 +354,7 @@
               formData.append(`dokumen_metadata_${key}[${index}]`, d[key])
           })                
           
-          formData.append(`dokumen_metadata_id_inventaris[${index}]`, viewModel.data.checkedItem[0])
+          formData.append(`dokumen_metadata_id_inventaris[${index}]`, $("#table-inventaris").DataTable().rows('.selected').data()[0].id)
         }
 
         fotoPemanfaatan.fileList().forEach((d, index) => {
@@ -373,7 +373,7 @@
               formData.append(`foto_metadata_${key}[${index}]`, d[key])
           })                
 
-          formData.append(`foto_metadata_id_inventaris[${index}]`, viewModel.data.checkedItem[0])
+          formData.append(`foto_metadata_id_inventaris[${index}]`, $("#table-inventaris").DataTable().rows('.selected').data()[0].id)
           
           return d.rawFile
         })

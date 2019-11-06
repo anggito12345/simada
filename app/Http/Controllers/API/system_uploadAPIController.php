@@ -43,6 +43,10 @@ class system_uploadAPIController extends AppBaseController
             return $this->sendError('foreign_table is required');
         }
 
+        if ($request->input('foreign_table')) {
+            $query = $query->where('system_upload.foreign_table', '=', $request->input('foreign_table'));            
+        }
+
         if ($request->input('jenis')) {
             $query = $query->where('system_upload.jenis', '=', $request->input('jenis'));            
         }
@@ -53,7 +57,7 @@ class system_uploadAPIController extends AppBaseController
             return $this->sendResponse([], 'System Uploads retrieved successfully');
         }
 
-        if ($request->input('foreign_field') && $request->input('foreign_id')) {
+        if ($request->has('foreign_field') && $request->has('foreign_id')) {
             $query = $query->join($request->input('foreign_table'), $request->input('foreign_table') . '.' . $request->input('foreign_field'), 'system_upload.foreign_id');
         }
         

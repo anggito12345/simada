@@ -58,7 +58,7 @@ class organisasiAPIController extends AppBaseController
             $querys = $querys->where('m_organisasi.nama', 'like' ,'%'.$request->input('q').'%');
         }
 
-        $organisasis = $querys->limit(10)
+        $organisasis = $querys 
         ->get();
 
 

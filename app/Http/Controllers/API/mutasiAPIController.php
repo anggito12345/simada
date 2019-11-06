@@ -163,11 +163,11 @@ class mutasiAPIController extends AppBaseController
                 return $systemUpload;
             });             
 
-            $pemanfaatan = $this->mutasiRepository->update($input, $id);
+            $rka = $this->mutasiRepository->update($input, $id);
 
             $dataDetils = json_decode($request->input('data-detil'), true);
 
-                               
+            
 
             DB::commit();   
 

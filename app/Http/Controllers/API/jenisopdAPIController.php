@@ -45,7 +45,7 @@ class jenisopdAPIController extends AppBaseController
         }
 
 
-        $jenisopds = $querys->limit(10)
+        $jenisopds = $querys 
         ->get();
 
         return $this->sendResponse($jenisopds->toArray(), 'Jenisopds retrieved successfully');

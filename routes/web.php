@@ -17,6 +17,7 @@ Route::get('/', function () {
 
 Route::get('/activation/{activationcode}', 'usersController@activate');
 Route::get('/partials/view.mutasi/{id}', 'mutasiController@partialview');
+Route::get('/partials/view.rka/{id}', 'rkaController@partialview');
 Route::get('/home', 'HomeController@index');
 Auth::routes();
 
@@ -84,3 +85,7 @@ Route::resource('settings', 'settingController');
 Route::resource('mutasis', 'mutasiController');
 
 Route::resource('mutasiDetils', 'mutasi_detilController');
+
+Route::resource('rkas', 'rkaController');
+
+Route::resource('rkaDetils', 'rka_detilController');

@@ -39,7 +39,7 @@ class lokasiAPIController extends AppBaseController
             'id'
         ])
         ->whereRaw("nama like '%".$request->input("term")."%'")
-        ->limit(10)
+         
         ->get();
 
         return $this->sendResponse($lokasis->toArray(), 'Lokasis retrieved successfully');

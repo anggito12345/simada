@@ -49,7 +49,7 @@ class jabatanAPIController extends AppBaseController
         }
 
         $jabatans = $querys->whereRaw("m_jabatan.nama like '%".$request->input("term")."%'")
-        ->limit(10)
+         
         ->get();
 
         

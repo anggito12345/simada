@@ -1,4 +1,8 @@
-<li class="treeview {{ Request::is('inventaris*') || Request::is('pemeliharaans*') || Request::is('penghapusans*')? 'active' : '' }}">
+<li class="treeview {{ 
+    Request::is('inventaris*')      || 
+    Request::is('pemeliharaans*')   || 
+    Request::is('rkas*')            ||
+    Request::is('penghapusans*')    ? 'active' : '' }}">
     <a href="#">
         <i class="fa fa-edit"></i>
         <span>Transaksi</span>
@@ -16,6 +20,9 @@
         </li>
         <li class="{{ Request::is('mutasis*') ? 'active' : '' }}">
             <a href="{!! route('mutasis.index') !!}"><i class="fa fa-edit"></i><span>Mutasi</span></a>
+        </li>
+        <li class="{{ Request::is('rkas*') ? 'active' : '' }}">
+            <a href="{!! route('rkas.index') !!}"><i class="fa fa-edit"></i><span>RKA</span></a>
         </li>
 
 
@@ -120,7 +127,3 @@
 
     </ul>
 </li>
-
-
-
-

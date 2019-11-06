@@ -8,6 +8,9 @@ var App = {
             $.ajax({
                 type: 'GET',
                 url: url,
+                headers: {
+                    'Authorization':'Bearer ' + sessionStorage.getItem('api token'),
+                }
             }).then(function (data) {
                 
                 const generateText = (data, textFieldParam) => {

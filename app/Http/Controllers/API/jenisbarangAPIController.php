@@ -36,7 +36,7 @@ class jenisbarangAPIController extends AppBaseController
     {
         $jenisbarangs = \App\Models\jenisbarang::
         whereRaw("nama like '%".$request->input("term")."%'")
-        ->limit(10)
+         
         ->get();
 
         return $this->sendResponse($jenisbarangs->toArray(), 'Jenisbarangs retrieved successfully');

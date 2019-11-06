@@ -39,7 +39,7 @@ class mitraAPIController extends AppBaseController
             'id'
         ])
         ->whereRaw("nama like '%".$request->input("term")."%'")
-        ->limit(10)
+         
         ->get();
 
 

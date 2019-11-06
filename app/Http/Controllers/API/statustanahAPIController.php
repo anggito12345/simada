@@ -39,7 +39,7 @@ class statustanahAPIController extends AppBaseController
             'id'
         ])
         ->whereRaw("nama like '%".$request->input("term")."%'")
-        ->limit(10)
+         
         ->get();
 
         return $this->sendResponse($statustanahs->toArray(), 'Statustanahs retrieved successfully');
