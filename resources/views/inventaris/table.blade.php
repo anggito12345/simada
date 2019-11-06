@@ -469,6 +469,8 @@
                                     <th>Uraian</th>
                                     <th>Tanggal Pemakaian</th>
                                     <th>Tanggal Kontrak</th>
+                                    <th>Nama Instansi/CV/PT</th>
+                                    <th>Biaya Pemeliharaan</th>
                                 </tr>
                             </thead>
                             <tbody>
@@ -555,6 +557,12 @@
                                 },
                                 {                                    
                                     data: 'tglkontrak'
+                                },
+                                {                                    
+                                    data: 'persh'
+                                },
+                                {                                    
+                                    data: 'biaya'
                                 }
                             ],
                             'columnDefs': [

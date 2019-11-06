@@ -370,6 +370,9 @@ jQuery.fn.extend({
                             method: "GET",
                             dataType: "json",
                             data: data,
+                            headers: {
+                                'Authorization':'Bearer ' + sessionStorage.getItem('api token'),
+                            },
                             url: url
                         }).then((d) => {
                             resolve(d.data)

@@ -170,7 +170,7 @@ class inventaris extends Model
                     return;
                 }
 
-                if(is_array($dataKib['koordinattanah'])) {
+                if(isset($dataKib['koordinattanah']) && is_array($dataKib['koordinattanah'])) {
                     $dataKib['koordinattanah'] = json_encode($dataKib['koordinattanah']);
                 }
 

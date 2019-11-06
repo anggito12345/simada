@@ -131,7 +131,7 @@ class inventarisDataTable extends DataTable
             $buildingModel = $buildingModel->where('m_barang.kode_sub_rincian_objek', $_GET['kodesubrincianobjek']);
         }
         
-        return  $buildingModel->orderBy('inventaris.updated_at', 'desc')
+        return  $buildingModel->orderByRaw('inventaris.updated_at DESC NULLS LAST')
             ->orderBy('inventaris.id', 'desc');
     }
 

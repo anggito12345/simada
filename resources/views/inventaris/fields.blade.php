@@ -105,13 +105,13 @@
 
 <!-- pid opd cabang Field -->
 <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
-    {!! Form::label('pidopd_cabang', 'Kuasa Pengguna Barang') !!} <span class="text-danger">*</span>
+    {!! Form::label('pidopd_cabang', 'Kuasa Pengguna Barang') !!}
     {!! Form::select('pidopd_cabang', [] , null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- pid upt Field -->
 <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
-    {!! Form::label('pidupt', 'Sub Kuasa Pengguna Barang') !!} <span class="text-danger">*</span>
+    {!! Form::label('pidupt', 'Sub Kuasa Pengguna Barang') !!}
     {!! Form::select('pidupt', [] , null, ['class' => 'form-control']) !!}
 </div>
 

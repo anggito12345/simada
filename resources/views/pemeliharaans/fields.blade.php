@@ -96,6 +96,9 @@
                         dataSrc: 'data',
                         data: (d) => {
                             return d
+                        },
+                        headers: {
+                            'Authorization':'Bearer ' + sessionStorage.getItem('api token'),
                         }
                     },
                     columns: [
