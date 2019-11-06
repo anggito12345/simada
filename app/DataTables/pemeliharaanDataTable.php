@@ -76,12 +76,11 @@ class pemeliharaanDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'noreg' => [
-                'name' => 'inventaris.noreg',
-                'title' => 'No Registrasi'
-            ],
+            'uraian',            
             'tgl',
-            'uraian',
+            'tglkontrak',
+            'persh',
+            'biaya'
             // 'persh',
             // 'alamat',
             // 'nokontrak',
