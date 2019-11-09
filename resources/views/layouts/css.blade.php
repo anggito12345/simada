@@ -182,4 +182,31 @@
     .select2-dropdown {
         z-index:99999;
     }
+
+
+    /* lookuptable style */
+    .lookup-values-wrapper {
+        border: 1px solid #d2d6de;
+        /* border-radius: 11px; */
+        background: white;
+        width: 100%;
+        min-height: 40px;
+        padding: 7px;
+    }
+
+    .lookup-values-wrapper .fa.fa-caret-down {
+        position: absolute;
+        right: 15px;
+        opacity: .5;
+        top: 30%;
+    }
+    
+    .lookup-values-wrapper .tag {
+        display: inline;
+        background: blue;
+        color:white !important;
+        padding: 3px;
+        border-radius: 8px;
+        margin: 2px;
+    }
 </style>

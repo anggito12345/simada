@@ -15,7 +15,10 @@ Route::get('/', function () {
     return redirect('login');
 });
 
+Route::get('/users-ubah-password', 'usersController@ubahPassword');
+
 Route::get('/activation/{activationcode}', 'usersController@activate');
+Route::get('/lupa-password/{forgotPasswordCode}', 'usersController@forgotPassword');
 Route::get('/partials/view.mutasi/{id}', 'mutasiController@partialview');
 Route::get('/partials/view.rka/{id}', 'rkaController@partialview');
 Route::get('/home', 'HomeController@index');

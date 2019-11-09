@@ -48,7 +48,7 @@ class jabatanAPIController extends AppBaseController
             
         }
 
-        $jabatans = $querys->whereRaw("m_jabatan.nama like '%".$request->input("term")."%'")
+        $jabatans = $querys->whereRaw("m_jabatan.nama ~* '".$request->input("term")."'")
          
         ->get();
 

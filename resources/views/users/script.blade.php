@@ -41,6 +41,7 @@ $('#jabatan').select2({
             };
         }
     },
+    minimumResultsForSearch: -1,
     theme: 'bootstrap' , 
 })
 </script>

@@ -26,5 +26,6 @@ return [
     'ternak_jenis' => 'Jenis',
     'ternak_ukuran' => 'Ukuran',
     'peruntukan' => 'Jenis Pemanfaatan',
-    'umur' => 'Jangka Waktu'
+    'umur' => 'Jangka Waktu',
+    'tgl_dibukukan' => 'Tgl Perolehan'
 ];

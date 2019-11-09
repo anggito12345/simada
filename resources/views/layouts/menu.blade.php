@@ -44,7 +44,6 @@
     || Request::is('perolehans*') 
     || Request::is('satuanbarangs*')     
     || Request::is('mitras*')
-    || Request::is('jabatans*')
     || Request::is('statustanahs*') ? 'active' : '' }}">
     <a href="#">
         <i class="fa fa-edit"></i>
@@ -84,10 +83,7 @@
         </li>
         <li class="{{ Request::is('mitras*') ? 'active' : '' }}">
             <a href="{!! route('mitras.index') !!}"><i class="fa fa-edit"></i><span>Mitra</span></a>
-        </li>
-        <li class="{{ Request::is('jabatans*') ? 'active' : '' }}">
-            <a href="{!! route('jabatans.index') !!}"><i class="fa fa-edit"></i><span>Jabatan</span></a>
-        </li>
+        </li>        
     </ul>
 </li>
 
@@ -107,7 +103,7 @@
     </a>   
     <ul class="treeview-menu">
         <li class="{{ Request::is('users*') 
-        || Request::is('roles*')
+        || Request::is('jabatans*')
         || Request::is('settings*')
         ? 'active' : '' }}">
             <a href="{!! route('users.index') !!}">
@@ -118,8 +114,8 @@
                 </div>
             </a>
         </li>
-        <li class="{{ Request::is('roles*') ? 'active' : '' }}">
-            <a href="{!! route('roles.index') !!}"><i class="fa fa-edit"></i><span>Roles</span></a>
+        <li class="{{ Request::is('jabatans*') ? 'active' : '' }}">
+            <a href="{!! route('jabatans.index') !!}"><i class="fa fa-edit"></i><span>Jabatan/Roles</span></a>
         </li>
         <li class="{{ Request::is('settings*') ? 'active' : '' }}">
             <a href="{!! route('settings.index') !!}"><i class="fa fa-edit"></i><span>Setting</span></a>

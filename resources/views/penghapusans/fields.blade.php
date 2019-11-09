@@ -28,7 +28,9 @@
 <div class="form-group col-md-12">
     {!! Form::label('kriteria', 'Kriteria Penghapusan:') !!}
     {!! Form::select('kriteria', [
-        'Penghapusan' => 'penghapusan'
+        'Pemindahtanganan'  =>  'Pemindahtanganan',
+        'Pemusnahan' => 'Pemusnahan',
+        'Penghapusan' => 'Penghapusan'
     ], null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data.formPenghapusan().kriteria']) !!}
 </div>
 

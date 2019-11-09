@@ -21,6 +21,9 @@
     <link rel="stylesheet" href="<?= url('css/thirdparty/AdminLTE.min.css') ?>">
     <link rel="stylesheet" href="<?= url('css/thirdparty/_all-skins.min.css') ?>">
 
+    <!-- sweetalert2 -->
+    <link rel="stylesheet" href="<?= url('css/thirdparty/sweetalert2.min.css') ?>">
+
     <style>
         @font-face {
             font-family: mainfont;
@@ -51,6 +54,12 @@
                 </div>
             @endif
 
+            @if(isset($_GET['forgotPasswordCallback']))
+                <div class='alert alert-<?= $_GET['forgotPasswordCallback'] == '1' ? 'success' : 'error' ?>'>
+                    <?= $_GET['forgotPasswordCallback'] == '1' ? 'Password telah berhasi diubah' : 'Password gagal diubah' ?>
+                </div>
+            @endif
+
             @if(isset($_GET['successRegister']))
                 <div class='alert alert-<?= $_GET['successRegister'] == '1' ? 'success' : 'error' ?>'>
                     <?= $_GET['successRegister'] == '1' ? 'Mohon tunggu persetujuan dari pihak admin' : 'Gagal!' ?>
@@ -77,7 +86,10 @@
                 @endif
 
             </div>
-            <div class="row">                
+            <div class="row"> 
+                <div class="col-12">
+                    Lupa password ? <a href='#' onclick="$('#modal-lupa-password').modal('show')">Klik disini</a>
+                </div>               
                 <!-- /.col -->
                 <div class="col-md-12">
                     <button type="submit" class="btn btn-primary btn-block btn-flat">Sign In</button>                    
@@ -100,10 +112,64 @@
 </div>
 <!-- /.login-box -->
 
+<div class="modal fade" id="modal-lupa-password"  role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Lupa Password</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class='col-12 form-group'>
+            {!! Form::label('email', 'Email:') !!}
+            {!! Form::email('email', '', ['class' => 'form-control']) !!}
+        </div>        
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary btn-send-forgot-email" onclick="sendLupaPassword()">Kirim Email</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 <script src="<?= url('js/thirdparty/jquery.min.js') ?>"></script>
 <script src="<?= url('js/thirdparty/bootstrap.min.js') ?>"></script>
 
 <!-- AdminLTE App -->
 <script src="<?= url('js/thirdparty/adminlte.min.js') ?>"></script>
+
+<script src="<?= url('js/thirdparty/sweetalert2.min.js') ?>"></script>
+
+<script>
+    function sendLupaPassword() {
+        $('.btn-send-forgot-email').attr('disabled', 'disabled');
+
+        $.ajax({
+            url: '<?= url('api/lupa-password') ?>',
+            method: 'POST',
+            data: {
+                email: $("#modal-lupa-password input[name=email]").val()
+            },
+            dataType: 'json',
+            complete: () => {
+                $('.btn-send-forgot-email').removeAttr('disabled');
+                $('#modal-lupa-password').modal('hide')
+            }
+        }).then((d) => {
+            swal.fire({
+                type: 'success',
+                text: 'Email lupa password terkirim',
+            })
+        }, (d) => {
+            swal.fire({
+                type: 'error',
+                text: d.message
+            })
+        })
+    }
+</script>
 </body>
 </html>

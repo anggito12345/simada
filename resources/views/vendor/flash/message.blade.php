@@ -5,22 +5,16 @@
             'title'      => $message['title'],
             'body'       => $message['message']
         ])
-    @else
-        <div class="alert
-                    alert-{{ $message['level'] }}
-                    {{ $message['important'] ? 'alert-important' : '' }}"
-                    role="alert"
-        >
-            @if ($message['important'])
-                <button type="button"
-                        class="close"
-                        data-dismiss="alert"
-                        aria-hidden="true"
-                >&times;</button>
-            @endif
-
-            {!! $message['message'] !!}
-        </div>
+    @else 
+        <link rel="stylesheet" href="<?= url('css/thirdparty/sweetalert2.min.css') ?>">
+        <script src="<?= url('js/thirdparty/sweetalert2.min.js') ?>"></script>
+        <script>
+            swal.fire({
+                type: "{{ $message['level'] == 'danger' ? 'error' : $message['level'] }}",
+                text: "{!! $message['message'] !!}"
+            })
+        </script>
+       
     @endif
 @endforeach
 

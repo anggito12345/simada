@@ -104,7 +104,7 @@
                                 <!-- Menu Footer-->
                                 <li class="user-footer">
                                     <div class="pull-left">
-                                        <a href="#" class="btn btn-default btn-flat">Profile</a>
+                                        <a href="{!! url('/users-ubah-password') !!}" class="btn btn-default btn-flat">Ubah Password</a>
                                     </div>
                                     <div class="pull-right">
                                         <a href="{!! url('/logout') !!}" class="btn btn-default btn-flat"
@@ -198,6 +198,7 @@
 
     <script src="<?= url('js/thirdparty/moment.min.js') ?>"></script>
     <script src="<?= url('js/thirdparty/bootstrap.min.js') ?>"></script>
+    <script src="<?= url('js/thirdparty/bootbox.min.js') ?>"></script>
     <script src="<?= url('js/thirdparty/bootstrap-datepicker.min.js') ?>"></script>
     <script src="<?= url('js/thirdparty/bootstrap-toggle.min.js') ?>"></script>
     
@@ -213,6 +214,8 @@
 
     
     <script src="<?= url('js/plugins/inlinedatepicker.plugin.js?key='.sha1(time())) ?>"></script>
+
+    <script src="<?= url('js/plugins/lookuptable.plugin.js?key='.sha1(time())) ?>"></script>
 
     <script src="<?= url('js/plugins/mapinput.plugin.js?key='.sha1(time())) ?>"></script>
 
@@ -289,6 +292,18 @@
         var api_token = url.searchParams.get("secret");
         if(api_token) {
             sessionStorage.setItem("api token", api_token);
+            window.history.pushState("","", url_string.split("?")[0]);
+        }
+
+        // swal manual trigger
+        var triggerSwal = url.searchParams.get("triggerSwal");
+        if (triggerSwal) {
+            let msg = url.searchParams.get("msg");
+            let type = url.searchParams.get("type");
+            swal.fire({
+                type: type,
+                text: msg
+            })
             window.history.pushState("","", url_string.split("?")[0]);
         }
 

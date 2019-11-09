@@ -1,6 +1,7 @@
 <?php
 
 use Illuminate\Http\Request;
+use Illuminate\Support\Facades\Mail;
 
 /*
 |--------------------------------------------------------------------------
@@ -15,6 +16,22 @@ use Illuminate\Http\Request;
 
 Route::middleware('auth:api')->get('/user', function (Request $request) {
     return $request->user();
+});
+
+Route::post('/lupa-password', function(Request $request) {
+    $update = \App\Models\users::where('email', $request->input('email'))->update([
+        'email_forgot_password' => sha1(date('Y-m-d') . uniqid())
+    ]);
+    
+    $users = \App\Models\users::where('email', $request->input('email'))->first();
+
+    if (!empty($users)) {
+        Mail::to($users->email)->send(new \App\Mail\ForgotPassword($users));
+    }    
+
+    return json_encode([
+        'success' => true
+    ]);
 });
 
 Route::get('/barangs/get', 'barangAPIController@lookup');

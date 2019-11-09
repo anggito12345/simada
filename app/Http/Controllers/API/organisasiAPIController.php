@@ -39,9 +39,8 @@ class organisasiAPIController extends AppBaseController
             'm_organisasi.id',      
             'm_organisasi.jabatans',      
             'm_organisasi.kode',
-        ])
+        ]);
         // ->join('m_jenis_opd', 'm_jenis_opd.id', 'm_organisasi.jenis')
-        ->whereRaw("m_organisasi.nama like '%".$request->input("term")."%'");
         
         if ($request->has('pid')) {
             if ($request->input('pid') == "") {
@@ -55,7 +54,7 @@ class organisasiAPIController extends AppBaseController
         }
 
         if ($request->has('q')) {
-            $querys = $querys->where('m_organisasi.nama', 'like' ,'%'.$request->input('q').'%');
+            $querys = $querys->whereRaw("m_organisasi.nama ~* '".$request->input('q')."'");
         }
 
         $organisasis = $querys 

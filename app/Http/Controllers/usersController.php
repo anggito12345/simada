@@ -155,12 +155,40 @@ class usersController extends AppBaseController
             $input['email_verification_code'] = sha1(date('Y-m-d') . uniqid() . $users->username);
         }
 
+        if (isset($input['from_forgot_password']) || isset($input['from_ubah_password'])) {
+            if (!Hash::check($input['password_confirmation'], $input['password'])) {
+                // The passwords match...
+                Flash::error('Password lama tidak sama');
+                return redirect()->back();
+            }
+
+
+            if (strlen($input['password_confirmation']) < 6) {
+                Flash::error('Password minimal 6 huruf atau angka');
+                return redirect()->back();
+            }
+
+            if (isset($input['from_forgot_password'])) {
+                $input['email_forgot_password'] = '';
+            }            
+        }
+
         $users = $this->usersRepository->update($input, $id);
 
         if (isset($input['from_aktif_process'])) {            
             Mail::to($users->email)->send(new \App\Mail\ActivationUser($users));            
             return redirect(route('users.index') . '?IsSent=true');
         }
+
+        if (isset($input['from_forgot_password'])) { 
+            Flash::success('Password berhasil diubah!.');
+            return redirect('/login?forgotPasswordCallback=1');
+        }
+
+        if (isset($input['from_ubah_password'])) {
+            Flash::success('Password berhasil diubah!.');
+            return redirect('/home?triggerSwal=true&msg=Password berhasil diubah&type=success');
+        }    
 
         Flash::success('Users updated successfully.');
 
@@ -192,6 +220,27 @@ class usersController extends AppBaseController
         return redirect(route('users.index'));
     }
 
+    public function forgotPassword($forgotPasswordCode, Request $request) {
+
+        $user = \App\Models\users::where('email_forgot_password', $forgotPasswordCode)->first();
+
+        if ($user) {
+            return view('users.forgot_password')->with('users', $user );
+        } else {
+            Flash::error('Link telah expired atau tidak valid!');
+            // it means fail on validate email forgot password code!
+            return redirect('login?verificationCallback=2');
+        }
+    }
+
+    public function ubahPassword(Request $request) {
+        $this->middleware('auth');
+
+        return view('users.ubah_password')->with('users', Auth::user() );
+    }
+
+
+    
     public function activate($activationcode, Request $request)
     {
         $userByVerificationCode = \App\Models\users::where('email_verification_code', $activationcode)->first();

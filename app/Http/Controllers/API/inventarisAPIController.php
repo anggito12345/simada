@@ -44,7 +44,7 @@ class inventarisAPIController extends AppBaseController
             'inventaris.tahun_perolehan',
             'm_barang.nama_rek_aset'
         ])
-        ->whereRaw("inventaris.noreg like '%".$request->input("term")."%'")
+        ->whereRaw("(inventaris.noreg ~* '".$request->input("q")."' OR m_barang.nama_rek_aset ~* '".$request->input("q")."' )")
         ->join('m_barang', 'm_barang.id', 'inventaris.pidbarang');
         
 

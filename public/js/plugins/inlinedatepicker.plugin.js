@@ -23,6 +23,7 @@ let inlineDatepicker = function(element, config) {
         'Agustus',
         'September',
         'Oktober',
+        'November',
         'Desember'
     ]
 

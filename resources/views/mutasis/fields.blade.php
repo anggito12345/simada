@@ -103,6 +103,8 @@
 
 
 <script type="text/javascript">
+    
+
     let dataDetils = JSON.parse('<?= $dataDetils ?>')
     const funcGetDokumenFileList = () => {
         __ajax({
@@ -294,38 +296,60 @@
     ]
 
     let editorInit = false
+    let DTE_Field_inventaris = null
 
     editor.on( 'open', function ( e, type ) {
-        $('#DTE_Field_inventaris').val('').trigger('change')
+        $('#DTE_Field_inventaris').val('')
         // Type is 'main', 'bubble' or 'inline'
-        if (!editorInit) {
-            $('#DTE_Field_inventaris').select2({
-                ajax: {
-                    url: "<?= url('api/inventaris') ?>",
-                    dataType: 'json',
-                    data: function (params) {
-                        var query = {
-                            q: params.term,                                           
-                            level: '0',
-                            same_org: true,
-                            nin: $("#table-detil-mutasi").DataTable().rows().data().toArray().map((d) => {
-                                return d.inventaris
-                            }).join("|")
-                        } 
-                        return query;
+        if (DTE_Field_inventaris == null) {
+            DTE_Field_inventaris = new lookupTable(document.getElementById('DTE_Field_inventaris'),{
+                dataTableOption: {
+                    ajax: {
+                        url: `${$('[base-path]').val()}/inventaris`,
+                        method: 'GET',
+                        headers: {
+                            'Authorization':'Bearer ' + sessionStorage.getItem('api token'),
+                        }
                     },
-                    processResults: function (data) {
-                        // Transforms the top-level key of the response object from 'items' to 'results'
-                        return {
-                            results: data.data.map((d) => {
-                                d.text = d.nama_rek_aset + " - " + d.tahun_perolehan + " - " + d.text
-                                return d
-                            })
-                        };
-                    }
+                    cache: true,
+                    columns: [
+                        {
+                            data: 'kode_barang',                    
+                            title: 'Kode Barang'
+                        },
+                        
+                        {
+                            data: 'noreg',                    
+                            title: 'Noreg'
+                        },
+                        {
+                            data: 'perolehan',                    
+                            title: 'Cara Perolehan'
+                        },
+                        
+                        {
+                            data: 'tahun_perolehan',                    
+                            title: 'Tahun Perolehan'
+                        },
+                        {
+                            data: 'kondisi',                    
+                            title: 'Keadaan Barang'
+                        },
+                        {
+                            data: 'harga_satuan',                    
+                            title: 'Harga Satuan'
+                        },
+                    ],
+                    'select': {
+                        'style': 'single'
+                    },
+                    "processing": true,
+                    "serverSide": true,
                 },
-                theme: 'bootstrap' ,
-            })
+                dataFieldLabel: 'nama_rek_aset',
+                dataFieldValue: 'id',
+                multiple: false
+            });            
             editorInit = true
         }
         
@@ -333,7 +357,7 @@
 
 
     editor.on( 'preSubmit', function ( e, data, action ) {
-        if(! $('#DTE_Field_inventaris').select2('val')) {
+        if(DTE_Field_inventaris.selectedValues.length <= 0) {
             this.field('inventaris').error( 'Mohon pilih inventaris terlebih dahulu!' );
         }
 
@@ -342,14 +366,14 @@
         }
 
         // Type is 'main', 'bubble' or 'inline'
-        dataSelect = $('#DTE_Field_inventaris').select2('data')[0]
+        dataSelect = DTE_Field_inventaris.selectedValues[0]
         if (action == 'create') {
             data.data[0].inventaris = parseInt( dataSelect.id );
-            data.data[0].inventarisNama = dataSelect.text;
+            data.data[0].inventarisNama = dataSelect.nama_rek_aset;
         } else {
             $.each( data.data, function ( key, values ) {
                 data.data[ key ][ 'inventaris' ] = parseInt( dataSelect.id );
-                data.data[ key ][ 'inventarisNama' ] = dataSelect.text;
+                data.data[ key ][ 'inventarisNama' ] = dataSelect.nama_rek_aset;
             } );
         }
             
@@ -360,8 +384,22 @@
         // Type is 'main', 'bubble' or 'inline'
 
         setTimeout(() => {
-            App.Helpers.defaultSelect2($('#DTE_Field_inventaris'), "<?= url('api/inventaris') ?>/" + data.inventaris,"id","nama_rek_aset", " - ", "tahun_perlehan" , " - ", "noreg")
+            __ajax({
+                url: "<?= url('api/inventaris') ?>/" + data.inventaris,
+                method: 'GET',
+                dataType: 'json'
+            }).then((d) => {
+                DTE_Field_inventaris.setDefault(d)                
+            })
         }, 1);
+            
+        
+    } );
+
+    editor.on( 'postSubmit', function ( e, node, data) {
+        // Type is 'main', 'bubble' or 'inline'
+        DTE_Field_inventaris.setDefault(null)
+            
             
         
     } );

@@ -43,7 +43,8 @@ class users extends Model
         'username',
         'pid_organisasi',
         'aktif',
-        'email_verification_code'
+        'email_verification_code',
+        'email_forgot_password'
     ];
 
     /**

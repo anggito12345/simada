@@ -21,7 +21,7 @@
     {!! Form::label('tahun_perolehan', 'Tahun Perolehan') !!} <span class="text-danger">*</span>
     <div class="input-group">
         
-        {!! Form::number('tahun_perolehan', null, ['class' => 'form-control', 'maxlength' => 4, 'required' => true]) !!}
+        {!! Form::text('tahun_perolehan', null, ['class' => 'form-control', 'maxlength' => 4, 'required' => true]) !!}
         <div class="input-group-append">
             <span class="input-group-text text-danger" id="basic-addon2">4 digit(mis: 2018)</span>
         </div>
@@ -74,7 +74,7 @@
 
 <!-- Tgl Sensus Field -->
 <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
-    {!! Form::label('tgl_dibukukan', 'Tgl Dibukukan:') !!}
+    {!! Form::label('tgl_dibukukan',  __('field.tgl_dibukukan').':') !!}
     {!! Form::text('tgl_dibukukan', null, ['class' => 'form-control tgl_dibukukan','id'=>'tgl_dibukukan']) !!}
 </div>
 
@@ -414,6 +414,14 @@
         })
 
         $('#harga_satuan').mask("#.##0", {reverse: true});
+
+        $('#tahun_perolehan').mask("0000");
+
+        $('#tahun_perolehan').change((d) => {
+            if (parseInt($("#tahun_perolehan").val()) > parseInt(new Date().getFullYear())) {
+                $("#tahun_perolehan").val(new Date().getFullYear())
+            }
+        })
 
         $('#pidbarang').select2({
             ajax: {
