@@ -7,6 +7,7 @@ use App\Http\Requests;
 use App\Http\Requests\CreatejabatanRequest;
 use App\Http\Requests\UpdatejabatanRequest;
 use App\Repositories\jabatanRepository;
+use App\Repositories\module_accessRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
 use Response;
@@ -15,10 +16,12 @@ class jabatanController extends AppBaseController
 {
     /** @var  jabatanRepository */
     private $jabatanRepository;
+    private $moduleAccessRepository;
 
-    public function __construct(jabatanRepository $jabatanRepo)
+    public function __construct(jabatanRepository $jabatanRepo, module_accessRepository $moduleAccessRepository)
     {
         $this->jabatanRepository = $jabatanRepo;
+        $this->moduleAccessRepository = $moduleAccessRepository;
     }
 
     /**
@@ -54,6 +57,8 @@ class jabatanController extends AppBaseController
         $input = $request->all();
 
         $jabatan = $this->jabatanRepository->create($input);
+
+        $this->moduleAccessRepository->bulkSaveJabatan($input['access'], $jabatan->id);
 
         Flash::success('Jabatan saved successfully.');
 
@@ -112,13 +117,17 @@ class jabatanController extends AppBaseController
     {
         $jabatan = $this->jabatanRepository->find($id);
 
+        $input = $request->all();
+
         if (empty($jabatan)) {
             Flash::error('Jabatan not found');
 
             return redirect(route('jabatans.index'));
         }
 
-        $jabatan = $this->jabatanRepository->update($request->all(), $id);
+        $jabatan = $this->jabatanRepository->update( $input, $id);
+
+        $this->moduleAccessRepository->bulkSaveJabatan($input['access'], $id);
 
         Flash::success('Jabatan updated successfully.');
 

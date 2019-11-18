@@ -92,3 +92,7 @@ Route::resource('mutasiDetils', 'mutasi_detilController');
 Route::resource('rkas', 'rkaController');
 
 Route::resource('rkaDetils', 'rka_detilController');
+
+Route::resource('modules', 'modulesController');
+
+Route::resource('moduleAccesses', 'module_accessController');

@@ -5,6 +5,8 @@ namespace App\DataTables;
 use App\Models\mutasi;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
+use Auth;
+use c;
 
 class mutasiDataTable extends DataTable
 {
@@ -34,14 +36,20 @@ class mutasiDataTable extends DataTable
      */
     public function query(mutasi $model)
     {
-        return $model->newQuery()
-            ->select([
-                'mutasi.*',
-                'mo1.nama as nama_mo1',
-                'mo2.nama as nama_mo2',
-            ])
-            ->join('m_organisasi as mo1', 'mo1.id', 'mutasi.opd_asal')
-            ->join('m_organisasi as mo2', 'mo2.id', 'mutasi.opd_tujuan');
+        $query = $model->newQuery()
+        ->select([
+            'mutasi.*',
+            'mo1.nama as nama_mo1',
+            'mo2.nama as nama_mo2',
+        ])
+        ->join('m_organisasi as mo1', 'mo1.id', 'mutasi.opd_asal')
+        ->join('m_organisasi as mo2', 'mo2.id', 'mutasi.opd_tujuan');
+
+        if (c::is([],[],[0])) {
+            $query = $query->where('mutasi.opd_asal', Auth::user()->pid_organisasi);
+        }
+
+        return $query;            
     }
 
     /**

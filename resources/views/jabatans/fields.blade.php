@@ -26,6 +26,44 @@
     </div>
 </div>
 
+<!-- modules table -->
+<?php 
+    $allowables_access = explode(',',env('ALLOWABLE_ACCESS', ''));    
+    $modules = \App\Models\modules::get();
+?>
+<table class='table table-bordered table-striped'>
+    <tr>
+        <th >Access Name</th>        
+        @foreach($allowables_access as $key => $value)
+        <th>{!! ucfirst($value) !!}</th>
+        @endforeach
+    </tr>
+    @foreach($modules as $key => $module)
+    <tr>
+        <td>{!! ucfirst($module->nama) !!}</td>
+        @foreach($allowables_access as $key => $value)
+        <?php 
+            $checked = '';
+            if (isset($jabatan)) {
+                $module_access = \App\Models\module_access::where([
+                    'pid_jabatan' => $jabatan->id,
+                    'nama' => $module->nama,
+                    'kode_module' => $value,
+                ])->first();
+
+
+                if ($module_access) {
+                    $checked = 'checked';
+                }
+            }
+            
+        ?>
+        <td><input type='checkbox' name='access[<?= $module->nama ?>][]' value="<?= $value ?>"  <?= $checked ?> /></td>
+        @endforeach
+    </tr>
+    @endforeach
+</table>
+
 
 <!-- Submit Field -->
 <div class="form-group col-sm-12">

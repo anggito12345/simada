@@ -2,11 +2,11 @@
 
 namespace App\DataTables;
 
-use App\Models\mutasi_detil;
+use App\Models\module_access;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 
-class mutasi_detilDataTable extends DataTable
+class module_accessDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -18,19 +18,18 @@ class mutasi_detilDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'mutasi_detils.datatables_actions');
+        return $dataTable->addColumn('action', 'module_accesses.datatables_actions');
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\mutasi_detil $model
+     * @param \App\Models\module_access $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(mutasi_detil $model)
+    public function query(module_access $model)
     {
-        return $model
-            ->newQuery();
+        return $model->newQuery();
     }
 
     /**
@@ -66,9 +65,8 @@ class mutasi_detilDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'pid',
-            'inventaris',
-            'keterangan'
+            'nama',
+            'pid'
         ];
     }
 
@@ -79,6 +77,6 @@ class mutasi_detilDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'mutasi_detilsdatatable_' . time();
+        return 'module_accessesdatatable_' . time();
     }
 }

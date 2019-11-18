@@ -115,3 +115,7 @@ Route::resource('mutasi_detils', 'mutasi_detilAPIController');
 Route::resource('rkas', 'rkaAPIController');
 
 Route::resource('rka_detils', 'rka_detilAPIController');
+
+Route::resource('modules', 'modulesAPIController');
+
+Route::resource('module_accesses', 'module_accessAPIController');

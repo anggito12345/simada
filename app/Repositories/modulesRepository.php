@@ -2,23 +2,22 @@
 
 namespace App\Repositories;
 
-use App\Models\jabatan;
+use App\Models\modules;
 use App\Repositories\BaseRepository;
 
 /**
- * Class jabatanRepository
+ * Class modulesRepository
  * @package App\Repositories
- * @version October 19, 2019, 2:50 pm UTC
+ * @version November 13, 2019, 2:11 pm UTC
 */
 
-class jabatanRepository extends BaseRepository
+class modulesRepository extends BaseRepository
 {
     /**
      * @var array
      */
     protected $fieldSearchable = [
-        'nama',
-        'jenis'
+        'nama'
     ];
 
     /**
@@ -36,7 +35,8 @@ class jabatanRepository extends BaseRepository
      **/
     public function model()
     {
-        return jabatan::class;
+        return modules::class;
     }
 
+   
 }

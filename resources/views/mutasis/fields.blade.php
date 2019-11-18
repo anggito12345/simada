@@ -282,10 +282,7 @@
                 label: "Inventaris:",
                 name: "inventaris",
                 type: "select"
-            }, {
-                label: "Keterangan:",
-                name: "keterangan"
-            }, 
+            }
         ]
     });
 
@@ -299,6 +296,7 @@
     let DTE_Field_inventaris = null
 
     editor.on( 'open', function ( e, type ) {
+        
         $('#DTE_Field_inventaris').val('')
         // Type is 'main', 'bubble' or 'inline'
         if (DTE_Field_inventaris == null) {
@@ -341,18 +339,18 @@
                         },
                     ],
                     'select': {
-                        'style': 'single'
+                        'style': 'multiple'
                     },
                     "processing": true,
                     "serverSide": true,
                 },
                 dataFieldLabel: 'nama_rek_aset',
                 dataFieldValue: 'id',
-                multiple: false
+                multiple: true
             });            
             editorInit = true
         }
-        
+        DTE_Field_inventaris.setDefault(null)                    
     } );
 
 
@@ -366,14 +364,26 @@
         }
 
         // Type is 'main', 'bubble' or 'inline'
-        dataSelect = DTE_Field_inventaris.selectedValues[0]
+        dataSelect = DTE_Field_inventaris.selectedValues
         if (action == 'create') {
-            data.data[0].inventaris = parseInt( dataSelect.id );
-            data.data[0].inventarisNama = dataSelect.nama_rek_aset;
+            dataSelect.forEach((dataVal, index) => {
+
+                if (data.data[index] == undefined) {
+                    data.data[index] = {
+                        inventaris: parseInt( dataVal.id ),
+                        inventarisNama: dataVal.nama_rek_aset
+                    }
+                } else {
+                    data.data[0].inventaris = parseInt( dataVal.id );
+                    data.data[0].inventarisNama = dataVal.nama_rek_aset;
+                }
+                
+            })
+            
         } else {
             $.each( data.data, function ( key, values ) {
-                data.data[ key ][ 'inventaris' ] = parseInt( dataSelect.id );
-                data.data[ key ][ 'inventarisNama' ] = dataSelect.nama_rek_aset;
+                data.data[ key ][ 'inventaris' ] = parseInt( dataSelect[0].id );
+                data.data[ key ][ 'inventarisNama' ] = dataSelect[0].nama_rek_aset;
             } );
         }
             
@@ -398,10 +408,7 @@
 
     editor.on( 'postSubmit', function ( e, node, data) {
         // Type is 'main', 'bubble' or 'inline'
-        DTE_Field_inventaris.setDefault(null)
-            
-            
-        
+        DTE_Field_inventaris.setDefault(null)                                
     } );
 </script>
 
@@ -439,14 +446,8 @@ buttonsOpt = [
                 data: 'inventarisNama',
                 title: 'Barang',
                 orderable: false,
-            },
-            {
-                data: 'keterangan',
-                title: 'Keterangan',
-                className: 'keterangan',    
-                orderable: false,
-            },
-        ],
+            }
+        ]
     })
 
     App.Helpers.defaultSelect2($('#opd_asal'), "<?= url('api/organisasis', [Auth::user()->pid_organisasi]) ?>","id","nama")

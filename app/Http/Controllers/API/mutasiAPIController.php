@@ -6,6 +6,7 @@ use App\Http\Requests\API\CreatemutasiAPIRequest;
 use App\Http\Requests\API\UpdatemutasiAPIRequest;
 use App\Models\mutasi;
 use App\Repositories\mutasiRepository;
+use App\Repositories\inventaris_mutasiRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
@@ -21,10 +22,12 @@ class mutasiAPIController extends AppBaseController
 {
     /** @var  mutasiRepository */
     private $mutasiRepository;
+    private $inventaris_mutasiRepository;
 
-    public function __construct(mutasiRepository $mutasiRepo)
+    public function __construct(mutasiRepository $mutasiRepo, inventaris_mutasiRepository $inventaris_mutasiRepository)
     {
         $this->mutasiRepository = $mutasiRepo;
+        $this->inventaris_mutasiRepository = $inventaris_mutasiRepository;
     }
 
     /**
@@ -80,15 +83,7 @@ class mutasiAPIController extends AppBaseController
 
             $dataDetils = json_decode($request->input('data-detil'), true);
 
-            foreach ($dataDetils as $dataDetil) {
-                // change OPD 
-                \App\Models\inventaris::where('id', $dataDetil['inventaris'])->update([
-                    'pid_organisasi' => $request->input("opd_tujuan"),
-                ]);
-
-                $dataDetil['pid'] = $request->input('idmutasi');
-                \App\Models\mutasi_detil::create($dataDetil);
-            }
+            $this->inventaris_mutasiRepository->moveInventaris($dataDetils, $mutasi->id);
                              
 
             DB::commit();   

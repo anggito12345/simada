@@ -2,12 +2,10 @@
 
 @section('content')
     <section class="content-header">
-        <h1 class="pull-left">Mutasis</h1>
-        @if(c::is([], [],[0]) && c::is(['mutasi'],['create'],[]))
+        <h1 class="pull-left">Modules</h1>
         <h1 class="pull-right">
-           <a class="btn btn-primary pull-right" style="margin-top: -10px;margin-bottom: 5px" href="{!! route('mutasis.create') !!}">Add New</a>
+           <a class="btn btn-primary pull-right" style="margin-top: -10px;margin-bottom: 5px" href="{!! route('modules.create') !!}">Add New</a>
         </h1>
-        @endif
     </section>
     <div class="content">
         <div class="clearfix"></div>
@@ -17,7 +15,7 @@
         <div class="clearfix"></div>
         <div class="box box-primary">
             <div class="box-body">
-                    @include('mutasis.table')
+                    @include('modules.table')
             </div>
         </div>
         <div class="text-center">
