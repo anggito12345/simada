@@ -58,7 +58,7 @@ Route::resource('organisasis', 'organisasiAPIController');
 
 Route::resource('lokasis', 'lokasiAPIController');
 
-Route::resource('satuan_barangs', 'satuan_barangAPIController');
+//Route::resource('satuan_barangs', 'satuan_barangAPIController');
 
 
 
