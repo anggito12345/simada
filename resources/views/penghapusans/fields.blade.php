@@ -8,9 +8,9 @@
 <div class="form-group col-sm-6">
     {!! Form::label('kriteria', 'Kriteria Penghapusan:') !!}
     {!! Form::select('kriteria', [
-    'Pemindahtanganan' => 'Pemindahtanganan',
-    'Pemusnahan' => 'Pemusnahan',
-    'Penghapusan' => 'Penghapusan'
+        'Pemindahtanganan' => 'Pemindahtanganan',
+        'Pemusnahan' => 'Pemusnahan',
+        'Penghapusan' => 'Penghapusan'
     ], null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data.formPenghapusan().kriteria']) !!}
 </div>
 
