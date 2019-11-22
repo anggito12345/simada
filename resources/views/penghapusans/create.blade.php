@@ -11,8 +11,8 @@
         <div class="box box-primary">
 
             <div class="box-body">
-                <div class="row">
-                    {!! Form::open(['route' => 'penghapusans.store']) !!}
+                <div class="">
+                    {!! Form::open(['route' => 'penghapusans.store', 'id' => 'form-penghapusan']) !!}
 
                         @include('penghapusans.fields')
 

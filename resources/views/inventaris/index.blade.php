@@ -14,32 +14,14 @@
 
         <div class="box box-primary">
             <div class="box-body">
-              <ul class="nav nav-tabs" id="myTab" role="tablist">
-                <li class="nav-item">
-                  <a class="nav-link active" id="inventaris-tab" data-toggle="tab" href="#inventaris" role="tab" aria-controls="inventaris" aria-selected="true">Inventaris</a>
-                </li>
-                <li class="nav-item">
-                  <a class="nav-link" id="penghapusan-tab" data-toggle="tab" href="#penghapusan" role="tab" aria-controls="penghapusan" aria-selected="false">Penghapusan</a>
-                </li>                
-              </ul>
-              <div class="tab-content" id="myTabContent">
-                <div class="tab-pane fade show active" id="inventaris" role="tabpanel" aria-labelledby="inventaris-tab">
-                  @include('inventaris.table_filter')
-                  <div class="clearfix"></div>
-        
-                  <div class="box box-primary">
-                      <div class="box-body">
-                            @include('inventaris.table')
-                      </div>
-                  </div>
-                </div>
-                <div class="tab-pane fade p-1" id="penghapusan" role="tabpanel" aria-labelledby="penghapusan-tab">
-                  <table id="table-penghapusan"  class="table table-bordered  table-striped " >
-                    <thead>                     
-                    </thead>
-                  </table>
-                </div>                
-              </div>                    
+                @include('inventaris.table_filter')
+                <div class="clearfix"></div>
+      
+                <div class="box box-primary">
+                    <div class="box-body">
+                          @include('inventaris.table')
+                    </div>
+                </div>            
             </div>
         </div>
 

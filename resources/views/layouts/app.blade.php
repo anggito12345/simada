@@ -279,9 +279,10 @@
 
 
     </script>
+    @include('layouts.pages')
     @yield('scripts')
     @yield('scripts_2')
-    @include('layouts.pages')
+    
 
         
 
