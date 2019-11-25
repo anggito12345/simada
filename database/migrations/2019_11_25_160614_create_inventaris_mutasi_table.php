@@ -14,7 +14,7 @@ class CreateInventarisMutasiTable extends Migration {
 	{
 		Schema::create('inventaris_mutasi', function(Blueprint $table)
 		{
-			$table->integer('id', true);
+			$table->integer('id', false);
 			$table->string('noreg')->nullable();
 			$table->integer('pidbarang')->nullable();
 			$table->string('pidopd')->nullable();

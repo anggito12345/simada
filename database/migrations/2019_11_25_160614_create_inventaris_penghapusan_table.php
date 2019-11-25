@@ -14,7 +14,7 @@ class CreateInventarisPenghapusanTable extends Migration {
 	{
 		Schema::create('inventaris_penghapusan', function(Blueprint $table)
 		{
-			$table->integer('id', true);
+			$table->integer('id', false);
 			$table->string('noreg')->nullable();
 			$table->integer('pidbarang')->nullable();
 			$table->string('pidopd')->nullable();
