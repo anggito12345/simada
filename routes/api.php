@@ -47,6 +47,20 @@ Route::post('/mutasiinventaris/{id}', 'inventarisAPIController@mutasi');
 Route::get('/intraorekstra', 'inventarisAPIController@intraorekstra');
 Route::post('penghapusans/edit/{id}', 'penghapusanAPIController@editCustom');
 Route::post('pemanfaatans/edit/{id}', 'pemanfaatanAPIController@editCustom');
+
+Route::middleware('auth:api')->patch('inventaris_mutasi/approvements', function( \App\Repositories\inventaris_mutasiRepository $inventaris_mutasiRepository, Request $request) {    
+    return $inventaris_mutasiRepository->approvements($request);
+});
+
+Route::middleware('auth:api')->post('inventaris_mutasi/approvements', function( \App\Repositories\inventaris_mutasiRepository $inventaris_mutasiRepository, Request $request) {    
+    return $inventaris_mutasiRepository->approvements($request);
+});
+
+Route::middleware('auth:api')->get('inventaris_mutasi/count', function( \App\Repositories\inventaris_mutasiRepository $inventaris_mutasiRepository, Request $request) {        
+    return $inventaris_mutasiRepository->count($request);
+});
+
+
 Route::resource('inventaris', 'inventarisAPIController');
 
 Route::get('/jenisbarangsget/getbykode/{id}', 'jenisbarangAPIController@getbykode');

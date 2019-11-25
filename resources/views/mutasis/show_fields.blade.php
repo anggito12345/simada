@@ -52,20 +52,19 @@
 </div>
 
 
-<script>
+<script> 
 
 
 if ( ! $.fn.DataTable.isDataTable( '#table-detil-mutasi-<?= $uniqID  ?>' ) ) {
-    let dataDetils = JSON.parse('<?= json_encode(\App\Models\mutasi_detil::where('pid', $mutasi->id)
+    let dataDetils = JSON.parse('<?= json_encode(\App\Models\inventaris_mutasi::where('inventaris_mutasi.mutasi_id', $mutasi->id)
             ->select([
                 'm_barang.nama_rek_aset as inventarisNama',
-                'mutasi_detil.keterangan',
-                'inventaris.id as inventaris',
-                'mutasi_detil.id as DT_RowId'
+                'inventaris_mutasi.id as inventaris',
+                'inventaris_mutasi.id as DT_RowId'
             ])
-            ->join('inventaris','inventaris.id', 'mutasi_detil.inventaris')
-            ->join('m_barang','m_barang.id', 'inventaris.pidbarang')
+            ->join('m_barang','m_barang.id', 'inventaris_mutasi.pidbarang')
             ->get()) ?>')
+
     $('#table-detil-mutasi-<?= $uniqID  ?>').DataTable({
         data: dataDetils,
         dom: 'Bfrtip',
@@ -81,12 +80,6 @@ if ( ! $.fn.DataTable.isDataTable( '#table-detil-mutasi-<?= $uniqID  ?>' ) ) {
             {
                 data: 'inventarisNama',
                 title: 'Barang',
-                orderable: false,
-            },
-            {
-                data: 'keterangan',
-                title: 'Keterangan',
-                className: 'keterangan',    
                 orderable: false,
             },
         ],
