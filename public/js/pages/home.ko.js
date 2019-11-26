@@ -7,7 +7,10 @@ viewModel.data = Object.assign(viewModel.data, {
         step1: 0,
         step2: 0,
         step3: 0
-    })
+    }),
+    countPenghapusan: ko.observable({
+        step1: 0,
+    }),
 })
 
 /**
@@ -82,6 +85,7 @@ function loadDataTableMutasiBPKAD() {
     })
 }
 
+
 /**
  * for modal step-3 confirmation
  */
@@ -113,6 +117,42 @@ function loadDataTableMutasiStep3() {
         {
             title: 'Dibuat pada',
             data: 'created_at'
+        }
+        ]
+    })
+}
+
+/**
+ * step - 1 for bpkad
+ */
+
+function loadDataTablePenghapusanBPKAD() {
+    $('#table-penghapusan-bpkad').DataTable({
+        ajax: `${$("[base-path]").val()}/penghapusans?status=STEP-1`,
+        dom: 'Bfrtip',
+        'drawCallback': onloadDataTableMutasiMutasiMasuk,
+        'select': {
+            'style': 'single'
+        },
+        columns: [{
+            'orderable': false,
+            "className": "details-control",
+            "render": function (data, type, row) {
+                return '<i class="fa fa-plus-circle text-success"></i>'
+            },
+            data: "id",
+        },
+        {
+            title: 'Kriteria',
+            data: 'kriteria'
+        },
+        {
+            title: 'Kondisi',
+            data: 'kondisi'
+        },
+        {
+            title: 'Tanggal SK',
+            data: 'tglsk'
         }
         ]
     })
@@ -162,6 +202,45 @@ function approvementMutasiStep2(step) {
 }
 
 
+/**
+ * to approve each penghapusan for BPKAD 
+ * 
+ */
+
+function approvementMutasiStep2(step) {
+    viewModel.services.approveMutasi($('#table-mutasi-bpkad').DataTable().rows('.selected').data().toArray(), step)
+        .then((d) => {
+            swal.fire({
+                type: 'success',
+                text: 'inventaris berhasil di setujui!'
+            }).then((d) => {
+                $('#modal-mutasi-bpkad').modal('hide')
+                $('#modal-mutasi-bpkad-form').modal('hide')
+                countMutasiProgress();
+            })
+        })
+}
+
+
+/**
+ * approve bpkad for penghapusan
+ * 
+ */
+
+
+function approvementPenghapusanBPKAD() {
+    viewModel.services.approvementPenghapusanBPKAD($('#table-penghapusan-bpkad').DataTable().rows('.selected').data().toArray())
+        .then((d) => {
+            swal.fire({
+                type: 'success',
+                text: 'Penghapusan inventaris berhasil di setujui!'
+            }).then((d) => {
+                $('#modal-penghapusan-bpkad').modal('hide')
+                $('#modal-penghapusan-bpkad-form').modal('hide')
+                countPenghapusanProgress();
+            })
+        })
+}
 
 
 /**
@@ -193,6 +272,11 @@ function beforeApproveStep2(step) {
 }
 
 
+function beforeApproveBPKADPenghapusan() {
+    $('#modal-penghapusan-bpkad-form').modal('show')
+}
+
+
 /**
  * onDrawCallback DataTable
  * @param {e} e parameter of datatable itself
@@ -220,6 +304,34 @@ function onloadDataTableMutasiMutasiMasuk(e) {
     })
 }
 
+
+/**
+ * onDrawCallback DataTable Penghapusan
+ * @param {e} e parameter of datatable itself
+ */
+function onloadDataTableMutasiMutasiMasuk(e) {
+    $(`#${e.sTableId} tbody`).on('click', 'td.details-control i', function (i, n) {
+        var tr = $(this).closest('tr');
+        var row = $(`#${e.sTableId}`).DataTable().row(tr);
+
+        if (row.child.isShown()) {
+            // This row is already open - close it
+            $(this).attr('class', $(this).attr('class').replace('minus-circle', 'plus-circle'))
+
+            row.child.hide();
+            tr.removeClass('shown');
+        }
+        else {
+            $(this).attr('class', $(this).attr('class').replace('plus-circle', 'minus-circle'))
+
+            $.get(`${$("[base-path]").val()}/partials/view.penghapusan/${row.data().id}`).then((data) => {
+
+                row.child(`<div class='container container-view'>${data}</div>`).show();
+            })
+        }
+    })
+}
+
 /**
  * counting mutasi masuk
  * mutasi on progress 
@@ -230,12 +342,24 @@ function countMutasiProgress() {
 }
 
 /**
+ * counting penghapusan
+ * etc
+ */
+
+function countPenghapusanProgress() {
+    viewModel.services.countPenghapusan()
+}
+
+
+/**
  * load functions
  */
 countMutasiProgress()
+countPenghapusanProgress()
 loadDataTableMutasi()
 loadDataTableMutasiBPKAD();
 loadDataTableMutasiStep3();
+loadDataTablePenghapusanBPKAD();
 
 
 /**

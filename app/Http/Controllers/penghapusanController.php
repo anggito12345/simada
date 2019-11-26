@@ -148,4 +148,24 @@ class penghapusanController extends AppBaseController
 
         return redirect(route('penghapusans.index'));
     }
+
+     /**
+     * Display the partial specified mutasi.
+     *
+     * @param  int $id
+     *
+     * @return Response
+     */
+    public function partialview($id)
+    {
+        $penghapusan = $this->penghapusanRepository->find($id);
+
+        if (empty($penghapusan)) {
+            Flash::error('Penghapusan not found');
+
+            return 'Not found';
+        }
+
+        return view('penghapusans.show_fields')->with('penghapusan', $penghapusan);
+    }
 }

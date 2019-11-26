@@ -56,10 +56,17 @@ Route::middleware('auth:api')->post('inventaris_mutasi/approvements', function( 
     return $inventaris_mutasiRepository->approvements($request);
 });
 
+Route::middleware('auth:api')->post('inventaris_penghapusan/approvements', function( \App\Repositories\inventaris_penghapusanRepository $inventaris_penghapusanRepository, Request $request) {    
+    return $inventaris_penghapusanRepository->approvements($request);
+});
+
 Route::middleware('auth:api')->get('inventaris_mutasi/count', function( \App\Repositories\inventaris_mutasiRepository $inventaris_mutasiRepository, Request $request) {        
     return $inventaris_mutasiRepository->count($request);
 });
 
+Route::middleware('auth:api')->get('inventaris_penghapusan/count', function( \App\Repositories\inventaris_penghapusanRepository $inventaris_penghapusanRepository, Request $request) {        
+    return $inventaris_penghapusanRepository->count($request);
+});
 
 Route::resource('inventaris', 'inventarisAPIController');
 

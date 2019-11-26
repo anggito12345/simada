@@ -78,7 +78,8 @@ class inventaris_penghapusan extends Model
         'alamat_kota',
         'idpegawai',
         'pid_organisasi',
-        'pid_penghapusan'
+        'pid_penghapusan',
+        'status'
     ];
 
     /**

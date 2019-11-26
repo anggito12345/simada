@@ -55,6 +55,24 @@
         </div>        
     </div>
     @endif
+
+      
+    @if(c::is([],[],[-1]))
+    <h4>Penghapusan:</h4> 
+    <div class="row">
+        <div class="col-3">
+            <div class="info-box" onclick="$('#modal-penghapusan-bpkad').modal('show')">
+                <span class="info-box-icon bg-green"><i class="fa fa-check"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Persetujuan</span>
+                    <span class="info-box-number" data-bind="text: viewModel.data.countPenghapusan().step1"></span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+        </div>        
+    </div>
+    @endif
 </div>
 
 <div class="modal fade" id="modal-mutasi-masuk" role="dialog">
@@ -101,6 +119,28 @@
 </div>
 
 
+<div class="modal fade" id="modal-penghapusan-bpkad" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Penghapusan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped table-bordered" id="table-penghapusan-bpkad">
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="beforeApproveBPKADPenghapusan()">Setujui</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
 <div class="modal fade" id="modal-mutasi-bpkad-form" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -122,6 +162,34 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" onclick="approvementMutasiStep2('STEP-2')">Submit</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modal-penghapusan-bpkad-form" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Penghapusan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    {!! Form::open(['id' => 'form-bpkad-penghapusan' ]) !!}
+                        <div class="form-group">
+                            <label>Dokumen Persetujuan:</label>
+                            {!! Form::file('dokumen', ['class' => 'form-control', 'id' => 'dokumen-penghapusan']) !!}
+                        </div>
+                    {!! Form::close() !!}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="approvementPenghapusanBPKAD('STEP-2')">Submit</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
             </div>
         </div>

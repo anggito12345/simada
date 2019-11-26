@@ -29,8 +29,20 @@ class penghapusanDataTable extends DataTable
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function query(penghapusan $model)
-    {
-        return $model->newQuery();
+    {   
+        $query = $model
+            ->newQuery()
+            ->select([
+                'penghapusan.*'
+            ]);   
+
+        if (isset($_GET['status'])) {
+            $query = $query->join('inventaris_penghapusan','inventaris_penghapusan.pid_penghapusan', 'penghapusan.id')
+                ->where('inventaris_penghapusan.status', $_GET['status'])
+                ->groupBy('penghapusan.id');
+        }
+
+        return $query;
     }
 
     /**

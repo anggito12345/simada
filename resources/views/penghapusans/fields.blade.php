@@ -82,6 +82,7 @@ if (isset($penghapusan)) {
             'inventaris_penghapusan.id_pk as DT_RowId',
             'm_barang.nama_rek_aset as inventarisNama',
             'inventaris_penghapusan.id as inventaris',
+            'inventaris_penghapusan.tahun_perolehan as tahun_perolehan',
         ])
         ->join('m_barang','m_barang.id', 'inventaris_penghapusan.pidbarang')
         ->get());
@@ -219,15 +220,8 @@ if (isset($penghapusan)) {
                 type: "success",
                 text: "Berhasil menyimpan data!",
                 onClose: () => {
-                    if ($('#modal-penghapusan').attr('is_mode_insert') != 'false') {
-                        viewModel.data.checkedItem = []
-                        $("#table-inventaris").DataTable().ajax.reload();
+                    window.location = `${$('[base-path]').val()}/penghapusans`
 
-                    }
-
-                    $("#table-penghapusan").DataTable().ajax.reload();
-
-                    $("#modal-penghapusan").modal('hide')
 
                 }
             })
@@ -271,12 +265,12 @@ if (isset($penghapusan)) {
     editor.on('open', function(e, type) {
 
         $('#DTE_Field_inventaris').val('')
-        // Type is 'main', 'bubble' or 'inline'
+        
         if (DTE_Field_inventaris == null) {
             DTE_Field_inventaris = new lookupTable(document.getElementById('DTE_Field_inventaris'), {
                 dataTableOption: {
                     ajax: {
-                        url: `${$('[base-path]').val()}/inventaris`,
+                        url: `${$('[base-path]').val()}/inventaris?is_exist_inventaris_penghapusan=false`,
                         method: 'GET',
                         headers: {
                             'Authorization': 'Bearer ' + sessionStorage.getItem('api token'),
@@ -335,7 +329,7 @@ if (isset($penghapusan)) {
             return false;
         }
 
-        // Type is 'main', 'bubble' or 'inline'
+        
         dataSelect = DTE_Field_inventaris.selectedValues
         if (action == 'create') {
             dataSelect.forEach((dataVal, index) => {
@@ -343,11 +337,13 @@ if (isset($penghapusan)) {
                 if (data.data[index] == undefined) {
                     data.data[index] = {
                         inventaris: parseInt(dataVal.id),
-                        inventarisNama: dataVal.nama_rek_aset
+                        inventarisNama: dataVal.nama_rek_aset,
+                        tahun_perolehan: dataVal.tahun_perolehan,
                     }
                 } else {
                     data.data[0].inventaris = parseInt(dataVal.id);
                     data.data[0].inventarisNama = dataVal.nama_rek_aset;
+                    data.data[0].tahun_perolehan = dataVal.tahun_perolehan;
                 }
 
             })
@@ -356,6 +352,7 @@ if (isset($penghapusan)) {
             $.each(data.data, function(key, values) {
                 data.data[key]['inventaris'] = parseInt(dataSelect[0].id);
                 data.data[key]['inventarisNama'] = dataSelect[0].nama_rek_aset;
+                data.data[key]['tahun_perolehan'] = dataSelect[0].tahun_perolehan;
             });
         }
 
@@ -363,7 +360,7 @@ if (isset($penghapusan)) {
     });
 
     editor.on('initEdit', function(e, node, data) {
-        // Type is 'main', 'bubble' or 'inline'
+        
 
         setTimeout(() => {
             __ajax({
@@ -379,7 +376,7 @@ if (isset($penghapusan)) {
     });
 
     editor.on('postSubmit', function(e, node, data) {
-        // Type is 'main', 'bubble' or 'inline'
+        
         DTE_Field_inventaris.setDefault(null)
     });
 </script>
@@ -414,7 +411,12 @@ if (isset($penghapusan)) {
             },
             {
                 data: 'inventarisNama',
-                title: 'Barang',
+                title: 'Inventaris',
+                orderable: false,
+            },
+            {
+                data: 'tahun_perolehan',
+                title: 'Tahun Perolehan',
                 orderable: false,
             }
         ]

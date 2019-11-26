@@ -278,7 +278,7 @@
     editor.on( 'open', function ( e, type ) {
         
         $('#DTE_Field_inventaris').val('')
-        // Type is 'main', 'bubble' or 'inline'
+        
         if (DTE_Field_inventaris == null) {
             DTE_Field_inventaris = new lookupTable(document.getElementById('DTE_Field_inventaris'),{
                 dataTableOption: {
@@ -343,7 +343,7 @@
             return false;
         }
 
-        // Type is 'main', 'bubble' or 'inline'
+        
         dataSelect = DTE_Field_inventaris.selectedValues
         if (action == 'create') {
             dataSelect.forEach((dataVal, index) => {
@@ -371,7 +371,7 @@
     } );
 
     editor.on( 'initEdit', function ( e, node, data) {
-        // Type is 'main', 'bubble' or 'inline'
+        
 
         setTimeout(() => {
             __ajax({
@@ -387,7 +387,7 @@
     } );
 
     editor.on( 'postSubmit', function ( e, node, data) {
-        // Type is 'main', 'bubble' or 'inline'
+        
         DTE_Field_inventaris.setDefault(null)                                
     } );
 </script>

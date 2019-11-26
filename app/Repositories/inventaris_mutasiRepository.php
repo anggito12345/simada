@@ -119,7 +119,7 @@ class inventaris_mutasiRepository extends BaseRepository
             ]);
 
             if (empty($theItem)) {
-                return response('Hello World', 200);
+                return response('No Found', 404);
             }
 
             foreach ($theItem as $k => $each) { 
