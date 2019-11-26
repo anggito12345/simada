@@ -15,6 +15,7 @@ class AddStatusToInventarisPenghapusan extends Migration
     {
         Schema::table('inventaris_penghapusan', function (Blueprint $table) {
             //
+            $table->string('status', 15);
         });
     }
 
@@ -27,7 +28,7 @@ class AddStatusToInventarisPenghapusan extends Migration
     {
         Schema::table('inventaris_penghapusan', function (Blueprint $table) {
             //
-            $table->string('status', 15);
+            
         });
     }
 }
