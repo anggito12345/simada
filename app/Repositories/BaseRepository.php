@@ -123,6 +123,7 @@ abstract class BaseRepository
         return $query->get($columns);
     }
 
+    
     /**
      * Create model record
      *

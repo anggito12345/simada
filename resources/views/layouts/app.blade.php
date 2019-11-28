@@ -99,7 +99,8 @@
     <link rel="stylesheet" href="<?= url('css/thirdparty/select.dataTables.min.css') ?>">
 
     <script src="<?= url('js/thirdparty/knockout-3.5.0.js') ?>"></script>
-   
+    <script src="<?= url('js/thirdparty/ko_mapping.min.js') ?>"></script>
+    
     <script src="<?= url('js/app.ko.js?key='.sha1(time())) ?>"></script>
 
     @include('layouts.datatables_css')
@@ -151,7 +152,7 @@
                                     <p>
                                         {!! Auth::user()->name !!}
                                         <small>{!! \App\Models\organisasi::find(Auth::user()->pid_organisasi)->nama !!}</small>
-                                        <small>{!! \App\Models\jabatan::find(Auth::user()->jabatan)->nama !!}</small>
+                                        <small>{!! \App\Models\jabatan::find(Auth::user()->jabatan)->nama_jabatan !!} ( {!! \App\Models\BaseModel::$kelompokJabatanDs[\App\Models\jabatan::find(Auth::user()->jabatan)->kelompok] !!} )</small>
                                     </p>
                                 </li>
                                 <!-- Menu Footer-->
@@ -274,6 +275,8 @@
 
     
     <script>
+        localStorage.setItem('pid_organisasi', '<?= Auth::user()->pid_organisasi ?>');
+
         $.fn.select2.defaults.set("placeholder", "Silahkan Pilih");
         $.fn.select2.defaults.set("allow-clear", true);
         $.fn.select2.defaults.set("ajax--headers", {
@@ -332,11 +335,10 @@
 
 
     </script>
+    @yield('before_pages')
+    @include('layouts.pages')
     @yield('scripts')
     @yield('scripts_2')
-    @include('layouts.pages')
-
-        
 
     <script>        
         

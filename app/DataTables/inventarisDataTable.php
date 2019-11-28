@@ -6,6 +6,7 @@ use App\Models\inventaris;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 use Auth;
+use Illuminate\Support\Facades\DB;
 
 class inventarisDataTable extends DataTable
 {
@@ -96,7 +97,8 @@ class inventarisDataTable extends DataTable
                 "m_barang.nama_rek_aset",
                 "m_merk_barang.nama as merk",
                 "m_jenis_barang.kelompok_kib",
-                "detil_mesin.bahan as bahan"                
+                "detil_mesin.bahan as bahan",
+                "inventaris_penghapusan.id as ip"                
             ])
             ->selectRaw('CONCAT(detil_tanah.nomor_sertifikat,\'/\',detil_mesin.nopabrik,\'/\', detil_mesin.norangka,\'/\', detil_mesin.nomesin) as nomor')            
             ->selectRaw('CONCAT(\'1 \',m_satuan_barang.nama) as barang')             
@@ -110,6 +112,7 @@ class inventarisDataTable extends DataTable
             ->leftJoin("m_satuan_barang", "m_satuan_barang.id", "inventaris.satuan")
             ->leftJoin("detil_mesin", "detil_mesin.pidinventaris", "inventaris.id")
             ->leftJoin("m_merk_barang", "m_merk_barang.id", "detil_mesin.merk")
+            ->leftJoin('inventaris_penghapusan', 'inventaris_penghapusan.id', 'inventaris.id')
             ->where('inventaris.draft', isset($_GET['draft']) ? $_GET['draft'] == "1" : false)
             // role =================
             // ->where('m_jabatan.level', '<=', $mineJabatan->level)
@@ -129,6 +132,18 @@ class inventarisDataTable extends DataTable
 
         if (isset($_GET['kodesubrincianobjek']) && $_GET['kodesubrincianobjek'] != "" && $_GET['kodesubrincianobjek'] != null) {
             $buildingModel = $buildingModel->where('m_barang.kode_sub_rincian_objek', $_GET['kodesubrincianobjek']);
+        }
+
+        // take data which is doesn't has any duplicate data in inventaris_penghapusan
+        if(isset($_GET['is_exist_inventaris_penghapusan'])) {
+
+            // false it mean must not be in there
+            if ($_GET['is_exist_inventaris_penghapusan'] == 'false') {
+                $buildingModel = $buildingModel
+                                        ->whereRaw('inventaris_penghapusan.id IS NULL');    
+            } 
+            
+
         }
         
         return  $buildingModel->orderByRaw('inventaris.updated_at DESC NULLS LAST')

@@ -1,4 +1,7 @@
 let viewModel = {
+    pages: {
+        loadJs: []
+    },    
     data: {
         title: "SIMADA",        
         informations: {
@@ -37,6 +40,10 @@ let viewModel = {
                 string2: "detil_konstruksi"
             }
         }
+    },
+
+    services: {
+
     },
 
     modal: {

@@ -19,20 +19,18 @@
         <li class="{{ Request::is('inventaris*') ? 'active' : '' }}">
             <a href="{!! route('inventaris.index') !!}"><i class="fa fa-edit"></i><span>Penata Usahaan</span></a>
         </li>
+        <li class="{{ Request::is('penghapusans*') ? 'active' : '' }}">
+            <a href="{!! route('penghapusans.index') !!}"><i class="fa fa-edit"></i><span>Penghapusan</span></a>
+        </li> 
         <li class="{{ Request::is('pemeliharaans*') ? 'active' : '' }}">
             <a href="{!! route('pemeliharaans.index') !!}"><i class="fa fa-edit"></i><span>Pemeliharaan</span></a>
         </li>
         <li class="{{ Request::is('mutasis*') ? 'active' : '' }}">
-            <a href="{!! route('mutasis.index') !!}"><i class="fa fa-edit"></i><span>Mutasi</span></a>
+            <a href="{!! route('mutasis.index') !!}"><i class="fa fa-edit"></i><span>Mutasi Keluar</span></a>
         </li>
         <li class="{{ Request::is('rkas*') ? 'active' : '' }}">
             <a href="{!! route('rkas.index') !!}"><i class="fa fa-edit"></i><span>RKA</span></a>
-        </li>
-
-
-        <!-- <li class="{{ Request::is('penghapusans*') ? 'active' : '' }}">
-            <a href="{!! route('penghapusans.index') !!}"><i class="fa fa-edit"></i><span>Penghapusan</span></a>
-        </li>  -->
+        </li>        
     </ul>
 </li>
 
@@ -61,30 +59,30 @@
         <li class="{{ Request::is('alamats*') ? 'active' : '' }}">
             <a href="{!! route('alamats.index') !!}"><i class="fa fa-edit"></i><span>Lokasi</span></a>
         </li>
-        <li class="{{ Request::is('jenisbarangs*') ? 'active' : '' }}">
+        <!-- <li class="{{ Request::is('jenisbarangs*') ? 'active' : '' }}">
             <a href="{!! route('jenisbarangs.index') !!}"><i class="fa fa-edit"></i><span>Jenis Barang</span></a>
-        </li>
-        <li class="{{ Request::is('kondisis*') ? 'active' : '' }}">
+        </li> -->
+        <!-- <li class="{{ Request::is('kondisis*') ? 'active' : '' }}">
             <a href="{!! route('kondisis.index') !!}"><i class="fa fa-edit"></i><span>Kondisi</span></a>
-        </li>
+        </li> -->
         <li class="{{ Request::is('merkbarangs*') ? 'active' : '' }}">
             <a href="{!! route('merkbarangs.index') !!}"><i class="fa fa-edit"></i><span>Merk Barang</span></a>
         </li>
         <li class="{{ Request::is('organisasis*') ? 'active' : '' }}">
             <a href="{!! route('organisasis.index') !!}"><i class="fa fa-edit"></i><span>Organisasi</span></a>
         </li>
-        <li class="{{ Request::is('perolehans*') ? 'active' : '' }}">
+        <!-- <li class="{{ Request::is('perolehans*') ? 'active' : '' }}">
             <a href="{!! route('perolehans.index') !!}"><i class="fa fa-edit"></i><span>Perolehan</span></a>
-        </li>
+        </li> -->
         <li class="{{ Request::is('satuanbarangs*') ? 'active' : '' }}">
             <a href="{!! route('satuanbarangs.index') !!}"><i class="fa fa-edit"></i><span>Satuan Barang</span></a>
         </li>
         <!-- <li class="{{ Request::is('jenisopds*') ? 'active' : '' }}">
             <a href="{!! route('jenisopds.index') !!}"><i class="fa fa-edit"></i><span>Jenis OPD</span></a>
         </li> -->
-        <li class="{{ Request::is('statustanahs*') ? 'active' : '' }}">
+        <!-- <li class="{{ Request::is('statustanahs*') ? 'active' : '' }}">
             <a href="{!! route('statustanahs.index') !!}"><i class="fa fa-edit"></i><span>Status Tanah</span></a>
-        </li>
+        </li> -->
         <li class="{{ Request::is('mitras*') ? 'active' : '' }}">
             <a href="{!! route('mitras.index') !!}"><i class="fa fa-edit"></i><span>Mitra</span></a>
         </li>        

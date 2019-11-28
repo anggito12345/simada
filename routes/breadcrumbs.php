@@ -414,3 +414,26 @@ Breadcrumbs::for('settings.show', function ($trail,$data) {
     $trail->parent('settings.index', $data);
     $trail->push('Show', route('settings.show',$data));
 });
+
+
+Breadcrumbs::for('penghapusans.index', function ($trail) {
+    $trail->push('Penghapusan', route('settings.index'));
+});
+
+// Setting > Create
+Breadcrumbs::for('penghapusans.create', function ($trail) {
+    $trail->parent('penghapusans.index');
+    $trail->push('Create', route('settings.create'));
+});
+
+// Setting > Edit
+Breadcrumbs::for('penghapusans.edit', function ($trail,$data) {
+    $trail->parent('penghapusans.index', $data);
+    $trail->push('Edit', route('settings.edit',$data));
+});
+
+// Setting > Show
+Breadcrumbs::for('penghapusans.show', function ($trail,$data) {
+    $trail->parent('penghapusans.index', $data);
+    $trail->push('Show', route('settings.show',$data));
+});
