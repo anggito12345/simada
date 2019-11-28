@@ -18,6 +18,6 @@
 
 <!-- Submit Field -->
 <div class="form-group col-sm-12">
-    {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-    <a href="{!! route('lokasis.index') !!}" class="btn btn-default">Cancel</a>
+    {!! Form::submit('Simpan', ['class' => 'btn btn-primary submit']) !!}
+    <a href="{!! route('lokasis.index') !!}" class="btn btn-default">Batal</a>
 </div>

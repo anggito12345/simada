@@ -184,7 +184,7 @@ class inventarisDataTable extends DataTable
                 'buttons'   => [
                     ['pageLength'],                
                     
-                    ['extend' => 'collection', 'text' => 'Action', 'className' => 'btn btn-default btn-sm no-corner',  'buttons' => [                        
+                    ['extend' => 'collection', 'text' => 'Aksi', 'className' => 'btn btn-default btn-sm no-corner',  'buttons' => [                        
                         ['extend' => 'create'],  
                         ['text' => '<i class="fa fa-edit"></i> Ubah', 'action' => 'function(){onEdit()}', ],                        
                         // ['text' => '<i class="fa fa-trash"></i> Hapus', 'action' => 'function(){onDelete()}', ],

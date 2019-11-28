@@ -52,8 +52,8 @@
 
 <!-- Submit Field -->
 <div class="form-group col-sm-12">
-    {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-    <a href="{!! route('mutasis.index') !!}" class="btn btn-default">Cancel</a>
+    {!! Form::submit('Simpan', ['class' => 'btn btn-primary submit']) !!}
+    <a href="{!! route('mutasis.index') !!}" class="btn btn-default">Batal</a>
 </div>
 
 <div class="modal" id="modal-mutasi-detil"  role="dialog">

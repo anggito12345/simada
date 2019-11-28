@@ -12,6 +12,59 @@
             src: url('<?= url('css/fonts/glyphicons-halflings-regular.eot') ?>') format('embedded-opentype'),  url('<?= url('css/fonts/glyphicons-halflings-regular.woff') ?>') format('woff'), url('<?= url('css/fonts/glyphicons-halflings-regular.ttf') ?>') format('truetype'), url('<?= url('css/fonts/glyphicons-halflings-regular.svg') ?>') format('svg');
         }
     </style>
+    <style type="text/css">
+        .loading{
+          font-size:0;
+          width:30px;
+          height:30px;
+          margin-top:5px;
+          border-radius:15px;
+          padding:0;
+          border:3px solid #FFFFFF;
+          border-bottom:3px solid rgba(255,255,255,0.0);
+          border-left:3px solid rgba(255,255,255,0.0);
+          background-color:transparent !important;
+          animation-name: rotateAnimation;
+          -webkit-animation-name: wk-rotateAnimation;
+          animation-duration: 1s;
+          -webkit-animation-duration: 1s;
+          animation-delay: 0.2s;
+          -webkit-animation-delay: 0.2s;
+          animation-iteration-count: infinite;
+          -webkit-animation-iteration-count: infinite;
+        }
+
+        @keyframes rotateAnimation {
+            0%   {transform: rotate(0deg);}
+            100% {transform: rotate(360deg);}
+        }
+        @-webkit-keyframes wk-rotateAnimation {
+            0%   {-webkit-transform: rotate(0deg);}
+            100% {-webkit-transform: rotate(360deg);}
+        }
+        .fa{
+          color:#ffffff;
+          font-size:18px !important;
+          position:absolute;
+          left:50%;
+          top:50%;
+          margin-left:-9px;
+          margin-top:-9px;
+          -webkit-transform:scaleX(0) !important;
+          transform:scaleX(0) !important;
+        }
+        .finish{
+          -webkit-transform:scaleX(1) !important;
+          transform:scaleX(1) !important;
+        }
+        .hide-loading{
+          opacity:0;
+          -webkit-transform: rotate(0deg) !important;
+          transform: rotate(0deg) !important;
+          -webkit-transform:scale(0) !important;
+          transform:scale(0) !important;
+        }
+    </style>
 
     <!-- Bootstrap 3.3.7 -->
     <link rel="stylesheet" href="<?= url('css/thirdparty/bootstrap.min.css') ?>">
@@ -316,6 +369,24 @@
             });
         });
         
+    </script>
+    <script type="text/javascript">
+        $(document).ready(function() {
+          $(".submit").click(function() {
+            $(".submit").addClass("loading");
+            setTimeout(function() {
+              $(".submit").addClass("hide-loading");
+              // For failed icon just replace ".done" with ".failed"
+              $(".done").addClass("finish");
+            }, 3000);
+            setTimeout(function() {
+              $(".submit").removeClass("loading");
+              $(".submit").removeClass("hide-loading");
+              $(".done").removeClass("finish");
+              $(".failed").removeClass("finish");
+            }, 5000);
+          })
+        });
     </script>
 </body>
 </html>
