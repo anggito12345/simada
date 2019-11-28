@@ -121,7 +121,7 @@
         className: 'buttons-excel',
 
         text: function (dt) {
-            return '<i class="fa fa-file-excel-o"></i> ' + dt.i18n('buttons.excel', 'Excel (only visible columns)');
+            return '<i class="fa fa-file-excel-o"></i> ' + dt.i18n('buttons.excel', 'Excel (hanya kolom yang terlihat))');
         },
 
         action: function (e, dt, button, config) {
@@ -161,7 +161,7 @@
         className: 'buttons-csv',
 
         text: function (dt) {
-            return '<i class="fa fa-file-excel-o"></i> ' + dt.i18n('buttons.csv', 'CSV (only visible columns)');
+            return '<i class="fa fa-file-excel-o"></i> ' + dt.i18n('buttons.csv', 'CSV (hanya kolom yang terlihat))');
         },
 
         action: function (e, dt, button, config) {
@@ -219,7 +219,7 @@
         className: 'buttons-print',
 
         text: function (dt) {
-            return  '<i class="fa fa-print"></i> ' + dt.i18n('buttons.print', 'Print');
+            return  '<i class="fa fa-print"></i> ' + dt.i18n('buttons.print', 'Cetak');
         },
 
         action: function (e, dt, button, config) {
@@ -246,7 +246,7 @@
         className: 'buttons-reload',
 
         text: function (dt) {
-            return '<i class="fa fa-refresh"></i> ' + dt.i18n('buttons.reload', 'Reload');
+            return '<i class="fa fa-refresh"></i> ' + dt.i18n('buttons.reload', 'Memuat Ulang');
         },
 
         action: function (e, dt, button, config) {
@@ -258,7 +258,7 @@
         className: 'buttons-create',
 
         text: function (dt) {
-            return '<i class="fa fa-plus"></i> ' + dt.i18n('buttons.create', 'Create');
+            return '<i class="fa fa-plus"></i> ' + dt.i18n('buttons.create', 'Buat Baru');
         },
 
         action: function (e, dt, button, config) {
@@ -269,7 +269,7 @@
     if (typeof DataTable.ext.buttons.copyHtml5 !== 'undefined') {
         $.extend(DataTable.ext.buttons.copyHtml5, {
             text: function (dt) {
-                return '<i class="fa fa-copy"></i> ' + dt.i18n('buttons.copy', 'Copy');
+                return '<i class="fa fa-copy"></i> ' + dt.i18n('buttons.copy', 'Salin');
             }
         });
     }
@@ -277,7 +277,7 @@
     if (typeof DataTable.ext.buttons.colvis !== 'undefined') {
         $.extend(DataTable.ext.buttons.colvis, {
             text: function (dt) {
-                return '<i class="fa fa-eye"></i> ' + dt.i18n('buttons.colvis', 'Column visibility');
+                return '<i class="fa fa-eye"></i> ' + dt.i18n('buttons.colvis', 'Visibilitas Kolom');
             }
         });
     }
