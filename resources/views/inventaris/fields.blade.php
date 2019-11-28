@@ -882,11 +882,11 @@
 @if(!isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1)
 <!-- Submit Field -->
 <div class="form-group col-sm-12">
-    {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
+    {!! Form::submit('Simpan', ['class' => 'btn btn-primary submit']) !!}
 
     @if ((isset($inventaris) && !$inventaris->draft) || !isset($inventaris))
         <div class="btn btn-primary" onclick="onSave(true)">Draft</div>
     @endif
-    <a href="{!! route('inventaris.index') !!}" class="btn btn-default">Cancel</a>
+    <a href="{!! route('inventaris.index') !!}" class="btn btn-default">Batal</a>
 </div>
 @endif

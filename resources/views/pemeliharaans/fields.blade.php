@@ -75,8 +75,8 @@
 
 @if(!isset($isInventarisPage))
 <div class="form-group <?=  isset($isFromRegister) ? 'col-md-12' : 'col-md-6' ?> col-sm-12">
-    {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-    <a href="{!! route('pemeliharaans.index') !!}" class="btn btn-default">Cancel</a>
+    {!! Form::submit('Simpan', ['class' => 'btn btn-primary submit']) !!}
+    <a href="{!! route('pemeliharaans.index') !!}" class="btn btn-default">Batal</a>
 </div>
 @endif
 

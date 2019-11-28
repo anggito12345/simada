@@ -58,6 +58,7 @@
     {!! Form::textarea('keterangan', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data.formPenghapusan().keterangan']) !!}
 </div>
 
+
 <div class="form-group col-sm-12">
     <table id="table-detil-penghapusan" class="table table-striped table-bordered">
         <thead>
