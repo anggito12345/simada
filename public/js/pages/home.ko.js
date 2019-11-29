@@ -10,6 +10,7 @@ viewModel.data = Object.assign(viewModel.data, {
     }),
     countPenghapusan: ko.observable({
         step1: 0,
+        step2: 0
     }),
 })
 
@@ -123,14 +124,86 @@ function loadDataTableMutasiStep3() {
 }
 
 /**
- * step - 1 for bpkad
+ * step - 1 for penghapusan bpkad
  */
 
 function loadDataTablePenghapusanBPKAD() {
     $('#table-penghapusan-bpkad').DataTable({
         ajax: `${$("[base-path]").val()}/penghapusans?status=STEP-1`,
         dom: 'Bfrtip',
-        'drawCallback': onloadDataTableMutasiMutasiMasuk,
+        'drawCallback': onloadDataTablePenghapusan,
+        'select': {
+            'style': 'single'
+        },
+        columns: [{
+            'orderable': false,
+            "className": "details-control",
+            "render": function (data, type, row) {
+                return '<i class="fa fa-plus-circle text-success"></i>'
+            },
+            data: "id",
+        },
+        {
+            title: 'Kriteria',
+            data: 'kriteria'
+        },
+        {
+            title: 'Kondisi',
+            data: 'kondisi'
+        },
+        {
+            title: 'Tanggal SK',
+            data: 'tglsk'
+        }
+        ]
+    })
+}
+
+/**
+ * step - 2 penghapusan for bpkad
+ */
+
+function loadDataTableKonfirmasiPenghapusan() {
+    $('#table-penghapusan-konfirmasi').DataTable({
+        ajax: `${$("[base-path]").val()}/penghapusans?status=STEP-2&pid_organisasi=${localStorage.getItem('pid_organisasi')}`,
+        dom: 'Bfrtip',
+        'drawCallback': onloadDataTablePenghapusan,
+        'select': {
+            'style': 'single'
+        },
+        columns: [{
+            'orderable': false,
+            "className": "details-control",
+            "render": function (data, type, row) {
+                return '<i class="fa fa-plus-circle text-success"></i>'
+            },
+            data: "id",
+        },
+        {
+            title: 'Kriteria',
+            data: 'kriteria'
+        },
+        {
+            title: 'Kondisi',
+            data: 'kondisi'
+        },
+        {
+            title: 'Tanggal SK',
+            data: 'tglsk'
+        }
+        ]
+    })
+}
+
+/**
+ * step - 3 penghapusan for bpkad
+ */
+
+function loadDataTableValidasiPenghapusan() {
+    $('#table-penghapusan-validasi').DataTable({
+        ajax: `${$("[base-path]").val()}/penghapusans?status=STEP-3`,
+        dom: 'Bfrtip',
+        'drawCallback': onloadDataTablePenghapusan,
         'select': {
             'style': 'single'
         },
@@ -202,24 +275,6 @@ function approvementMutasiStep2(step) {
 }
 
 
-/**
- * to approve each penghapusan for BPKAD 
- * 
- */
-
-function approvementMutasiStep2(step) {
-    viewModel.services.approveMutasi($('#table-mutasi-bpkad').DataTable().rows('.selected').data().toArray(), step)
-        .then((d) => {
-            swal.fire({
-                type: 'success',
-                text: 'inventaris berhasil di setujui!'
-            }).then((d) => {
-                $('#modal-mutasi-bpkad').modal('hide')
-                $('#modal-mutasi-bpkad-form').modal('hide')
-                countMutasiProgress();
-            })
-        })
-}
 
 
 /**
@@ -229,7 +284,7 @@ function approvementMutasiStep2(step) {
 
 
 function approvementPenghapusanBPKAD() {
-    viewModel.services.approvementPenghapusanBPKAD($('#table-penghapusan-bpkad').DataTable().rows('.selected').data().toArray())
+    viewModel.services.approvementPenghapusanBPKAD($('#table-penghapusan-bpkad').DataTable().rows('.selected').data().toArray(), 'STEP-1')
         .then((d) => {
             swal.fire({
                 type: 'success',
@@ -241,6 +296,47 @@ function approvementPenghapusanBPKAD() {
             })
         })
 }
+
+
+/**
+ * approve konfirmasi for penghapusan
+ * 
+ */
+
+
+function approvementKonfirmasiPenghapusan() {
+    viewModel.services.approvementPenghapusanBPKAD($('#table-penghapusan-konfirmasi').DataTable().rows('.selected').data().toArray(), 'STEP-2')
+        .then((d) => {
+            swal.fire({
+                type: 'success',
+                text: 'Penghapusan inventaris berhasil di setujui!'
+            }).then((d) => {
+                $('#modal-penghapusan-konfirmasi').modal('hide')
+                $('#modal-penghapusan-konfirmasi-form').modal('hide')
+                countPenghapusanProgress();
+            })
+        })
+}
+
+/**
+ * approve validasi for penghapusan
+ * 
+ */
+
+
+function approvementValidasiPenghapusan() {
+    viewModel.services.approvementPenghapusanBPKAD($('#table-penghapusan-validasi').DataTable().rows('.selected').data().toArray(), 'STEP-3')
+        .then((d) => {
+            swal.fire({
+                type: 'success',
+                text: 'Penghapusan inventaris berhasil di setujui!'
+            }).then((d) => {
+                $('#modal-penghapusan-validasi').modal('hide')
+                countPenghapusanProgress();
+            })
+        })
+}
+
 
 
 /**
@@ -276,6 +372,10 @@ function beforeApproveBPKADPenghapusan() {
     $('#modal-penghapusan-bpkad-form').modal('show')
 }
 
+function beforeApproveKonfirmasiPenghapusan() {
+    $('#modal-penghapusan-konfirmasi-form').modal('show')
+}
+
 
 /**
  * onDrawCallback DataTable
@@ -309,7 +409,7 @@ function onloadDataTableMutasiMutasiMasuk(e) {
  * onDrawCallback DataTable Penghapusan
  * @param {e} e parameter of datatable itself
  */
-function onloadDataTableMutasiMutasiMasuk(e) {
+function onloadDataTablePenghapusan(e) {
     $(`#${e.sTableId} tbody`).on('click', 'td.details-control i', function (i, n) {
         var tr = $(this).closest('tr');
         var row = $(`#${e.sTableId}`).DataTable().row(tr);
@@ -360,6 +460,8 @@ loadDataTableMutasi()
 loadDataTableMutasiBPKAD();
 loadDataTableMutasiStep3();
 loadDataTablePenghapusanBPKAD();
+loadDataTableKonfirmasiPenghapusan();
+loadDataTableValidasiPenghapusan();
 
 
 /**

@@ -79,7 +79,8 @@ class inventaris_penghapusan extends Model
         'idpegawai',
         'pid_organisasi',
         'pid_penghapusan',
-        'status'
+        'status',
+        'nomor_surat_persetujuan_bpkad'
     ];
 
     /**

@@ -13,7 +13,7 @@
             <span class="input-group-text" id="basic-addon2">Hari</span>
         </div>
     </div>
-    
+
 </div>
 
 <!-- No Perjanjian Field -->
@@ -48,20 +48,20 @@
 
 <!-- Tetap Field -->
 <!-- ko if: viewModel.data.formPemanfaatan().tipe_kontribusi == '2' -->
-<div class="form-group col-sm-12" >
+<div class="form-group col-sm-12">
     {!! Form::label('tetap', 'Tetap:') !!}
     {!! Form::number('tetap' , "", ['class' => 'form-control', 'data-bind' => 'value: viewModel.data.formPemanfaatan().tetap']) !!}
 </div>
 
 <!-- Bagi Hasil Field -->
-<div class="form-group col-sm-12"  >
+<div class="form-group col-sm-12">
     {!! Form::label('bagi_hasil', 'Bagi Hasil:') !!}
     {!! Form::number('bagi_hasil', "", ['class' => 'form-control', 'data-bind' => 'value: viewModel.data.formPemanfaatan().bagi_hasil']) !!}
 </div>
 <!-- /ko -->
 
 <!-- ko if: viewModel.data.formPemanfaatan().tipe_kontribusi != '2' -->
-<div class="form-group col-sm-12" >
+<div class="form-group col-sm-12">
     {!! Form::label('jumlah_kontribusi', 'Jumlah Kontribusi:') !!}
     {!! Form::number('jumlah_kontribusi', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data.formPemanfaatan().jumlah_kontribusi']) !!}
 </div>
@@ -93,9 +93,9 @@
 <script>
     function changeTanggalAkhir(obj) {
         setTimeout(() => {
-            viewModel.data.formPemanfaatan().tgl_akhir = moment(viewModel.data.formPemanfaatan().tgl_mulai, "DD-MM-YYYY").add(viewModel.data.formPemanfaatan().umur, 'days').format("DD-MM-YYYY");    
+            viewModel.data.formPemanfaatan().tgl_akhir = moment(viewModel.data.formPemanfaatan().tgl_mulai, "DD-MM-YYYY").add(viewModel.data.formPemanfaatan().umur, 'days').format("DD-MM-YYYY");
             notifySubscribersManually()
-        }, 1000);        
+        }, 1000);
     }
 
     function notifySubscribersManually() {
@@ -104,39 +104,39 @@
         }, 100);
     }
 
-    var fileGalleryPemanfaatan, fotoPemanfaatan
+
     viewModel.jsLoaded.subscribe(() => {
         new inlineDatepicker(document.getElementById('tgl_mulai'), {
             format: 'DD-MM-YYYY',
             buttonClear: true,
-        });        
-        
+        });
+
 
         // new inlineDatepicker(document.getElementById('tgl_akhir'), {
         //     format: 'DD-MM-YYYY',
         //     buttonClear: true,
         //     value: viewModel.data.formPemanfaatan().tglhapus
         // });
-        
+
         $('#mitra').select2({
             ajax: {
                 url: "<?= url('api/mitras') ?>",
                 dataType: 'json',
-                processResults: function (data) {
-                // Transforms the top-level key of the response object from 'items' to 'results'
-                return {
-                    results: data.data
-                };
+                processResults: function(data) {
+                    // Transforms the top-level key of the response object from 'items' to 'results'
+                    return {
+                        results: data.data
+                    };
                 }
             },
-            theme: 'bootstrap' , 
+            theme: 'bootstrap',
         })
 
         fileGalleryPemanfaatan = new FileGallery(document.getElementById('dokumen_pemanfaatan'), {
             title: 'File Dokumen',
             maxSize: 5000000,
             accept: App.Constant.MimeOffice,
-            onDelete: () => {                
+            onDelete: () => {
                 return new Promise((resolve, reject) => {
                     let checkIfIdExist = fileGalleryPemanfaatan.checkedRow().filter((d) => {
                         return d.id != undefined
@@ -148,8 +148,8 @@
                     __ajax({
                         method: 'DELETE',
                         url: "<?= url('api/system_uploads') ?>/" + checkIfIdExist.map((d) => {
-                                return d.id
-                            }),
+                            return d.id
+                        }),
                     }).then((d) => {
                         resolve(true)
                         onPemanfaatanGetFiles(checkIfIdExist[0].foreign_id, () => {})
@@ -157,12 +157,13 @@
                 })
             }
         })
+        console.log(fileGalleryPemanfaatan)
 
         fotoPemanfaatan = new FileGallery(document.getElementById('foto_pemanfaatan'), {
             title: 'Foto',
             maxSize: 3000000,
             accept: "image/*",
-            onDelete: () => {                
+            onDelete: () => {
                 return new Promise((resolve, reject) => {
                     let checkIfIdExist = fotoPemanfaatan.checkedRow().filter((d) => {
                         return d.id != undefined
@@ -174,8 +175,8 @@
                     __ajax({
                         method: 'DELETE',
                         url: "<?= url('api/system_uploads') ?>/" + checkIfIdExist.map((d) => {
-                                return d.id
-                            }),
+                            return d.id
+                        }),
                     }).then((d) => {
                         resolve(true)
                         onPemanfaatanGetFiles(checkIfIdExist[0].foreign_id, () => {})

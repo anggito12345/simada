@@ -38,8 +38,18 @@ class penghapusanDataTable extends DataTable
 
         if (isset($_GET['status'])) {
             $query = $query->join('inventaris_penghapusan','inventaris_penghapusan.pid_penghapusan', 'penghapusan.id')
-                ->where('inventaris_penghapusan.status', $_GET['status'])
+                ->where([
+                    'inventaris_penghapusan.status' => $_GET['status'],                    
+                ])
+                ->join('users', 'users.id', 'penghapusan.created_by')
                 ->groupBy('penghapusan.id');
+        
+        }
+
+        if (isset($_GET['pid_organisasi'])) {
+            $query = $query->where([
+                'users.pid_organisasi' => $_GET['pid_organisasi']
+            ]);
         }
 
         return $query;
