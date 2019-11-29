@@ -45,9 +45,33 @@ class mutasiDataTable extends DataTable
         ->join('m_organisasi as mo1', 'mo1.id', 'mutasi.opd_asal')
         ->join('m_organisasi as mo2', 'mo2.id', 'mutasi.opd_tujuan');
 
-        if (c::is([],[],[0])) {
-            $query = $query->where('mutasi.opd_asal', Auth::user()->pid_organisasi);
+        
+
+        if(isset($_GET['opd_tujuan']) || isset($_GET['status'])) {
+            $query = $query
+                ->join('inventaris_mutasi','inventaris_mutasi.mutasi_id', 'mutasi.id');
+
+            if (isset($_GET['opd_tujuan'])) {
+                $query = $query ->where([
+                    'mutasi.opd_tujuan' => $_GET['opd_tujuan']
+                    
+                ]);
+            }
+
+            if (isset($_GET['status'])) {
+                $query = $query ->where([   
+                    'inventaris_mutasi.status' => $_GET['status']             
+                ]);
+            }
+               
+            $query = $query->groupBy(['mutasi.id','mo1.nama', 'mo2.nama']);   
+        } else {
+            if (c::is([],[],[0])) {
+                $query = $query->where('mutasi.opd_asal', Auth::user()->pid_organisasi);
+            }
         }
+
+        
 
         return $query;            
     }

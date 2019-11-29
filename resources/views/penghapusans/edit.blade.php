@@ -2,16 +2,14 @@
 
 @section('content')
     <section class="content-header">
-        <h1>
-            Penghapusan
-        </h1>
+        <h3 class="pull-left">{{ Breadcrumbs::render() }}</h3>
    </section>
    <div class="content">
        @include('adminlte-templates::common.errors')
        <div class="box box-primary">
            <div class="box-body">
-               <div class="row">
-                   {!! Form::model($penghapusan, ['route' => ['penghapusans.update', $penghapusan->id], 'method' => 'patch']) !!}
+               <div class="">
+                   {!! Form::model($penghapusan, ['route' => ['penghapusans.update', $penghapusan->id], 'method' => 'patch', 'id' => 'form-penghapusan']) !!}
 
                         @include('penghapusans.fields')
 

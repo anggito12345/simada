@@ -115,7 +115,9 @@ class BaseModel extends Model {
     ];
 
     public static $kelompokJabatanDs = [
-        '-1' => 'BPKAD dan atasnya',
+        '-3' => 'Gubernur',
+        '-2' => 'Sekda',
+        '-1' => 'BPKAD',
         '0' => 'OPD',
         '1' => 'Cabang OPD',
         '2' => 'UPT'

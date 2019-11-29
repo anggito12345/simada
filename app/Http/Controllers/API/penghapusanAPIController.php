@@ -6,6 +6,7 @@ use App\Http\Requests\API\CreatepenghapusanAPIRequest;
 use App\Http\Requests\API\UpdatepenghapusanAPIRequest;
 use App\Models\penghapusan;
 use App\Repositories\penghapusanRepository;
+use App\Repositories\inventaris_penghapusanRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
@@ -21,10 +22,12 @@ class penghapusanAPIController extends AppBaseController
 {
     /** @var  penghapusanRepository */
     private $penghapusanRepository;
+    private $inventaris_penghapusanRepository;
 
-    public function __construct(penghapusanRepository $penghapusanRepo)
+    public function __construct(penghapusanRepository $penghapusanRepo, inventaris_penghapusanRepository $inventaris_penghapusanRepository)
     {
         $this->penghapusanRepository = $penghapusanRepo;
+        $this->inventaris_penghapusanRepository = $inventaris_penghapusanRepository;
     }
 
     /**
@@ -97,9 +100,9 @@ class penghapusanAPIController extends AppBaseController
                 return $systemUpload;
             });                
 
-            
+            $dataDetils = json_decode($request->input('detil'), true);
 
-            \App\Models\inventaris::find($input['pidinventaris'])->delete();
+            $this->inventaris_penghapusanRepository->moveInventaris($dataDetils, $penghapusan->id);
 
             DB::commit();   
 
@@ -260,6 +263,8 @@ class penghapusanAPIController extends AppBaseController
             });                
 
             $penghapusan = $this->penghapusanRepository->update($input, $id);
+
+            $this->inventaris_penghapusanRepository->moveInventaris($input['detil'], $penghapusan->id);
 
 
             DB::commit();   

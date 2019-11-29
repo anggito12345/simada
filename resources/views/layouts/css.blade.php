@@ -209,4 +209,10 @@
         border-radius: 8px;
         margin: 2px;
     }
+
+    /* breadcrumbs */
+    .breadcrumb {
+        width: 100%;
+        font-size: 14px;
+    }
 </style>

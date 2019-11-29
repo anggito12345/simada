@@ -95,7 +95,7 @@ class mutasiController extends AppBaseController
         if (empty($mutasi)) {
             Flash::error('Mutasi not found');
 
-            return redirect(route('mutasis.index'));
+            return 'Not found';
         }
 
         return view('mutasis.show_fields')->with('mutasi', $mutasi);
