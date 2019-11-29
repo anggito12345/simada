@@ -42,17 +42,6 @@
             0%   {-webkit-transform: rotate(0deg);}
             100% {-webkit-transform: rotate(360deg);}
         }
-        .fa{
-          color:#ffffff;
-          font-size:18px !important;
-          position:absolute;
-          left:50%;
-          top:50%;
-          margin-left:-9px;
-          margin-top:-9px;
-          -webkit-transform:scaleX(0) !important;
-          transform:scaleX(0) !important;
-        }
         .finish{
           -webkit-transform:scaleX(1) !important;
           transform:scaleX(1) !important;
