@@ -169,9 +169,9 @@
       buttons: [
         {
           extend: 'collection',
-          text: 'Action',
+          text: 'Aksi',
           buttons: [
-            { text: 'Edit', action: () => {
+            { text: 'Ubah', action: () => {
               var count = $("#table-penghapusan").DataTable().rows('.selected').count();
                             
               if (count != 1) {

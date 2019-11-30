@@ -124,6 +124,7 @@
         }
 
         function onPemanfaatan(currentData, param) {
+           // var fileList;
             if (currentData == null && $("#table-inventaris").DataTable().rows('.selected').count()!= 1 ) {
                 swal.fire({
                     type: 'error',
@@ -155,6 +156,7 @@
                     })    
                 } else {
                     viewModel.data.formPemanfaatan().pidinventaris = $("#table-inventaris").DataTable().rows('.selected').data()[0].id
+                    alert(fileGalleryPemanfaatan.fileList().val());
                     fileGalleryPemanfaatan.fileList([])
                     fotoPemanfaatan.fileList([])
                     $("#modal-pemanfaatan").modal('show')
@@ -490,10 +492,10 @@
                             buttons: [
                                 {
                                     extend: 'collection',
-                                    text: 'Action',
+                                    text: 'Aksi',
                                     buttons: [
                                         {
-                                            text: "Edit",
+                                            text: "Ubah",
                                             action: function () {
                                                 var count = table.rows('.selected').count();
                             
@@ -510,7 +512,7 @@
                                             }
                                         },
                                         {
-                                            text: "Delete",
+                                            text: "Hapus",
                                             action: function () {
                                                 var count = table.rows('.selected').count();
                             
@@ -599,10 +601,10 @@
                             buttons: [
                                 {
                                     extend: 'collection',
-                                    text: 'Action',
+                                    text: 'Aksi',
                                     buttons: [
                                         {
-                                            text: "Edit",
+                                            text: "Ubah",
                                             action: function () {
                                                 var count = tablePemanfaatan.rows('.selected').count();
                             
@@ -619,7 +621,7 @@
                                             }
                                         },
                                         {
-                                            text: "Delete",
+                                            text: "Hapus",
                                             action: function () {
                                                 var count = tablePemanfaatan.rows('.selected').count();
                             
