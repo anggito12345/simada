@@ -15,7 +15,12 @@ class AddStatusToInventarisPenghapusan extends Migration
     {
         Schema::table('inventaris_penghapusan', function (Blueprint $table) {
             //
-            $table->string('status', 15);
+            $table->dropColumn(['status']);
+        });
+
+        Schema::table('inventaris_penghapusan', function (Blueprint $table) {
+            //
+            $table->string('status', 15)->if;
         });
     }
 
