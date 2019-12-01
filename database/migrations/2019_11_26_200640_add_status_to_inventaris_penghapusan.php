@@ -20,7 +20,7 @@ class AddStatusToInventarisPenghapusan extends Migration
 
         Schema::table('inventaris_penghapusan', function (Blueprint $table) {
             //
-            $table->string('status', 15)->if;
+            $table->string('status', 15)->nullable();
         });
     }
 
