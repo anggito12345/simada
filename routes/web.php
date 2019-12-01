@@ -98,3 +98,5 @@ Route::resource('rkaDetils', 'rka_detilController');
 Route::resource('modules', 'modulesController');
 
 Route::resource('moduleAccesses', 'module_accessController');
+
+Route::resource('pengunaans', 'pengunaanController');

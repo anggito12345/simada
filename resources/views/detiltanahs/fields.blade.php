@@ -75,7 +75,7 @@
     <!-- Penggunaan Field -->
     <div class="form-group col-sm-6 row">
         {!! Form::label('penggunaan', 'Penggunaan:') !!}
-        {!! Form::text('penggunaan', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB A"]().penggunaan']) !!}
+        {!! Form::select('penggunaan', [], null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB A"]().penggunaan']) !!}
     </div>
 
     <!-- Keterangan Field -->
@@ -114,6 +114,26 @@
             format: 'DD-MM-YYYY',
             buttonClear: true,
         });
+
+        $('#penggunaan').select2({
+            ajax: {
+                url: "<?= url('api/pengunaans') ?>",
+                dataType: 'json',
+                data: function (params) {
+                    var query = {
+                        q: params.term,      
+                    } 
+                    return query;
+                },
+                processResults: function (data) {
+                    // Transforms the top-level key of the response object from 'items' to 'results'
+                    return {
+                        results: data.data
+                    };
+                }
+            },
+            theme: 'bootstrap' ,
+        })
 
         $('#idkota').select2({
             ajax: {
