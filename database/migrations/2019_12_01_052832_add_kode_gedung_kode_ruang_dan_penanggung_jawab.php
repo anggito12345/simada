@@ -13,6 +13,12 @@ class AddKodeGedungKodeRuangDanPenanggungJawab extends Migration
      */
     public function up()
     {
+
+        Schema::table('inventaris', function (Blueprint $table) {
+            //
+            $table->dropColumn(['kode_gedung','kode_ruang','penanggung_jawab']);
+        });
+
         Schema::table('inventaris', function (Blueprint $table) {
             //
             $table->string('kode_gedung',50)->nullable();

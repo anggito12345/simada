@@ -15,7 +15,12 @@ class AddCreatedBy extends Migration
     {
         Schema::table('penghapusan', function (Blueprint $table) {
             //
-            $table->integer('created_by');
+            $table->dropColumn(['created_by']);
+        });
+
+        Schema::table('penghapusan', function (Blueprint $table) {
+            //
+            $table->integer('created_by')->nullable();
         });
     }
 
