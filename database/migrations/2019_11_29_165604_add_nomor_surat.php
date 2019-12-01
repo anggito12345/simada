@@ -13,11 +13,15 @@ class AddNomorSurat extends Migration
      */
     public function up()
     {
+        if (Schema::hasColumn('inventaris_penghapusan', 'nomor_surat_persetujuan_bpkad')) {
 
-        Schema::table('inventaris_penghapusan', function (Blueprint $table) {
-            //
-            $table->dropColumn(['nomor_surat_persetujuan_bpkad']);
-        });
+            Schema::table('inventaris_penghapusan', function (Blueprint $table) {
+                //
+                $table->dropColumn(['nomor_surat_persetujuan_bpkad']);
+            });
+            
+        }
+        
 
         Schema::table('inventaris_penghapusan', function (Blueprint $table) {
             //
