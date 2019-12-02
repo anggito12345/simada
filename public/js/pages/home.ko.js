@@ -58,7 +58,7 @@ function loadDataTableMutasiBPKAD() {
     $('#table-mutasi-bpkad').DataTable({
         ajax: `${$("[base-path]").val()}/mutasis?status=STEP-2`,
         dom: 'Bfrtip',
-        'drawCallback': onloadDataTableMutasiMutasiMasuk,
+        'drawCallback': onloadDataTableMutasiMutasiBPKAD,
         'select': {
             'style': 'single'
         },
@@ -95,7 +95,7 @@ function loadDataTableMutasiStep3() {
     $('#table-mutasi-konfirmasi').DataTable({
         ajax: `${$("[base-path]").val()}/mutasis?opd_tujuan=${localStorage.getItem('pid_organisasi')}&status=STEP-3`,
         dom: 'Bfrtip',
-        'drawCallback': onloadDataTableMutasiMutasiMasuk,
+        'drawCallback': onloadDataTableMutasiMutasiStep3,
         'select': {
             'style': 'multi'
         },
@@ -131,7 +131,7 @@ function loadDataTablePenghapusanBPKAD() {
     $('#table-penghapusan-bpkad').DataTable({
         ajax: `${$("[base-path]").val()}/penghapusans?status=STEP-1`,
         dom: 'Bfrtip',
-        'drawCallback': onloadDataTablePenghapusan,
+        'drawCallback': onloadDataTablePenghapusanBPKAD,
         'select': {
             'style': 'single'
         },
@@ -382,6 +382,34 @@ function beforeApproveKonfirmasiPenghapusan() {
  * @param {e} e parameter of datatable itself
  */
 function onloadDataTableMutasiMutasiMasuk(e) {
+  //  $(`#${e.sTableId} tbody`).unbind()
+    $(`#${e.sTableId} tbody`).unbind('click').on('click', 'td.details-control i', function (i, n) {
+            var tr = $(this).closest('tr');
+                var row = $(`#${e.sTableId}`).DataTable().row( tr );
+               // alert (row.child.isShown())
+                if ( row.child.isShown() ) {
+                    // This row is already open - close it
+                    $(this).attr('class',$(this).attr('class').replace('minus-circle', 'plus-circle'))
+
+                    row.child.hide();
+                    tr.removeClass('shown');
+                }
+                else {
+                    $(this).attr('class',$(this).attr('class').replace('plus-circle', 'minus-circle'))
+
+                    $.get(`${$("[base-path]").val()}/partials/view.mutasi/${row.data().id}`).then((data) => {                                                
+
+                        row.child(`<div class='container container-view'>${data}</div>`).show();
+                    })
+                }
+        })
+}
+
+/**
+ * onDrawCallback DataTable
+ * @param {e} e parameter of datatable itself
+ */
+function onloadDataTableMutasiMutasiBPKAD(e) {
     $(`#${e.sTableId} tbody`).on('click', 'td.details-control i', function (i, n) {
         var tr = $(this).closest('tr');
         var row = $(`#${e.sTableId}`).DataTable().row(tr);
@@ -409,7 +437,34 @@ function onloadDataTableMutasiMutasiMasuk(e) {
  * onDrawCallback DataTable Penghapusan
  * @param {e} e parameter of datatable itself
  */
-function onloadDataTablePenghapusan(e) {
+function onloadDataTableMutasiMutasiStep3(e) {
+    $(`#${e.sTableId} tbody`).on('click', 'td.details-control i', function (i, n) {
+        var tr = $(this).closest('tr');
+        var row = $(`#${e.sTableId}`).DataTable().row(tr);
+
+        if (row.child.isShown()) {
+            // This row is already open - close it
+            $(this).attr('class', $(this).attr('class').replace('minus-circle', 'plus-circle'))
+
+            row.child.hide();
+            tr.removeClass('shown');
+        }
+        else {
+            $(this).attr('class', $(this).attr('class').replace('plus-circle', 'minus-circle'))
+
+            $.get(`${$("[base-path]").val()}/partials/view.mutasi/${row.data().id}`).then((data) => {
+
+                row.child(`<div class='container container-view'>${data}</div>`).show();
+            })
+        }
+    })
+}
+
+/**
+ * onDrawCallback DataTable Penghapusan
+ * @param {e} e parameter of datatable itself
+ */
+function onloadDataTablePenghapusanBPKAD(e) {
     $(`#${e.sTableId} tbody`).on('click', 'td.details-control i', function (i, n) {
         var tr = $(this).closest('tr');
         var row = $(`#${e.sTableId}`).DataTable().row(tr);

@@ -108,7 +108,10 @@
 </div>
 
 <script>
+  
   viewModel.jsLoaded.subscribe(() => {
+    
+
     $("#table-penghapusan").DataTable({
       ajax: `${$("[base-path]").val()}/penghapusans`,
       dom: 'Bfrtip',
@@ -148,9 +151,9 @@
       buttons: [
         {
           extend: 'collection',
-          text: 'Action',
+          text: 'Aksi',
           buttons: [
-            { text: 'Edit', action: () => {
+            { text: 'Ubah', action: () => {
               var count = $("#table-penghapusan").DataTable().rows('.selected').count();
                             
               if (count != 1) {

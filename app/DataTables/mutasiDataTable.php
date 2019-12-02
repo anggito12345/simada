@@ -70,6 +70,7 @@ class mutasiDataTable extends DataTable
                 $query = $query->where('mutasi.opd_asal', Auth::user()->pid_organisasi);
             }
         }
+    //   echo $query;exit;
 
         
 
