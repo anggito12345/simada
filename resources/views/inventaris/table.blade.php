@@ -160,8 +160,35 @@
                     })    
                 } else {
                     viewModel.data.formPemanfaatan().pidinventaris = $("#table-inventaris").DataTable().rows('.selected').data()[0].id
-                  //  fileGalleryPemanfaatan.fileList([])
-                  //  fotoPemanfaatan.fileList([]);
+                   /* viewModel.jsLoaded.subscribe(() => {
+                        fileGalleryPemanfaatan = new FileGallery(document.getElementById('dokumen_pemanfaatan'), {
+                    title: 'File Dokumen',
+                    maxSize: 5000000,
+                    accept: App.Constant.MimeOffice,
+                    onDelete: () => {                
+                        return new Promise((resolve, reject) => {
+                            let checkIfIdExist = fileGalleryPemanfaatan.checkedRow().filter((d) => {
+                                return d.id != undefined
+                            })
+                            if (checkIfIdExist.length < 1) {
+                                resolve(true)
+                                return
+                            }
+                            __ajax({
+                                method: 'DELETE',
+                                url: "http://simada-jabar.deva/api/system_uploads/" + checkIfIdExist.map((d) => {
+                                        return d.id
+                                    }),
+                            }).then((d) => {
+                                resolve(true)
+                                onPemanfaatanGetFiles(checkIfIdExist[0].foreign_id, () => {})
+                            })
+                        })
+                    }
+                })*/
+                   /* fileGalleryPemanfaatan.fileList([])
+                    fotoPemanfaatan.fileList([])*/
+           /*   })
                   var fileGalleryPemanfaatan, fotoPemanfaatan
             viewModel.jsLoaded.subscribe(() => {
 
@@ -216,7 +243,7 @@
                         })
                     }
                 })
-            })
+            })*/
                     $("#modal-pemanfaatan").modal('show')
                 }   
             }
