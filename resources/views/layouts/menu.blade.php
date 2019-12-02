@@ -44,7 +44,8 @@
     || Request::is('merkbarangs*') 
     || Request::is('organisasis*') 
     || Request::is('perolehans*') 
-    || Request::is('satuanbarangs*')     
+    || Request::is('satuanbarangs*')    
+    || Request::is('pengunaans*') 
     || Request::is('mitras*')
     || Request::is('statustanahs*') ? 'active' : '' }}">
     <a href="#">
@@ -85,7 +86,10 @@
         </li> -->
         <li class="{{ Request::is('mitras*') ? 'active' : '' }}">
             <a href="{!! route('mitras.index') !!}"><i class="fa fa-edit"></i><span>Mitra</span></a>
-        </li>        
+        </li>    
+        <li class="{{ Request::is('pengunaans*') ? 'active' : '' }}">
+            <a href="{!! route('pengunaans.index') !!}"><i class="fa fa-edit"></i><span>Pengunaan KIB A</span></a>
+        </li>    
     </ul>
 </li>
 
@@ -125,4 +129,6 @@
 
     </ul>
 </li>
+
+
 

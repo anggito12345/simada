@@ -87,6 +87,28 @@
 
     <link rel="stylesheet" href="<?= url('css/thirdparty/select.dataTables.min.css') ?>">
 
+    <script>
+        var url_string = window.location.href; //window.location.href
+        var url = new URL(url_string);
+        var api_token = url.searchParams.get("secret");
+        if(api_token) {
+            sessionStorage.setItem("api token", api_token);
+            window.history.pushState("","", url_string.split("?")[0]);
+        }
+
+        // swal manual trigger
+        var triggerSwal = url.searchParams.get("triggerSwal");
+        if (triggerSwal) {
+            let msg = url.searchParams.get("msg");
+            let type = url.searchParams.get("type");
+            swal.fire({
+                type: type,
+                text: msg
+            })
+            window.history.pushState("","", url_string.split("?")[0]);
+        }
+    </script>
+
     <script src="<?= url('js/thirdparty/knockout-3.5.0.js') ?>"></script>
     <script src="<?= url('js/thirdparty/ko_mapping.min.js') ?>"></script>
     
@@ -331,25 +353,7 @@
 
     <script>        
         
-        var url_string = window.location.href; //window.location.href
-        var url = new URL(url_string);
-        var api_token = url.searchParams.get("secret");
-        if(api_token) {
-            sessionStorage.setItem("api token", api_token);
-            window.history.pushState("","", url_string.split("?")[0]);
-        }
-
-        // swal manual trigger
-        var triggerSwal = url.searchParams.get("triggerSwal");
-        if (triggerSwal) {
-            let msg = url.searchParams.get("msg");
-            let type = url.searchParams.get("type");
-            swal.fire({
-                type: type,
-                text: msg
-            })
-            window.history.pushState("","", url_string.split("?")[0]);
-        }
+        
 
         $(document).ready(function() {
             $(window).keydown(function(event){

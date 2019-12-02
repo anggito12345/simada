@@ -46,7 +46,8 @@ class penghapusan extends Model
         // 'foto',
         'nosk',
         'tglsk',
-        'keterangan'
+        'keterangan',
+        'created_by'
     ];
 
     /**

@@ -6,7 +6,7 @@
     @if(c::is([],[],[0]))    
     <div class="row">
         <div class="col-4">
-            <div class="info-box" onclick="showMutasiMasuk()">
+            <div class="info-box" onclick="$('#table-mutasi-masuk').DataTable().ajax.reload(); showMutasiMasuk()">
                 <span class="info-box-icon bg-green"><i class="fa fa-cubes"></i></span>
 
                 <div class="info-box-content">
@@ -29,10 +29,10 @@
         </div>
         <div class="col-4">
             <div class="info-box">
-                <span class="info-box-icon bg-yellow" onclick="$('#modal-mutasi-konfirmasi').modal('show')"><i class="fa fa-shopping-cart"></i></span>
+                <span class="info-box-icon bg-yellow" onclick="$('#table-mutasi-konfirmasi').DataTable().ajax.reload(); $('#modal-mutasi-konfirmasi').modal('show')"><i class="fa fa-shopping-cart"></i></span>
 
                 <div class="info-box-content">
-                    <span class="info-box-text">Konfirmasi Inventaris Tiba</span>
+                    <span class="info-box-text">Konfirmasi Mutasi</span>
                     <span class="info-box-number" data-bind="text: viewModel.data.count().step3"></span>
                 </div>
                 <!-- /.info-box-content -->
@@ -42,8 +42,8 @@
     @endif
     @if(c::is([],[],[-1]))
     <div class="row">
-        <div class="col-3">
-            <div class="info-box" onclick="$('#modal-mutasi-bpkad').modal('show')">
+        <div class="col-4">
+            <div class="info-box" onclick="$('#table-mutasi-bpkad').DataTable().ajax.reload(); $('#modal-mutasi-bpkad').modal('show')">
                 <span class="info-box-icon bg-green"><i class="fa fa-check"></i></span>
 
                 <div class="info-box-content">
@@ -56,17 +56,41 @@
     </div>
     @endif
 
-      
-    @if(c::is([],[],[-1]))
     <h4>Penghapusan:</h4> 
+    @if(c::is([],[],[0]))     
     <div class="row">
-        <div class="col-3">
-            <div class="info-box" onclick="$('#modal-penghapusan-bpkad').modal('show')">
+        <div class="col-4">
+            <div class="info-box" onclick="$('#table-penghapusan-konfirmasi').DataTable().ajax.reload(); $('#modal-penghapusan-konfirmasi').modal('show')">
+                <span class="info-box-icon bg-green"><i class="fa fa-check"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Konfirmasi Penghapusan</span>
+                    <span class="info-box-number" data-bind="text: viewModel.data.countPenghapusan().step2"></span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+        </div>        
+    </div> 
+    @elseif(c::is([],[],[-1]))
+    <div class="row">
+        <div class="col-4">
+            <div class="info-box" onclick="$('#table-penghapusan-bpkad').DataTable().ajax.reload(); $('#modal-penghapusan-bpkad').modal('show')">
                 <span class="info-box-icon bg-green"><i class="fa fa-check"></i></span>
 
                 <div class="info-box-content">
                     <span class="info-box-text">Persetujuan</span>
                     <span class="info-box-number" data-bind="text: viewModel.data.countPenghapusan().step1"></span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+        </div>        
+        <div class="col-4">
+            <div class="info-box" onclick="$('#table-penghapusan-validasi').DataTable().ajax.reload(); $('#modal-penghapusan-validasi').modal('show')">
+                <span class="info-box-icon bg-green"><i class="fa fa-check"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Validasi Penghapusan</span>
+                    <span class="info-box-number" data-bind="text: viewModel.data.countPenghapusan().step3"></span>
                 </div>
                 <!-- /.info-box-content -->
             </div>
@@ -140,6 +164,48 @@
     </div>
 </div>
 
+<div class="modal fade" id="modal-penghapusan-konfirmasi" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Konfirmasi Penghapusan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped table-bordered" id="table-penghapusan-konfirmasi">
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="beforeApproveKonfirmasiPenghapusan()">Setujui</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-penghapusan-validasi" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Validasi Penghapusan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <table class="table table-striped table-bordered" id="table-penghapusan-validasi">
+                </table>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="approvementValidasiPenghapusan()">Setujui</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
 
 <div class="modal fade" id="modal-mutasi-bpkad-form" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
@@ -168,6 +234,32 @@
     </div>
 </div>
 
+<div class="modal fade" id="modal-penghapusan-konfirmasi-form" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Penghapusan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    {!! Form::open(['id' => 'form-konfirmasi-penghapusan' ]) !!}
+                        <div class="form-group">
+                            <label>Berita Acara:</label>
+                            {!! Form::file('dokumen', ['class' => 'form-control', 'id' => 'berita-acara']) !!}
+                        </div>
+                    {!! Form::close() !!}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="approvementKonfirmasiPenghapusan('STEP-2')">Submit</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
 
 <div class="modal fade" id="modal-penghapusan-bpkad-form" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
@@ -181,6 +273,10 @@
             <div class="modal-body">
                 <div class="container">
                     {!! Form::open(['id' => 'form-bpkad-penghapusan' ]) !!}
+                        <div class="form-group">
+                            <label>Nomor Surat:</label>
+                            {!! Form::text('nomor-persetujuan-step1', '', ['class' => 'form-control', 'id' => 'nomor-persetujuan-step1']) !!}
+                        </div>
                         <div class="form-group">
                             <label>Dokumen Persetujuan:</label>
                             {!! Form::file('dokumen', ['class' => 'form-control', 'id' => 'dokumen-penghapusan']) !!}
