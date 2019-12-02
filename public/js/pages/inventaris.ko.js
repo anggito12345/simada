@@ -116,24 +116,28 @@ viewModel.data.tipeKib.subscribe((newVal) => {
             tglSertifikat.value = response.tgl_sertifikat
             tglSertifikat.dispatchEvent(new Event('change'))
 
-            App.Helpers.defaultSelect2(
-                $("#idkota"), `${$('[base-path]').val()}/api/alamats/${response.idkota}`,
-                "id",
-                "nama",
-                () => {
-                    App.Helpers.defaultSelect2(
-                        $("#idkecamatan"), 
-                        `${$('[base-path]').val()}/api/alamats/${response.idkecamatan}`,
-                        "id",
-                        "nama",
-                        () => {
-                            App.Helpers.defaultSelect2($("#idkelurahan"), `${$('[base-path]').val()}/api/alamats/${response.idkelurahan}`,"id","nama", () => {
-                                viewModel.data[newVal](response)
-                            })
-                        }
-                    )
-                }
-            )
+            App.Helpers.defaultSelect2($("#penggunaan"), `${$('[base-path]').val()}/api/pengunaans/${response.penggunaan}`,"id","nama", () => {                
+                App.Helpers.defaultSelect2(
+                    $("#idkota"), `${$('[base-path]').val()}/api/alamats/${response.idkota}`,
+                    "id",
+                    "nama",
+                    () => {
+                        App.Helpers.defaultSelect2(
+                            $("#idkecamatan"), 
+                            `${$('[base-path]').val()}/api/alamats/${response.idkecamatan}`,
+                            "id",
+                            "nama",
+                            () => {
+                                App.Helpers.defaultSelect2($("#idkelurahan"), `${$('[base-path]').val()}/api/alamats/${response.idkelurahan}`,"id","nama", () => {
+                                    viewModel.data[newVal](response)
+                                })
+                            }
+                        )
+                    }
+                )
+            })
+
+            
 
             
         } else if (newVal == 'KIB B') {            

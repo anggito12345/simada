@@ -2,11 +2,11 @@
 
 namespace App\DataTables;
 
-use App\Models\penghapusan;
+use App\Models\pengunaan;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 
-class penghapusanDataTable extends DataTable
+class pengunaanDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -18,41 +18,18 @@ class penghapusanDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable
-            ->addColumn('action', 'penghapusans.datatables_actions');
+        return $dataTable->addColumn('action', 'pengunaans.datatables_actions');
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\penghapusan $model
+     * @param \App\Models\pengunaan $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(penghapusan $model)
-    {   
-        $query = $model
-            ->newQuery()
-            ->select([
-                'penghapusan.*'
-            ]);   
-
-        if (isset($_GET['status'])) {
-            $query = $query->join('inventaris_penghapusan','inventaris_penghapusan.pid_penghapusan', 'penghapusan.id')
-                ->where([
-                    'inventaris_penghapusan.status' => $_GET['status'],                    
-                ])
-                ->join('users', 'users.id', 'penghapusan.created_by')
-                ->groupBy('penghapusan.id');
-        
-        }
-
-        if (isset($_GET['pid_organisasi'])) {
-            $query = $query->where([
-                'users.pid_organisasi' => $_GET['pid_organisasi']
-            ]);
-        }
-
-        return $query;
+    public function query(pengunaan $model)
+    {
+        return $model->newQuery();
     }
 
     /**
@@ -88,17 +65,7 @@ class penghapusanDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            // 'pidinventaris',
-            // 'noreg',
-            // 'tglhapus',
-            'kriteria',
-            'kondisi',
-            'harga_apprisal',
-            // 'dokumen',
-            // 'foto',
-            'nosk',
-            'tglsk',
-            'keterangan'
+            'nama',
         ];
     }
 
@@ -109,6 +76,6 @@ class penghapusanDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'penghapusansdatatable_' . time();
+        return 'pengunaansdatatable_' . time();
     }
 }

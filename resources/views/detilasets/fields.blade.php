@@ -42,7 +42,7 @@
 
 
 
-<u class="col-md-12">Hewan Ternak</u>
+<u class="col-md-12">Aset Biologis</u>
 
 <div class="col-md-12">
     

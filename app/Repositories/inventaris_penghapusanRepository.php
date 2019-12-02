@@ -5,8 +5,11 @@ namespace App\Repositories;
 use App\Models\inventaris;
 use App\Models\inventaris_penghapusan;
 use App\Repositories\BaseRepository;
+use Illuminate\Support\Facades\Auth;
 use Illuminate\Support\Facades\DB;
 use PhpOffice\PhpSpreadsheet\Shared\Trend\Trend;
+use Symfony\Component\CssSelector\Exception\InternalErrorException;
+use Symfony\Component\HttpKernel\Exception\NotFoundHttpException;
 
 /**
  * Class inventaris_penghapusanRepository
@@ -51,7 +54,9 @@ class inventaris_penghapusanRepository extends BaseRepository
 
     public static $status = [
         'STEP-1' => 'Menunggu Persetujuan BPKAD',
-        'STEP-2' => 'Selesai',
+        'STEP-2' => 'Konfimasi Pemohon',
+        'STEP-3' => 'Validasi BPKAD',
+        'STEP-4' => 'Selesai',
     ];
 
     /**
@@ -107,39 +112,106 @@ class inventaris_penghapusanRepository extends BaseRepository
             }
 
             foreach ($theItem as $k => $each) {
-                DB::beginTransaction();
-                try {
-                    $req->merge(['pid_penghapusan' => $each["pid_penghapusan"]]);
+                switch ($req->get('step')) {
+                    case 'STEP-1': {
+                            if ($each['status'] != 'STEP-1') {
+                                continue;
+                            }
 
-                    if (!$isAlreadyUpload) {
-                        $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen', $req, "inventaris_penghapusan", function ($metadatas, $index, $systemUpload) {
+                            DB::beginTransaction();
+                            try {
+                                $req->merge(['pid_penghapusan' => $each["pid_penghapusan"]]);
 
-                            $systemUpload->foreign_field = 'id';
-                            $systemUpload->jenis = 'bpkad';
-                            $systemUpload->foreign_table = 'inventaris_penghapusan';
-                            $systemUpload->foreign_id = $metadatas['pid_penghapusan'];
+                                if (!$isAlreadyUpload) {
+                                    $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen', $req, "inventaris_penghapusan", function ($metadatas, $index, $systemUpload) {
 
-
-                            return $systemUpload;
-                        });
-
-                        $isAlreadyUpload = true;
-                    }
+                                        $systemUpload->foreign_field = 'id';
+                                        $systemUpload->jenis = 'penghapusan-step1';
+                                        $systemUpload->foreign_table = 'inventaris_penghapusan';
+                                        $systemUpload->foreign_id = $metadatas['pid_penghapusan'];
 
 
-                    $each->update([
-                        'status' => 'STEP-2'
-                    ]);
+                                        return $systemUpload;
+                                    });
 
-                    inventaris::withTrashed()->find($each['id'])->delete();
+                                    $isAlreadyUpload = true;
+                                }
 
-                    DB::commit();
-                } catch (\Exception $e) {
-                    \App\Helpers\FileHelpers::deleteAll($fileDokumens);
-                    DB::rollBack();
-                    return response()->json([
-                        'message' => $e->getMessage()
-                    ], 500);
+                                $penghapusan = \App\Models\penghapusan::find($each['pid_penghapusan']);
+
+
+                                if (empty($penghapusan)) {
+                                    throw new NotFoundHttpException("Data tidak ditemukan");
+                                }
+
+                                $penghapusan->nomor_surat_persetujuan_bpkad = $req->get('nomor_surat');
+                                $penghapusan->save();
+
+
+                                $each->update([
+                                    'status' => 'STEP-2'
+                                ]);
+
+                                DB::commit();
+                            } catch (\Exception $e) {
+                                \App\Helpers\FileHelpers::deleteAll($fileDokumens);
+                                DB::rollBack();
+                                return response()->json([
+                                    'message' => $e->getMessage()
+                                ], 500);
+                            }
+                            break;
+                        }
+                    case 'STEP-2': {
+                            if ($each['status'] != 'STEP-2') {
+                                continue;
+                            }
+                            DB::beginTransaction();
+                            try {
+                                $req->merge(['pid_penghapusan' => $each["pid_penghapusan"]]);
+
+                                if (!$isAlreadyUpload) {
+                                    $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen', $req, "inventaris_penghapusan", function ($metadatas, $index, $systemUpload) {
+
+                                        $systemUpload->foreign_field = 'id';
+                                        $systemUpload->jenis = 'penghapusan-step2';
+                                        $systemUpload->foreign_table = 'inventaris_penghapusan';
+                                        $systemUpload->foreign_id = $metadatas['pid_penghapusan'];
+
+
+                                        return $systemUpload;
+                                    });
+
+                                    $isAlreadyUpload = true;
+                                }
+
+
+                                $each->update([
+                                    'status' => 'STEP-3'
+                                ]);
+
+                                DB::commit();
+                            } catch (\Exception $e) {
+                                \App\Helpers\FileHelpers::deleteAll($fileDokumens);
+                                DB::rollBack();
+                                return response()->json([
+                                    'message' => $e->getMessage()
+                                ], 500);
+                            }
+                            break;
+                        }
+                    case 'STEP-3': {
+                            if ($each['status'] != 'STEP-3') {
+                                continue;
+                            }
+                            $each->update([
+                                'status' => 'STEP-4'
+                            ]);
+
+                            \App\Models\inventaris::withTrashed()->find($each['id'])->delete();
+
+                            break;
+                        }
                 }
             }
         }
@@ -157,17 +229,40 @@ class inventaris_penghapusanRepository extends BaseRepository
     {
         $count = [
             'step1' => 0,
+            'step2' => 0,
+            'step3' => 0
         ];
 
         $count['step1'] = count($this->allQuery()->select([
             'inventaris_penghapusan.pid_penghapusan'
         ])
-        ->where([
-            'inventaris_penghapusan.status' => 'STEP-1'
-        ])
+            ->where([
+                'inventaris_penghapusan.status' => 'STEP-1'
+            ])
             ->join('penghapusan', 'penghapusan.id', 'inventaris_penghapusan.pid_penghapusan')
+            ->join('users', 'users.id', 'penghapusan.created_by')
             ->groupBy(['inventaris_penghapusan.pid_penghapusan'])->get());
 
+        $count['step2'] = count($this->allQuery()->select([
+            'inventaris_penghapusan.pid_penghapusan'
+        ])
+            ->where([
+                'users.pid_organisasi' => Auth::user()->pid_organisasi,
+                'inventaris_penghapusan.status' => 'STEP-2'
+            ])
+            ->join('penghapusan', 'penghapusan.id', 'inventaris_penghapusan.pid_penghapusan')
+            ->join('users', 'users.id', 'penghapusan.created_by')
+            ->groupBy(['inventaris_penghapusan.pid_penghapusan'])->get());
+
+        $count['step3'] = count($this->allQuery()->select([
+            'inventaris_penghapusan.pid_penghapusan'
+        ])
+            ->where([
+                'inventaris_penghapusan.status' => 'STEP-3'
+            ])
+            ->join('penghapusan', 'penghapusan.id', 'inventaris_penghapusan.pid_penghapusan')
+            ->join('users', 'users.id', 'penghapusan.created_by')
+            ->groupBy(['inventaris_penghapusan.pid_penghapusan'])->get());
         return response()->json([
             'data' => $count
         ]);

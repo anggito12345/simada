@@ -84,6 +84,7 @@
   </div>
 </div>
 
+
 <div class="modal" id="modal-pemanfaatan"  role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -100,28 +101,6 @@
       </div>
       <div class="modal-footer">
         <button type="button" class="btn btn-primary" onclick="viewModel.clickEvent.savePemanfaatan()">Simpan</button>
-        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
-      </div>
-    </div>
-  </div>
-</div>
-
-<div class="modal" id="modal-penghapusan"  role="dialog">
-  <div class="modal-dialog" role="document">
-    <div class="modal-content">
-      <div class="modal-header">
-        <h5 class="modal-title">Penghapusan</h5>
-        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-          <span aria-hidden="true">&times;</span>
-        </button>
-      </div>
-      <div class="modal-body">
-        {!! Form::open(['id' => 'form-penghapusan']) !!}
-          @include('penghapusans.fields')
-        {!! Form::close() !!}
-      </div>
-      <div class="modal-footer">
-        <button type="button" class="btn btn-primary" onclick="viewModel.clickEvent.savePenghapusan()">Simpan</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
       </div>
     </div>
@@ -235,88 +214,6 @@
           })
         })
       },
-      savePenghapusan: () => {
-        let url = $("[base-path]").val() + "/api/penghapusans"
-        let formData = new FormData($('#form-penghapusan')[0])
-        let method = "POST"
-
-        for (let index =0 ; index < fileGallery.fileList().length; index ++) {
-          const d = fileGallery.fileList()[index]
-          if (d.rawFile) {
-              formData.append(`dokumen[${index}]`, d.rawFile)
-          } else {
-              formData.append(`dokumen[${index}]`, false)
-          }
-
-          let keys = Object.keys(d)
-
-          keys.forEach((key) => {
-              if (key == 'rawFile') {
-                  return
-              }
-              formData.append(`dokumen_metadata_${key}[${index}]`, d[key])
-          })                
-          
-          formData.append(`dokumen_metadata_id_inventaris[${index}]`, $("#table-inventaris").DataTable().rows('.selected').data()[0].id)
-        }
-
-        foto.fileList().forEach((d, index) => {
-          if (d.rawFile) {
-              formData.append(`foto[${index}]`, d.rawFile)
-          } else {
-              formData.append(`foto[${index}]`, false)
-          }
-
-          let keys = Object.keys(d)
-
-          keys.forEach((key) => {
-              if (key == 'rawFile') {
-                  return
-              }
-              formData.append(`foto_metadata_${key}[${index}]`, d[key])
-          })                
-
-          formData.append(`foto_metadata_id_inventaris[${index}]`, $("#table-inventaris").DataTable().rows('.selected').data()[0].id)
-          
-          return d.rawFile
-        })
-
-       
-
-        if($('#modal-penghapusan').attr('is_mode_insert') == 'false') {
-          formData.append(`pidinventaris`, viewModel.data.formPenghapusan().pidinventaris)
-          url = $("[base-path]").val() + "/api/penghapusans" + "/edit/" + viewModel.data.formPenghapusan().id
-          method = "POST"
-        } else {
-          formData.append(`pidinventaris`, $("#table-inventaris").DataTable().rows('.selected').data()[0].id)
-        }
-        
-        __ajax({
-          method: method,
-          url: url,
-          data: formData,
-          processData: false,
-          contentType: false,
-        }).then((d, resp) => {
-          swal.fire({
-              type: "success",
-              text: "Berhasil menyimpan data!",
-              onClose: () => {
-                if($('#modal-penghapusan').attr('is_mode_insert') != 'false') {
-                  viewModel.data.checkedItem = []
-                  $("#table-inventaris").DataTable().ajax.reload();
-                  
-                }
-
-                $("#table-penghapusan").DataTable().ajax.reload();
-                                
-                $("#modal-penghapusan").modal('hide')
-
-              }
-          })
-            
-        })          
-      },
       savePemanfaatan: () => {
         let url = $("[base-path]").val() + "/api/pemanfaatans"
         let formData = new FormData($('#form-pemanfaatan')[0])
@@ -399,88 +296,7 @@
           })
             
         })          
-      },
-      showModalMutasi: ($id, $barangInfo) => {               
-          // try to match each default field to and from          
-
-          $('#kode').select2({
-            ajax: {
-                url: $("[base-path]").val() + "/api/barangs/get?length=10",                
-                dataType: "json",
-                data: function (params) {
-                  params.length = 10
-                  params['search-lookup'] = {
-                    "nama_rek_aset": {
-                      operator: 'like',
-                      value: params.term,
-                      logic: 'or',
-                      group: 'filter'
-                    },
-                    "CONCAT(kode_akun,'.',kode_kelompok,'.',kode_jenis,'.',kode_objek,'.', kode_rincian_objek, '.', kode_sub_rincian_objek,'.',kode_sub_sub_rincian_objek)": {
-                      operator: 'like',
-                      value: params.term,
-                      logic: 'or',
-                      group: 'filter'
-                    },
-                    "kode_jenis": {
-                      operator: '=',
-                      value: parseInt($barangInfo.kode_sub_sub_rincian_objek),
-                    },
-                    
-                  }
-                  return params;
-                },                
-                processResults: function (data) {
-                  // Transforms the top-level key of the response object from 'items' to 'results'   
-                  return {
-                      results: data.data.map((d) => {
-                          d.text = viewModel.helpers.buildKodeBarang(d) + " - " + d.nama_rek_aset                          
-                          return d
-                      })
-                  };
-                }
-            },
-            minimumInputLength: 1,
-            theme: 'bootstrap' , 
-        })
-
-          $("#modal-mutasi").modal('show')
-          $("#modal-mutasi").attr("data-id", $id)
-          $("#modal-mutasi").attr("data-kode_sub_sub_rincian_objek", $barangInfo.kode_sub_sub_rincian_objek)
-      },
-      confirmMutasiSwal: () => {
-        Swal.fire({
-            title: 'Anda yakin?',
-            text: "Anda tidak akan bisa mengembalikan data yang sudah dimutasi",
-            type: 'warning',
-            showCancelButton: true,
-            confirmButtonColor: '#3085d6',
-            cancelButtonColor: '#d33',
-            confirmButtonText: 'Ya!'
-          }).then((result) => {
-            if (result.value) {
-                __ajax({
-                  url: `<?= url('api/mutasiinventaris') ?>/${$("#modal-mutasi").attr("data-id")}`,
-                  method: 'POST',
-                  dataType: 'json',
-                  data: {
-                    tipe_kib:  $("#modal-mutasi").attr("data-kode_sub_sub_rincian_objek"),
-                    id:  $("#modal-mutasi").attr("data-id"),
-                    newidbarang: $("#kode").val()
-                  }
-                }).then((d) => {
-                  swal.fire({
-                      type: "success",
-                      text: "Berhasil menyimpan data!",
-                      onClose: () => {
-                        $("#modal-mutasi").modal('hide')
-                        $("#table-inventaris").DataTable().ajax.reload();
-                      }
-                  })
-                })             
-            }
-          })
-      }
+      },            
   })
 </script>
 @endsection

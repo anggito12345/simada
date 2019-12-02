@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddStatusToInventarisPenghapusan extends Migration
+class AddNomorSurat extends Migration
 {
     /**
      * Run the migrations.
@@ -13,11 +13,11 @@ class AddStatusToInventarisPenghapusan extends Migration
      */
     public function up()
     {
-        if (Schema::hasColumn('inventaris_penghapusan', 'status')) {
-            
+        if (Schema::hasColumn('inventaris_penghapusan', 'nomor_surat_persetujuan_bpkad')) {
+
             Schema::table('inventaris_penghapusan', function (Blueprint $table) {
-                //            
-                $table->dropColumn(['status']);
+                //
+                $table->dropColumn(['nomor_surat_persetujuan_bpkad']);
             });
             
         }
@@ -25,7 +25,7 @@ class AddStatusToInventarisPenghapusan extends Migration
 
         Schema::table('inventaris_penghapusan', function (Blueprint $table) {
             //
-            $table->string('status', 15)->nullable();
+            $table->string('nomor_surat_persetujuan_bpkad', 255)->nullable();
         });
     }
 
@@ -36,9 +36,8 @@ class AddStatusToInventarisPenghapusan extends Migration
      */
     public function down()
     {
-        Schema::table('inventaris_penghapusan', function (Blueprint $table) {
+        Schema::table('inventari_penghapusan', function (Blueprint $table) {
             //
-            
         });
     }
 }

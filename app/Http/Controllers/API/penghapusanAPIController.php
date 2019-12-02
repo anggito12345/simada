@@ -9,6 +9,7 @@ use App\Repositories\penghapusanRepository;
 use App\Repositories\inventaris_penghapusanRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use Illuminate\Support\Facades\Auth;
 use Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
@@ -28,6 +29,7 @@ class penghapusanAPIController extends AppBaseController
     {
         $this->penghapusanRepository = $penghapusanRepo;
         $this->inventaris_penghapusanRepository = $inventaris_penghapusanRepository;
+        $this->middleware('auth:api');
     }
 
     /**
@@ -62,6 +64,8 @@ class penghapusanAPIController extends AppBaseController
 
         $fileDokumens = [];
         $fileFotos = [];
+
+        $input['created_by'] = Auth::id();
 
         $penghapusan = $this->penghapusanRepository->create($input);
 

@@ -69,7 +69,10 @@ class inventaris extends Model
         'alamat_kota',
         'alamat_propinsi',
         'idpegawai',
-        'pid_organisasi'
+        'pid_organisasi',
+        'kode_gedung',
+        'kode_ruang',
+        'penanggung_jawab'
     ];
 
     /**
