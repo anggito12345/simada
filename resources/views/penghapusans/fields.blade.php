@@ -1,3 +1,7 @@
+<!-- Blank Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('', '') !!}
+</div>
 <!-- Tglhapus Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('tglhapus', 'Tanggal Penghapusan:') !!}

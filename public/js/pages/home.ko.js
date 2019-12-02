@@ -310,7 +310,7 @@ function onloadDataTableMutasiMutasiMasuk(e) {
  * @param {e} e parameter of datatable itself
  */
 function onloadDataTableMutasiMutasiBPKAD(e) {
-    $(`#${e.sTableId} tbody`).on('click', 'td.details-control i', function (i, n) {
+    $(`#${e.sTableId} tbody`).unbind('click').on('click', 'td.details-control i', function (i, n) {
         var tr = $(this).closest('tr');
         var row = $(`#${e.sTableId}`).DataTable().row(tr);
 
@@ -338,7 +338,7 @@ function onloadDataTableMutasiMutasiBPKAD(e) {
  * @param {e} e parameter of datatable itself
  */
 function onloadDataTableMutasiMutasiStep3(e) {
-    $(`#${e.sTableId} tbody`).on('click', 'td.details-control i', function (i, n) {
+    $(`#${e.sTableId} tbody`).unbind('click').on('click', 'td.details-control i', function (i, n) {
         var tr = $(this).closest('tr');
         var row = $(`#${e.sTableId}`).DataTable().row(tr);
 
@@ -365,7 +365,7 @@ function onloadDataTableMutasiMutasiStep3(e) {
  * @param {e} e parameter of datatable itself
  */
 function onloadDataTablePenghapusanBPKAD(e) {
-    $(`#${e.sTableId} tbody`).on('click', 'td.details-control i', function (i, n) {
+    $(`#${e.sTableId} tbody`).unbind('click').on('click', 'td.details-control i', function (i, n) {
         var tr = $(this).closest('tr');
         var row = $(`#${e.sTableId}`).DataTable().row(tr);
 
