@@ -14,7 +14,7 @@ class CreateInventarisHistoryTable extends Migration {
 	{
 		Schema::create('inventaris_history', function(Blueprint $table)
 		{
-			$table->integer('id', true);
+			$table->integer('id');
 			$table->string('noreg')->nullable();
 			$table->integer('pidbarang')->nullable();
 			$table->string('pidopd')->nullable();
