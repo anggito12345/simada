@@ -8,17 +8,23 @@ use App\Http\Requests\CreatepemeliharaanRequest;
 use App\Http\Requests\UpdatepemeliharaanRequest;
 use App\Repositories\pemeliharaanRepository;
 use Flash;
+use App\Models\inventaris;
+use App\Repositories\inventaris_historyRepository;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use App\Helpers\Constant;
+use Illuminate\Support\Facades\DB;
 
 class pemeliharaanController extends AppBaseController
 {
     /** @var  pemeliharaanRepository */
     private $pemeliharaanRepository;
+    private $inventaris_historyRepository;
 
-    public function __construct(pemeliharaanRepository $pemeliharaanRepo)
+    public function __construct(pemeliharaanRepository $pemeliharaanRepo, inventaris_historyRepository $inventaris_historyRepository)
     {
         $this->pemeliharaanRepository = $pemeliharaanRepo;
+        $this->inventaris_historyRepository = $inventaris_historyRepository;
     }
 
     /**
@@ -53,7 +59,30 @@ class pemeliharaanController extends AppBaseController
     {
         $input = $request->all();
 
-        $pemeliharaan = $this->pemeliharaanRepository->create($input);
+        DB::beginTransaction();
+        try {
+            $inventaris = inventaris::find($input['pidinventaris']);
+
+            if (empty($inventaris)) {
+                Flash::error('Inventaris not found');            
+            }                     
+    
+            $inventaris->update([
+                'umur_ekonomis' => (int)$inventaris->umur_ekonomis + (int)$input['umur_ekonomis'],
+                'harga_satuan' => (int)$inventaris->harga_satuan + (int)$input['biaya'],
+            ]);
+
+            $inventarisHistory = $inventaris->toArray();   
+
+            $this->inventaris_historyRepository->postHistory($inventarisHistory, Constant::$ACTION_HISTORY['PEM1']);
+    
+            $pemeliharaan = $this->pemeliharaanRepository->create($input);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Flash::error($e->getMessage());         
+            return redirect(route('pemeliharaans.index'));
+        }
 
         Flash::success('Pemeliharaan saved successfully.');
 
