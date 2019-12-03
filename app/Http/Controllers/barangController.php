@@ -52,7 +52,7 @@ class barangController extends AppBaseController
      */
     public function store(CreatebarangRequest $request)
     {
-        $input = $request->all();
+        $input = $request->all();        
 
         $barang = $this->barangRepository->create($input);
 

@@ -72,7 +72,8 @@ class inventaris extends Model
         'pid_organisasi',
         'kode_gedung',
         'kode_ruang',
-        'penanggung_jawab'
+        'penanggung_jawab',
+        'umur_ekonomis'
     ];
 
     /**

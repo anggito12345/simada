@@ -2,16 +2,20 @@
 
 namespace App\Http\Controllers\API;
 
+use App\Helpers\Constant;
 use App\Http\Requests\API\CreateinventarisAPIRequest;
 use App\Http\Requests\API\UpdateinventarisAPIRequest;
 use App\Models\inventaris;
 use App\Repositories\inventarisRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
+use App\Models\barang;
+use App\Repositories\inventaris_historyRepository;
 use Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Auth;
+use Exception;
 
 /**
  * Class inventarisController
@@ -22,10 +26,12 @@ class inventarisAPIController extends AppBaseController
 {
     /** @var  inventarisRepository */
     private $inventarisRepository;
+    private $inventaris_historyRepository;
 
-    public function __construct(inventarisRepository $inventarisRepo)
+    public function __construct(inventarisRepository $inventarisRepo, inventaris_historyRepository $inventaris_historyRepository)
     {
         $this->inventarisRepository = $inventarisRepo;
+        $this->inventaris_historyRepository = $inventaris_historyRepository;
         $this->middleware('auth:api');
     }
 
@@ -44,31 +50,30 @@ class inventarisAPIController extends AppBaseController
             'inventaris.tahun_perolehan',
             'm_barang.nama_rek_aset'
         ])
-        ->whereRaw("(inventaris.noreg ~* '".$request->input("q")."' OR m_barang.nama_rek_aset ~* '".$request->input("q")."' )")
-        ->join('m_barang', 'm_barang.id', 'inventaris.pidbarang');
-        
+            ->whereRaw("(inventaris.noreg ~* '" . $request->input("q") . "' OR m_barang.nama_rek_aset ~* '" . $request->input("q") . "' )")
+            ->join('m_barang', 'm_barang.id', 'inventaris.pidbarang');
 
-        if($request->has('own')) {
+
+        if ($request->has('own')) {
             $mineJabatan = \App\Models\jabatan::find(Auth::user()->jabatan);
 
-            $query = $query->join("users","users.id", "inventaris.idpegawai")
+            $query = $query->join("users", "users.id", "inventaris.idpegawai")
                 ->join("m_jabatan", "m_jabatan.id", 'users.jabatan')
                 ->where('m_jabatan.level', '<=', $mineJabatan->level)
                 ->where('inventaris.pid_organisasi', '=', Auth::user()->pid_organisasi);
         }
 
 
-        if($request->has('same_org')) {
+        if ($request->has('same_org')) {
 
             $query = $query
                 ->where('inventaris.pid_organisasi', '=', Auth::user()->pid_organisasi);
         }
 
-        if($request->has('nin') && $request->input('nin') != "") {
-            $query = $query->whereRaw('inventaris.id NOT IN ('. $request->input('nin') .')');    
-            
+        if ($request->has('nin') && $request->input('nin') != "") {
+            $query = $query->whereRaw('inventaris.id NOT IN (' . $request->input('nin') . ')');
         }
-        
+
         $inventaris = $query
             ->get();
 
@@ -97,59 +102,68 @@ class inventarisAPIController extends AppBaseController
         $barangMaster = \App\Models\barang::find($input['pidbarang']);
 
         $currentNoReg = DB::table($modelInventaris->table)
-                ->select([
-                    'inventaris.*',                    
-                ])
-                ->join('m_barang', 'm_barang.id', 'inventaris.pidbarang')
-                ->where('m_barang.kode_jenis', '=', $barangMaster->kode_jenis)
-                ->where('inventaris.tahun_perolehan', '=', $input['tahun_perolehan'])
-                ->where('inventaris.harga_satuan', '=', str_replace(".","", $input['harga_satuan']))
-                ->orderBy('inventaris.noreg', 'desc')
-                ->lockForUpdate()->first();
-            
+            ->select([
+                'inventaris.*',
+            ])
+            ->join('m_barang', 'm_barang.id', 'inventaris.pidbarang')
+            ->where('m_barang.kode_jenis', '=', $barangMaster->kode_jenis)
+            ->where('inventaris.tahun_perolehan', '=', $input['tahun_perolehan'])
+            ->where('inventaris.harga_satuan', '=', str_replace(".", "", $input['harga_satuan']))
+            ->orderBy('inventaris.noreg', 'desc')
+            ->lockForUpdate()->first();
+
         $lastNoReg = 0;
         if ($currentNoReg != null) {
-            $lastNoReg = (int)$currentNoReg->noreg;
-        }            
-        for ($i = 0; $i < $input['jumlah'] ; $i ++) {
-            
-            $input['noreg'] = sprintf('%03d',$lastNoReg + 1);
+            $lastNoReg = (int) $currentNoReg->noreg;
+        }
+        for ($i = 0; $i < $input['jumlah']; $i++) {
+
+            $input['noreg'] = sprintf('%03d', $lastNoReg + 1);
+
+            $barang = barang::find($input['pidbarang']);
+
+            if (empty($barang)) {
+                throw new Exception('Barang not found');
+                return;
+            }
+
+            $input['umur_ekonomis'] = $barang->umur_ekonomis;
 
             $inventaris = $this->inventarisRepository->create($input);
 
-            $request->merge(['idinventaris' => $inventaris["id"]]);            
+            $request->merge(['idinventaris' => $inventaris["id"]]);
 
             $fileDokumens = [];
             $fileFotos = [];
 
             DB::beginTransaction();
             try {
-                
-                $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen', $request, "inventaris", function($metadatas, $index, $systemUpload) {
+
+                $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen', $request, "inventaris", function ($metadatas, $index, $systemUpload) {
                     if (isset($metadatas['dokumen_metadata_keterangan'][$index]) && $metadatas['dokumen_metadata_keterangan'][$index] != null) {
                         $systemUpload->keterangan = $metadatas['dokumen_metadata_keterangan'][$index];
                     }
-                    
-                    $systemUpload->uid = $metadatas['dokumen_metadata_uid'][$index];             
+
+                    $systemUpload->uid = $metadatas['dokumen_metadata_uid'][$index];
                     $systemUpload->foreign_field = 'id';
                     $systemUpload->jenis = 'dokumen';
                     $systemUpload->foreign_table = 'inventaris';
-                    $systemUpload->foreign_id = $metadatas['idinventaris'];                   
+                    $systemUpload->foreign_id = $metadatas['idinventaris'];
 
                     return $systemUpload;
                 });
 
 
-                $fileFotos = \App\Helpers\FileHelpers::uploadMultiple('foto', $request, "inventaris", function($metadatas, $index, $systemUpload) {
+                $fileFotos = \App\Helpers\FileHelpers::uploadMultiple('foto', $request, "inventaris", function ($metadatas, $index, $systemUpload) {
                     if (isset($metadatas['foto_metadata_keterangan'][$index]) && $metadatas['foto_metadata_keterangan'][$index] != null) {
                         $systemUpload->keterangan = $metadatas['foto_metadata_keterangan'][$index];
                     }
-                    $systemUpload->uid = $metadatas['foto_metadata_uid'][$index];             
+                    $systemUpload->uid = $metadatas['foto_metadata_uid'][$index];
                     $systemUpload->foreign_field = 'id';
                     $systemUpload->jenis = 'foto';
                     $systemUpload->foreign_table = 'inventaris';
                     $systemUpload->foreign_id = $metadatas['idinventaris'];
-                                   
+
 
                     return $systemUpload;
                 });
@@ -160,9 +174,12 @@ class inventarisAPIController extends AppBaseController
 
                 \App\Models\inventaris::saveKib($kibData, $input['tipe_kib']);
 
-                DB::commit();   
+                $inventarisHistory = $inventaris->toArray();
 
-            } catch(\Exception $e) {
+                $this->inventaris_historyRepository->postHistory($inventarisHistory, Constant::$ACTION_HISTORY['NEW']);
+
+                DB::commit();
+            } catch (\Exception $e) {
                 DB::rollBack();
                 \App\Helpers\FileHelpers::deleteAll($fileDokumens);
                 \App\Helpers\FileHelpers::deleteAll($fileFotos);
@@ -171,11 +188,10 @@ class inventarisAPIController extends AppBaseController
             }
 
             $lastNoReg++;
-        }                
+        }
 
 
         return $this->sendResponse([], 'inventaris updated successfully');
-
     }
 
     /** bridge to calculating the value is intra or ekstra
@@ -183,9 +199,10 @@ class inventarisAPIController extends AppBaseController
      * 
      */
 
-    public function intraorekstra(Request $request) {
+    public function intraorekstra(Request $request)
+    {
         try {
-            $calculated = \App\Models\inventaris::CalculateIsIntraOrEkstra($request->tahun_perolehan, (int)str_replace(".","",$request->harga_satuan));
+            $calculated = \App\Models\inventaris::CalculateIsIntraOrEkstra($request->tahun_perolehan, (int) str_replace(".", "", $request->harga_satuan));
             return $this->sendResponse($calculated, 'success');
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
@@ -227,7 +244,7 @@ class inventarisAPIController extends AppBaseController
      */
     public function mutasi($id, Request $request)
     {
-        $input = $request->all();        
+        $input = $request->all();
 
         /** @var inventaris $inventaris */
         $inventaris = $this->inventarisRepository->find($id);
@@ -235,10 +252,10 @@ class inventarisAPIController extends AppBaseController
         if (empty($inventaris)) {
             return $this->sendError('Inventaris not found');
         }
-        
+
         DB::beginTransaction();
         try {
-            
+
             $detilKontruksi = \App\Models\detilkonstruksi::where('pidinventaris', $id);
 
             $detilKontruksiArray = $detilKontruksi->first()->toArray();
@@ -247,12 +264,12 @@ class inventarisAPIController extends AppBaseController
                 return $this->sendError('Kontruksi not found');
             }
 
-            $tipe_kib = chr(64+(int)$input['tipe_kib']);
+            $tipe_kib = chr(64 + (int) $input['tipe_kib']);
 
             if ($tipe_kib == 'A') {
-                $prepareSave = $detilKontruksiArray;               
+                $prepareSave = $detilKontruksiArray;
 
-                if(isset($detilKontruksiArray['kodetanah'])) {       
+                if (isset($detilKontruksiArray['kodetanah'])) {
 
                     $detilTanahFromForeign = \App\Models\detiltanah::find($detilKontruksiArray['kodetanah'])->toArray();
                     $prepareSave['hak'] = $detilTanahFromForeign['hak'];
@@ -261,9 +278,16 @@ class inventarisAPIController extends AppBaseController
                     $prepareSave['tgl_sertifikat'] = $detilTanahFromForeign['tgl_sertifikat'];
                     $prepareSave['nomor_sertifikat'] = $detilTanahFromForeign['nomor_sertifikat'];
                     $prepareSave['penggunaan'] = $detilTanahFromForeign['penggunaan'];
+                } else {
+                    $prepareSave['hak'] = null;
+                    $prepareSave['luas'] = null;
+                    $prepareSave['status_sertifikat'] = null;
+                    $prepareSave['tgl_sertifikat'] = null;
+                    $prepareSave['nomor_sertifikat'] = null;
+                    $prepareSave['penggunaan'] = null;
                 }
-                
-                
+
+
                 DB::table('detil_tanah')->insert([
                     'pidinventaris' => $prepareSave['pidinventaris'],
                     'luas' => $prepareSave['luasbangunan'],
@@ -282,8 +306,8 @@ class inventarisAPIController extends AppBaseController
                 ]);
             } else if ($tipe_kib == 'B') {
                 DB::table('detil_mesin')->insert([
-                    'pidinventaris' => $detilKontruksiArray['pidinventaris'],                  
-                    'keterangan' => $detilKontruksiArray['keterangan'],   
+                    'pidinventaris' => $detilKontruksiArray['pidinventaris'],
+                    'keterangan' => $detilKontruksiArray['keterangan'],
                 ]);
             } else if ($tipe_kib == 'C') {
                 DB::table('detil_bangunan')->insert([
@@ -302,8 +326,8 @@ class inventarisAPIController extends AppBaseController
                     'nodokumen' => $detilKontruksiArray['nodokumen'],
                     'luastanah' => $detilKontruksiArray['luastanah'],
                     'statustanah' => $detilKontruksiArray['statustanah'],
-                    'kodetanah' => $detilKontruksiArray['kodetanah'],        
-                    'keterangan' => $detilKontruksiArray['keterangan'],   
+                    'kodetanah' => $detilKontruksiArray['kodetanah'],
+                    'keterangan' => $detilKontruksiArray['keterangan'],
                 ]);
             } else if ($tipe_kib == 'D') {
                 DB::table('detil_jalan')->insert([
@@ -320,13 +344,13 @@ class inventarisAPIController extends AppBaseController
                     'nodokumen' => $detilKontruksiArray['nodokumen'],
                     'luastanah' => $detilKontruksiArray['luastanah'],
                     'statustanah' => $detilKontruksiArray['statustanah'],
-                    'kodetanah' => $detilKontruksiArray['kodetanah'],        
-                    'keterangan' => $detilKontruksiArray['keterangan'],                       
+                    'kodetanah' => $detilKontruksiArray['kodetanah'],
+                    'keterangan' => $detilKontruksiArray['keterangan'],
                 ]);
             } else if ($tipe_kib == 'E') {
                 DB::table('detil_aset_lainnya')->insert([
-                    'pidinventaris' => $detilKontruksiArray['pidinventaris'],                  
-                    'keterangan' => $detilKontruksiArray['keterangan'],   
+                    'pidinventaris' => $detilKontruksiArray['pidinventaris'],
+                    'keterangan' => $detilKontruksiArray['keterangan'],
                 ]);
             }
 
@@ -336,33 +360,33 @@ class inventarisAPIController extends AppBaseController
 
             $currentNoReg = DB::table('inventaris')
                 ->select([
-                    'inventaris.*',                    
+                    'inventaris.*',
                 ])
                 ->join('m_barang', 'm_barang.id', 'inventaris.pidbarang')
                 ->where('m_barang.kode_jenis', '=', $barangMaster->kode_jenis)
                 ->where('inventaris.tahun_perolehan', '=', $inventaris->tahun_perolehan)
-                ->where('inventaris.harga_satuan', '=', str_replace(".","", $inventaris->harga_satuan))
+                ->where('inventaris.harga_satuan', '=', str_replace(".", "", $inventaris->harga_satuan))
                 ->orderBy('inventaris.noreg', 'desc')
                 ->lockForUpdate()->first();
-            
+
             $lastNoReg = 0;
             if ($currentNoReg != null) {
-                $lastNoReg = (int)$currentNoReg->noreg;
-            }            
+                $lastNoReg = (int) $currentNoReg->noreg;
+            }
 
-            $inventaris->noreg = sprintf('%03d',$lastNoReg + 1);
+            $inventaris->noreg = sprintf('%03d', $lastNoReg + 1);
             $inventaris->pidbarang = $input['newidbarang'];
 
             $inventaris->update();
 
-            DB::commit();   
+            DB::commit();
 
             return $this->sendResponse($inventaris->toArray(), 'inventaris updated successfully');
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             return $this->sendError($e->getMessage() . $e->getTraceAsString());
         }
-        
+
         return $this->sendResponse($inventaris->toArray(), 'inventaris updated successfully');
     }
 
@@ -377,7 +401,7 @@ class inventarisAPIController extends AppBaseController
      */
     public function update($id, UpdateinventarisAPIRequest $request)
     {
-        $input = $request->all();        
+        $input = $request->all();
 
         /** @var inventaris $inventaris */
         $inventaris = $this->inventarisRepository->find($id);
@@ -385,37 +409,37 @@ class inventarisAPIController extends AppBaseController
         if (empty($inventaris)) {
             return $this->sendError('Inventaris not found');
         }
-        
+
         $fileDokumens = [];
         $fileFotos = [];
 
         DB::beginTransaction();
         try {
-            
-            $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen', $request, "inventaris", function($metadatas, $index, $systemUpload) {
+
+            $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen', $request, "inventaris", function ($metadatas, $index, $systemUpload) {
                 if (isset($metadatas['dokumen_metadata_keterangan'][$index]) && $metadatas['dokumen_metadata_keterangan'][$index] != null) {
                     $systemUpload->keterangan = $metadatas['dokumen_metadata_keterangan'][$index];
                 }
-                
-                $systemUpload->uid = $metadatas['dokumen_metadata_uid'][$index];             
+
+                $systemUpload->uid = $metadatas['dokumen_metadata_uid'][$index];
                 $systemUpload->foreign_field = 'id';
                 $systemUpload->jenis = 'dokumen';
                 $systemUpload->foreign_table = 'inventaris';
-                $systemUpload->foreign_id = $metadatas['dokumen_metadata_id_inventaris'][$index];              
+                $systemUpload->foreign_id = $metadatas['dokumen_metadata_id_inventaris'][$index];
 
                 return $systemUpload;
             });
 
 
-            $fileFotos = \App\Helpers\FileHelpers::uploadMultiple('foto', $request, "inventaris", function($metadatas, $index, $systemUpload) {
+            $fileFotos = \App\Helpers\FileHelpers::uploadMultiple('foto', $request, "inventaris", function ($metadatas, $index, $systemUpload) {
                 if (isset($metadatas['foto_metadata_keterangan'][$index]) && $metadatas['foto_metadata_keterangan'][$index] != null) {
                     $systemUpload->keterangan = $metadatas['foto_metadata_keterangan'][$index];
                 }
-                $systemUpload->uid = $metadatas['foto_metadata_uid'][$index];             
+                $systemUpload->uid = $metadatas['foto_metadata_uid'][$index];
                 $systemUpload->foreign_field = 'id';
                 $systemUpload->jenis = 'foto';
-                $systemUpload->foreign_table = 'inventaris';                                
-                $systemUpload->foreign_id = $metadatas['foto_metadata_id_inventaris'][$index];        
+                $systemUpload->foreign_table = 'inventaris';
+                $systemUpload->foreign_id = $metadatas['foto_metadata_id_inventaris'][$index];
 
                 return $systemUpload;
             });
@@ -428,16 +452,16 @@ class inventarisAPIController extends AppBaseController
 
             \App\Models\inventaris::saveKib($kibData, $input['tipe_kib']);
 
-            DB::commit();   
+            DB::commit();
 
             return $this->sendResponse($inventaris->toArray(), 'inventaris updated successfully');
-        } catch(\Exception $e) {
+        } catch (\Exception $e) {
             DB::rollBack();
             \App\Helpers\FileHelpers::deleteAll($fileDokumens);
             \App\Helpers\FileHelpers::deleteAll($fileFotos);
             return $this->sendError($e->getMessage() . $e->getTraceAsString());
         }
-        
+
         return $this->sendResponse($inventaris->toArray(), 'inventaris updated successfully');
     }
 
@@ -452,12 +476,12 @@ class inventarisAPIController extends AppBaseController
      * @return Response
      */
     public function destroy($id)
-    {   
-        $ids = explode("|",$id);
-        
+    {
+        $ids = explode("|", $id);
+
         foreach ($ids as $key => $id) {
             # code...
-             /** @var inventaris $inventaris */
+            /** @var inventaris $inventaris */
 
             DB::beginTransaction();
             try {
@@ -470,27 +494,25 @@ class inventarisAPIController extends AppBaseController
                     'foreign_table' => 'inventaris',
                     'foreign_id' => $id,
                 ]);
-        
-        
+
+
                 $dataSystemUploads = $querySystemUpload->get();
-        
+
                 foreach ($dataSystemUploads as $key => $value) {
                     Storage::delete($value->path);
                 }
-        
+
                 $querySystemUpload->delete();
-    
+
                 $inventaris->forceDelete();
-                
-                DB::commit(); 
-            } catch(\Exception $e) {
+
+                DB::commit();
+            } catch (\Exception $e) {
                 DB::rollBack();
             }
-            
-
         }
 
-       
+
         return $this->sendResponse($id, 'Inventaris deleted successfully');
     }
 }

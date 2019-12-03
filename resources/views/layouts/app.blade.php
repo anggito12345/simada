@@ -87,6 +87,8 @@
 
     <link rel="stylesheet" href="<?= url('css/thirdparty/select.dataTables.min.css') ?>">
 
+    <script src="<?= url('js/thirdparty/knockout-3.5.0.js') ?>"></script>
+
     <script>
         var url_string = window.location.href; //window.location.href
         var url = new URL(url_string);
@@ -109,7 +111,7 @@
         }
     </script>
 
-    <script src="<?= url('js/thirdparty/knockout-3.5.0.js') ?>"></script>
+    
     <script src="<?= url('js/thirdparty/ko_mapping.min.js') ?>"></script>
     
     <script src="<?= url('js/app.ko.js?key='.sha1(time())) ?>"></script>
@@ -382,6 +384,8 @@
             }, 5000);
           })
         });
+
+        ko.applyBindings(viewModel)
     </script>
 </body>
 </html>
