@@ -14,7 +14,7 @@ class AddForeignKeysToInventarisHistoryTable extends Migration {
 	{
 		Schema::table('inventaris_history', function(Blueprint $table)
 		{
-			$table->foreign('id', 'id_inventaris')->references('id')->on('inventaris')->onUpdate('RESTRICT')->onDelete('SET NULL');
+			$table->foreign('id', 'id_inventaris_history')->references('id')->on('inventaris')->onUpdate('RESTRICT')->onDelete('SET NULL');
 		});
 	}
 
@@ -28,7 +28,7 @@ class AddForeignKeysToInventarisHistoryTable extends Migration {
 	{
 		Schema::table('inventaris_history', function(Blueprint $table)
 		{
-			$table->dropForeign('id_inventaris');
+			$table->dropForeign('id_inventaris_history');
 		});
 	}
 
