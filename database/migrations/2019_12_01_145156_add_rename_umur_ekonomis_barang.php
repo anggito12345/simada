@@ -21,7 +21,7 @@ class AddRenameUmurEkonomisBarang extends Migration
             });
             Schema::table('m_barang', function (Blueprint $table) {
                 //
-                $table->integer('umur_ekonomis');
+                $table->integer('umur_ekonomis')->nullable();
             });
     
         }
