@@ -255,6 +255,7 @@ class inventaris_mutasiRepository extends BaseRepository
             'inventaris_mutasi.mutasi_id'
         ])
         ->where([
+            'mutasi.opd_tujuan' => Auth::user()->pid_organisasi,
             'inventaris_mutasi.status' => 'STEP-2'
         ])
         ->join('mutasi', 'mutasi.id', 'inventaris_mutasi.mutasi_id')
@@ -267,6 +268,7 @@ class inventaris_mutasiRepository extends BaseRepository
         ])->join('mutasi', 'mutasi.id', 'inventaris_mutasi.mutasi_id')
         ->groupBy(['inventaris_mutasi.mutasi_id'])
         ->where([
+            'mutasi.opd_tujuan' => Auth::user()->pid_organisasi,
             'inventaris_mutasi.status' => 'STEP-3'
         ])->get());
 
