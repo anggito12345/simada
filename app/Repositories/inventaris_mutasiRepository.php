@@ -114,9 +114,11 @@ class inventaris_mutasiRepository extends BaseRepository
         $fileDokumens = [];
         
         foreach (json_decode($req->get('items'), true) as $key => $item) {
-            $theItem = $this->all([
+            $theItem = $this->allQuery([
+                
+            ])->where([
                 'mutasi_id' => $item['id']
-            ]);
+            ])->get();
 
             if (empty($theItem)) {
                 return response('No Found', 404);
@@ -239,12 +241,13 @@ class inventaris_mutasiRepository extends BaseRepository
         ];
         
         $count['step1'] = count($this->allQuery([
-            'mutasi.opd_tujuan' => Auth::user()->pid_organisasi,
+            
         ])->select([
             'inventaris_mutasi.mutasi_id'
         ])->join('mutasi', 'mutasi.id', 'inventaris_mutasi.mutasi_id')
         ->groupBy(['inventaris_mutasi.mutasi_id'])
         ->where([
+            'mutasi.opd_tujuan' => Auth::user()->pid_organisasi,
             'inventaris_mutasi.status' => 'STEP-1'
         ])->get());
 

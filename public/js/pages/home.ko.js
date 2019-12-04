@@ -131,7 +131,7 @@ function loadDataTablePenghapusanBPKAD() {
     $('#table-penghapusan-bpkad').DataTable({
         ajax: `${$("[base-path]").val()}/penghapusans?status=STEP-1`,
         dom: 'Bfrtip',
-        'drawCallback': onloadDataTablePenghapusanBPKAD,
+        'drawCallback': onloadDataTablePenghapusan,
         'select': {
             'style': 'single'
         },
@@ -464,7 +464,7 @@ function onloadDataTableMutasiMutasiStep3(e) {
  * onDrawCallback DataTable Penghapusan
  * @param {e} e parameter of datatable itself
  */
-function onloadDataTablePenghapusanBPKAD(e) {
+function onloadDataTablePenghapusan(e) {
     $(`#${e.sTableId} tbody`).on('click', 'td.details-control i', function (i, n) {
         var tr = $(this).closest('tr');
         var row = $(`#${e.sTableId}`).DataTable().row(tr);
