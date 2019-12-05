@@ -26,7 +26,7 @@ class AddForeignKeyToInventarisPenghapusanTable extends Migration
     public function down()
     {
         Schema::table('inventaris_penghapusan', function (Blueprint $table) {
-            //
+            $table->dropForeign('inventaris_penghapusan');
         });
     }
 }
