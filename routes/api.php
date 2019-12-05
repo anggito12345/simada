@@ -142,3 +142,5 @@ Route::resource('modules', 'modulesAPIController');
 Route::resource('module_accesses', 'module_accessAPIController');
 
 Route::resource('pengunaans', 'pengunaanAPIController');
+
+Route::resource('inventaris_histories', 'inventaris_historyAPIController');

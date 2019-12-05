@@ -239,6 +239,7 @@ return [
         'Html'      => Collective\Html\HtmlFacade::class,
         'Flash'     => Laracasts\Flash\Flash::class,
         'c'     => \App\Helpers\Access::class,
+        'Constant'     => \App\Helpers\Constant::class,
 
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
     ],

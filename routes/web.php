@@ -100,3 +100,5 @@ Route::resource('modules', 'modulesController');
 Route::resource('moduleAccesses', 'module_accessController');
 
 Route::resource('pengunaans', 'pengunaanController');
+
+Route::resource('inventarisHistories', 'inventaris_historyController');

@@ -48,8 +48,13 @@
 
 <!-- Umur Ekononomis Field -->
 <div class="form-group <?= strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
-    {!! Form::label('umur_ekononomis', 'Umur Ekononomis:') !!}
-    {!! Form::number('umur_ekononomis', null, ['class' => 'form-control']) !!}
+    {!! Form::label('umur_ekonomis', 'Umur Ekonomis:') !!}
+    <div class="input-group">
+        {!! Form::number('umur_ekonomis', null, ['class' => 'form-control']) !!}
+        <div class="input-group-append">
+            <span class="input-group-text" id="basic-addon2">Tahun</span>
+        </div>
+    </div>
 </div>
 
 @if(strpos($idPostfix, 'non-ajax') > -1)
@@ -61,12 +66,12 @@
 @endif
 
 @section(strpos($idPostfix, 'non-ajax') > -1 ? 'scripts' : 'scripts_2')
-    <script type="text/javascript">        
-        
-    </script>
-    @if (isset($barang))
-    <script>
-        
-    </script>
-    @endif
+<script type="text/javascript">
+
+</script>
+@if (isset($barang))
+<script>
+
+</script>
+@endif
 @endsection

@@ -8,15 +8,6 @@
             <i class="fa fa-recycle"></i>
         </div>
     @endif
-    <a href="{{ route('inventaris.edit', $id) }}" title="ubah" class='btn btn-sm btn-default btn-xs'>
-        <i class="fa fa-edit"></i>
-    </a>
-    {!! Form::button('<i class="fa fa-trash"></i>', [
-        'type' => 'submit',
-        'title' => 'hapus',
-        'class' => 'btn btn-danger btn-sm btn-xs',
-        'onclick' => "return confirm('Are you sure?')"
-    ]) !!}
 </div>
 {!! Form::close() !!}
 

@@ -43,7 +43,8 @@ class pemeliharaan extends Model
         'tglkontrak',
         'biaya',
         'menambah',
-        'keterangan'
+        'keterangan',
+        'umur_ekonomis'
     ];
 
     /**

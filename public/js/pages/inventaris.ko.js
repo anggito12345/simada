@@ -67,6 +67,8 @@ viewModel.data = Object.assign(viewModel.data, {
         alamat: "",
         nokontrak: "",
         tglkontrak: moment().format("DD-MM-YYYY"),
+        umur_ekonomis: 0,
+        keterangan: "",
     }),
 
     formPemanfaatan: ko.observable({

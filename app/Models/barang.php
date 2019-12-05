@@ -35,7 +35,7 @@ class barang extends Model
 
     public $fillable = [
         'nama_rek_aset',
-        'umur_ekononomis',
+        'umur_ekonomis',
         'kode_akun',
         'kode_kelompok',
         'kode_objek',
@@ -52,7 +52,6 @@ class barang extends Model
     protected $casts = [
         'id' => 'integer',
         'nama_rek_aset' => 'string',
-        'umur_ekononomis' => 'integer',
         'kode_akun' => 'string',
         'kode_kelompok' => 'string',
         'kode_rincian_objek' => 'string',

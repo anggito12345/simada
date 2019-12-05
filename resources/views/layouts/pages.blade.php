@@ -16,5 +16,4 @@
 <script>
     
     viewModel.jsLoaded(true)
-    ko.applyBindings(viewModel)
 </script>

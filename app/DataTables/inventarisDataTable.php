@@ -161,6 +161,7 @@ class inventarisDataTable extends DataTable
             ->pageLength(25)
             ->columns($this->getColumns())
             // ->minifiedAjax()
+            ->addAction(['width' => '120px', 'printable' => false])
             ->ajax([
                 'url' => route('inventaris.index'),
                 'type' => 'GET',
@@ -189,7 +190,7 @@ class inventarisDataTable extends DataTable
                     [ '10 rows', '25 rows', '50 rows', 'Show all' ]
                 ],    
                 'select' => [
-                    'style'=> 'multi'
+                    'style'=> 'single'
                 ],
                 'drawCallback' => 'function(e) { onLoadDataTable(e) }',
                 'rowCallback' => 'function(e) { onLoadRowDataTable(e) }',
@@ -201,10 +202,10 @@ class inventarisDataTable extends DataTable
                     
                     ['extend' => 'collection', 'text' => 'Aksi', 'className' => 'btn btn-default btn-sm no-corner',  'buttons' => [                        
                         ['extend' => 'create'],  
-                        ['text' => '<i class="fa fa-edit"></i> Ubah', 'action' => 'function(){onEdit()}', ],                        
+                        // ['text' => '<i class="fa fa-edit"></i> Ubah', 'action' => 'function(){onEdit()}', ],                        
                         // ['text' => '<i class="fa fa-trash"></i> Hapus', 'action' => 'function(){onDelete()}', ],
                         ['text' => '<hr />'],
-                        ['text' => '<i class="fa fa-wrench"></i> Pemeliharaan', 'action' => 'function(){onPemeliharaan()}', ],
+                        // ['text' => '<i class="fa fa-wrench"></i> Pemeliharaan', 'action' => 'function(){onPemeliharaan()}', ],
                         ['text' => '<i class="fa fa-envelope"></i> Pemanfaatan', 'action' => 'function(){onPemanfaatan()}', ],
                       /*  ['text' => '<i class="fa fa-eraser"></i> Penghapusan', 'action' => 'function(){onPenghapusan()}', ],*/
                     ]],                    

@@ -103,7 +103,9 @@ class inventaris_penghapusanRepository extends BaseRepository
         $isAlreadyUpload = true;
 
         foreach (json_decode($req->get('items'), true) as $key => $item) {
-            $theItem = $this->all([
+            $theItem = $this->allQuery([
+                
+            ])->where([
                 'pid_penghapusan' => $item['id']
             ]);
 
