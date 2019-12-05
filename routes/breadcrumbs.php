@@ -437,3 +437,27 @@ Breadcrumbs::for('penghapusans.show', function ($trail,$data) {
     $trail->parent('penghapusans.index', $data);
     $trail->push('Lihat', route('settings.show',$data));
 });
+
+// Pemanfaatan
+Breadcrumbs::for('pemanfaatans.index', function ($trail) {
+    $trail->push('Pemanfaatan', route('pemanfaatans.index'));
+});
+
+// Pemanfaatan > Buat
+Breadcrumbs::for('pemanfaatans.create', function ($trail) {
+    $trail->parent('pemanfaatans.index');
+    $trail->push('Buat', route('pemanfaatans.create'));
+});
+
+// Pemanfaatan > Ubah
+Breadcrumbs::for('pemanfaatans.edit', function ($trail,$data) {
+    $trail->parent('pemanfaatans.index', $data);
+    $trail->push('Ubah', route('pemanfaatans.edit',$data));
+});
+
+// Pemanfaatan > Lihat
+Breadcrumbs::for('pemanfaatans.show', function ($trail,$data) {
+    $trail->parent('pemanfaatans.index', $data);
+    $trail->push('Lihat', route('pemanfaatans.show',$data));
+});
+

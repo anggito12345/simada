@@ -25,6 +25,9 @@
         <li class="{{ Request::is('pemeliharaans*') ? 'active' : '' }}">
             <a href="{!! route('pemeliharaans.index') !!}"><i class="fa fa-edit"></i><span>Pemeliharaan</span></a>
         </li>
+        <li class="{{ Request::is('pemanfaatans*') ? 'active' : '' }}">
+            <a href="{!! route('pemanfaatans.index') !!}"><i class="fa fa-edit"></i><span>Pemanfaatan</span></a>
+        </li>
         <li class="{{ Request::is('mutasis*') ? 'active' : '' }}">
             <a href="{!! route('mutasis.index') !!}"><i class="fa fa-edit"></i><span>Mutasi Keluar</span></a>
         </li>

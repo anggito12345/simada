@@ -22,6 +22,15 @@ class pemanfaatanDataTable extends DataTable
             ->editColumn('tipe_kontribusi', function($d) {
                 return \App\Models\BaseModel::$tipeKontribusiDs[$d->tipe_kontribusi];
             })
+            ->addColumn('mitra', function($d) {
+                $m_mitra = \App\Models\mitra::where('id',$d->mitra)->first();
+                return $m_mitra->nama;
+            })/*
+            ->addColumn('jenis', function($data) {
+                $barang = \App\Models\barang::find($data->pidbarang);
+                $jenisbarang = \App\Models\jenisbarang::where('kode', $barang->kode_jenis)->first();
+                return $jenisbarang->nama . "(".chr(64+$jenisbarang->kode).")";
+            })*/
             ->addColumn('action', 'pemanfaatans.datatables_actions');
     }
 
@@ -34,6 +43,13 @@ class pemanfaatanDataTable extends DataTable
     public function query(pemanfaatan $model)
     {
         $query = $model->newQuery();
+          /*  ->select([
+                'pemanfaatan.*',
+                'inventaris.noreg',
+                'm_mitra.nama'
+            ])
+            ->join('inventaris', 'inventaris.id', 'pemanfaatan.pidinventaris')
+            ->leftjoin('m_mitra', 'm_mitra.id', 'pemanfaatan.mitra');*/
 
         if (isset($_GET['pidinventaris'])) {
             $query = $query->where('pidinventaris', $_GET['pidinventaris']);
@@ -74,17 +90,18 @@ class pemanfaatanDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'pidinventaris',
+          //  'pidinventaris',
             'peruntukan',
             'umur',
             'no_perjanjian',
             'tgl_mulai',
-            'tgl_akhir',
+         //   'tgl_akhir',
+           // 'mitra',
             'mitra',
-            'tipe_kontribusi',
+         //   'tipe_kontribusi',
             'jumlah_kontribusi',
-            'pegawai',
-            'aktif'
+          //  'pegawai',
+         //   'aktif'
         ];
     }
 

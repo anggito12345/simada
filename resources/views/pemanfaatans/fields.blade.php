@@ -1,3 +1,19 @@
+<!-- Blank Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('', '') !!}
+</div>
+
+@if(!isset($isInventarisPage))
+<!-- pid Field -->
+<div class="form-group col-md-12">
+    {!! Form::label('pidinventaris', 'Inventaris:') !!}
+    {!! Form::text('pidinventaris', null, ['id' => 'pidinventaris_pemanfaatan', 'class' => 'form-control', 'data-bind' => 'value: viewModel.data.formPemanfaatan()formPemanfaatan().pidinventaris']) !!}
+</div>
+
+<script>
+    viewModel.data.formPemanfaatan() = ko.observable({})
+</script>
+@endif
 <!-- Peruntukan Field -->
 <div class="form-group col-sm-12">
     {!! Form::label('peruntukan', __('field.peruntukan')) !!}
@@ -85,6 +101,14 @@
     {!! Form::file('foto_pemanfaatan', ['class' => 'form-control', 'name' => 'dummy-foto']) !!}
 </div>
 
+<div class="form-group col-sm-12">
+    {!! Form::submit('Simpan', ['class' => 'btn btn-primary submit']) !!}
+    <a href="{!! route('pemanfaatans.index') !!}" class="btn btn-default">Batal</a>
+</div>
+
+@section('scripts')
+ @include('pemanfaatans.js')
+<script src="<?= url('js/thirdparty/dataTables.editor.min.js') ?>"></script>
 <!-- Submit Field -->
 <!-- <div class="form-group col-sm-12">
     {!! Form::submit('Simpan', ['class' => 'btn btn-primary submit']) !!}
@@ -182,4 +206,224 @@
             })
         }
     })
+     function doSave() {
+        let url = $("[base-path]").val() + "/api/pemanfaatans"
+        let formData = new FormData($('#form-pemanfaatan')[0])
+        let method = "POST"
+
+        for (let index = 0; index < fileGalleryPemanfaatan.fileList().length; index++) {
+            const d = fileGalleryPemanfaatan.fileList()[index]
+            if (d.rawFile) {
+                formData.append(`dokumen_pemanfaatan[${index}]`, d.rawFile)
+            } else {
+                formData.append(`dokumen_pemanfaatan[${index}]`, false)
+            }
+
+            let keys = Object.keys(d)
+
+            keys.forEach((key) => {
+                if (key == 'rawFile') {
+                    return
+                }
+                formData.append(`dokumen_pemanfaatan_metadata_${key}[${index}]`, d[key])
+            })
+
+            formData.append(`dokumen_pemanfaatan_metadata_id_inventaris[${index}]`, $("#table-inventaris").DataTable().rows('.selected').data()[0].id)
+        }
+
+        fotoPemanfaatan.fileList().forEach((d, index) => {
+            if (d.rawFile) {
+                formData.append(`foto_pemanfaatan[${index}]`, d.rawFile)
+            } else {
+                formData.append(`foto_pemanfaatan[${index}]`, false)
+            }
+
+            let keys = Object.keys(d)
+
+            keys.forEach((key) => {
+                if (key == 'rawFile') {
+                    return
+                }
+                formData.append(`foto_pemanfaatan_metadata_${key}[${index}]`, d[key])
+            })
+
+            formData.append(`foto_pemanfaatan_metadata_id_inventaris[${index}]`, $("#table-inventaris").DataTable().rows('.selected').data()[0].id)
+
+            return d.rawFile
+        })
+
+        formData.append('detil', JSON.stringify($("#table-detil-pemanfaatan").DataTable().rows().data().toArray()));
+
+        __ajax({
+            method: method,
+            url: "<?= url('api/pemanfaatans', isset($pemanfaatan) ? [$pemanfaatan->id] : []) ?>",
+            data: formData,
+            processData: false,
+            contentType: false,
+        }).then((d, resp) => {
+            swal.fire({
+                type: "success",
+                text: "Berhasil menyimpan data!",
+                onClose: () => {
+                    window.location = `${$('[base-path]').val()}/pemanfaatans`
+
+
+                }
+            })
+
+        })
+    }
+
+    const form = document.querySelector('#form-pemanfaatan')
+    form.addEventListener('submit', (ev) => {
+        ev.preventDefault()
+
+        doSave(false)
+    })
+
+    editor = new $.fn.dataTable.Editor({
+        table: "#table-detil-pemanfaatan",
+        fields: [{
+            label: "Inventaris:",
+            name: "inventaris",
+            type: "select"
+        }]
+    });
+
+    let buttonsOpt = [{
+            extend: "create",
+            editor: editor
+        },
+        {
+            extend: "edit",
+            editor: editor
+        },
+        {
+            extend: "remove",
+            editor: editor
+        },
+    ]
+
+    let editorInit = false
+    let DTE_Field_inventaris = null
+
+    editor.on('open', function(e, type) {
+
+        $('#DTE_Field_inventaris').val('')
+        
+        if (DTE_Field_inventaris == null) {
+            DTE_Field_inventaris = new lookupTable(document.getElementById('DTE_Field_inventaris'), {
+                dataTableOption: {
+                    ajax: {
+                        url: `${$('[base-path]').val()}/inventaris?is_exist_inventaris_pemanfaatan=false`,
+                        method: 'GET',
+                        headers: {
+                            'Authorization': 'Bearer ' + sessionStorage.getItem('api token'),
+                        }
+                    },
+                    cache: true,
+                    columns: [{
+                            data: 'kode_barang',
+                            title: 'Kode Barang'
+                        },
+
+                        {
+                            data: 'noreg',
+                            title: 'Noreg'
+                        },
+                        {
+                            data: 'perolehan',
+                            title: 'Cara Perolehan'
+                        },
+
+                        {
+                            data: 'tahun_perolehan',
+                            title: 'Tahun Perolehan'
+                        },
+                        {
+                            data: 'kondisi',
+                            title: 'Keadaan Barang'
+                        },
+                        {
+                            data: 'harga_satuan',
+                            title: 'Harga Satuan'
+                        },
+                    ],
+                    'select': {
+                        'style': 'multiple'
+                    },
+                    "processing": true,
+                    "serverSide": true,
+                },
+                dataFieldLabel: 'nama_rek_aset',
+                dataFieldValue: 'id',
+                multiple: true
+            });
+            editorInit = true
+        }
+        DTE_Field_inventaris.setDefault(null)
+    });
+
+
+    editor.on('preSubmit', function(e, data, action) {
+        if (DTE_Field_inventaris.selectedValues.length <= 0) {
+            this.field('inventaris').error('Mohon pilih inventaris terlebih dahulu!');
+        }
+
+        if (this.inError()) {
+            return false;
+        }
+
+        
+        dataSelect = DTE_Field_inventaris.selectedValues
+        if (action == 'create') {
+            dataSelect.forEach((dataVal, index) => {
+
+                if (data.data[index] == undefined) {
+                    data.data[index] = {
+                        inventaris: parseInt(dataVal.id),
+                        inventarisNama: dataVal.nama_rek_aset,
+                        tahun_perolehan: dataVal.tahun_perolehan,
+                    }
+                } else {
+                    data.data[0].inventaris = parseInt(dataVal.id);
+                    data.data[0].inventarisNama = dataVal.nama_rek_aset;
+                    data.data[0].tahun_perolehan = dataVal.tahun_perolehan;
+                }
+
+            })
+
+        } else {
+            $.each(data.data, function(key, values) {
+                data.data[key]['inventaris'] = parseInt(dataSelect[0].id);
+                data.data[key]['inventarisNama'] = dataSelect[0].nama_rek_aset;
+                data.data[key]['tahun_perolehan'] = dataSelect[0].tahun_perolehan;
+            });
+        }
+
+
+    });
+
+    editor.on('initEdit', function(e, node, data) {
+        
+
+        setTimeout(() => {
+            __ajax({
+                url: "<?= url('api/inventaris') ?>/" + data.inventaris,
+                method: 'GET',
+                dataType: 'json'
+            }).then((d) => {
+                DTE_Field_inventaris.setDefault(d)
+            })
+        }, 1);
+
+
+    });
+
+    editor.on('postSubmit', function(e, node, data) {
+        
+        DTE_Field_inventaris.setDefault(null)
+    });
 </script>
+
+@endsection
