@@ -15,7 +15,7 @@
         <div class="box box-primary">
             <div class="box-body">
                 <div class="row">
-                    <div class="col-4 form-group">
+                    <div class="col-md-4 form-group">
                         {!! Form::label('jenis', 'Jenis:') !!}
                         {!! Form::select('jenis', \App\Models\BaseModel::$jenisKotaDs, null, ['class' => 'form-control', 'placeholder' => 'Silahkan pilih', 'onchange' => '$("#table-alamat").DataTable().ajax.reload();']) !!}       
                     </div>

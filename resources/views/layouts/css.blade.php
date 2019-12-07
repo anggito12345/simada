@@ -1,9 +1,38 @@
 <style>
 
+    .table th {
+        font-size: .5rm;
+        font-weight: 500;
+    }
+
+    .treeview-menu>li>a, .sidebar {
+        font-size: 14px !important;
+        font-weight: 300 !important;
+    }
+
     .modal {
         overflow-y:auto;
     }
 
+    .navbar-custom-menu .navbar-nav {
+        flex-direction: unset !important;
+    }
+
+    .navbar-custom-menu .navbar-nav .dropdown {
+        margin: 0 .5rem;
+    }
+
+    .main-header .navbar .nav>li>a>.label {
+        top: 1px !important;
+    }
+
+    .dropdown-toggle::after {
+        display: none !important;
+    }
+
+    .dropdown .dropdown-toggle:hover, .dropdown.show .dropdown-toggle {
+        background: none !important;
+    }
     
     .navbar {
         padding: 0px;
@@ -164,6 +193,10 @@
 
     .dt-buttons .btn-sm {
         padding: 10px !important;
+    }
+
+    .btn, .dropdown-menu, .dropdown {
+        font-size: .8rem !important;   
     }
 
     .padding-notif {

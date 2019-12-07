@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+
 <head>
     <meta charset="UTF-8">
     <title>SIMADA</title>
@@ -9,49 +10,62 @@
         @font-face {
             font-family: 'Glyphicons Halflings';
             src: url('<?= url('css/fonts/glyphicons-halflings-regular.eot') ?>');
-            src: url('<?= url('css/fonts/glyphicons-halflings-regular.eot') ?>') format('embedded-opentype'),  url('<?= url('css/fonts/glyphicons-halflings-regular.woff') ?>') format('woff'), url('<?= url('css/fonts/glyphicons-halflings-regular.ttf') ?>') format('truetype'), url('<?= url('css/fonts/glyphicons-halflings-regular.svg') ?>') format('svg');
+            src: url('<?= url('css/fonts/glyphicons-halflings-regular.eot') ?>') format('embedded-opentype'), url('<?= url('css/fonts/glyphicons-halflings-regular.woff') ?>') format('woff'), url('<?= url('css/fonts/glyphicons-halflings-regular.ttf') ?>') format('truetype'), url('<?= url('css/fonts/glyphicons-halflings-regular.svg') ?>') format('svg');
         }
     </style>
     <style type="text/css">
-        .loading{
-          font-size:0;
-          width:30px;
-          height:30px;
-          margin-top:5px;
-          border-radius:15px;
-          padding:0;
-          border:3px solid #FFFFFF;
-          border-bottom:3px solid rgba(255,255,255,0.0);
-          border-left:3px solid rgba(255,255,255,0.0);
-          background-color:transparent !important;
-          animation-name: rotateAnimation;
-          -webkit-animation-name: wk-rotateAnimation;
-          animation-duration: 1s;
-          -webkit-animation-duration: 1s;
-          animation-delay: 0.2s;
-          -webkit-animation-delay: 0.2s;
-          animation-iteration-count: infinite;
-          -webkit-animation-iteration-count: infinite;
+        .loading {
+            font-size: 0;
+            width: 30px;
+            height: 30px;
+            margin-top: 5px;
+            border-radius: 15px;
+            padding: 0;
+            border: 3px solid #FFFFFF;
+            border-bottom: 3px solid rgba(255, 255, 255, 0.0);
+            border-left: 3px solid rgba(255, 255, 255, 0.0);
+            background-color: transparent !important;
+            animation-name: rotateAnimation;
+            -webkit-animation-name: wk-rotateAnimation;
+            animation-duration: 1s;
+            -webkit-animation-duration: 1s;
+            animation-delay: 0.2s;
+            -webkit-animation-delay: 0.2s;
+            animation-iteration-count: infinite;
+            -webkit-animation-iteration-count: infinite;
         }
 
         @keyframes rotateAnimation {
-            0%   {transform: rotate(0deg);}
-            100% {transform: rotate(360deg);}
+            0% {
+                transform: rotate(0deg);
+            }
+
+            100% {
+                transform: rotate(360deg);
+            }
         }
+
         @-webkit-keyframes wk-rotateAnimation {
-            0%   {-webkit-transform: rotate(0deg);}
-            100% {-webkit-transform: rotate(360deg);}
+            0% {
+                -webkit-transform: rotate(0deg);
+            }
+
+            100% {
+                -webkit-transform: rotate(360deg);
+            }
         }
-        .finish{
-          -webkit-transform:scaleX(1) !important;
-          transform:scaleX(1) !important;
+
+        .finish {
+            -webkit-transform: scaleX(1) !important;
+            transform: scaleX(1) !important;
         }
-        .hide-loading{
-          opacity:0;
-          -webkit-transform: rotate(0deg) !important;
-          transform: rotate(0deg) !important;
-          -webkit-transform:scale(0) !important;
-          transform:scale(0) !important;
+
+        .hide-loading {
+            opacity: 0;
+            -webkit-transform: rotate(0deg) !important;
+            transform: rotate(0deg) !important;
+            -webkit-transform: scale(0) !important;
+            transform: scale(0) !important;
         }
     </style>
 
@@ -61,7 +75,7 @@
     <link rel="stylesheet" href="<?= url('css/thirdparty/bootstrap-datepicker3.min.css') ?>">
     <link rel="stylesheet" href="<?= url('css/thirdparty/bootstrap-toggle.min.css') ?>">
 
-    <!-- Font Awesome -->    
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="<?= url('css/thirdparty/font-awesome.min.css') ?>">
 
     <!-- Ionicons -->
@@ -70,7 +84,7 @@
     <!-- Theme style -->
     <link rel="stylesheet" href="<?= url('css/thirdparty/AdminLTE.min.css') ?>">
     <link rel="stylesheet" href="<?= url('css/thirdparty/_all-skins.min.css') ?>">
-    
+
 
     <link rel="stylesheet" href="<?= url('css/thirdparty/select2.min.css') ?>">
 
@@ -93,9 +107,9 @@
         var url_string = window.location.href; //window.location.href
         var url = new URL(url_string);
         var api_token = url.searchParams.get("secret");
-        if(api_token) {
+        if (api_token) {
             sessionStorage.setItem("api token", api_token);
-            window.history.pushState("","", url_string.split("?")[0]);
+            window.history.pushState("", "", url_string.split("?")[0]);
         }
 
         // swal manual trigger
@@ -107,14 +121,14 @@
                 type: type,
                 text: msg
             })
-            window.history.pushState("","", url_string.split("?")[0]);
+            window.history.pushState("", "", url_string.split("?")[0]);
         }
     </script>
 
-    
+
     <script src="<?= url('js/thirdparty/ko_mapping.min.js') ?>"></script>
-    
-    <script src="<?= url('js/app.ko.js?key='.sha1(time())) ?>"></script>
+
+    <script src="<?= url('js/app.ko.js?key=' . sha1(time())) ?>"></script>
 
     @include('layouts.datatables_css')
 
@@ -127,15 +141,16 @@
 <input type="text" value="<?= Storage::url('') ?>" base-storage style="display:none" />
 <input type="text" value="<?= public_path('') ?>" base-http style="display:none" />
 
-<body class="skin-blue sidebar-mini">
-@if (!Auth::guest())
+<body class="skin-green-light sidebar-mini">
+    @if (!Auth::guest())
     <div class="wrapper">
         <!-- Main Header -->
         <header class="main-header">
 
             <!-- Logo -->
             <a href="#" class="logo">
-                <b>Simada</b>
+                <span class="logo-mini">SMD</span>
+                <span class="logo-lg">SIMADA</span>
             </a>
 
             <!-- Header Navbar -->
@@ -146,14 +161,56 @@
                 </a>
                 <!-- Navbar Right Menu -->
                 <div class="navbar-custom-menu">
+
                     <ul class="nav navbar-nav">
                         <!-- User Account Menu -->
+                        <li class="dropdown notifications-menu">
+                            <a href="#" class="dropdown-toggle" data-toggle="dropdown" aria-expanded="false">
+                                <i class="fa fa-bell-o"></i>
+                                <span class="label label-warning">10</span>
+                            </a>
+                            <ul class="dropdown-menu">
+                                <li class="header">You have 10 notifications</li>
+                                <li>
+                                    <!-- inner menu: contains the actual data -->
+                                    <ul class="menu">
+                                        <li>
+                                            <a href="#">
+                                                <i class="fa fa-users text-aqua"></i> 5 new members joined today
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <i class="fa fa-warning text-yellow"></i> Very long description here that may not fit into the
+                                                page and may cause design problems
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <i class="fa fa-users text-red"></i> 5 new members joined
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <i class="fa fa-shopping-cart text-green"></i> 25 sales made
+                                            </a>
+                                        </li>
+                                        <li>
+                                            <a href="#">
+                                                <i class="fa fa-user text-red"></i> You changed your username
+                                            </a>
+                                        </li>
+                                    </ul>
+                                </li>
+                                <li class="footer"><a href="#">View all</a></li>
+                            </ul>
+                        </li>
                         <li class="dropdown user user-menu">
+
                             <!-- Menu Toggle Button -->
                             <a href="#" class="dropdown-toggle" data-toggle="dropdown">
                                 <!-- The user image in the navbar-->
-                                <img src="<?= url('images/user_male-icon.png') ?>"
-                                     class="user-image" alt="User Image"/>
+                                <img src="<?= url('images/user_male-icon.png') ?>" class="user-image" alt="User Image" />
                                 <!-- hidden-xs hides the username on small devices so only the image appears. -->
                                 <span class="hidden-xs">{!! Auth::user()->name !!}</span>
                             </a>
@@ -161,7 +218,7 @@
                                 <!-- The user image in the menu -->
                                 <li class="user-header">
                                     <img src="<?= url('images/user_male-icon.png') ?>""
-                                         class="img-circle" alt="User Image"/>
+                                         class=" img-circle" alt="User Image" />
                                     <p>
                                         {!! Auth::user()->name !!}
                                         <small>{!! \App\Models\organisasi::find(Auth::user()->pid_organisasi)->nama !!}</small>
@@ -174,8 +231,7 @@
                                         <a href="{!! url('/users-ubah-password') !!}" class="btn btn-default btn-flat">Ubah Password</a>
                                     </div>
                                     <div class="pull-right">
-                                        <a href="{!! url('/logout') !!}" class="btn btn-default btn-flat"
-                                            onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                        <a href="{!! url('/logout') !!}" class="btn btn-default btn-flat" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                             Sign out
                                         </a>
                                         <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
@@ -203,14 +259,13 @@
         </footer>
 
     </div>
-@else
+    @else
     <nav class="navbar navbar-default navbar-static-top">
         <div class="container">
             <div class="navbar-header">
 
                 <!-- Collapsed Hamburger -->
-                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse"
-                        data-target="#app-navbar-collapse">
+                <button type="button" class="navbar-toggle collapsed" data-toggle="collapse" data-target="#app-navbar-collapse">
                     <span class="sr-only">Toggle Navigation</span>
                     <span class="icon-bar"></span>
                     <span class="icon-bar"></span>
@@ -255,11 +310,11 @@
     <script src="<?= url('js/thirdparty/handlebars-v4.3.1.js') ?>"></script>
 
     <!-- jQuery 3.1.1 -->
-    
+
     <script src="<?= url('js/thirdparty/jquery.min.js') ?>"></script>
     <script src="<?= url('js/thirdparty/jquery.mask.min.js') ?>"></script>
 
-    @include('layouts.datatables_js')        
+    @include('layouts.datatables_js')
 
     <script src="<?= url('js/thirdparty/dataTables.select.min.js') ?>"></script>
 
@@ -268,7 +323,7 @@
     <script src="<?= url('js/thirdparty/bootbox.min.js') ?>"></script>
     <script src="<?= url('js/thirdparty/bootstrap-datepicker.min.js') ?>"></script>
     <script src="<?= url('js/thirdparty/bootstrap-toggle.min.js') ?>"></script>
-    
+
     <!-- AdminLTE App -->
     <script src="<?= url('js/thirdparty/bootstrap-toggle.min.js') ?>"></script>
     <script src="<?= url('js/thirdparty/adminlte.min.js') ?>"></script>
@@ -277,25 +332,25 @@
 
     <script src="<?= url('js/thirdparty/sweetalert2.min.js') ?>"></script>
 
-    <script src="<?= url('js/public.js?key='.sha1(time())) ?>"></script>
+    <script src="<?= url('js/public.js?key=' . sha1(time())) ?>"></script>
 
-    
-    <script src="<?= url('js/plugins/inlinedatepicker.plugin.js?key='.sha1(time())) ?>"></script>
 
-    <script src="<?= url('js/plugins/lookuptable.plugin.js?key='.sha1(time())) ?>"></script>
+    <script src="<?= url('js/plugins/inlinedatepicker.plugin.js?key=' . sha1(time())) ?>"></script>
 
-    <script src="<?= url('js/plugins/mapinput.plugin.js?key='.sha1(time())) ?>"></script>
+    <script src="<?= url('js/plugins/lookuptable.plugin.js?key=' . sha1(time())) ?>"></script>
 
-    
+    <script src="<?= url('js/plugins/mapinput.plugin.js?key=' . sha1(time())) ?>"></script>
+
+
     <script>
         localStorage.setItem('pid_organisasi', '<?= Auth::user()->pid_organisasi ?>');
 
         $.fn.select2.defaults.set("placeholder", "Silahkan Pilih");
         $.fn.select2.defaults.set("allow-clear", true);
         $.fn.select2.defaults.set("ajax--headers", {
-            'Authorization':'Bearer ' + sessionStorage.getItem('api token'),
+            'Authorization': 'Bearer ' + sessionStorage.getItem('api token'),
         });
-        
+
         $.fn.datepicker.defaults.language = 'in'
         $.fn.datepicker.defaults.autClose = true
         $.fn.datepicker.dates['in'] = {
@@ -307,17 +362,18 @@
             today: "Hari Ini",
             clear: "Clear",
             format: "dd-mm-yyyy",
-            titleFormat: "MM yyyy", /* Leverages same syntax as 'format' */
+            titleFormat: "MM yyyy",
+            /* Leverages same syntax as 'format' */
         };
-        
+
 
         $.fn.dataTable.defaults.oLanguage.sUrl = `${$('[base-path]').val()}/i18n/datatables/Indonesian.json`
 
 
         $(function() {
-            $('input').attr('autocomplete','off');
-            $('input').attr('autocorrect','off');
-            $('form').attr('autocomplete','off');
+            $('input').attr('autocomplete', 'off');
+            $('input').attr('autocorrect', 'off');
+            $('form').attr('autocomplete', 'off');
 
             $('input[type=number]').keyup((obj) => {
                 let valueNumber = parseInt(obj.target.value)
@@ -327,8 +383,8 @@
                         obj.target.value = parseInt(maxAttribute)
                     }
                 }
-            });  
-            
+            });
+
             var elements = document.querySelectorAll("input,select");
             for (var i = 0; i < elements.length; i++) {
                 elements[i].oninvalid = function(e) {
@@ -337,7 +393,7 @@
                         if (e.target.getAttribute('required') != null && (e.target.value == '' || e.target.value == null)) {
                             e.target.setCustomValidity("Data wajib di isi!");
                         }
-                        
+
                     }
                 };
                 elements[i].oninput = function(e) {
@@ -345,47 +401,42 @@
                 };
             }
         })
-
-
     </script>
     @yield('before_pages')
     @include('layouts.pages')
     @yield('scripts')
     @yield('scripts_2')
 
-    <script>        
-        
-        
-
+    <script>
         $(document).ready(function() {
-            $(window).keydown(function(event){
-                if(event.keyCode == 13) {
+            $(window).keydown(function(event) {
+                if (event.keyCode == 13) {
                     event.preventDefault();
                     return false;
                 }
             });
         });
-        
     </script>
     <script type="text/javascript">
         $(document).ready(function() {
-          $(".submit").click(function() {
-            $(".submit").addClass("loading");
-            setTimeout(function() {
-              $(".submit").addClass("hide-loading");
-              // For failed icon just replace ".done" with ".failed"
-              $(".done").addClass("finish");
-            }, 3000);
-            setTimeout(function() {
-              $(".submit").removeClass("loading");
-              $(".submit").removeClass("hide-loading");
-              $(".done").removeClass("finish");
-              $(".failed").removeClass("finish");
-            }, 5000);
-          })
+            $(".submit").click(function() {
+                $(".submit").addClass("loading");
+                setTimeout(function() {
+                    $(".submit").addClass("hide-loading");
+                    // For failed icon just replace ".done" with ".failed"
+                    $(".done").addClass("finish");
+                }, 3000);
+                setTimeout(function() {
+                    $(".submit").removeClass("loading");
+                    $(".submit").removeClass("hide-loading");
+                    $(".done").removeClass("finish");
+                    $(".failed").removeClass("finish");
+                }, 5000);
+            })
         });
 
         ko.applyBindings(viewModel)
     </script>
 </body>
+
 </html>

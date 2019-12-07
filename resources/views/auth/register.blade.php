@@ -70,7 +70,7 @@
 
             <div class="row">   
                 <!-- /.col -->
-                <div class="col-12">
+                <div class="col-md-4">
                     <button type="submit" class="btn btn-primary btn-block btn-flat">Register</button>
                 </div>
                 <!-- /.col -->

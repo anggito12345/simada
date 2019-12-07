@@ -60,7 +60,7 @@
 
 
 <div class="form-group col-sm-12">
-    <table id="table-detil-penghapusan" class="table table-striped table-bordered">
+    <table id="table-detil-penghapusan" class="table table-striped ">
         <thead>
         </thead>
     </table>
