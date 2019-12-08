@@ -26,5 +26,6 @@ class DatabaseSeeder extends Seeder
         $this->call(InitMBarangTableSeeder::class);
         $this->call(InitMAlamatTableSeeder::class);
         $this->call(InitMJenisBarangTableSeeder::class);
+        $this->call(MAlamatTableSeeder::class);
     }
 }

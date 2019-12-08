@@ -50,6 +50,13 @@
         </thead>
     </table>
 </div>
+<div class="clear-fix"></div>
+<div class="form-group col-sm-12">
+    <table id="table-dokumen-mutasi-<?= $uniqID  ?>" class="table table-striped table-bordered">
+        <thead>
+        </thead>
+    </table>
+</div>
 
 
 <script> 
@@ -80,6 +87,43 @@ if ( ! $.fn.DataTable.isDataTable( '#table-detil-mutasi-<?= $uniqID  ?>' ) ) {
             {
                 data: 'inventarisNama',
                 title: 'Barang',
+                orderable: false,
+            },
+        ],
+    })
+}
+
+if ( ! $.fn.DataTable.isDataTable( '#table-dokumen-mutasi-<?= $uniqID  ?>' ) ) {
+    let dataDetils = JSON.parse('<?= json_encode(\App\Models\inventaris_mutasi::where('inventaris_mutasi.mutasi_id', $mutasi->id)
+            ->select([
+                'system_upload.name as dokumenNama',
+                'system_upload.path as dokumenPath',
+                'inventaris_mutasi.id as DT_RowId'
+            ])
+            ->join('system_upload','system_upload.foreign_id', 'inventaris_mutasi.id')
+            ->get()) ?>')
+
+    $('#table-dokumen-mutasi-<?= $uniqID  ?>').DataTable({
+        data: dataDetils,
+        dom: 'Bfrtip',
+        buttons: [],
+        searching: false,
+        "lengthChange": false,
+        "ordering": true,
+        "aaSorting": [[ 0, "desc" ]],
+        select: {
+            style:    'os',
+            selector: 'td:first-child'
+        },
+        columns: [
+            {
+                data: 'dokumenNama',
+                title: 'Nama Dokumen',
+                orderable: false,
+            },
+            {
+                data: 'dokumenPath',
+                title: 'Lokasi Dokumen',
                 orderable: false,
             },
         ],
