@@ -41,7 +41,7 @@
 
 <!-- Keterangan Field -->
 <div class="row">
-    {!! Form::label('keterangan', 'Mutasi List:', ["class" => 'col-md-12 item-view']) !!}
+    {!! Form::label('keterangan', 'Daftar Barang Mutasi:', ["class" => 'col-md-12 item-view']) !!}
 </div>
 
 <div class="form-group col-sm-12">
@@ -50,7 +50,46 @@
         </thead>
     </table>
 </div>
+<div class="form-group col-sm-12">
+    {!! Form::label('', '') !!}
+</div>
+<br>
+<div class="row">
+    {!! Form::label('dokumen', 'Daftar Dokumen Mutasi:', ["class" => 'col-md-12 item-view']) !!}
+</div>
 
+<div class="form-group col-sm-12">
+    <table id="table-dokumen-mutasi-<?= $uniqID  ?>" class="table table-striped table-bordered">
+        <thead>
+        </thead>
+    </table>
+</div>
+
+<button class="btn btn-primary btn-lg" data-toggle="modal" data-target="#myModal">
+  Launch demo modal
+</button>
+
+<!-- Modal -->
+<div class="modal fade" id="myModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true">
+  <div class="modal-dialog">
+    <div class="modal-content">
+      <div class="modal-header">
+        <button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button>
+        <h4 class="modal-title" id="myModalLabel">Modal title</h4> 
+      </div>
+      <div class="modal-body">
+        <div style="text-align: center;">
+<iframe src="http://docs.google.com/gview?url=http://www.pdf995.com/samples/pdf.pdf&embedded=true" 
+style="width:500px; height:500px;" frameborder="0"></iframe>
+</div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-default" data-dismiss="modal">Close</button>
+        <button type="button" class="btn btn-primary">Save changes</button>
+      </div>
+    </div>
+  </div>
+</div>
 
 <script> 
 
@@ -81,6 +120,49 @@ if ( ! $.fn.DataTable.isDataTable( '#table-detil-mutasi-<?= $uniqID  ?>' ) ) {
                 data: 'inventarisNama',
                 title: 'Barang',
                 orderable: false,
+            },
+        ],
+    })
+}
+
+if ( ! $.fn.DataTable.isDataTable( '#table-dokumen-mutasi-<?= $uniqID  ?>' ) ) {
+    let dataDetils = JSON.parse('<?= json_encode(\App\Models\inventaris_mutasi::where('inventaris_mutasi.mutasi_id', $mutasi->id)
+            ->select([
+                'system_upload.name as dokumenNama',
+                'system_upload.path as dokumenPath',
+                'inventaris_mutasi.id as DT_RowId'
+            ])
+            ->join('system_upload','system_upload.foreign_id', 'inventaris_mutasi.id')
+            ->get()) ?>')
+
+    $('#table-dokumen-mutasi-<?= $uniqID  ?>').DataTable({
+        data: dataDetils,
+        dom: 'Bfrtip',
+        buttons: [],
+        searching: false,
+        "lengthChange": false,
+        "ordering": true,
+        "aaSorting": [[ 0, "desc" ]],
+        select: {
+            style:    'os',
+            selector: 'td:first-child'
+        },
+        columns: [
+            {
+                data: 'dokumenNama',
+                title: 'Nama Dokumen',
+                orderable: false,
+            },
+            {
+                data: 'dokumenPath',
+                title: 'Lokasi Dokumen',
+                orderable: false,
+            },
+            {
+            data: null,
+            render: function ( data, type, row ) {
+            return '<!-- Button trigger modal --><button type="button" class="btn btn-primary" data-toggle="modal" data-target="#viewDocModal">Lihat Dokumen</button><!-- Modal --><div class="modal fade" id="viewDocModal" tabindex="-1" role="dialog" aria-labelledby="myModalLabel" aria-hidden="true"><div class="modal-dialog"><div class="modal-content"><div class="modal-header"><button type="button" class="close" data-dismiss="modal" aria-hidden="true">×</button><h4 class="modal-title" id="myModalLabel">'+data.dokumenNama+'</h4></div><div class="modal-body"><div style="text-align: center;"><iframe src="http://docs.google.com/gview?url={{ url(Storage::url('+data.dokumenPath+')) }}&embedded=true" style="width:500px; height:500px;" frameborder="0"></iframe></div></div><div class="modal-footer"><button type="button" class="btn btn-default" data-dismiss="modal">Close</button></div></div></div></div>';
+            }
             },
         ],
     })

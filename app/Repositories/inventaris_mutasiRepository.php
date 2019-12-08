@@ -146,7 +146,7 @@ class inventaris_mutasiRepository extends BaseRepository
                                     $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen', $req, "inventaris_mutasi", function($metadatas, $index, $systemUpload) {
                                             
                                         $systemUpload->foreign_field = 'id';
-                                        $systemUpload->jenis = 'bpkad';
+                                        $systemUpload->jenis = 'Dokumen Persetujuan Mutasi (BPKAD)';
                                         $systemUpload->foreign_table = 'inventaris_mutasi';
                                         $systemUpload->foreign_id = $metadatas['mutasi_id'];
                                                        

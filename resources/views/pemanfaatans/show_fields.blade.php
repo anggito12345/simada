@@ -1,84 +1,89 @@
-<!-- Id Field -->
-<div class="form-group">
-    {!! Form::label('id', 'Id:') !!}
-    <p>{!! $pemanfaatan->id !!}</p>
+<!-- Id Field
+<div class="row col-sm-12">
+    {!! Form::label('id', 'Id:', ["class" => 'col-md-3 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $pemanfaatan->id !!}</p>
+</div>
+ -->
+<!-- Pidinventaris Field -->
+<?php 
+    $inventaris = \App\Models\inventaris::join('m_barang','m_barang.id', 'inventaris.pidbarang')->find($pemanfaatan->pidinventaris);
+    $mitra = \App\Models\pemanfaatan::join('m_mitra','m_mitra.id', 'pemanfaatan.mitra')->find($pemanfaatan->mitra);
+?>
+<div class="row col-sm-12">
+    {!! Form::label('pidinventaris', 'Inventaris No Registrasi', ["class" => 'col-md-3 item-view'], ["class" => 'col-md-3 item-view']) !!}
+    <p class="col-md-8 item-view">: {!! $inventaris->noreg !!}</p>
 </div>
 
-<!-- Pidinventaris Field -->
-<div class="form-group">
-    {!! Form::label('pidinventaris', 'Pidinventaris:') !!}
-    <p>{!! $pemanfaatan->pidinventaris !!}</p>
-</div>
 
 <!-- Peruntukan Field -->
-<div class="form-group">
-    {!! Form::label('peruntukan', 'Peruntukan:') !!}
-    <p>{!! $pemanfaatan->peruntukan !!}</p>
+<div class="row col-sm-12">
+    {!! Form::label('peruntukan', 'Peruntukan:', ["class" => 'col-md-3 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $pemanfaatan->peruntukan !!}</p>
 </div>
 
 <!-- Umur Field -->
-<div class="form-group">
-    {!! Form::label('umur', 'Umur:') !!}
-    <p>{!! $pemanfaatan->umur !!}</p>
+<div class="row col-sm-12">
+    {!! Form::label('umur', 'Umur:', ["class" => 'col-md-3 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $pemanfaatan->umur !!}</p>
 </div>
 
 <!-- No Perjanjian Field -->
-<div class="form-group">
-    {!! Form::label('no_perjanjian', 'No Perjanjian:') !!}
-    <p>{!! $pemanfaatan->no_perjanjian !!}</p>
+<div class="row col-sm-12">
+    {!! Form::label('no_perjanjian', 'No Perjanjian:', ["class" => 'col-md-3 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $pemanfaatan->no_perjanjian !!}</p>
 </div>
 
 <!-- Tgl Mulai Field -->
-<div class="form-group">
-    {!! Form::label('tgl_mulai', 'Tgl Mulai:') !!}
-    <p>{!! $pemanfaatan->tgl_mulai !!}</p>
+<div class="row col-sm-12">
+    {!! Form::label('tgl_mulai', 'Tgl Mulai:', ["class" => 'col-md-3 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $pemanfaatan->tgl_mulai !!}</p>
 </div>
 
 <!-- Tgl Akhir Field -->
-<div class="form-group">
-    {!! Form::label('tgl_akhir', 'Tgl Akhir:') !!}
-    <p>{!! $pemanfaatan->tgl_akhir !!}</p>
+<div class="row col-sm-12">
+    {!! Form::label('tgl_akhir', 'Tgl Akhir:', ["class" => 'col-md-3 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $pemanfaatan->tgl_akhir !!}</p>
 </div>
 
 <!-- Mitra Field -->
-<div class="form-group">
-    {!! Form::label('mitra', 'Mitra:') !!}
-    <p>{!! $pemanfaatan->mitra !!}</p>
+<div class="row col-sm-12">
+    {!! Form::label('mitra', 'Mitra:', ["class" => 'col-md-3 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $mitra->nama !!}</p>
 </div>
 
 <!-- Tipe Kontribusi Field -->
-<div class="form-group">
-    {!! Form::label('tipe_kontribusi', 'Tipe Kontribusi:') !!}
-    <p>{!! $pemanfaatan->tipe_kontribusi !!}</p>
+<div class="row col-sm-12">
+    {!! Form::label('tipe_kontribusi', 'Tipe Kontribusi:', ["class" => 'col-md-3 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $pemanfaatan->tipe_kontribusi !!}</p>
 </div>
 
 <!-- Jumlah Kontribusi Field -->
-<div class="form-group">
-    {!! Form::label('jumlah_kontribusi', 'Jumlah Kontribusi:') !!}
-    <p>{!! $pemanfaatan->jumlah_kontribusi !!}</p>
+<div class="row col-sm-12">
+    {!! Form::label('jumlah_kontribusi', 'Jumlah Kontribusi:', ["class" => 'col-md-3 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $pemanfaatan->jumlah_kontribusi !!}</p>
 </div>
 
 <!-- Pegawai Field -->
-<div class="form-group">
-    {!! Form::label('pegawai', 'Pegawai:') !!}
-    <p>{!! $pemanfaatan->pegawai !!}</p>
+<div class="row col-sm-12">
+    {!! Form::label('pegawai', 'Pegawai:', ["class" => 'col-md-3 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $pemanfaatan->pegawai !!}</p>
 </div>
 
 <!-- Aktif Field -->
-<div class="form-group">
-    {!! Form::label('aktif', 'Aktif:') !!}
-    <p>{!! $pemanfaatan->aktif !!}</p>
+<div class="row col-sm-12">
+    {!! Form::label('aktif', 'Aktif:', ["class" => 'col-md-3 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $pemanfaatan->aktif !!}</p>
 </div>
 
 <!-- Created At Field -->
-<div class="form-group">
-    {!! Form::label('created_at', 'Created At:') !!}
-    <p>{!! $pemanfaatan->created_at !!}</p>
+<div class="row col-sm-12">
+    {!! Form::label('created_at', 'Created At:', ["class" => 'col-md-3 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $pemanfaatan->created_at !!}</p>
 </div>
 
 <!-- Updated At Field -->
-<div class="form-group">
-    {!! Form::label('updated_at', 'Updated At:') !!}
-    <p>{!! $pemanfaatan->updated_at !!}</p>
+<div class="row col-sm-12">
+    {!! Form::label('updated_at', 'Updated At:', ["class" => 'col-md-3 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $pemanfaatan->updated_at !!}</p>
 </div>
 

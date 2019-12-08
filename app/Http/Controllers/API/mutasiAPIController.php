@@ -74,7 +74,7 @@ class mutasiAPIController extends AppBaseController
                 
                 $systemUpload->uid = $metadatas['dokumen_metadata_uid'][$index];             
                 $systemUpload->foreign_field = 'id';
-                $systemUpload->jenis = 'dokumen';
+                $systemUpload->jenis = 'Dokumen Pengajuan Mutasi';
                 $systemUpload->foreign_table = 'mutasi';
                 $systemUpload->foreign_id = $metadatas['idmutasi'];                 
 
