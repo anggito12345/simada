@@ -3,7 +3,7 @@
 @endsection
 
 
-{!! $dataTable->table(['id' => 'table-inventaris', 'width' => '100%', 'class' => 'table table-striped table-bordered']) !!}
+{!! $dataTable->table(['id' => 'table-inventaris', 'width' => '100%', 'class' => 'table table-striped ']) !!}
 
 @section('scripts')
     <script>
@@ -550,7 +550,7 @@
                         }
                         
                                                                          
-                        document.querySelector(`#Pemeliharaan-${selectEvent}`).innerHTML = `<table class='mt-2 table table-bordered table-striped' id='table-pemeliharaan-<?= $uniqId ?>${selectEvent}'>
+                        document.querySelector(`#Pemeliharaan-${selectEvent}`).innerHTML = `<table class='mt-2 table  table-striped' id='table-pemeliharaan-<?= $uniqId ?>${selectEvent}'>
                             <thead>
                                 <tr>
                                     <th>Uraian</th>
@@ -668,7 +668,7 @@
                         })
 
 
-                        document.querySelector(`#Pemanfaatan-${selectEvent}`).innerHTML = `<table class='mt-2 table table-bordered table-striped' id='table-pemanfaatan-<?= $uniqId ?>${selectEvent}'>
+                        document.querySelector(`#Pemanfaatan-${selectEvent}`).innerHTML = `<table class='mt-2 table  table-striped' id='table-pemanfaatan-<?= $uniqId ?>${selectEvent}'>
                             <thead>                           
                             </thead>
                         </table>`

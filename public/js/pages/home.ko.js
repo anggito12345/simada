@@ -12,8 +12,20 @@ viewModel.data = Object.assign(viewModel.data, {
         step1: 0,
         step2: 0
     }),
+    currentTab: ko.observable('mutasi'),
+    currentHighlight: ko.observable('')
 })
 
+
+viewModel.clickEvent = Object.assign(viewModel.clickEvent, {
+    setCurrentTab: (tab) => {
+        viewModel.data.currentTab(tab)
+    },
+    setCurrentHighlight: (currentHighlight) => {
+        $(`#table-${currentHighlight}`).DataTable().ajax.reload(); 
+        viewModel.data.currentHighlight(currentHighlight)
+    }
+})
 /**
  * load datatble mutasi step-1
  */
@@ -249,6 +261,7 @@ function approvementMutasi(step) {
                 type: 'success',
                 text: 'inventaris berhasil di setujui!'
             }).then((d) => {
+                viewModel.clickEvent.setCurrentHighlight(viewModel.data.currentHighlight())
                 $('#modal-mutasi-masuk').modal('hide')
                 countMutasiProgress();
             })
@@ -267,6 +280,7 @@ function approvementMutasiStep2(step) {
                 type: 'success',
                 text: 'inventaris berhasil di setujui!'
             }).then((d) => {
+                viewModel.clickEvent.setCurrentHighlight(viewModel.data.currentHighlight())
                 $('#modal-mutasi-bpkad').modal('hide')
                 $('#modal-mutasi-bpkad-form').modal('hide')
                 countMutasiProgress();
@@ -290,6 +304,7 @@ function approvementPenghapusanBPKAD() {
                 type: 'success',
                 text: 'Penghapusan inventaris berhasil di setujui!'
             }).then((d) => {
+                viewModel.clickEvent.setCurrentHighlight(viewModel.data.currentHighlight())
                 $('#modal-penghapusan-bpkad').modal('hide')
                 $('#modal-penghapusan-bpkad-form').modal('hide')
                 countPenghapusanProgress();
@@ -311,6 +326,7 @@ function approvementKonfirmasiPenghapusan() {
                 type: 'success',
                 text: 'Penghapusan inventaris berhasil di setujui!'
             }).then((d) => {
+                viewModel.clickEvent.setCurrentHighlight(viewModel.data.currentHighlight())
                 $('#modal-penghapusan-konfirmasi').modal('hide')
                 $('#modal-penghapusan-konfirmasi-form').modal('hide')
                 countPenghapusanProgress();
@@ -331,6 +347,7 @@ function approvementValidasiPenghapusan() {
                 type: 'success',
                 text: 'Penghapusan inventaris berhasil di setujui!'
             }).then((d) => {
+                viewModel.clickEvent.setCurrentHighlight(viewModel.data.currentHighlight())
                 $('#modal-penghapusan-validasi').modal('hide')
                 countPenghapusanProgress();
             })
@@ -351,6 +368,7 @@ function approvementMutasiStep3(step) {
                 type: 'success',
                 text: 'inventaris berhasil di setujui!'
             }).then((d) => {
+                viewModel.clickEvent.setCurrentHighlight(viewModel.data.currentHighlight())
                 $('#modal-mutasi-konfirmasi').modal('hide')
                 countMutasiProgress();
             })

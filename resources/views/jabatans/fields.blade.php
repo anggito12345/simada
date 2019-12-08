@@ -31,7 +31,7 @@
     $allowables_access = explode(',',env('ALLOWABLE_ACCESS', ''));    
     $modules = \App\Models\modules::get();
 ?>
-<table class='table table-bordered table-striped'>
+<table class='table  table-striped'>
     <tr>
         <th >Access Name</th>        
         @foreach($allowables_access as $key => $value)
