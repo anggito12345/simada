@@ -23,6 +23,15 @@ class MoveNomorSuratToPenghapusan extends Migration
             
         }
 
+        if (Schema::hasColumn('penghapusan', 'nomor_surat_persetujuan_bpkad')) {
+
+            Schema::table('penghapusan', function (Blueprint $table) {
+                //
+                $table->dropColumn(['nomor_surat_persetujuan_bpkad']);
+            });
+            
+        }
+
         Schema::table('penghapusan', function (Blueprint $table) {
             //
             $table->string('nomor_surat_persetujuan_bpkad', 255)->nullable();
