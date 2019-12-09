@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Helpers\Constant;
 use App\Models\inventaris_mutasi;
 use App\Repositories\BaseRepository;
 use Auth;
@@ -108,7 +109,7 @@ class inventaris_mutasiRepository extends BaseRepository
      * for approvements each item of inventaris mutasis
      */
 
-    public function approvements($req)
+    public function approvements($req, $inventaris_historyRepository)
     {
         $isAlreadyUpload = false;
         $fileDokumens = [];
@@ -199,13 +200,12 @@ class inventaris_mutasiRepository extends BaseRepository
 
                             $preForCreteKodeLokasi = $inventaris->toArray();
                             $preForCreteKodeLokasi['pid_organisasi'] = $mutasi->opd_tujuan;
-                            $preForCreteKodeLokasi['pidopd'] = $mutasi->opd_tujuan;
+                            $preForCreteKodeLokasi['pidopd'] = $mutasi->opd_tujuan;   
+                            $preForCreteKodeLokasi['kode_lokasi'] = \App\Repositories\inventarisRepository::generateKodeLokasi($preForCreteKodeLokasi);
 
-                            $inventaris->update([
-                                'pid_organisasi' => $mutasi->opd_tujuan,
-                                'pidopd' => $mutasi->opd_tujuan,
-                                'kode_lokasi' => \App\Repositories\inventarisRepository::generateKodeLokasi($preForCreteKodeLokasi)
-                            ]);
+                            $inventaris->save();
+
+                            $inventaris_historyRepository->postHistory($preForCreteKodeLokasi, Constant::$ACTION_HISTORY['MUT']);
 
                             $inventaris->restore();
 
@@ -251,15 +251,27 @@ class inventaris_mutasiRepository extends BaseRepository
             'inventaris_mutasi.status' => 'STEP-1'
         ])->get());
 
-        $count['step2'] = count($this->allQuery()->select([
-            'inventaris_mutasi.mutasi_id'
-        ])
-        ->where([
-            'mutasi.opd_tujuan' => Auth::user()->pid_organisasi,
-            'inventaris_mutasi.status' => 'STEP-2'
-        ])
-        ->join('mutasi', 'mutasi.id', 'inventaris_mutasi.mutasi_id')
-        ->groupBy(['inventaris_mutasi.mutasi_id'])->get());
+        if (c::is([],[],[0])) {
+            $count['step2'] = count($this->allQuery()->select([
+                'inventaris_mutasi.mutasi_id'
+            ])
+            ->where([
+                'mutasi.opd_tujuan' => Auth::user()->pid_organisasi,
+                'inventaris_mutasi.status' => 'STEP-2'
+            ])
+            ->join('mutasi', 'mutasi.id', 'inventaris_mutasi.mutasi_id')
+            ->groupBy(['inventaris_mutasi.mutasi_id'])->get());
+        } else {
+            $count['step2'] = count($this->allQuery()->select([
+                'inventaris_mutasi.mutasi_id'
+            ])
+            ->where([
+                'inventaris_mutasi.status' => 'STEP-2'
+            ])
+            ->join('mutasi', 'mutasi.id', 'inventaris_mutasi.mutasi_id')
+            ->groupBy(['inventaris_mutasi.mutasi_id'])->get());
+        }
+        
 
         $count['step3'] = count($this->allQuery([
             'mutasi.opd_tujuan' => Auth::user()->pid_organisasi,

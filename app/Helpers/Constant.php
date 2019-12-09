@@ -9,6 +9,12 @@ class Constant {
         "PEM1" => [
             'nama' => 'Tambah Pemeliharaan'
         ],
+        "MUT" => [
+            'nama' => 'Mutasi'
+        ],
+        "PENGHAPUSAN" => [
+            'nama' => 'Penghapusan'
+        ],
         'NEW' => [
             'nama' => 'Baru'
         ]

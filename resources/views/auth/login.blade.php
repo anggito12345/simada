@@ -38,9 +38,8 @@
         }
 
         .left-panel {
-            background: url('images/banner-left.png') no-repeat;
-            object-fit: cover;
-            background-position: center;
+            background: url('images/banner-left.jpeg') no-repeat center center fixed;
+            background-size: cover;
         }
 
         .right-panel {
