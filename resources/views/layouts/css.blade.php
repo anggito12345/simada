@@ -195,9 +195,9 @@
         padding: 10px !important;
     }
 
-    .btn, .dropdown-menu, .dropdown {
+    /* .btn, .dropdown-menu, .dropdown {
         font-size: .8rem !important;   
-    }
+    } */
 
     .padding-notif {
         display: inline;

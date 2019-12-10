@@ -1,5 +1,7 @@
 <?php
 
+use App\Repositories\inventaris_historyRepository;
+use App\Repositories\inventarisRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 
@@ -48,16 +50,25 @@ Route::get('/intraorekstra', 'inventarisAPIController@intraorekstra');
 Route::post('penghapusans/edit/{id}', 'penghapusanAPIController@editCustom');
 Route::post('pemanfaatans/edit/{id}', 'pemanfaatanAPIController@editCustom');
 
-Route::middleware('auth:api')->patch('inventaris_mutasi/approvements', function( \App\Repositories\inventaris_mutasiRepository $inventaris_mutasiRepository, Request $request) {    
-    return $inventaris_mutasiRepository->approvements($request);
+Route::middleware('auth:api')->patch('inventaris_mutasi/approvements', function( 
+    \App\Repositories\inventaris_mutasiRepository $inventaris_mutasiRepository, 
+    inventaris_historyRepository $inventaris_historyRepository,
+    Request $request) {    
+    return $inventaris_mutasiRepository->approvements($request, $inventaris_historyRepository);
 });
 
-Route::middleware('auth:api')->post('inventaris_mutasi/approvements', function( \App\Repositories\inventaris_mutasiRepository $inventaris_mutasiRepository, Request $request) {    
-    return $inventaris_mutasiRepository->approvements($request);
+Route::middleware('auth:api')->post('inventaris_mutasi/approvements', function( 
+    \App\Repositories\inventaris_mutasiRepository $inventaris_mutasiRepository, 
+    inventaris_historyRepository $inventaris_historyRepository,
+    Request $request) {     
+    return $inventaris_mutasiRepository->approvements($request, $inventaris_historyRepository);
 });
 
-Route::middleware('auth:api')->post('inventaris_penghapusan/approvements', function( \App\Repositories\inventaris_penghapusanRepository $inventaris_penghapusanRepository, Request $request) {    
-    return $inventaris_penghapusanRepository->approvements($request);
+Route::middleware('auth:api')->post('inventaris_penghapusan/approvements', function( 
+    \App\Repositories\inventaris_penghapusanRepository $inventaris_penghapusanRepository, 
+    inventaris_historyRepository $inventaris_historyRepository,
+    Request $request) {    
+    return $inventaris_penghapusanRepository->approvements($request, $inventaris_historyRepository);
 });
 
 Route::middleware('auth:api')->get('inventaris_mutasi/count', function( \App\Repositories\inventaris_mutasiRepository $inventaris_mutasiRepository, Request $request) {        

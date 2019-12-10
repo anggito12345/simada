@@ -30,7 +30,7 @@ viewModel.clickEvent = Object.assign(viewModel.clickEvent, {
  * load datatble mutasi step-1
  */
 function loadDataTableMutasi() {
-    $('#table-mutasi').DataTable({
+    $('#table-mutasi-masuk').DataTable({
         ajax: `${$("[base-path]").val()}/mutasis?opd_tujuan=${localStorage.getItem('pid_organisasi')}&status=STEP-1`,
         dom: 'Bfrtip',
         'drawCallback': onloadDataTableMutasiMutasiMasuk,
@@ -255,7 +255,7 @@ function showMutasiMasuk() {
  * to approve each mutasi for step-1
  */
 function approvementMutasi(step) {
-    viewModel.services.approveMutasi($('#table-mutasi').DataTable().rows('.selected').data().toArray(), step)
+    viewModel.services.approveMutasi($('#table-mutasi-masuk').DataTable().rows('.selected').data().toArray(), step)
         .then((d) => {
             swal.fire({
                 type: 'success',

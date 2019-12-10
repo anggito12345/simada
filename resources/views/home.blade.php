@@ -53,7 +53,7 @@
     </div>
 </div>
 <div class="container p-3">
-    @if(c::is([],[],[0]))
+    @if(c::is([],[],[0, 1]))
     <div class="row" data-bind="if: viewModel.data.currentTab() === 'mutasi'">
         <div class="col-md-4">
             <div class="info-box" data-bind="{
@@ -72,7 +72,7 @@
                 <!-- /.info-box-content -->
             </div>
         </div>
-        <div class="col-md-4">
+        <!-- <div class="col-md-4">
             <div class="info-box" data-bind="{
                     click: viewModel.clickEvent.setCurrentHighlight.bind(this, 'mutasi-bpkad'),
                     class: viewModel.data.currentHighlight() === 'mutasi-bpkad' ? 'active' : ''
@@ -86,9 +86,8 @@
                     </span>
                     <span class="info-box-number" data-bind="text: viewModel.data.count().step2"></span>
                 </div>
-                <!-- /.info-box-content -->
             </div>
-        </div>
+        </div> -->
         <div class="col-md-4">
             <div class="info-box" data-bind="{
                     click: viewModel.clickEvent.setCurrentHighlight.bind(this, 'mutasi-konfirmasi'),
@@ -130,7 +129,7 @@
     </div>
     @endif
 
-    @if(c::is([],[],[0]))
+    @if(c::is([],[],[0, 1]))
     <div class="row" data-bind="if: viewModel.data.currentTab() === 'penghapusan'">
         <div class="col-md-4">
             <div class="info-box" data-bind="{
@@ -191,16 +190,18 @@
     <div class="box content" data-bind="visible: viewModel.data.currentHighlight() !== ''">
         <div class="box-body ">
             <div class="panel-body" data-bind="visible: viewModel.data.currentHighlight() == 'mutasi-masuk'">
-                <table class="table table-striped" id="table-mutasi">
+                <table class="table table-striped" id="table-mutasi-masuk">
                 </table>
-
+                                
                 <button type="button" class="btn btn-primary" onclick="approvementMutasi('STEP-1')">Konfirmasi</button>
             </div>
             <div class="panel-body" data-bind="visible: viewModel.data.currentHighlight() == 'mutasi-bpkad'">
                 <table class="table table-striped" id="table-mutasi-bpkad">
                 </table>
 
-                <button type="button" class="btn btn-primary" onclick="beforeApproveStep2()">Setujui</button>
+                @if(c::is([],[],[-1]))
+                    <button type="button" class="btn btn-primary" onclick="beforeApproveStep2()">Setujui</button>
+                @endif
             </div>
 
             <div class="panel-body" data-bind="visible: viewModel.data.currentHighlight() == 'mutasi-konfirmasi'">

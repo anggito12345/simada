@@ -14,7 +14,9 @@ viewModel.services = Object.assign(viewModel.services, {
         } else if (step === 'STEP-2') {
             let formData = new FormData($('#form-bpkad-mutasi')[0])
 
-            formData.append('dokumen[]', document.getElementById('dokumen').files[0])
+            if (document.getElementById('dokumen').files.length > 0) {
+                formData.append('dokumen[]', document.getElementById('dokumen').files[0])
+            }
             formData.append('items', JSON.stringify(tableListSelected))
             formData.append('step', step)
             
@@ -32,10 +34,15 @@ viewModel.services = Object.assign(viewModel.services, {
     approvementPenghapusanBPKAD: (tableListSelected, step) => {
         let formData = new FormData($('#form-penghapusan-mutasi')[0])
         if (step == 'STEP-1') { 
-            formData.append('dokumen[]', document.getElementById('dokumen-penghapusan').files[0])
+            if (document.getElementById('dokumen-penghapusan').files.length > 0) {
+                formData.append('dokumen[]', document.getElementById('dokumen-penghapusan').files[0])
+            }            
             formData.append('nomor_surat', document.getElementById('nomor-persetujuan-step1').value)
         } else if(step == 'STEP-2') {
-            formData.append('dokumen[]', document.getElementById('berita-acara').files[0])
+            if (document.getElementById('berita-acara').files.length > 0) {
+                formData.append('dokumen[]', document.getElementById('berita-acara').files[0])
+            }
+            
         }
         
         formData.append('items', JSON.stringify(tableListSelected))        

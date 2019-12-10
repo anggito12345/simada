@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Helpers\Constant;
 use App\Models\inventaris;
 use App\Models\inventaris_penghapusan;
 use App\Repositories\BaseRepository;
@@ -98,14 +99,13 @@ class inventaris_penghapusanRepository extends BaseRepository
     /**
      * approving data penghapusan for bpkad
      */
-    public function approvements($req)
+    public function approvements($req, $inventaris_historyRepository)
     {
         $isAlreadyUpload = true;
 
         foreach (json_decode($req->get('items'), true) as $key => $item) {
-            $theItem = $this->allQuery([
-                
-            ])->where([
+            $fileDokumens = [];
+            $theItem = $this->all([
                 'pid_penghapusan' => $item['id']
             ]);
 
@@ -119,6 +119,7 @@ class inventaris_penghapusanRepository extends BaseRepository
                             if ($each['status'] != 'STEP-1') {
                                 continue;
                             }
+
 
                             DB::beginTransaction();
                             try {
@@ -206,11 +207,29 @@ class inventaris_penghapusanRepository extends BaseRepository
                             if ($each['status'] != 'STEP-3') {
                                 continue;
                             }
-                            $each->update([
-                                'status' => 'STEP-4'
-                            ]);
 
-                            \App\Models\inventaris::withTrashed()->find($each['id'])->delete();
+                            DB::beginTransaction();
+                            try {
+
+                                $each->update([
+                                    'status' => 'STEP-4'
+                                ]);
+
+                                $newInventaris = inventaris::find($each['id'])->toArray();                            
+
+                                $inventaris_historyRepository->postHistory($newInventaris, Constant::$ACTION_HISTORY['PENGHAPUSAN']);
+
+                                \App\Models\inventaris::withTrashed()->find($each['id'])->delete();
+
+                                DB::commit();
+                            } catch (\Exception $e) { 
+
+                                DB::rollBack();
+                                return response()->json([
+                                    'message' => $e->getMessage()
+                                ], 500);
+                            }
+
 
                             break;
                         }
