@@ -110,7 +110,7 @@ class rkaAPIController extends AppBaseController
     public function show($id)
     {
         /** @var rka $rka */
-        $rka = $this->rkaRepository->find($id);
+        $rka = rka::withDrafts()->find($id);
 
         if (empty($rka)) {
             return $this->sendError('Rka not found');
@@ -133,7 +133,7 @@ class rkaAPIController extends AppBaseController
         $input = $request->all();
 
         /** @var rka $rka */
-        $rka = $this->rkaRepository->find($id);
+        $rka = rka::withDrafts()->find($id);
 
         if (empty($rka)) {
             return $this->sendError('Rka not found');
@@ -206,7 +206,7 @@ class rkaAPIController extends AppBaseController
     public function destroy($id)
     {
         /** @var rka $rka */
-        $rka = $this->rkaRepository->find($id);
+        $rka = rka::withDrafts()->find($id);
 
         if (empty($rka)) {
             return $this->sendError('Rka not found');

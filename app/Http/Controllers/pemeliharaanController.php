@@ -68,7 +68,7 @@ class pemeliharaanController extends AppBaseController
                 Flash::error('Inventaris not found');            
             }                     
     
-            if ($request->input('draft') != '1') {
+            if (empty($request->input('draft'))) {
                 $inventaris->update([
                     'umur_ekonomis' => (int)$inventaris->umur_ekonomis + (int)$input['umur_ekonomis'],
                     'harga_satuan' => (int)$inventaris->harga_satuan + (int)$input['biaya'],
@@ -161,7 +161,7 @@ class pemeliharaanController extends AppBaseController
                 Flash::error('Inventaris not found');            
             }                     
     
-            if ($request->input('draft') != '1') {
+            if (empty($request->input('draft'))) {
                 $inventaris->update([
                     'umur_ekonomis' => (int)$inventaris->umur_ekonomis + (int)$input['umur_ekonomis'],
                     'harga_satuan' => (int)$inventaris->harga_satuan + (int)$input['biaya'],

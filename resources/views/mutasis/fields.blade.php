@@ -53,7 +53,7 @@
 <!-- Submit Field -->
 <div class="form-group col-sm-6">
     {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-    @if ((isset($mutasi) && !empty($mutasi->draft)))
+    @if ((isset($mutasi) && !empty($mutasi->draft)) || !isset($mutasi))
         <div class="btn btn-primary" onclick="doSave(true)">Draft</div>
     @endif
     <a href="{!! route('mutasis.index') !!}" class="btn btn-default">Cancel</a>
@@ -190,7 +190,7 @@
 
         Swal.fire({
             title: 'Anda yakin?',
-            html: ``,
+            html: `Data akan tersimpan <b>${isDraft ? "" : "tidak"} sebagai draft</b>`,
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',

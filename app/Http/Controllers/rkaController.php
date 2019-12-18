@@ -9,6 +9,7 @@ use App\Http\Requests\UpdaterkaRequest;
 use App\Repositories\rkaRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
+use App\Models\rka;
 use Response;
 
 class rkaController extends AppBaseController
@@ -70,7 +71,7 @@ class rkaController extends AppBaseController
      */
     public function show($id)
     {
-        $rka = $this->rkaRepository->find($id);
+        $rka = rka::withDrafts()->find($id);
 
         if (empty($rka)) {
             Flash::error('Rka not found');
@@ -90,7 +91,7 @@ class rkaController extends AppBaseController
      */
     public function partialview($id)
     {
-        $rka = $this->rkaRepository->find($id);
+        $rka = rka::withDrafts()->find($id);
 
         if (empty($rka)) {
             Flash::error('RKA not found');
@@ -110,7 +111,7 @@ class rkaController extends AppBaseController
      */
     public function edit($id)
     {
-        $rka = $this->rkaRepository->find($id);
+        $rka = rka::withDrafts()->find($id);
 
         if (empty($rka)) {
             Flash::error('Rka not found');
@@ -131,7 +132,7 @@ class rkaController extends AppBaseController
      */
     public function update($id, UpdaterkaRequest $request)
     {
-        $rka = $this->rkaRepository->find($id);
+        $rka = rka::withDrafts()->find($id);
 
         if (empty($rka)) {
             Flash::error('Rka not found');
@@ -155,7 +156,7 @@ class rkaController extends AppBaseController
      */
     public function destroy($id)
     {
-        $rka = $this->rkaRepository->find($id);
+        $rka = rka::withDrafts()->find($id);
 
         if (empty($rka)) {
             Flash::error('Rka not found');

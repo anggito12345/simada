@@ -226,9 +226,6 @@ class inventarisAPIController extends AppBaseController
         ])->join('m_barang', 'm_barang.id', 'inventaris.pidbarang')
             ->find($id);
 
-
-        dd($inventaris, 'info');
-
         if (empty($inventaris)) {
             return $this->sendError('Inventaris not found');
         }
@@ -454,6 +451,10 @@ class inventarisAPIController extends AppBaseController
             $kibData['pidinventaris'] = $id;
 
             \App\Models\inventaris::saveKib($kibData, $input['tipe_kib']);
+
+            $inventarisHistory = $inventaris->toArray();
+
+            $this->inventaris_historyRepository->postHistory($inventarisHistory, Constant::$ACTION_HISTORY["UPDATE"]);
 
             DB::commit();
 

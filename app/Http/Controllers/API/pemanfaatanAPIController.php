@@ -154,7 +154,7 @@ class pemanfaatanAPIController extends AppBaseController
     //     return $this->sendResponse($pemanfaatan->toArray(), 'pemanfaatan updated successfully');
     // }
 
-    public function editCustom($id, UpdatepemanfaatanAPIRequest $request)
+    public function update($id, UpdatepemanfaatanAPIRequest $request)
     {
         $input = $request->all();
 

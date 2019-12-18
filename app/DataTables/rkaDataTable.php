@@ -36,7 +36,7 @@ class rkaDataTable extends DataTable
     {
         $query = $model->newQuery();
 
-        if (isset($_GET['draft']) && $_GET['draft'] === '1') {
+        if (isset($_GET['draft']) && $_GET['draft'] == 1) {
             $query = rka::onlyDrafts();
         }
 

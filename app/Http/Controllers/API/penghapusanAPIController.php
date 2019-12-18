@@ -106,7 +106,7 @@ class penghapusanAPIController extends AppBaseController
 
             $dataDetils = json_decode($request->input('detil'), true);
 
-            if ($request->input('draft')) {
+            if (empty($request->input('draft')) && isset($dataDetils)) {
                 $this->inventaris_penghapusanRepository->moveInventaris($dataDetils, $penghapusan->id);
             }            
 
@@ -270,7 +270,7 @@ class penghapusanAPIController extends AppBaseController
 
             $penghapusan = $this->penghapusanRepository->update($input, $id);
 
-            if ($request->input('draft')) {
+            if (empty($request->input('draft')) && isset($dataDetils)) {
                 $this->inventaris_penghapusanRepository->moveInventaris($dataDetils, $penghapusan->id);
             }    
 

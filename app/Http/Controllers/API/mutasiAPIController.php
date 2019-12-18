@@ -83,7 +83,7 @@ class mutasiAPIController extends AppBaseController
 
             $dataDetils = json_decode($request->input('data-detil'), true);
 
-            if ($request->input('draft')) {
+            if (empty($request->input('draft'))) {
                 $this->inventaris_mutasiRepository->moveInventaris($dataDetils, $mutasi->id);
             }                             
 
@@ -163,7 +163,7 @@ class mutasiAPIController extends AppBaseController
 
             $dataDetils = json_decode($request->input('data-detil'), true);
 
-            if ($request->input('draft')) {
+            if (empty($request->input('draft'))) {
                 $this->inventaris_mutasiRepository->moveInventaris($dataDetils, $mutasi->id);
             }  
 

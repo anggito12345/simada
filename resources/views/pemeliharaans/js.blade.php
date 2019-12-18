@@ -52,15 +52,26 @@
 
     new inlineDatepicker(document.getElementById('tglkontrak'), {
         format: 'DD-MM-YYYY',
-        buttonClear: true,        
+        buttonClear: true,
     });
 
-    function draftSave() {
-        $('[name=draft]').val('1')
-        $('#pemeliharaan-form').submit()
-    }
+    function doSave(isDraft) {
+        Swal.fire({
+            title: 'Anda yakin?',
+            html: `Data akan tersimpan <b>${isDraft ? "" : "tidak"} sebagai draft</b>`,
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya!'
+        }).then((result) => {
+            if (result.value) {
+                $('[name=draft]').val(isDraft ? '1' : '')
+                $('#pemeliharaan-form').submit()
+            }
+        })
 
-    
+    }
 </script>
 
 @if(isset($pemeliharaan))

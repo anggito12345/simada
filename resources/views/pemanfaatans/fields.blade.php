@@ -100,9 +100,9 @@
 
 <div class="form-group col-sm-6">
     {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-    @if(isset($pemanfaatan) && !empty($pemanfaatan->draft))
-        <div class="btn btn-primary" onclick="doSave(true)">Draft</div>
-    @endif     
+    @if(isset($pemanfaatan) && !empty($pemanfaatan->draft) || !isset($pemanfaatan))
+    <div class="btn btn-primary" onclick="doSave(true)">Draft</div>
+    @endif
     <a href="{!! route('pemanfaatans.index') !!}" class="btn btn-default">Cancel</a>
 </div>
 
@@ -257,68 +257,82 @@
         let formData = new FormData($('#form-pemanfaatan')[0])
         let method = "POST"
 
-        for (let index = 0; index < fileGalleryPemanfaatan.fileList().length; index++) {
-            const d = fileGalleryPemanfaatan.fileList()[index]
-            if (d.rawFile) {
-                formData.append(`dokumen_pemanfaatan[${index}]`, d.rawFile)
-            } else {
-                formData.append(`dokumen_pemanfaatan[${index}]`, false)
-            }
+        Swal.fire({
+            title: 'Anda yakin?',
+            html: `Data akan tersimpan <b>${isDraft ? "" : "tidak"} sebagai draft</b>`,
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya!'
+        }).then((result) => {
+            if (result.value) {
+                for (let index = 0; index < fileGalleryPemanfaatan.fileList().length; index++) {
+                    const d = fileGalleryPemanfaatan.fileList()[index]
+                    if (d.rawFile) {
+                        formData.append(`dokumen_pemanfaatan[${index}]`, d.rawFile)
+                    } else {
+                        formData.append(`dokumen_pemanfaatan[${index}]`, false)
+                    }
 
-            let keys = Object.keys(d)
+                    let keys = Object.keys(d)
 
-            keys.forEach((key) => {
-                if (key == 'rawFile') {
-                    return
+                    keys.forEach((key) => {
+                        if (key == 'rawFile') {
+                            return
+                        }
+                        formData.append(`dokumen_pemanfaatan_metadata_${key}[${index}]`, d[key])
+                    })
+
+                    formData.append(`dokumen_pemanfaatan_metadata_id_inventaris[${index}]`, $("#table-inventaris").DataTable().rows('.selected').data()[0].id)
                 }
-                formData.append(`dokumen_pemanfaatan_metadata_${key}[${index}]`, d[key])
-            })
 
-            formData.append(`dokumen_pemanfaatan_metadata_id_inventaris[${index}]`, $("#table-inventaris").DataTable().rows('.selected').data()[0].id)
-        }
+                fotoPemanfaatan.fileList().forEach((d, index) => {
+                    if (d.rawFile) {
+                        formData.append(`foto_pemanfaatan[${index}]`, d.rawFile)
+                    } else {
+                        formData.append(`foto_pemanfaatan[${index}]`, false)
+                    }
 
-        fotoPemanfaatan.fileList().forEach((d, index) => {
-            if (d.rawFile) {
-                formData.append(`foto_pemanfaatan[${index}]`, d.rawFile)
-            } else {
-                formData.append(`foto_pemanfaatan[${index}]`, false)
+                    let keys = Object.keys(d)
+
+                    keys.forEach((key) => {
+                        if (key == 'rawFile') {
+                            return
+                        }
+                        formData.append(`foto_pemanfaatan_metadata_${key}[${index}]`, d[key])
+                    })
+
+                    formData.append(`foto_pemanfaatan_metadata_id_inventaris[${index}]`, $("#table-inventaris").DataTable().rows('.selected').data()[0].id)
+
+                    return d.rawFile
+                })
+
+                formData.append('detil', JSON.stringify($("#table-detil-pemanfaatan").DataTable().rows().data().toArray()));
+                formData.append('draft', isDraft ? '1' : '')
+
+                __ajax({
+                    method: method,
+                    url: "<?= url('api/pemanfaatans', isset($pemanfaatan) ? [$pemanfaatan->id] : []) ?>",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                }).then((d, resp) => {
+                    swal.fire({
+                        type: "success",
+                        text: "Berhasil menyimpan data!",
+                        onClose: () => {
+                            window.location = `${$('[base-path]').val()}/pemanfaatans`
+
+
+                        }
+                    })
+
+                })
             }
-
-            let keys = Object.keys(d)
-
-            keys.forEach((key) => {
-                if (key == 'rawFile') {
-                    return
-                }
-                formData.append(`foto_pemanfaatan_metadata_${key}[${index}]`, d[key])
-            })
-
-            formData.append(`foto_pemanfaatan_metadata_id_inventaris[${index}]`, $("#table-inventaris").DataTable().rows('.selected').data()[0].id)
-
-            return d.rawFile
         })
 
-        formData.append('detil', JSON.stringify($("#table-detil-pemanfaatan").DataTable().rows().data().toArray()));
-        formData.append('draft', isDraft ? '1' : '')
 
-        __ajax({
-            method: method,
-            url: "<?= url('api/pemanfaatans', isset($pemanfaatan) ? [$pemanfaatan->id] : []) ?>",
-            data: formData,
-            processData: false,
-            contentType: false,
-        }).then((d, resp) => {
-            swal.fire({
-                type: "success",
-                text: "Berhasil menyimpan data!",
-                onClose: () => {
-                    window.location = `${$('[base-path]').val()}/pemanfaatans`
-
-
-                }
-            })
-
-        })
     }
 
     const form = document.querySelector('#form-pemanfaatan')

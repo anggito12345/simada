@@ -30,7 +30,8 @@ class rka extends Model
     public $fillable = [
         'no_spk',
         'no_bast',
-        'nilai_kontrak'
+        'nilai_kontrak',
+        'draft'
     ];
 
     /**

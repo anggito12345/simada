@@ -17,6 +17,9 @@ class Constant {
         ],
         'NEW' => [
             'nama' => 'Baru'
+        ],
+        "UPDATE" => [
+            'nama' => 'Update'
         ]
     ];
 

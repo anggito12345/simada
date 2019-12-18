@@ -78,8 +78,8 @@
 {!! Form::hidden('draft', '', []) !!}
 
 <div class="form-group col-sm-6">
-    {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
-    @if(isset($pemeliharaan) && !empty($pemeliharaan->draft))
+    <div class="btn btn-primary" onclick="doSave(false)">Save</div>
+    @if(isset($pemeliharaan) && !empty($pemeliharaan->draft) || !isset($pemeliharaan))
         <div class="btn btn-primary" onclick="doSave(true)">Draft</div>
     @endif 
     <a href="{!! route('pemeliharaans.index') !!}" class="btn btn-default">Cancel</a>
