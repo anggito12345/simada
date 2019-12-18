@@ -42,7 +42,7 @@ class alamat extends Model
      * @var array
      */
     protected $casts = [
-        'id' => 'integer',
+        'id' => 'bigint',
         'pid' => 'integer',
         'nama' => 'string',
         'jenis' => 'string',

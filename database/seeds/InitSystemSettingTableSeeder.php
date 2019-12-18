@@ -81,7 +81,7 @@ class InitSystemSettingTableSeeder extends Seeder
             array (
                 'id' => 4,
                 'nama' => 'NAMA_PROPINSI',
-                'nilai' => 'Jawa Bara',
+                'nilai' => 'Jawa Barat',
                 'aktif' => NULL,
                 'created_at' => NULL,
                 'updated_at' => '2019-11-06',

@@ -30,12 +30,32 @@
 
 <!-- Kode dan Nama kota Field -->
 <div class="row">
-    {!! Form::label('noreg', 'Kode dan Nama Kota:', ["class" => 'col-md-4 item-view']) !!}
+    {!! Form::label('noreg', 'Kode dan Nama Kabupaten/Kota:', ["class" => 'col-md-4 item-view']) !!}
     <p class="col-md-8 item-view">
         <?php  
             echo \App\Models\BaseModel::getRelationData($inventaris->kota, "kode", "");
             echo " / ";
             echo \App\Models\BaseModel::getRelationData($inventaris->kota, "nama", "");
+        ?>
+    </p>
+</div>
+
+<!-- Nama kecamatan Field -->
+<div class="row">
+    {!! Form::label('noreg', 'Nama Kecamatan:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">
+        <?php 
+            echo \App\Models\BaseModel::getRelationData($inventaris->kecamatan, "nama", "");
+        ?>
+    </p>
+</div>
+
+<!-- Nama Kelurahan Field -->
+<div class="row">
+    {!! Form::label('noreg', 'Nama Kelurahan/Desa:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">
+        <?php 
+            echo \App\Models\BaseModel::getRelationData($inventaris->Kelurahan, "nama", "");
         ?>
     </p>
 </div>

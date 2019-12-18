@@ -14,7 +14,7 @@ class CreateMAlamatTable extends Migration {
 	{
 		Schema::create('m_alamat', function(Blueprint $table)
 		{
-			$table->integer('id', true);
+			$table->bigint('id', true);
 			$table->integer('pid')->nullable();
 			$table->string('nama')->nullable();
 			$table->string('jenis')->nullable();
