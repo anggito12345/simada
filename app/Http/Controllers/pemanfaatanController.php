@@ -9,6 +9,7 @@ use App\Http\Requests\UpdatepemanfaatanRequest;
 use App\Repositories\pemanfaatanRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
+use App\Models\pemanfaatan;
 use Response;
 
 class pemanfaatanController extends AppBaseController
@@ -69,7 +70,7 @@ class pemanfaatanController extends AppBaseController
      */
     public function show($id)
     {
-        $pemanfaatan = $this->pemanfaatanRepository->find($id);
+        $pemanfaatan = pemanfaatan::withDrafts()->find($id);
 
         if (empty($pemanfaatan)) {
             Flash::error('Pemanfaatan not found');
@@ -89,7 +90,7 @@ class pemanfaatanController extends AppBaseController
      */
     public function edit($id)
     {
-        $pemanfaatan = $this->pemanfaatanRepository->find($id);
+        $pemanfaatan = pemanfaatan::withDrafts()->find($id);
 
         if (empty($pemanfaatan)) {
             Flash::error('Pemanfaatan not found');
@@ -110,7 +111,7 @@ class pemanfaatanController extends AppBaseController
      */
     public function update($id, UpdatepemanfaatanRequest $request)
     {
-        $pemanfaatan = $this->pemanfaatanRepository->find($id);
+        $pemanfaatan = pemanfaatan::withDrafts()->find($id);
 
         if (empty($pemanfaatan)) {
             Flash::error('Pemanfaatan not found');
@@ -134,7 +135,8 @@ class pemanfaatanController extends AppBaseController
      */
     public function destroy($id)
     {
-        $pemanfaatan = $this->pemanfaatanRepository->find($id);
+        
+        $pemanfaatan = pemanfaatan::withDrafts()->find($id);
 
         if (empty($pemanfaatan)) {
             Flash::error('Pemanfaatan not found');

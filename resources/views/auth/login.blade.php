@@ -33,17 +33,18 @@
 
         body {
             font-family: mainfont !important;
-
-
         }
 
         .left-panel {
-            background: url('images/banner-left.jpeg') no-repeat center center fixed;
+            background: url('images/banner-left_2.png') no-repeat center center;    
             background-size: cover;
+            object-fit: cover;
         }
 
         .right-panel {
             min-height: 100vh;
+            background: url('images/banner-left.jpeg') no-repeat left center fixed;
+            background-size: cover;
         }
     </style>
 </head>

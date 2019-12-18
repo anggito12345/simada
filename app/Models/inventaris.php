@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Draftable;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 use Illuminate\Support\Facades\Validator;
@@ -32,6 +33,8 @@ class inventaris extends Model
 {
 
     use SoftDeletes;
+
+    use Draftable;
 
     public $table = 'inventaris';
     

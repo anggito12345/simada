@@ -91,8 +91,13 @@ class inventarisDataTable extends DataTable
     {
         $mineJabatan = \App\Models\jabatan::find(Auth::user()->jabatan);
 
-        $buildingModel = $model->newQuery()
-            ->select([
+        $buildingModel = $model->newQuery();
+
+        if (isset($_GET['draft']) && $_GET['draft'] == '1') {
+            $buildingModel = inventaris::onlyDrafts();
+        }
+            
+        $buildingModel = $buildingModel->select([
                 "inventaris.*",
                 "m_barang.nama_rek_aset",
                 "m_merk_barang.nama as merk",
@@ -113,7 +118,6 @@ class inventarisDataTable extends DataTable
             ->leftJoin("detil_mesin", "detil_mesin.pidinventaris", "inventaris.id")
             ->leftJoin("m_merk_barang", "m_merk_barang.id", "detil_mesin.merk")
             ->leftJoin('inventaris_penghapusan', 'inventaris_penghapusan.id', 'inventaris.id')
-            ->where('inventaris.draft', isset($_GET['draft']) ? $_GET['draft'] == "1" : false)
             // role =================
             // ->where('m_jabatan.level', '<=', $mineJabatan->level)
             ->where('inventaris.pid_organisasi', '=', Auth::user()->pid_organisasi);

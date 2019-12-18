@@ -626,7 +626,7 @@
                     if (result.value) {
                         let formData = new FormData($('#form-inventaris')[0])
             
-                        formData.append(`draft`, isDraft)
+                        formData.append(`draft`, isDraft ? '1' : '')
 
                         for (let index =0 ; index < fileGallery.fileList().length; index ++) {
                             const d = fileGallery.fileList()[index]

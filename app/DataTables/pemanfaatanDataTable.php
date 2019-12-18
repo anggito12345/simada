@@ -24,6 +24,11 @@ class pemanfaatanDataTable extends DataTable
             })
             ->addColumn('mitra', function($d) {
                 $m_mitra = \App\Models\mitra::where('id',$d->mitra)->first();
+
+                if (empty($m_mitra)) {
+                    return "";
+                }
+
                 return $m_mitra->nama;
             })/*
             ->addColumn('jenis', function($data) {
@@ -43,6 +48,10 @@ class pemanfaatanDataTable extends DataTable
     public function query(pemanfaatan $model)
     {
         $query = $model->newQuery();
+
+        if (isset($_GET['draft']) && $_GET['draft'] == '1') {
+            $query = pemanfaatan::onlyDrafts();
+        }
           /*  ->select([
                 'pemanfaatan.*',
                 'inventaris.noreg',
@@ -66,7 +75,14 @@ class pemanfaatanDataTable extends DataTable
     {
         return $this->builder()
             ->columns($this->getColumns())
-            ->minifiedAjax()
+            ->ajax([
+                'url' => route('pemanfaatans.index'),
+                'type' => 'GET',
+                'dataType' => 'json',
+                'data' => 'function(d) { 
+                    d.draft = $("[name=draft]").val()                                                      
+                }',
+            ])
             ->addAction(['width' => '120px', 'printable' => false])
             ->parameters([
                 'dom'       => 'Bfrtip',

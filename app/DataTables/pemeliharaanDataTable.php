@@ -29,8 +29,15 @@ class pemeliharaanDataTable extends DataTable
      */
     public function query(pemeliharaan $model)
     {
-        $query = $model->newQuery()
-            ->select([
+         
+        $query = $model
+            ->newQuery();
+
+        if (isset($_GET['draft']) && $_GET['draft'] == "1") {            
+            $query = pemeliharaan::onlyDrafts();
+        }
+
+        $query = $query->select([
                 'pemeliharaan.*',
                 'inventaris.noreg'
             ])
@@ -52,7 +59,14 @@ class pemeliharaanDataTable extends DataTable
     {
         return $this->builder()
             ->columns($this->getColumns())
-            ->minifiedAjax()
+            ->ajax([
+                'url' => route('pemeliharaans.index'),
+                'type' => 'GET',
+                'dataType' => 'json',
+                'data' => 'function(d) { 
+                    d.draft = $("[name=draft]").val()                                                      
+                }',
+            ])
             ->addAction(['width' => '120px', 'printable' => false])
             ->parameters([
                 'dom'       => 'Bfrtip',

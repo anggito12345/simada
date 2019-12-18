@@ -2,7 +2,17 @@
     @include('layouts.datatables_css')
 @endsection
 
-{!! $dataTable->table(['id' => 'pemeliharaan-'.uniqid(), 'width' => '100%', 'class' => 'table table-striped ']) !!}
+@if(isset($isInventarisPage))
+<?php 
+$tableId = 'pemeliharaan-'.uniqid();
+?>
+@else
+<?php 
+$tableId = 'pemeliharaan-table';
+?>
+@endif
+
+{!! $dataTable->table(['id' => 'pemeliharaan-table', 'width' => '100%', 'class' => 'table table-striped ']) !!}
 
 
 @section('scripts')

@@ -2,24 +2,20 @@
 <!-- pid Field -->
 <div class="form-group <?= isset($isInventarisPage) ? 'col-md-12' : 'col-md-6'  ?>">
     {!! Form::label('pidinventaris', 'Inventaris:') !!}
-    {!! Form::text('pidinventaris', null, ['id' => 'pidinventaris_pemeliharaan', 'class' => 'form-control', 'data-bind' => 'value: viewModel.data.formPemeliharaan()formPemeliharaan().pidinventaris']) !!}
+    {!! Form::text('pidinventaris', null, ['id' => 'pidinventaris_pemeliharaan', 'class' => 'form-control']) !!}
 </div>
-
-<script>
-    viewModel.data.formPemeliharaan() = ko.observable({})
-</script>
 @endif
 
 <!-- Tgl Field -->
 <div class="form-group <?= isset($isInventarisPage) ? 'col-md-12' : 'col-md-6'  ?>">
     {!! Form::label('tgl', 'Tanggal Buku Pemeliharaan:') !!}
-    {!! Form::text('tgl', null, ['class' => 'form-control','id'=>'tgl', 'data-bind' => 'value: viewModel.data.formPemeliharaan().tgl']) !!}
+    {!! Form::text('tgl', null, ['class' => 'form-control','id'=>'tgl']) !!}
 </div>
 
 <!-- Uraian Field -->
 <div class="form-group <?= isset($isInventarisPage) ? 'col-md-12' : 'col-md-6'  ?>">
     {!! Form::label('uraian', 'Uraian Pemeliharaan:') !!}
-    {!! Form::textarea('uraian', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data.formPemeliharaan().uraian']) !!}
+    {!! Form::textarea('uraian', null, ['class' => 'form-control']) !!}
 </div>
 
 <u class="col-md-12 no-padding">Yang memelihara:</u>
@@ -28,13 +24,13 @@
     <!-- Persh Field -->
     <div class="form-group <?= isset($isInventarisPage) ? 'col-md-12' : 'col-md-6'  ?>">
         {!! Form::label('persh', 'Nama instansi/CV/PT:') !!}
-        {!! Form::text('persh', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data.formPemeliharaan().persh']) !!}
+        {!! Form::text('persh', null, ['class' => 'form-control']) !!}
     </div>
 
     <!-- Alamat Field -->
     <div class="form-group <?= isset($isInventarisPage) ? 'col-md-12' : 'col-md-6'  ?>">
         {!! Form::label('alamat', 'Alamat:') !!}
-        {!! Form::text('alamat', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data.formPemeliharaan().alamat']) !!}
+        {!! Form::text('alamat', null, ['class' => 'form-control']) !!}
     </div>
 </div>
 
@@ -45,46 +41,51 @@
     <!-- Nokontrak Field -->
     <div class="form-group <?= isset($isInventarisPage) ? 'col-md-12' : 'col-md-6'  ?>">
         {!! Form::label('nokontrak', 'Nomor:') !!}
-        {!! Form::text('nokontrak', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data.formPemeliharaan().nokontrak']) !!}
+        {!! Form::text('nokontrak', null, ['class' => 'form-control']) !!}
     </div>
 
     <!-- Tglkontrak Field -->
     <div class="form-group <?= isset($isInventarisPage) ? 'col-md-12' : 'col-md-6'  ?>">
         {!! Form::label('tglkontrak', 'Tanggal:') !!}
-        {!! Form::text('tglkontrak', null, ['class' => 'form-control','id'=>'tglkontrak', 'data-bind' => 'value: viewModel.data.formPemeliharaan().tglkontrak']) !!}
+        {!! Form::text('tglkontrak', null, ['class' => 'form-control','id'=>'tglkontrak']) !!}
     </div>
 </div>
 
 <!-- Biaya Field -->
 <div class="form-group <?= isset($isInventarisPage) ? 'col-md-12' : 'col-md-6'  ?>">
     {!! Form::label('biaya', 'Biaya Pemeliharaan:') !!}
-    {!! Form::number('biaya', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data.formPemeliharaan().biaya']) !!}
+    {!! Form::number('biaya', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Umur Ekonomis Field -->
 <div class="form-group <?= isset($isInventarisPage) ? 'col-md-12' : 'col-md-6'  ?>">
     {!! Form::label('umur_ekonomis', 'Umur Ekonomis:') !!}
-    {!! Form::number('umur_ekonomis', 0, [ 'class' => 'form-control', 'data-bind' => 'value: viewModel.data.formPemeliharaan().umur_ekonomis']) !!}
+    {!! Form::number('umur_ekonomis', 0, [ 'class' => 'form-control']) !!}
 </div>
 
 <!-- Menambah Field -->
 <div class="form-group <?= isset($isInventarisPage) ? 'col-md-12' : 'col-md-6'  ?>">
     {!! Form::label('menambah', 'Menambah Aset:') !!}
-    {!! Form::checkbox('menambah', 0, [ 'class' => 'form-control', 'value' => 1, 'data-bind' => 'checked: viewModel.data.formPemeliharaan().menambah']) !!} Ya
+    {!! Form::checkbox('menambah', 0, [ 'class' => 'form-control', 'value' => 1]) !!} Ya
 </div>
 
 <!-- Keterangan Field -->
 <div class="form-group <?= isset($isInventarisPage) ? 'col-md-12' : 'col-md-6'  ?>">
     {!! Form::label('keterangan', 'Keterangan:') !!}
-    {!! Form::textarea('keterangan', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data.formPemeliharaan().keterangan']) !!}
+    {!! Form::textarea('keterangan', null, ['class' => 'form-control']) !!}
 </div>
 
-@if(!isset($isInventarisPage))
-<div class="form-group <?= isset($isFromRegister) ? 'col-md-12' : 'col-md-6' ?> col-sm-12">
-    {!! Form::submit('Simpan', ['class' => 'btn btn-primary submit']) !!}
-    <a href="{!! route('pemeliharaans.index') !!}" class="btn btn-default">Batal</a>
+{!! Form::hidden('draft', '', []) !!}
+
+<div class="form-group col-sm-6">
+    {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
+    @if(isset($pemeliharaan) && !empty($pemeliharaan->draft))
+        <div class="btn btn-primary" onclick="doSave(true)">Draft</div>
+    @endif 
+    <a href="{!! route('pemeliharaans.index') !!}" class="btn btn-default">Cancel</a>
 </div>
-@endif
+
+
 
 @if(!isset($isInventarisPage))
     @section('scripts')

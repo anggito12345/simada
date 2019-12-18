@@ -31,8 +31,13 @@ class penghapusanDataTable extends DataTable
     public function query(penghapusan $model)
     {   
         $query = $model
-            ->newQuery()
-            ->select([
+            ->newQuery();
+
+        if (isset($_GET['draft']) && $_GET['draft'] == "1") {            
+            $query = penghapusan::onlyDrafts();
+        }
+            
+        $query = $query->select([
                 'penghapusan.*'
             ]);   
 
@@ -45,6 +50,7 @@ class penghapusanDataTable extends DataTable
                 ->groupBy('penghapusan.id');
         
         }
+        
 
         if (isset($_GET['pid_organisasi'])) {
             $query = $query->where([
@@ -64,7 +70,14 @@ class penghapusanDataTable extends DataTable
     {
         return $this->builder()
             ->columns($this->getColumns())
-            ->minifiedAjax()
+            ->ajax([
+                'url' => route('penghapusans.index'),
+                'type' => 'GET',
+                'dataType' => 'json',
+                'data' => 'function(d) { 
+                    d.draft = $("[name=draft]").val()                                                      
+                }',
+            ])
             ->addAction(['width' => '120px', 'printable' => false])
             ->parameters([
                 'dom'       => 'Bfrtip',

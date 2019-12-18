@@ -83,15 +83,16 @@ class mutasiAPIController extends AppBaseController
 
             $dataDetils = json_decode($request->input('data-detil'), true);
 
-            $this->inventaris_mutasiRepository->moveInventaris($dataDetils, $mutasi->id);
-                             
+            if ($request->input('draft')) {
+                $this->inventaris_mutasiRepository->moveInventaris($dataDetils, $mutasi->id);
+            }                             
 
             DB::commit();   
 
         } catch(\Exception $e) {
             DB::rollBack();
             \App\Helpers\FileHelpers::deleteAll($fileDokumens);
-            \App\Models\mutasi::find($mutasi->id)->delete();             
+            \App\Models\mutasi::withDrafts()->find($mutasi->id)->delete();             
             return $this->sendError($e->getMessage() . $e->getTraceAsString() . $e->getFile() . $e->getLine());
         }
 
@@ -110,7 +111,7 @@ class mutasiAPIController extends AppBaseController
     public function show($id)
     {
         /** @var mutasi $mutasi */
-        $mutasi = $this->mutasiRepository->find($id);
+        $mutasi = mutasi::withDrafts()->find($id);
 
         if (empty($mutasi)) {
             return $this->sendError('Mutasi not found');
@@ -133,7 +134,7 @@ class mutasiAPIController extends AppBaseController
         $input = $request->all();
 
         /** @var mutasi $mutasi */
-        $mutasi = $this->mutasiRepository->find($id);
+        $mutasi = mutasi::withDrafts()->find($id);
 
         if (empty($mutasi)) {
             return $this->sendError('Mutasi not found');
@@ -162,7 +163,9 @@ class mutasiAPIController extends AppBaseController
 
             $dataDetils = json_decode($request->input('data-detil'), true);
 
-            
+            if ($request->input('draft')) {
+                $this->inventaris_mutasiRepository->moveInventaris($dataDetils, $mutasi->id);
+            }  
 
             DB::commit();   
 
@@ -188,7 +191,7 @@ class mutasiAPIController extends AppBaseController
     public function destroy($id)
     {
         /** @var mutasi $mutasi */
-        $mutasi = $this->mutasiRepository->find($id);
+        $mutasi = mutasi::withDrafts()->find($id);
 
         if (empty($mutasi)) {
             return $this->sendError('Mutasi not found');

@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Draftable;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -26,6 +27,8 @@ class pemanfaatan extends Model
 {
     // use SoftDeletes;
 
+    use Draftable;
+
     public $table = 'pemanfaatan';
     
     const CREATED_AT = 'created_at';
@@ -49,6 +52,7 @@ class pemanfaatan extends Model
         'aktif',
         'tetap',
         'bagi_hasil',
+        'draft'
     ];
 
     /**

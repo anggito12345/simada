@@ -120,7 +120,7 @@ class pemanfaatanAPIController extends AppBaseController
     public function show($id)
     {
         /** @var pemanfaatan $pemanfaatan */
-        $pemanfaatan = $this->pemanfaatanRepository->find($id);
+        $pemanfaatan = pemanfaatan::withDrafts()->find($id);
 
         if (empty($pemanfaatan)) {
             return $this->sendError('Pemanfaatan not found');
@@ -159,7 +159,7 @@ class pemanfaatanAPIController extends AppBaseController
         $input = $request->all();
 
         /** @var pemanfaatan $pemanfaatan */
-        $pemanfaatan = $this->pemanfaatanRepository->find($id);
+        $pemanfaatan = pemanfaatan::withDrafts()->find($id);
 
         if (empty($pemanfaatan)) {
             return $this->sendError('Pemanfaatan not found');
@@ -238,7 +238,7 @@ class pemanfaatanAPIController extends AppBaseController
             DB::beginTransaction();
             try {
                 /** @var penghapusan $penghapusan */
-                $pemanfaatan = $this->pemanfaatanRepository->find($id);
+                $pemanfaatan = pemanfaatan::withDrafts()->find($id);
 
                 if (empty($pemanfaatan)) {
                     return $this->sendError('Pemanfaatan not found');

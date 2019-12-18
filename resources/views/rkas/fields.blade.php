@@ -30,9 +30,12 @@
 </div>
 
 <!-- Submit Field -->
-<div class="form-group col-sm-12">
-    {!! Form::submit('Simpan', ['class' => 'btn btn-primary submit']) !!}
-    <a href="{!! route('rkas.index') !!}" class="btn btn-default">Batal</a>
+<div class="form-group col-sm-6">
+    {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
+    @if ((isset($rka) && !empty($rka->draft)))
+        <div class="btn btn-primary" onclick="doSave(true)">Draft</div>
+    @endif
+    <a href="{!! route('rkas.index') !!}" class="btn btn-default">Cancel</a>
 </div>
 
 @section('scripts')
@@ -101,7 +104,7 @@ var fileGallery = new FileGallery(document.getElementById('dokumen'), {
     }
 })
 
-const onSave = () => {
+const doSave = (isDraft) => {
 
     Swal.fire({
         title: 'Anda yakin?',
@@ -136,6 +139,7 @@ const onSave = () => {
             }
 
             formData.append('data-detil', JSON.stringify($("#table-detil-rka").DataTable().rows().data().toArray()));
+            formData.append('draft', isDraft ? '1' : '')
 
             __ajax({
                 method: 'POST',
@@ -162,7 +166,7 @@ const form = document.querySelector('#form-rka')
 form.addEventListener('submit', (ev) => {
     ev.preventDefault()
 
-    onSave(false)            
+    doSave(false)            
 })
 
 funcGetDokumenFileList()
@@ -255,11 +259,11 @@ editor.on( 'preSubmit', function ( e, data, action ) {
         this.field('kode_barang').error( 'Mohon pilih Kode Barang terlebih dahulu!' );
     }
 
-    if(! isNaN(this.field( 'nilai_kontrak' ).val()) ) {
+    if(this.field( 'nilai_kontrak' ).val() == '') {
         this.field('nilai_kontrak').error( 'Nilai Kontrak tidak boleh kosong' );
     }
 
-    if(! isNaN(this.field( 'nilai_rka' ).val()) ) {
+    if(this.field( 'nilai_rka' ).val() == '') {
         this.field('nilai_rka').error( 'Nilai RKA tidak boleh kosong' );
     }
 

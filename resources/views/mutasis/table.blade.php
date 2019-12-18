@@ -2,7 +2,7 @@
     @include('layouts.datatables_css')
 @endsection
 
-{!! $dataTable->table(['width' => '100%', 'class' => 'table table-striped ']) !!}
+{!! $dataTable->table(['id' => 'table-mutasi', 'width' => '100%', 'class' => 'table table-striped ']) !!}
 
 @section('scripts')
     @include('layouts.datatables_js')

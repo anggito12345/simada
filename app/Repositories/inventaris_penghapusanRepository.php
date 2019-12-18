@@ -257,6 +257,7 @@ class inventaris_penghapusanRepository extends BaseRepository
         $count['step1'] = count($this->allQuery()->select([
             'inventaris_penghapusan.pid_penghapusan'
         ])
+            ->whereRaw('penghapusan.draft IS NULL')
             ->where([
                 'inventaris_penghapusan.status' => 'STEP-1'
             ])
@@ -267,6 +268,7 @@ class inventaris_penghapusanRepository extends BaseRepository
         $count['step2'] = count($this->allQuery()->select([
             'inventaris_penghapusan.pid_penghapusan'
         ])
+            ->whereRaw('penghapusan.draft IS NULL')
             ->where([
                 'users.pid_organisasi' => Auth::user()->pid_organisasi,
                 'inventaris_penghapusan.status' => 'STEP-2'
@@ -278,6 +280,7 @@ class inventaris_penghapusanRepository extends BaseRepository
         $count['step3'] = count($this->allQuery()->select([
             'inventaris_penghapusan.pid_penghapusan'
         ])
+            ->whereRaw('penghapusan.draft IS NULL')
             ->where([
                 'inventaris_penghapusan.status' => 'STEP-3'
             ])

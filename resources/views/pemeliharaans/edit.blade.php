@@ -13,7 +13,7 @@
        <div class="box box-primary">
            <div class="box-body">
                <div class="">
-                   {!! Form::model($pemeliharaan, ['route' => ['pemeliharaans.update', $pemeliharaan->id], 'method' => 'patch']) !!}
+                   {!! Form::model($pemeliharaan, ['route' => ['pemeliharaans.update', $pemeliharaan->id], 'method' => 'patch', 'id' => 'pemeliharaan-form']) !!}
 
                         @include('pemeliharaans.fields')
 

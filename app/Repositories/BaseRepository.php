@@ -165,7 +165,7 @@ abstract class BaseRepository
      */
     public function update($input, $id)
     {
-        $query = $this->model->newQuery();
+        $query = $this->model->withDrafts();
 
         $model = $query->findOrFail($id);
 
@@ -185,7 +185,7 @@ abstract class BaseRepository
      */
     public function delete($id)
     {
-        $query = $this->model->newQuery();
+        $query = $this->model->withDrafts();
 
         $model = $query->findOrFail($id);
 

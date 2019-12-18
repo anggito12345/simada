@@ -6,6 +6,11 @@ use Eloquent as Model;
 
 class BaseModel extends Model {
 
+    public function __construct()
+    {
+        parent::boot();
+    }
+
     public static $default = [
         'maxlength' => 30,
         'minlength' => 6

@@ -5,26 +5,23 @@
 
 @if(!isset($isInventarisPage))
 <!-- pid Field -->
-<div class="form-group col-md-12">
+<div class="form-group col-6">
     {!! Form::label('pidinventaris', 'Inventaris:') !!}
-    {!! Form::text('pidinventaris', null, ['id' => 'pidinventaris_pemanfaatan', 'class' => 'form-control', 'data-bind' => 'value: viewModel.data.formPemanfaatan()formPemanfaatan().pidinventaris']) !!}
+    {!! Form::text('pidinventaris', null, ['id' => 'pidinventaris_pemanfaatan', 'class' => 'form-control']) !!}
 </div>
 
-<script>
-    viewModel.data.formPemanfaatan() = ko.observable({})
-</script>
 @endif
 <!-- Peruntukan Field -->
-<div class="form-group col-sm-12">
+<div class="form-group col-6">
     {!! Form::label('peruntukan', __('field.peruntukan')) !!}
-    {!! Form::select('peruntukan', \App\Models\BaseModel::$peruntukanDs , null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data.formPemanfaatan().peruntukan']) !!}
+    {!! Form::select('peruntukan', \App\Models\BaseModel::$peruntukanDs , null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Umur Field -->
-<div class="form-group col-sm-12">
+<div class="form-group col-6">
     {!! Form::label('umur', __('field.umur')) !!}
     <div class="input-group">
-        {!! Form::number('umur', null, [ 'onchange' => 'changeTanggalAkhir(this)', 'class' => 'form-control', 'data-bind' => 'value: viewModel.data.formPemanfaatan().umur']) !!}
+        {!! Form::number('umur', null, [ 'onchange' => 'changeTanggalAkhir(this)', 'class' => 'form-control']) !!}
         <div class="input-group-append">
             <span class="input-group-text" id="basic-addon2">Hari</span>
         </div>
@@ -33,58 +30,58 @@
 </div>
 
 <!-- No Perjanjian Field -->
-<div class="form-group col-sm-12">
+<div class="form-group col-6">
     {!! Form::label('no_perjanjian', 'No Perjanjian:') !!}
-    {!! Form::text('no_perjanjian', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data.formPemanfaatan().no_perjanjian']) !!}
+    {!! Form::text('no_perjanjian', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Tgl Mulai Field -->
-<div class="form-group col-sm-12">
+<div class="form-group col-6">
     {!! Form::label('tgl_mulai', 'Tgl Mulai:') !!}
-    {!! Form::text('tgl_mulai', null, ['class' => 'form-control','id'=>'tgl_mulai', 'data-bind' => 'value: viewModel.data.formPemanfaatan().tgl_mulai']) !!}
+    {!! Form::text('tgl_mulai', null, ['class' => 'form-control','id'=>'tgl_mulai']) !!}
 </div>
 
 <!-- Tgl Akhir Field -->
-<div class="form-group col-sm-12">
+<div class="form-group col-6">
     {!! Form::label('tgl_akhir', 'Tgl Akhir:') !!}
-    {!! Form::text('tgl_akhir', null, ['class' => 'form-control','id'=>'tgl_akhir', 'data-bind' => 'value: viewModel.data.formPemanfaatan().tgl_akhir', 'readonly' => 'readonly']) !!}
+    {!! Form::text('tgl_akhir', null, ['class' => 'form-control','id'=>'tgl_akhir', 'readonly' => 'readonly']) !!}
 </div>
 
 <!-- Mitra Field -->
-<div class="form-group col-sm-12">
+<div class="form-group col-6">
     {!! Form::label('mitra', 'Mitra:') !!}
-    {!! Form::select('mitra',[] ,null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data.formPemanfaatan().mitra']) !!}
+    {!! Form::select('mitra',[] ,null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Tipe Kontribusi Field -->
-<div class="form-group col-sm-12">
+<div class="form-group col-6">
     {!! Form::label('tipe_kontribusi', 'Tipe Kontribusi:') !!}
-    {!! Form::select('tipe_kontribusi', \App\Models\BaseModel::$tipeKontribusiDs ,null, ['onchange' => 'notifySubscribersManually()', 'class' => 'form-control', 'data-bind' => 'value: viewModel.data.formPemanfaatan().tipe_kontribusi']) !!}
+    {!! Form::select('tipe_kontribusi', \App\Models\BaseModel::$tipeKontribusiDs ,null, ['onchange' => 'notifySubscribersManually()', 'class' => 'form-control']) !!}
 </div>
 
 <!-- Tetap Field -->
 <!-- ko if: viewModel.data.formPemanfaatan().tipe_kontribusi == '2' -->
-<div class="form-group col-sm-12">
+<div class="form-group col-6">
     {!! Form::label('tetap', 'Tetap:') !!}
-    {!! Form::number('tetap' , "", ['class' => 'form-control', 'data-bind' => 'value: viewModel.data.formPemanfaatan().tetap']) !!}
+    {!! Form::number('tetap' , "", ['class' => 'form-control']) !!}
 </div>
 
 <!-- Bagi Hasil Field -->
-<div class="form-group col-sm-12">
+<div class="form-group col-6">
     {!! Form::label('bagi_hasil', 'Bagi Hasil:') !!}
-    {!! Form::number('bagi_hasil', "", ['class' => 'form-control', 'data-bind' => 'value: viewModel.data.formPemanfaatan().bagi_hasil']) !!}
+    {!! Form::number('bagi_hasil', "", ['class' => 'form-control']) !!}
 </div>
 <!-- /ko -->
 
 <!-- ko if: viewModel.data.formPemanfaatan().tipe_kontribusi != '2' -->
-<div class="form-group col-sm-12">
+<div class="form-group col-6">
     {!! Form::label('jumlah_kontribusi', 'Jumlah Kontribusi:') !!}
-    {!! Form::number('jumlah_kontribusi', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data.formPemanfaatan().jumlah_kontribusi']) !!}
+    {!! Form::number('jumlah_kontribusi', null, ['class' => 'form-control']) !!}
 </div>
 <!-- /ko -->
 
 <!-- Pegawai Field -->
-<!-- <div class="form-group col-sm-12">
+<!-- <div class="form-group col-6">
     {!! Form::label('pegawai', 'Pegawai:') !!}
     {!! Form::number('pegawai', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data.formPemanfaatan().pegawai']) !!}
 </div> -->
@@ -101,20 +98,68 @@
     {!! Form::file('foto_pemanfaatan', ['class' => 'form-control', 'name' => 'dummy-foto']) !!}
 </div>
 
-<div class="form-group col-sm-12">
-    {!! Form::submit('Simpan', ['class' => 'btn btn-primary submit']) !!}
-    <a href="{!! route('pemanfaatans.index') !!}" class="btn btn-default">Batal</a>
+<div class="form-group col-sm-6">
+    {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
+    @if(isset($pemanfaatan) && !empty($pemanfaatan->draft))
+        <div class="btn btn-primary" onclick="doSave(true)">Draft</div>
+    @endif     
+    <a href="{!! route('pemanfaatans.index') !!}" class="btn btn-default">Cancel</a>
 </div>
 
+
 @section('scripts')
- @include('pemanfaatans.js')
 <script src="<?= url('js/thirdparty/dataTables.editor.min.js') ?>"></script>
 <!-- Submit Field -->
-<!-- <div class="form-group col-sm-12">
+<!-- <div class="form-group col-6">
     {!! Form::submit('Simpan', ['class' => 'btn btn-primary submit']) !!}
     <a href="{!! route('pemanfaatans.index') !!}" class="btn btn-default">Batal</a>
 </div> -->
 <script>
+    if ($("#pidinventaris_pemanfaatan").length > 0) {
+
+        $("#pidinventaris_pemanfaatan").LookupTable({
+            DataTable: {
+                ajax: {
+                    url: $("[base-path]").val() + "/inventaris",
+                    dataSrc: 'data',
+                    data: (d) => {
+                        return d
+                    },
+                    headers: {
+                        'Authorization': 'Bearer ' + sessionStorage.getItem('api token'),
+                    }
+                },
+                columns: [{
+                        data: 'noreg',
+                        title: 'Nomor Registrasi'
+                    },
+                    {
+                        data: 'nama_rek_aset',
+                        'name': 'm_barang.nama_rek_aset',
+                        title: 'Nama Barang'
+                    },
+                    {
+                        data: 'tahun_perolehan',
+                        title: 'Tahun Perolehan'
+                    },
+
+                ],
+                "processing": true,
+                "serverSide": true,
+                "searching": true,
+                responsive: true,
+                custom: {
+                    typeInput: 'radio',
+                    textField: 'nama_rek_aset',
+                    valueField: 'id',
+                    autoClose: false,
+                    filters: [
+                        // { name: "nama_rek_aset", type:"text", title: "Ketik nama barang yang dicari"},
+                    ]
+                }
+            }
+        })
+    }
     var fileGalleryPemanfaatan, fotoPemanfaatan
 
     function changeTanggalAkhir(obj) {
@@ -206,7 +251,8 @@
             })
         }
     })
-     function doSave() {
+
+    function doSave(isDraft) {
         let url = $("[base-path]").val() + "/api/pemanfaatans"
         let formData = new FormData($('#form-pemanfaatan')[0])
         let method = "POST"
@@ -253,6 +299,7 @@
         })
 
         formData.append('detil', JSON.stringify($("#table-detil-pemanfaatan").DataTable().rows().data().toArray()));
+        formData.append('draft', isDraft ? '1' : '')
 
         __ajax({
             method: method,
@@ -310,7 +357,7 @@
     editor.on('open', function(e, type) {
 
         $('#DTE_Field_inventaris').val('')
-        
+
         if (DTE_Field_inventaris == null) {
             DTE_Field_inventaris = new lookupTable(document.getElementById('DTE_Field_inventaris'), {
                 dataTableOption: {
@@ -374,7 +421,7 @@
             return false;
         }
 
-        
+
         dataSelect = DTE_Field_inventaris.selectedValues
         if (action == 'create') {
             dataSelect.forEach((dataVal, index) => {
@@ -405,7 +452,7 @@
     });
 
     editor.on('initEdit', function(e, node, data) {
-        
+
 
         setTimeout(() => {
             __ajax({
@@ -421,9 +468,15 @@
     });
 
     editor.on('postSubmit', function(e, node, data) {
-        
+
         DTE_Field_inventaris.setDefault(null)
     });
 </script>
+
+@if(isset($pemanfaatan))
+<script>
+    $("#pidinventaris_pemanfaatan").LookupTable().setValAjax("<?= url('api/inventaris', [$pemanfaatan->pidinventaris]) ?>").then((d) => {})
+</script>
+@endif
 
 @endsection

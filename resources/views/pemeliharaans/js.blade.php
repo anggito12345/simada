@@ -55,13 +55,16 @@
         buttonClear: true,        
     });
 
+    function draftSave() {
+        $('[name=draft]').val('1')
+        $('#pemeliharaan-form').submit()
+    }
+
     
 </script>
 
 @if(isset($pemeliharaan))
 <script>
-    viewModel.jsLoaded.subscribe(() => {
-        $("#pidinventaris_pemeliharaan").LookupTable().setValAjax("<?= url('api/inventaris', [$pemeliharaan->pidinventaris]) ?>").then((d) => {})
-    })
+    $("#pidinventaris_pemeliharaan").LookupTable().setValAjax("<?= url('api/inventaris', [$pemeliharaan->pidinventaris]) ?>").then((d) => {})
 </script>
 @endif

@@ -74,6 +74,9 @@
 
 <div class="form-group col-sm-6">
     {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
+    @if(isset($penghapusan) && !empty($penghapusan->draft))
+        <div class="btn btn-primary" onclick="doSave(true)">Draft</div>
+    @endif
     <a href="{!! route('penghapusans.index') !!}" class="btn btn-default">Cancel</a>
 </div>
 
@@ -100,8 +103,6 @@ if (isset($penghapusan)) {
     var fileGallery, foto
 
     let dataDetils = JSON.parse('<?= $dataDetils ?>')
-
-    console.log(dataDetils)
 
     new inlineDatepicker(document.getElementById('tglhapus'), {
         format: 'DD-MM-YYYY',
@@ -167,7 +168,7 @@ if (isset($penghapusan)) {
         }
     })
 
-    function doSave() {
+    function doSave(isDraft) {
         let url = $("[base-path]").val() + "/api/penghapusans"
         let formData = new FormData($('#form-penghapusan')[0])
         let method = "POST"
@@ -214,6 +215,7 @@ if (isset($penghapusan)) {
         })
 
         formData.append('detil', JSON.stringify($("#table-detil-penghapusan").DataTable().rows().data().toArray()));
+        formData.append('draft', isDraft ? '1' : '')
 
         __ajax({
             method: method,
@@ -386,12 +388,6 @@ if (isset($penghapusan)) {
         DTE_Field_inventaris.setDefault(null)
     });
 </script>
-
-@if(isset($penghapusan))
-<script>
-    buttonsOpt = []
-</script>
-@endif
 
 <script>
     $('#table-detil-penghapusan').DataTable({
