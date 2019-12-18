@@ -36,15 +36,16 @@
         }
 
         .left-panel {
-            background: url('images/banner-left_2.png') no-repeat center center;    
-            background-size: cover;
+            background: url('images/banner-left_2.png') no-repeat;    
             object-fit: cover;
+            background-position: center bottom;
         }
 
         .right-panel {
             min-height: 100vh;
-            background: url('images/banner-left.jpeg') no-repeat left center fixed;
+            background: url('images/banner-left.jpeg') no-repeat;
             background-size: cover;
+            background-position: top left;
         }
     </style>
 </head>
