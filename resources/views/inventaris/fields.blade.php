@@ -108,10 +108,21 @@
     {!! Form::select('alamat_propinsi', [] , "", ['class' => 'form-control']) !!}
 </div>
 
-<!-- Kota Field -->
+<!-- Kota Kabupaten Field -->
 <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
-    {!! Form::label('alamat_kota', 'Kota:') !!} <span class="text-danger">*</span>
+    {!! Form::label('alamat_kota', 'Kota/Kabupaten:') !!} <span class="text-danger">*</span>
     {!! Form::select('alamat_kota', [] , "", ['class' => 'form-control']) !!}
+</div>
+
+<!-- Kecamatan Field -->
+<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
+    {!! Form::label('alamat_kecamatan', 'Kecamatan:') !!} <span class="text-danger">*</span>
+    {!! Form::select('alamat_kecamatan', [] , "", ['class' => 'form-control']) !!}
+</div>
+<!-- Kelurahan/Desa Field -->
+<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
+    {!! Form::label('alamat_kelurahan', 'Kelurahan/Desa:') !!} <span class="text-danger">*</span>
+    {!! Form::select('alamat_kelurahan', [] , "", ['class' => 'form-control']) !!}
 </div>
 
 <!-- pid opd Field -->
@@ -430,6 +441,66 @@
             theme: 'bootstrap' ,
         })
 
+        $('#alamat_kota').on('change', function (e) {
+            $("#alamat_kecamatan").val("").trigger("change")
+        });
+
+
+        $('#alamat_kecamatan').select2({
+            ajax: {
+                url: "<?= url('api/alamats') ?>",
+                dataType: 'json',
+                data: function (params) {
+                    var query = {
+                        q: params.term,                                           
+                        addWhere: [
+                            "jenis = '2'",
+                            "pid = " + $("#alamat_kota").val()
+                        ]
+                    }                    
+
+                    return query;
+                },
+                processResults: function (data) {
+                    // Transforms the top-level key of the response object from 'items' to 'results'
+                    return {
+                        results: data.data
+                    };
+                }
+            },
+            theme: 'bootstrap' ,
+        })
+
+        $('#alamat_kecamatan').on('change', function (e) {
+            $("#alamat_kelurahan").val("").trigger("change")
+        });
+
+
+        $('#alamat_kelurahan').select2({
+            ajax: {
+                url: "<?= url('api/alamats') ?>",
+                dataType: 'json',
+                data: function (params) {
+                    var query = {
+                        q: params.term,                                           
+                        addWhere: [
+                            "jenis = '3'",
+                            "pid = " + $("#alamat_kecamatan").val()
+                        ]
+                    }                    
+
+                    return query;
+                },
+                processResults: function (data) {
+                    // Transforms the top-level key of the response object from 'items' to 'results'
+                    return {
+                        results: data.data
+                    };
+                }
+            },
+            theme: 'bootstrap' ,
+        })
+
         $('#harga_satuan').mask("#.##0", {reverse: true});
 
         $('#tahun_perolehan').mask("0000");
@@ -715,9 +786,11 @@
             $kodeStatus = \App\Models\setting::where('nama', 'KODE_LOKASI_STATUS')->first()->nilai;
             $kodePropinsi = \App\Models\setting::where('nama', 'KODE_PROPINSI')->first()->nilai;
             $kodeKota = \App\Models\setting::where('nama', 'KODE_KOTA')->first()->nilai;
+            /*$kodeKecamatan = \App\Models\setting::where('nama', 'KODE_KECAMATAN')->first()->nilai;
+            $kodeKelurahan = \App\Models\setting::where('nama', 'KODE_KELURAHAN')->first()->nilai;*/
         ?>
 
-        $("#pidbarang, #tahun_perolehan, #harga_satuan, #pidopd, #pidopd_cabang, #pidupt, #alamat_propinsi, #alamat_kota").change(() => {
+        $("#pidbarang, #tahun_perolehan, #harga_satuan, #pidopd, #pidopd_cabang, #pidupt, #alamat_propinsi, #alamat_kota, #alamat_kecamatan, #alamat_kelurahan").change(() => {
 
             let propinsiKode = 0
             if ($("#alamat_propinsi").select2('val') != null) {
@@ -742,6 +815,30 @@
 
             if (kotaKode == undefined)
                 kotaKode = 0
+
+            let kecamatanKode = 0
+            if ($("#alamat_kecamatan").select2('val') != null) {
+                kecamatanKode = $("#alamat_kecamatan").select2('data')[0].kode            
+            }
+
+            if (kecamatanKode == undefined && $("#alamat_kecamatan").select2('val') != null &&  $("#alamat_kecamatan").select2('val') != "") {                
+                kecamatanKode = $("#alamat_kecamatan").select2('data')[0].element.dataset.kode                
+            }
+
+            if (kecamatanKode == undefined)
+                kecamatanKode = 0
+
+            let kelurahanKode = 0
+            if ($("#alamat_kelurahan").select2('val') != null) {
+                kelurahanKode = $("#alamat_kelurahan").select2('data')[0].kode            
+            }
+
+            if (kelurahanKode == undefined && $("#alamat_kelurahan").select2('val') != null &&  $("#alamat_kelurahan").select2('val') != "") {                
+                kelurahanKode = $("#alamat_kelurahan").select2('data')[0].element.dataset.kode                
+            }
+
+            if (kelurahanKode == undefined)
+                kelurahanKode = 0
 
             let pidOpd = 0
             if ($("#pidopd").select2('val') != null) {
@@ -829,7 +926,10 @@
         App.Helpers.defaultSelect2($('#alamat_propinsi'), "<?= url('api/alamats', [$inventaris->alamat_propinsi]) ?>","id","nama", () => {           
             
             App.Helpers.defaultSelect2($('#alamat_kota'), "<?= url('api/alamats', [$inventaris->alamat_kota]) ?>","id","nama", () => {              
-                
+                App.Helpers.defaultSelect2($('#alamat_kecamatan'), "<?= url('api/alamats', [$inventaris->alamat_kecamatan]) ?>","id","nama", () => {              
+                    App.Helpers.defaultSelect2($('#alamat_kelurahan'), "<?= url('api/alamats', [$inventaris->alamat_kelurahan]) ?>","id","nama", () => {              
+                    }) 
+                }) 
             }) 
         })
 

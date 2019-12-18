@@ -68,6 +68,8 @@ class inventaris extends Model
         'draft',
         'alamat_kota',
         'alamat_propinsi',
+        'alamat_kecamatan',
+        'alamat_kelurahan',
         'idpegawai',
         'pid_organisasi',
         'kode_gedung',
@@ -358,6 +360,16 @@ class inventaris extends Model
     public function Propinsi()
     {
         return $this->hasOne('App\Models\alamat', 'id', 'alamat_propinsi');
+    }
+
+    public function Kecamatan()
+    {
+        return $this->hasOne('App\Models\alamat', 'id', 'alamat_kecamatan');
+    }
+
+    public function Kelurahan()
+    {
+        return $this->hasOne('App\Models\alamat', 'id', 'alamat_kelurahan');
     }
 
     

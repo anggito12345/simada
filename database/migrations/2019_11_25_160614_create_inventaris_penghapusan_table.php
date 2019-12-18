@@ -41,6 +41,8 @@ class CreateInventarisPenghapusanTable extends Migration {
 			$table->string('kode_lokasi', 1000)->nullable();
 			$table->integer('alamat_propinsi')->nullable();
 			$table->integer('alamat_kota')->nullable();
+			$table->integer('alamat_kecamatan')->nullable();
+			$table->bigInteger('alamat_kelurahan')->nullable();
 			$table->integer('idpegawai')->nullable();
 			$table->integer('pid_organisasi')->nullable();
 			$table->bigInteger('id_pk', true);
