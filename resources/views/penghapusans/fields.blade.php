@@ -73,7 +73,7 @@
 
 
 <div class="form-group col-sm-6">
-    {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
+    {!! Form::submit('Simpan', ['class' => 'btn btn-primary submit']) !!}
     @if(isset($penghapusan) && !empty($penghapusan->draft) || !isset($penghapusan))
     <div class="btn btn-primary" onclick="doSave(true)">Draft</div>
     @endif
