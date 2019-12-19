@@ -123,6 +123,9 @@
                 </div>
             </a>
         </li>
+        <li class="{{ Request::is('organisasis/settings') ? 'active' : '' }}">
+            <a href="{!! route('organisasis.settings') !!}"><i class="fa fa-building"></i><span>OPD</span></a>
+        </li>
         <li class="{{ Request::is('jabatans*') ? 'active' : '' }}">
             <a href="{!! route('jabatans.index') !!}"><i class="fa fa-edit"></i><span>Jabatan/Roles</span></a>
         </li>

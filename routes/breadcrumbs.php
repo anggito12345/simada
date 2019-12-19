@@ -252,6 +252,10 @@ Breadcrumbs::for('organisasis.show', function ($trail,$data) {
     $trail->parent('organisasis.index', $data);
     $trail->push('Lihat', route('organisasis.show',$data));
 });
+// Organisasi Setting
+Breadcrumbs::for('organisasis.settings', function ($trail) {
+    $trail->push('Setting OPD', route('organisasis.settings'));
+});
 
 // Perolehan
 Breadcrumbs::for('perolehans.index', function ($trail) {

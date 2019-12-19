@@ -62,6 +62,43 @@ class organisasiAPIController extends AppBaseController
 
 
         return $this->sendResponse($organisasis->toArray(), 'Organisasis retrieved successfully');
+    }/**
+     * Display a listing of the organisasi.
+     * GET|HEAD /organisasis
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function settings(Request $request)
+    {
+        $querys = \App\Models\organisasi::select([
+            'm_organisasi.nama as text',
+            'm_organisasi.id',      
+            'm_organisasi.jabatans',      
+            'm_organisasi.kode',
+        ]);
+        // ->join('m_jenis_opd', 'm_jenis_opd.id', 'm_organisasi.jenis')
+        
+        if ($request->has('pid')) {
+            if ($request->input('pid') == "") {
+                return $this->sendResponse([], 'Organisasis retrieved successfully');
+            }
+            $querys = $querys->where('m_organisasi.pid', $request->input('pid'));
+        }
+
+        if ($request->has('level')) {
+            $querys = $querys->where('m_organisasi.level', $request->input('level'));
+        }
+
+        if ($request->has('q')) {
+            $querys = $querys->whereRaw("m_organisasi.nama ~* '".$request->input('q')."'");
+        }
+
+        $organisasis = $querys 
+        ->get();
+
+
+        return $this->sendResponse($organisasis->toArray(), 'Organisasis retrieved successfully');
     }
 
     /**
