@@ -24,7 +24,7 @@
 <!-- Umur Field -->
 <div class="row col-sm-12">
     {!! Form::label('umur', 'Umur:', ["class" => 'col-md-3 item-view']) !!}
-    <p class="col-md-8 item-view">{!! $pemanfaatan->umur !!}</p>
+    <p class="col-md-8 item-view">{!! $pemanfaatan->umur !!} {!! $pemanfaatan->umur_satuan !!}</p>
 </div>
 
 <!-- No Perjanjian Field -->

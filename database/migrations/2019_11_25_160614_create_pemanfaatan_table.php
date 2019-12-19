@@ -18,6 +18,7 @@ class CreatePemanfaatanTable extends Migration {
 			$table->integer('pidinventaris')->nullable();
 			$table->string('peruntukan')->nullable();
 			$table->integer('umur')->nullable();
+			$table->string('umur_satuan')->nullable();
 			$table->string('no_perjanjian')->nullable();
 			$table->date('tgl_mulai')->nullable();
 			$table->date('tgl_akhir')->nullable();

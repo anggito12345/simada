@@ -11,6 +11,7 @@ $factory->define(pemanfaatan::class, function (Faker $faker) {
         'pidinventaris' => $faker->randomDigitNotNull,
         'peruntukan' => $faker->word,
         'umur' => $faker->randomDigitNotNull,
+        'umur_satuan' => $faker->word,
         'no_perjanjian' => $faker->word,
         'tgl_mulai' => $faker->word,
         'tgl_akhir' => $faker->word,

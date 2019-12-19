@@ -20,6 +20,7 @@ class pemanfaatanRepository extends BaseRepository
         'pidinventaris',
         'peruntukan',
         'umur',
+        'umur_satuan',
         'no_perjanjian',
         'tgl_mulai',
         'tgl_akhir',

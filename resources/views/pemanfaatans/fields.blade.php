@@ -26,7 +26,9 @@
     <div class="input-group">
         {!! Form::number('umur', null, [ 'onchange' => 'changeTanggalAkhir(this)', 'class' => 'form-control', 'data-bind' => 'value: viewModel.data.formPemanfaatan().umur']) !!}
         <div class="input-group-append">
-            <span class="input-group-text" id="basic-addon2">Hari</span>
+            <span class="input-group-text" id="basic-addon2">
+            {!! Form::select('umur_satuan',array('Hari' => 'Hari', 'Minggu' => 'Minggu', 'Bulan' => 'Bulan', 'Tahun' => 'Tahun'), null, ['class' => 'form-control']) !!}
+            </span>
         </div>
     </div>
 
