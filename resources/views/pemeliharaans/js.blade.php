@@ -52,16 +52,30 @@
 
     new inlineDatepicker(document.getElementById('tglkontrak'), {
         format: 'DD-MM-YYYY',
-        buttonClear: true,        
+        buttonClear: true,
     });
 
-    
+    function doSave(isDraft) {
+        Swal.fire({
+            title: 'Anda yakin?',
+            html: `Data akan tersimpan <b>${isDraft ? "" : "tidak"} sebagai draft</b>`,
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya!'
+        }).then((result) => {
+            if (result.value) {
+                $('[name=draft]').val(isDraft ? '1' : '')
+                $('#pemeliharaan-form').submit()
+            }
+        })
+
+    }
 </script>
 
 @if(isset($pemeliharaan))
 <script>
-    viewModel.jsLoaded.subscribe(() => {
-        $("#pidinventaris_pemeliharaan").LookupTable().setValAjax("<?= url('api/inventaris', [$pemeliharaan->pidinventaris]) ?>").then((d) => {})
-    })
+    $("#pidinventaris_pemeliharaan").LookupTable().setValAjax("<?= url('api/inventaris', [$pemeliharaan->pidinventaris]) ?>").then((d) => {})
 </script>
 @endif

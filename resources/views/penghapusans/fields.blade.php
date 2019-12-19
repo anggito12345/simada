@@ -13,9 +13,9 @@
 <div class="form-group col-sm-6">
     {!! Form::label('kriteria', 'Kriteria Penghapusan:') !!}
     {!! Form::select('kriteria', [
-        'Pemindahtanganan' => 'Pemindahtanganan',
-        'Pemusnahan' => 'Pemusnahan',
-        'Penghapusan' => 'Penghapusan'
+    'Pemindahtanganan' => 'Pemindahtanganan',
+    'Pemusnahan' => 'Pemusnahan',
+    'Penghapusan' => 'Penghapusan'
     ], null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data.formPenghapusan().kriteria']) !!}
 </div>
 
@@ -74,6 +74,9 @@
 
 <div class="form-group col-sm-6">
     {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
+    @if(isset($penghapusan) && !empty($penghapusan->draft) || !isset($penghapusan))
+    <div class="btn btn-primary" onclick="doSave(true)">Draft</div>
+    @endif
     <a href="{!! route('penghapusans.index') !!}" class="btn btn-default">Cancel</a>
 </div>
 
@@ -81,18 +84,18 @@
 <script src="<?= url('js/thirdparty/dataTables.editor.min.js') ?>"></script>
 <!-- why imported here because it would overwrite colvis button javascript which is affected on button create click event. -->
 <?php
-$dataDetils = json_encode([]);
-if (isset($penghapusan)) {
-    $dataDetils = json_encode(\App\Models\inventaris_penghapusan::where('pid_penghapusan', $penghapusan->id)
-        ->select([
-            'inventaris_penghapusan.id_pk as DT_RowId',
-            'm_barang.nama_rek_aset as inventarisNama',
-            'inventaris_penghapusan.id as inventaris',
-            'inventaris_penghapusan.tahun_perolehan as tahun_perolehan',
-        ])
-        ->join('m_barang','m_barang.id', 'inventaris_penghapusan.pidbarang')
-        ->get());
-}
+                $dataDetils = json_encode([]);
+                if (isset($penghapusan)) {
+                    $dataDetils = json_encode(\App\Models\inventaris_penghapusan::where('pid_penghapusan', $penghapusan->id)
+                        ->select([
+                            'inventaris_penghapusan.id_pk as DT_RowId',
+                            'm_barang.nama_rek_aset as inventarisNama',
+                            'inventaris_penghapusan.id as inventaris',
+                            'inventaris_penghapusan.tahun_perolehan as tahun_perolehan',
+                        ])
+                        ->join('m_barang', 'm_barang.id', 'inventaris_penghapusan.pidbarang')
+                        ->get());
+                }
 
 ?>
 
@@ -100,8 +103,6 @@ if (isset($penghapusan)) {
     var fileGallery, foto
 
     let dataDetils = JSON.parse('<?= $dataDetils ?>')
-
-    console.log(dataDetils)
 
     new inlineDatepicker(document.getElementById('tglhapus'), {
         format: 'DD-MM-YYYY',
@@ -167,72 +168,86 @@ if (isset($penghapusan)) {
         }
     })
 
-    function doSave() {
-        let url = $("[base-path]").val() + "/api/penghapusans"
-        let formData = new FormData($('#form-penghapusan')[0])
-        let method = "POST"
+    function doSave(isDraft) {
+        Swal.fire({
+            title: 'Anda yakin?',
+            html: `Data akan tersimpan <b>${isDraft ? "" : "tidak"} sebagai draft</b>`,
+            type: 'warning',
+            showCancelButton: true,
+            confirmButtonColor: '#3085d6',
+            cancelButtonColor: '#d33',
+            confirmButtonText: 'Ya!'
+        }).then((result) => {            
+            if (result.value) {
+                let url = $("[base-path]").val() + "/api/penghapusans"
+                let formData = new FormData($('#form-penghapusan')[0])
+                let method = "POST"
 
-        for (let index = 0; index < fileGallery.fileList().length; index++) {
-            const d = fileGallery.fileList()[index]
-            if (d.rawFile) {
-                formData.append(`dokumen[${index}]`, d.rawFile)
-            } else {
-                formData.append(`dokumen[${index}]`, false)
+                for (let index = 0; index < fileGallery.fileList().length; index++) {
+                    const d = fileGallery.fileList()[index]
+                    if (d.rawFile) {
+                        formData.append(`dokumen[${index}]`, d.rawFile)
+                    } else {
+                        formData.append(`dokumen[${index}]`, false)
+                    }
+
+                    let keys = Object.keys(d)
+
+                    keys.forEach((key) => {
+                        if (key == 'rawFile') {
+                            return
+                        }
+                        formData.append(`dokumen_metadata_${key}[${index}]`, d[key])
+                    })
+
+                    formData.append(`dokumen_metadata_id_inventaris[${index}]`, $("#table-inventaris").DataTable().rows('.selected').data()[0].id)
+                }
+
+                foto.fileList().forEach((d, index) => {
+                    if (d.rawFile) {
+                        formData.append(`foto[${index}]`, d.rawFile)
+                    } else {
+                        formData.append(`foto[${index}]`, false)
+                    }
+
+                    let keys = Object.keys(d)
+
+                    keys.forEach((key) => {
+                        if (key == 'rawFile') {
+                            return
+                        }
+                        formData.append(`foto_metadata_${key}[${index}]`, d[key])
+                    })
+
+                    formData.append(`foto_metadata_id_inventaris[${index}]`, $("#table-inventaris").DataTable().rows('.selected').data()[0].id)
+
+                    return d.rawFile
+                })
+
+                formData.append('detil', JSON.stringify($("#table-detil-penghapusan").DataTable().rows().data().toArray()));
+                formData.append('draft', isDraft ? '1' : '')
+
+                __ajax({
+                    method: method,
+                    url: "<?= url('api/penghapusans', isset($penghapusan) ? [$penghapusan->id] : []) ?>",
+                    data: formData,
+                    processData: false,
+                    contentType: false,
+                }).then((d, resp) => {
+                    swal.fire({
+                        type: "success",
+                        text: "Berhasil menyimpan data!",
+                        onClose: () => {
+                            window.location = `${$('[base-path]').val()}/penghapusans`
+
+
+                        }
+                    })
+
+                })
             }
+        });
 
-            let keys = Object.keys(d)
-
-            keys.forEach((key) => {
-                if (key == 'rawFile') {
-                    return
-                }
-                formData.append(`dokumen_metadata_${key}[${index}]`, d[key])
-            })
-
-            formData.append(`dokumen_metadata_id_inventaris[${index}]`, $("#table-inventaris").DataTable().rows('.selected').data()[0].id)
-        }
-
-        foto.fileList().forEach((d, index) => {
-            if (d.rawFile) {
-                formData.append(`foto[${index}]`, d.rawFile)
-            } else {
-                formData.append(`foto[${index}]`, false)
-            }
-
-            let keys = Object.keys(d)
-
-            keys.forEach((key) => {
-                if (key == 'rawFile') {
-                    return
-                }
-                formData.append(`foto_metadata_${key}[${index}]`, d[key])
-            })
-
-            formData.append(`foto_metadata_id_inventaris[${index}]`, $("#table-inventaris").DataTable().rows('.selected').data()[0].id)
-
-            return d.rawFile
-        })
-
-        formData.append('detil', JSON.stringify($("#table-detil-penghapusan").DataTable().rows().data().toArray()));
-
-        __ajax({
-            method: method,
-            url: "<?= url('api/penghapusans', isset($penghapusan) ? [$penghapusan->id] : []) ?>",
-            data: formData,
-            processData: false,
-            contentType: false,
-        }).then((d, resp) => {
-            swal.fire({
-                type: "success",
-                text: "Berhasil menyimpan data!",
-                onClose: () => {
-                    window.location = `${$('[base-path]').val()}/penghapusans`
-
-
-                }
-            })
-
-        })
     }
 
     const form = document.querySelector('#form-penghapusan')
@@ -271,7 +286,7 @@ if (isset($penghapusan)) {
     editor.on('open', function(e, type) {
 
         $('#DTE_Field_inventaris').val('')
-        
+
         if (DTE_Field_inventaris == null) {
             DTE_Field_inventaris = new lookupTable(document.getElementById('DTE_Field_inventaris'), {
                 dataTableOption: {
@@ -335,7 +350,7 @@ if (isset($penghapusan)) {
             return false;
         }
 
-        
+
         dataSelect = DTE_Field_inventaris.selectedValues
         if (action == 'create') {
             dataSelect.forEach((dataVal, index) => {
@@ -366,7 +381,7 @@ if (isset($penghapusan)) {
     });
 
     editor.on('initEdit', function(e, node, data) {
-        
+
 
         setTimeout(() => {
             __ajax({
@@ -382,16 +397,10 @@ if (isset($penghapusan)) {
     });
 
     editor.on('postSubmit', function(e, node, data) {
-        
+
         DTE_Field_inventaris.setDefault(null)
     });
 </script>
-
-@if(isset($penghapusan))
-<script>
-    buttonsOpt = []
-</script>
-@endif
 
 <script>
     $('#table-detil-penghapusan').DataTable({

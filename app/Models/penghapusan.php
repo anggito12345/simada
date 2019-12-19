@@ -4,6 +4,7 @@ namespace App\Models;
 
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
+use App\Traits\Draftable;
 
 /**
  * Class penghapusan
@@ -25,6 +26,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class penghapusan extends Model
 {
     // use SoftDeletes;
+    use Draftable;
 
     public $table = 'penghapusan';
     
@@ -47,7 +49,8 @@ class penghapusan extends Model
         'nosk',
         'tglsk',
         'keterangan',
-        'created_by'
+        'created_by',
+        'draft'
     ];
 
     /**

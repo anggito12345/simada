@@ -14,7 +14,7 @@
 
             <div class="box-body">
                 <div class="">
-                    {!! Form::open(['route' => 'pemeliharaans.store']) !!}
+                    {!! Form::open(['route' => 'pemeliharaans.store', 'id' => 'pemeliharaan-form']) !!}
 
                         @include('pemeliharaans.fields')
 

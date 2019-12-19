@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Draftable;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -15,6 +16,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class rka extends Model
 {
+    use Draftable;
 
     public $table = 'rka';
     
@@ -28,7 +30,8 @@ class rka extends Model
     public $fillable = [
         'no_spk',
         'no_bast',
-        'nilai_kontrak'
+        'nilai_kontrak',
+        'draft'
     ];
 
     /**

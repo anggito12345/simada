@@ -697,7 +697,7 @@
                     if (result.value) {
                         let formData = new FormData($('#form-inventaris')[0])
             
-                        formData.append(`draft`, isDraft)
+                        formData.append(`draft`, isDraft ? '1' : '')
 
                         for (let index =0 ; index < fileGallery.fileList().length; index ++) {
                             const d = fileGallery.fileList()[index]
@@ -1001,7 +1001,7 @@
 <div class="form-group col-sm-12">
     {!! Form::submit('Simpan', ['class' => 'btn btn-primary submit']) !!}
 
-    @if ((isset($inventaris) && !$inventaris->draft) || !isset($inventaris))
+    @if ((isset($inventaris) && !empty($inventaris->draft)) || !isset($inventaris))
         <div class="btn btn-primary" onclick="onSave(true)">Draft</div>
     @endif
     <a href="{!! route('inventaris.index') !!}" class="btn btn-default">Batal</a>

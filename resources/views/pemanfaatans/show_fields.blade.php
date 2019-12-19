@@ -45,11 +45,11 @@
     <p class="col-md-8 item-view">{!! $pemanfaatan->tgl_akhir !!}</p>
 </div>
 
-<!-- Mitra Field -->
+<!-- Mitra Field
 <div class="row col-sm-12">
     {!! Form::label('mitra', 'Mitra:', ["class" => 'col-md-3 item-view']) !!}
-    <p class="col-md-8 item-view">{!! $mitra->nama !!}</p>
-</div>
+    <p class="col-md-8 item-view"></p>
+</div> -->
 
 <!-- Tipe Kontribusi Field -->
 <div class="row col-sm-12">

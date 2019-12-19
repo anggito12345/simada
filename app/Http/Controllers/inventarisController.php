@@ -9,6 +9,7 @@ use App\Http\Requests\UpdateinventarisRequest;
 use App\Repositories\inventarisRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
+use App\Models\inventaris;
 use Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
@@ -111,7 +112,7 @@ class inventarisController extends AppBaseController
      */
     public function show($id)
     {
-        $inventaris = $this->inventarisRepository->find($id);
+        $inventaris = inventaris::withDrafts()->find($id);
 
         if (empty($inventaris)) {
             Flash::error('Inventaris not found');
@@ -131,7 +132,7 @@ class inventarisController extends AppBaseController
      */
     public function edit($id)
     {
-        $inventaris = $this->inventarisRepository->find($id);
+        $inventaris = inventaris::withDrafts()->find($id);
 
         if (empty($inventaris)) {
             Flash::error('Inventaris not found');
@@ -151,7 +152,7 @@ class inventarisController extends AppBaseController
      */
     public function destroy($id)
     {
-        $inventaris = $this->inventarisRepository->find($id);
+        $inventaris = inventaris::withDrafts()->find($id);
 
         if (empty($inventaris)) {
             Flash::error('Inventaris not found');

@@ -23,9 +23,8 @@ class DatabaseSeeder extends Seeder
         $this->call(InitMMerkBarangTableSeeder::class);
         $this->call(InitMKondisiTableSeeder::class);
         $this->call(InitMJabatanTableSeeder::class);
-        $this->call(InitMBarangTableSeeder::class);
         $this->call(InitMAlamatTableSeeder::class);
         $this->call(InitMJenisBarangTableSeeder::class);
-        $this->call(MAlamatTableSeeder::class);
+        // $this->call(MAlamatTableSeeder::class);
     }
 }

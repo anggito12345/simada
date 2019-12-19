@@ -51,14 +51,13 @@
 
 
 <!-- Submit Field -->
-<div class="form-group col-sm-12">
-    {!! Form::submit('Simpan', ['class' => 'btn btn-primary submit']) !!}
-    <a href="{!! route('mutasis.index') !!}" class="btn btn-default">Batal</a>
+<div class="form-group col-sm-6">
+    {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
+    @if ((isset($mutasi) && !empty($mutasi->draft)) || !isset($mutasi))
+        <div class="btn btn-primary" onclick="doSave(true)">Draft</div>
+    @endif
+    <a href="{!! route('mutasis.index') !!}" class="btn btn-default">Cancel</a>
 </div>
-
-
-
-
 @section('scripts')
 
 
@@ -187,11 +186,11 @@
         }
     })
 
-    const onSave = () => {
+    const doSave = (isDraft) => {
 
         Swal.fire({
             title: 'Anda yakin?',
-            html: ``,
+            html: `Data akan tersimpan <b>${isDraft ? "" : "tidak"} sebagai draft</b>`,
             type: 'warning',
             showCancelButton: true,
             confirmButtonColor: '#3085d6',
@@ -224,6 +223,7 @@
                 }
 
                 formData.append('data-detil', JSON.stringify($("#table-detil-mutasi").DataTable().rows().data().toArray()));
+                formData.append('draft', isDraft ? '1' : '')
 
                 __ajax({
                     method: 'POST',
@@ -250,7 +250,7 @@
     form.addEventListener('submit', (ev) => {
         ev.preventDefault()
 
-        onSave(false)            
+        doSave(false)            
     })
 
     funcGetDokumenFileList()

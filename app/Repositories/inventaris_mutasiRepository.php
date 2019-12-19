@@ -240,12 +240,12 @@ class inventaris_mutasiRepository extends BaseRepository
             'step3' => 0
         ];
         
-        $count['step1'] = count($this->allQuery([
-            
+        $count['step1'] = count($this->allQuery([            
         ])->select([
             'inventaris_mutasi.mutasi_id'
         ])->join('mutasi', 'mutasi.id', 'inventaris_mutasi.mutasi_id')
         ->groupBy(['inventaris_mutasi.mutasi_id'])
+        ->whereRaw('mutasi.draft IS NULL')
         ->where([
             'mutasi.opd_tujuan' => Auth::user()->pid_organisasi,
             'inventaris_mutasi.status' => 'STEP-1'
@@ -255,6 +255,7 @@ class inventaris_mutasiRepository extends BaseRepository
             $count['step2'] = count($this->allQuery()->select([
                 'inventaris_mutasi.mutasi_id'
             ])
+            ->whereRaw('mutasi.draft IS NULL')
             ->where([
                 'mutasi.opd_tujuan' => Auth::user()->pid_organisasi,
                 'inventaris_mutasi.status' => 'STEP-2'
@@ -265,6 +266,7 @@ class inventaris_mutasiRepository extends BaseRepository
             $count['step2'] = count($this->allQuery()->select([
                 'inventaris_mutasi.mutasi_id'
             ])
+            ->whereRaw('mutasi.draft IS NULL')
             ->where([
                 'inventaris_mutasi.status' => 'STEP-2'
             ])
@@ -279,6 +281,7 @@ class inventaris_mutasiRepository extends BaseRepository
             'inventaris_mutasi.mutasi_id'
         ])->join('mutasi', 'mutasi.id', 'inventaris_mutasi.mutasi_id')
         ->groupBy(['inventaris_mutasi.mutasi_id'])
+        ->whereRaw('mutasi.draft IS NULL')
         ->where([
             'mutasi.opd_tujuan' => Auth::user()->pid_organisasi,
             'inventaris_mutasi.status' => 'STEP-3'

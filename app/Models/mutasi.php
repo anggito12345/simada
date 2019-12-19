@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Traits\Draftable;
 use Eloquent as Model;
 use Illuminate\Database\Eloquent\SoftDeletes;
 
@@ -21,6 +22,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class mutasi extends Model
 {
     // use SoftDeletes;
+    use Draftable;
 
     public $table = 'mutasi';
     
@@ -38,7 +40,8 @@ class mutasi extends Model
         'tgl_bast',
         'idpegawai',
         'alasan_mutasi',
-        'keterangan'
+        'keterangan',
+        'draft'
     ];
 
     /**

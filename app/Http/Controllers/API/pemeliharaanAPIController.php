@@ -66,26 +66,28 @@ class pemeliharaanAPIController extends AppBaseController
             $inventaris = inventaris::find($input['pidinventaris']);
 
             if (empty($inventaris)) {
-                return $this->sendError('inventaris not found', 500);            
-            }                     
-    
-            $inventaris->update([
-                'umur_ekonomis' => (int)$inventaris->umur_ekonomis + (int)$input['umur_ekonomis'],
-                'harga_satuan' => (int)$inventaris->harga_satuan + (int)$input['biaya'],
-            ]);
+                return $this->sendError('inventaris not found', 500);
+            }
 
-            $inventarisHistory = $inventaris->toArray();   
+            if (empty($request->input('draft'))) {
+                $inventaris->update([
+                    'umur_ekonomis' => (int) $inventaris->umur_ekonomis + (int) $input['umur_ekonomis'],
+                    'harga_satuan' => (int) $inventaris->harga_satuan + (int) $input['biaya'],
+                ]);
 
-            $this->inventaris_historyRepository->postHistory($inventarisHistory, Constant::$ACTION_HISTORY['PEM1']);
-    
+                $inventarisHistory = $inventaris->toArray();
+
+                $this->inventaris_historyRepository->postHistory($inventarisHistory, Constant::$ACTION_HISTORY['PEM1']);
+            }
+
             $pemeliharaan = $this->pemeliharaanRepository->create($input);
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            return $this->sendError($e->getMessage(), 500);            
+            return $this->sendError($e->getMessage(), 500);
         }
 
-        
+
 
         return $this->sendResponse($pemeliharaan->toArray(), 'Pemeliharaan saved successfully');
     }

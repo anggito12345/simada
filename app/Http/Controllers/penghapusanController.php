@@ -9,6 +9,7 @@ use App\Http\Requests\UpdatepenghapusanRequest;
 use App\Repositories\penghapusanRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
+use App\Models\penghapusan;
 use Response;
 
 class penghapusanController extends AppBaseController
@@ -89,7 +90,7 @@ class penghapusanController extends AppBaseController
      */
     public function edit($id)
     {
-        $penghapusan = $this->penghapusanRepository->find($id);
+        $penghapusan = penghapusan::onlyDrafts()->find($id);
 
         if (empty($penghapusan)) {
             Flash::error('Penghapusan not found');

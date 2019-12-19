@@ -106,7 +106,9 @@ class penghapusanAPIController extends AppBaseController
 
             $dataDetils = json_decode($request->input('detil'), true);
 
-            $this->inventaris_penghapusanRepository->moveInventaris($dataDetils, $penghapusan->id);
+            if (empty($request->input('draft')) && isset($dataDetils)) {
+                $this->inventaris_penghapusanRepository->moveInventaris($dataDetils, $penghapusan->id);
+            }            
 
             DB::commit();   
 
@@ -114,7 +116,7 @@ class penghapusanAPIController extends AppBaseController
             DB::rollBack();
             \App\Helpers\FileHelpers::deleteAll($fileDokumens);
             \App\Helpers\FileHelpers::deleteAll($fileFotos);   
-            \App\Models\penghapusan::find($penghapusan->id)->delete();             
+            \App\Models\penghapusan::withDrafts()->find($penghapusan->id)->delete();             
             return $this->sendError($e->getMessage() . $e->getTraceAsString() . $e->getFile() . $e->getLine());
         }
 
@@ -134,7 +136,7 @@ class penghapusanAPIController extends AppBaseController
     public function show($id)
     {
         /** @var penghapusan $penghapusan */
-        $penghapusan = $this->penghapusanRepository->find($id);
+        $penghapusan = penghapusan::withDrafts()->find($id);
 
         if (empty($penghapusan)) {
             return $this->sendError('Penghapusan not found');
@@ -218,7 +220,7 @@ class penghapusanAPIController extends AppBaseController
 
     
 
-    public function editCustom($id, UpdatepenghapusanAPIRequest $request)
+    public function update($id, UpdatepenghapusanAPIRequest $request)
     {
         $input = $request->all();
 
@@ -227,7 +229,7 @@ class penghapusanAPIController extends AppBaseController
 
 
         /** @var penghapusan $penghapusan */
-        $penghapusan = $this->penghapusanRepository->find($id);
+        $penghapusan = penghapusan::withDrafts()->find($id);
 
         if (empty($penghapusan)) {
             return $this->sendError('Penghapusan not found');
@@ -268,8 +270,9 @@ class penghapusanAPIController extends AppBaseController
 
             $penghapusan = $this->penghapusanRepository->update($input, $id);
 
-            $this->inventaris_penghapusanRepository->moveInventaris($input['detil'], $penghapusan->id);
-
+            if (empty($request->input('draft')) && isset($dataDetils)) {
+                $this->inventaris_penghapusanRepository->moveInventaris($dataDetils, $penghapusan->id);
+            }    
 
             DB::commit();   
 
@@ -308,7 +311,7 @@ class penghapusanAPIController extends AppBaseController
             DB::beginTransaction();
             try {
                 /** @var penghapusan $penghapusan */
-                $penghapusan = $this->penghapusanRepository->find($id);
+                $penghapusan = penghapusan::withDrafts()->find($id);
 
                 if (empty($penghapusan)) {
                     return $this->sendError('Penghapusan not found');

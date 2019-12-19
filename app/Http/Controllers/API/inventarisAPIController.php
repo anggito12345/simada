@@ -220,7 +220,7 @@ class inventarisAPIController extends AppBaseController
     public function show($id)
     {
         /** @var inventaris $inventaris */
-        $inventaris = \App\Models\inventaris::select([
+        $inventaris = \App\Models\inventaris::withDrafts()->select([
             'inventaris.*',
             'm_barang.nama_rek_aset'
         ])->join('m_barang', 'm_barang.id', 'inventaris.pidbarang')
@@ -247,7 +247,7 @@ class inventarisAPIController extends AppBaseController
         $input = $request->all();
 
         /** @var inventaris $inventaris */
-        $inventaris = $this->inventarisRepository->find($id);
+        $inventaris = inventaris::withDrafts()->find($id);
 
         if (empty($inventaris)) {
             return $this->sendError('Inventaris not found');
@@ -404,7 +404,7 @@ class inventarisAPIController extends AppBaseController
         $input = $request->all();
 
         /** @var inventaris $inventaris */
-        $inventaris = $this->inventarisRepository->find($id);
+        $inventaris = inventaris::withDrafts()->find($id);
 
         if (empty($inventaris)) {
             return $this->sendError('Inventaris not found');
@@ -452,6 +452,10 @@ class inventarisAPIController extends AppBaseController
 
             \App\Models\inventaris::saveKib($kibData, $input['tipe_kib']);
 
+            $inventarisHistory = $inventaris->toArray();
+
+            $this->inventaris_historyRepository->postHistory($inventarisHistory, Constant::$ACTION_HISTORY["UPDATE"]);
+
             DB::commit();
 
             return $this->sendResponse($inventaris->toArray(), 'inventaris updated successfully');
@@ -485,7 +489,7 @@ class inventarisAPIController extends AppBaseController
 
             DB::beginTransaction();
             try {
-                $inventaris = $this->inventarisRepository->find($id);
+                $inventaris = inventaris::withDrafts()->find($id);
                 if (empty($inventaris)) {
                     return $this->sendError('Inventaris not found');
                 }

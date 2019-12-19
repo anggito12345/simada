@@ -9,6 +9,7 @@ use App\Http\Requests\UpdatemutasiRequest;
 use App\Repositories\mutasiRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
+use App\Models\mutasi;
 use Response;
 use Illuminate\Support\Facades\Storage;
 
@@ -70,7 +71,7 @@ class mutasiController extends AppBaseController
      */
     public function show($id)
     {
-        $mutasi = $this->mutasiRepository->find($id);
+        $mutasi = mutasi::withDrafts()->find($id);
 
         if (empty($mutasi)) {
             Flash::error('Mutasi not found');
@@ -90,7 +91,7 @@ class mutasiController extends AppBaseController
      */
     public function partialview($id)
     {
-        $mutasi = $this->mutasiRepository->find($id);
+        $mutasi = mutasi::withDrafts()->find($id);
 
         if (empty($mutasi)) {
             Flash::error('Mutasi not found');
@@ -111,7 +112,7 @@ class mutasiController extends AppBaseController
      */
     public function edit($id)
     {
-        $mutasi = $this->mutasiRepository->find($id);
+        $mutasi = mutasi::withDrafts()->find($id);
 
         if (empty($mutasi)) {
             Flash::error('Mutasi not found');
@@ -132,7 +133,7 @@ class mutasiController extends AppBaseController
      */
     public function update($id, UpdatemutasiRequest $request)
     {
-        $mutasi = $this->mutasiRepository->find($id);
+        $mutasi = mutasi::withDrafts()->find($id);
 
         if (empty($mutasi)) {
             Flash::error('Mutasi not found');

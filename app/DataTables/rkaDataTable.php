@@ -34,7 +34,13 @@ class rkaDataTable extends DataTable
      */
     public function query(rka $model)
     {
-        return $model->newQuery();
+        $query = $model->newQuery();
+
+        if (isset($_GET['draft']) && $_GET['draft'] == 1) {
+            $query = rka::onlyDrafts();
+        }
+
+        return $query;
     }
 
     /**
@@ -46,7 +52,14 @@ class rkaDataTable extends DataTable
     {
         return $this->builder()
             ->columns($this->getColumns())
-            ->minifiedAjax()
+            ->ajax([
+                'url' => route('rkas.index'),
+                'type' => 'GET',
+                'dataType' => 'json',
+                'data' => 'function(d) { 
+                    d.draft = $("[name=draft]").val()                                                      
+                }',
+            ])
             ->addAction(['width' => '120px', 'printable' => false])
             ->parameters([
                 'drawCallback' => 'function(e) { onLoadDataTable(e) }',

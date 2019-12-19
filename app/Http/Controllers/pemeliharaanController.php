@@ -13,6 +13,7 @@ use App\Repositories\inventaris_historyRepository;
 use App\Http\Controllers\AppBaseController;
 use Response;
 use App\Helpers\Constant;
+use App\Models\pemeliharaan;
 use Illuminate\Support\Facades\DB;
 
 class pemeliharaanController extends AppBaseController
@@ -67,14 +68,17 @@ class pemeliharaanController extends AppBaseController
                 Flash::error('Inventaris not found');            
             }                     
     
-            $inventaris->update([
-                'umur_ekonomis' => (int)$inventaris->umur_ekonomis + (int)$input['umur_ekonomis'],
-                'harga_satuan' => (int)$inventaris->harga_satuan + (int)$input['biaya'],
-            ]);
-
-            $inventarisHistory = $inventaris->toArray();   
-
-            $this->inventaris_historyRepository->postHistory($inventarisHistory, Constant::$ACTION_HISTORY['PEM1']);
+            if (empty($request->input('draft'))) {
+                $inventaris->update([
+                    'umur_ekonomis' => (int)$inventaris->umur_ekonomis + (int)$input['umur_ekonomis'],
+                    'harga_satuan' => (int)$inventaris->harga_satuan + (int)$input['biaya'],
+                ]);
+    
+                $inventarisHistory = $inventaris->toArray();   
+    
+                $this->inventaris_historyRepository->postHistory($inventarisHistory, Constant::$ACTION_HISTORY['PEM1']);
+            }
+            
     
             $pemeliharaan = $this->pemeliharaanRepository->create($input);
             DB::commit();
@@ -98,7 +102,7 @@ class pemeliharaanController extends AppBaseController
      */
     public function show($id)
     {
-        $pemeliharaan = $this->pemeliharaanRepository->find($id);
+        $pemeliharaan = pemeliharaan::withDrafts()->find($id);
 
         if (empty($pemeliharaan)) {
             Flash::error('Pemeliharaan not found');
@@ -118,7 +122,7 @@ class pemeliharaanController extends AppBaseController
      */
     public function edit($id)
     {
-        $pemeliharaan = $this->pemeliharaanRepository->find($id);
+        $pemeliharaan = pemeliharaan::withDrafts()->find($id);
 
         if (empty($pemeliharaan)) {
             Flash::error('Pemeliharaan not found');
@@ -139,7 +143,9 @@ class pemeliharaanController extends AppBaseController
      */
     public function update($id, UpdatepemeliharaanRequest $request)
     {
-        $pemeliharaan = $this->pemeliharaanRepository->find($id);
+        $input = $request->all();
+
+        $pemeliharaan = pemeliharaan::withDrafts()->find($id);
 
         if (empty($pemeliharaan)) {
             Flash::error('Pemeliharaan not found');
@@ -147,9 +153,36 @@ class pemeliharaanController extends AppBaseController
             return redirect(route('pemeliharaans.index'));
         }
 
-        $pemeliharaan = $this->pemeliharaanRepository->update($request->all(), $id);
+        DB::beginTransaction();
+        try {
+            $inventaris = inventaris::find($input['pidinventaris']);
 
-        Flash::success('Pemeliharaan updated successfully.');
+            if (empty($inventaris)) {
+                Flash::error('Inventaris not found');            
+            }                     
+    
+            if (empty($request->input('draft'))) {
+                $inventaris->update([
+                    'umur_ekonomis' => (int)$inventaris->umur_ekonomis + (int)$input['umur_ekonomis'],
+                    'harga_satuan' => (int)$inventaris->harga_satuan + (int)$input['biaya'],
+                ]);
+    
+                $inventarisHistory = $inventaris->toArray();   
+    
+                $this->inventaris_historyRepository->postHistory($inventarisHistory, Constant::$ACTION_HISTORY['PEM1']);
+            }
+            
+    
+            $pemeliharaan = $this->pemeliharaanRepository->update($input, $id);
+            DB::commit();
+        } catch (\Exception $e) {
+            DB::rollBack();
+            Flash::error($e->getMessage());         
+            dd($e->getLine(). $e->getMessage(). $e->getFile());
+            return redirect(route('pemeliharaans.index'));
+        }
+
+        Flash::success('Pemeliharaan saved successfully.');
 
         return redirect(route('pemeliharaans.index'));
     }
@@ -163,7 +196,7 @@ class pemeliharaanController extends AppBaseController
      */
     public function destroy($id)
     {
-        $pemeliharaan = $this->pemeliharaanRepository->find($id);
+        $pemeliharaan = pemeliharaan::withDrafts()->find($id);
 
         if (empty($pemeliharaan)) {
             Flash::error('Pemeliharaan not found');

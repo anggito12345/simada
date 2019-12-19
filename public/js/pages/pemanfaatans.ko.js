@@ -12,3 +12,9 @@ viewModel.data = Object.assign(viewModel.data, {
         keterangan: "",
     }),
 })
+
+viewModel.changeEvent = Object.assign(viewModel.changeEvent, {
+    refreshDatatable: () => {
+        $('#pemanfaatans-table').DataTable().ajax.reload()
+    }
+})

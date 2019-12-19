@@ -36,8 +36,13 @@ class mutasiDataTable extends DataTable
      */
     public function query(mutasi $model)
     {
-        $query = $model->newQuery()
-        ->select([
+        $query = $model->newQuery();
+
+        if (isset($_GET['draft']) && $_GET['draft'] == "1") {            
+            $query = mutasi::onlyDrafts();
+        }
+
+        $query = $query->select([
             'mutasi.*',
             'mo1.nama as nama_mo1',
             'mo2.nama as nama_mo2',
@@ -86,7 +91,14 @@ class mutasiDataTable extends DataTable
     {
         return $this->builder()
             ->columns($this->getColumns())
-            ->minifiedAjax()
+            ->ajax([
+                'url' => route('mutasis.index'),
+                'type' => 'GET',
+                'dataType' => 'json',
+                'data' => 'function(d) { 
+                    d.draft = $("[name=draft]").val()                                                      
+                }',
+            ])
             ->addAction(['width' => '120px', 'printable' => false])
             ->parameters([
                 'drawCallback' => 'function(e) { onLoadDataTable(e) }',
