@@ -75,7 +75,7 @@
 <div class="form-group col-sm-6">
     {!! Form::submit('Simpan', ['class' => 'btn btn-primary submit']) !!}
     @if(isset($penghapusan) && !empty($penghapusan->draft) || !isset($penghapusan))
-    <div class="btn btn-primary" onclick="doSave(true)">Draft</div>
+    <div class="btn btn-info" onclick="doSave(true)">Draft</div>
     @endif
     <a href="{!! route('penghapusans.index') !!}" class="btn btn-default">Batal</a>
 </div>

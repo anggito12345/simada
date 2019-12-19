@@ -54,7 +54,7 @@
 <div class="form-group col-sm-6">
     {!! Form::submit('Simpan', ['class' => 'btn btn-primary submit']) !!}
     @if ((isset($mutasi) && !empty($mutasi->draft)) || !isset($mutasi))
-        <div class="btn btn-primary" onclick="doSave(true)">Draft</div>
+        <div class="btn btn-info" onclick="doSave(true)">Draft</div>
     @endif
     <a href="{!! route('mutasis.index') !!}" class="btn btn-default">Batal</a>
 </div>
