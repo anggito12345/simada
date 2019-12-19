@@ -77,7 +77,7 @@
     @if(isset($penghapusan) && !empty($penghapusan->draft) || !isset($penghapusan))
     <div class="btn btn-primary" onclick="doSave(true)">Draft</div>
     @endif
-    <a href="{!! route('penghapusans.index') !!}" class="btn btn-default">Cancel</a>
+    <a href="{!! route('penghapusans.index') !!}" class="btn btn-default">Batal</a>
 </div>
 
 @section('scripts')

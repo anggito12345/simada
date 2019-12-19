@@ -105,7 +105,7 @@
     @if(isset($pemanfaatan) && !empty($pemanfaatan->draft) || !isset($pemanfaatan))
     <div class="btn btn-primary" onclick="doSave(true)">Draft</div>
     @endif
-    <a href="{!! route('pemanfaatans.index') !!}" class="btn btn-default">Cancel</a>
+    <a href="{!! route('pemanfaatans.index') !!}" class="btn btn-default">Batal</a>
 </div>
 
 

@@ -56,7 +56,7 @@
     @if ((isset($mutasi) && !empty($mutasi->draft)) || !isset($mutasi))
         <div class="btn btn-primary" onclick="doSave(true)">Draft</div>
     @endif
-    <a href="{!! route('mutasis.index') !!}" class="btn btn-default">Cancel</a>
+    <a href="{!! route('mutasis.index') !!}" class="btn btn-default">Batal</a>
 </div>
 @section('scripts')
 
