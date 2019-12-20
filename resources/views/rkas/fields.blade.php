@@ -33,7 +33,7 @@
 <div class="form-group col-sm-6">
     {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
     @if ((isset($rka) && !empty($rka->draft)) || !isset($rka))
-        <div class="btn btn-primary" onclick="doSave(true)">Draft</div>
+        <div class="btn btn-info" onclick="doSave(true)">Draft</div>
     @endif
     <a href="{!! route('rkas.index') !!}" class="btn btn-default">Cancel</a>
 </div>

@@ -21,7 +21,8 @@ class organisasiRepository extends BaseRepository
         'nama',
         'jenis',
         'alamat',
-        'aktif'
+        'aktif',
+        'setting'
     ];
 
     /**

@@ -19,6 +19,7 @@ class CreateMOrganisasiTable extends Migration {
 			$table->string('nama')->nullable();
 			$table->string('alamat')->nullable();
 			$table->integer('aktif')->nullable();
+			$table->integer('setting')->nullable();
 			$table->date('created_at')->nullable();
 			$table->date('updated_at')->nullable();
 			$table->string('kode')->nullable();

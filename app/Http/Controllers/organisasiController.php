@@ -3,6 +3,7 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\organisasiDataTable;
+use App\DataTables\organisasisettingDataTable;
 use App\Http\Requests;
 use App\Http\Requests\CreateorganisasiRequest;
 use App\Http\Requests\UpdateorganisasiRequest;
@@ -30,6 +31,35 @@ class organisasiController extends AppBaseController
     public function index(organisasiDataTable $organisasiDataTable)
     {
         return $organisasiDataTable->render('organisasis.index');
+    }
+
+    public function settings(organisasisettingDataTable $organisasisettingDataTable)
+    {
+        return $organisasisettingDataTable->render('organisasis.settings');
+    }
+
+    public function changeSetting($id,UpdateorganisasiRequest $request)
+    {
+       // print_r($request);exit;
+        $organisasi = $this->organisasiRepository->find($id);
+
+        if (empty($organisasi)) {
+            Flash::error('Setting OPD gagal diperbarui');
+
+            return redirect(route('organisasis.settings'));
+        }
+        if($organisasi->setting==1){
+            $organisasi->setting=0;
+        }
+        else{
+            $organisasi->setting=1;
+        }
+       // $organisasi->setting=$_GET['setting'];
+        $organisasi = $this->organisasiRepository->update($organisasi->toArray(), $id);
+
+        Flash::success('Setting OPD sudah diperbarui.');
+
+        return redirect(route('organisasis.settings'));
     }
 
     /**

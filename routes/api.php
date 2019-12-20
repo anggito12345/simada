@@ -88,6 +88,8 @@ Route::resource('barangs', 'barangAPIController');
 
 Route::resource('organisasis', 'organisasiAPIController');
 
+Route::get('/organisasis/settings', 'organisasiAPIController@settings');
+
 Route::resource('lokasis', 'lokasiAPIController');
 
 //Route::resource('satuan_barangs', 'satuan_barangAPIController');

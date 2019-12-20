@@ -34,6 +34,7 @@ class organisasi extends Model
         'level',
         'alamat',
         'aktif',
+        'setting',
         'jabatans'
     ];
 
@@ -49,6 +50,7 @@ class organisasi extends Model
         'level' => 'integer',
         'alamat' => 'string',
         'aktif' => 'integer',
+        'setting' => 'string',
         'jabatans' => 'string'
         
     ];

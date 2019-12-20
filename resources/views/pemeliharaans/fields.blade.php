@@ -80,7 +80,7 @@
 <div class="form-group col-sm-6">
     <div class="btn btn-primary" onclick="doSave(false)">Save</div>
     @if(isset($pemeliharaan) && !empty($pemeliharaan->draft) || !isset($pemeliharaan))
-        <div class="btn btn-primary" onclick="doSave(true)">Draft</div>
+        <div class="btn btn-info" onclick="doSave(true)">Draft</div>
     @endif 
     <a href="{!! route('pemeliharaans.index') !!}" class="btn btn-default">Cancel</a>
 </div>

@@ -1002,7 +1002,7 @@
     {!! Form::submit('Simpan', ['class' => 'btn btn-primary submit']) !!}
 
     @if ((isset($inventaris) && !empty($inventaris->draft)) || !isset($inventaris))
-        <div class="btn btn-primary" onclick="onSave(true)">Draft</div>
+        <div class="btn btn-info" onclick="onSave(true)">Draft</div>
     @endif
     <a href="{!! route('inventaris.index') !!}" class="btn btn-default">Batal</a>
 </div>

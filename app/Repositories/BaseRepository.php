@@ -165,7 +165,8 @@ abstract class BaseRepository
      */
     public function update($input, $id)
     {
-        $query = $this->model->withDrafts();
+      //  $query = $this->model->withDrafts();
+        $query = $this->model->newQuery();
 
         $model = $query->findOrFail($id);
 

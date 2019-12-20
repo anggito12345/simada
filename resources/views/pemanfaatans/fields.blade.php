@@ -23,7 +23,9 @@
     <div class="input-group">
         {!! Form::number('umur', null, [ 'onchange' => 'changeTanggalAkhir(this)', 'class' => 'form-control']) !!}
         <div class="input-group-append">
-            <span class="input-group-text" id="basic-addon2">Hari</span>
+            <span class="input-group-text" id="basic-addon2">
+            {!! Form::select('umur_satuan',array('Hari' => 'Hari', 'Minggu' => 'Minggu', 'Bulan' => 'Bulan', 'Tahun' => 'Tahun'), null, ['class' => 'form-control']) !!}
+            </span>
         </div>
     </div>
 
@@ -99,11 +101,11 @@
 </div>
 
 <div class="form-group col-sm-6">
-    {!! Form::submit('Save', ['class' => 'btn btn-primary']) !!}
+    {!! Form::submit('Simpan', ['class' => 'btn btn-primary submit']) !!}
     @if(isset($pemanfaatan) && !empty($pemanfaatan->draft) || !isset($pemanfaatan))
-    <div class="btn btn-primary" onclick="doSave(true)">Draft</div>
+    <div class="btn btn-info" onclick="doSave(true)">Draft</div>
     @endif
-    <a href="{!! route('pemanfaatans.index') !!}" class="btn btn-default">Cancel</a>
+    <a href="{!! route('pemanfaatans.index') !!}" class="btn btn-default">Batal</a>
 </div>
 
 
