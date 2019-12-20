@@ -43,25 +43,25 @@
     {!! Form::file('foto', ['class' => 'form-control', 'name' => 'dummy-foto']) !!}
 </div>
 
-<label>Dasar SK Gurbenur</label>
+<!-- <label>Dasar SK Gurbenur</label> -->
 
 <!-- Nosk Field -->
-<div class="form-group col-sm-6">
+<!-- <div class="form-group col-sm-6">
     {!! Form::label('nosk', 'No:') !!}
     {!! Form::text('nosk', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data.formPenghapusan().nosk']) !!}
-</div>
+</div> -->
 
 <!-- Tglsk Field -->
-<div class="form-group col-sm-6">
+<!-- <div class="form-group col-sm-6">
     {!! Form::label('tglsk', 'Tanggal:') !!}
     {!! Form::text('tglsk', null, ['class' => 'form-control','id'=>'tglsk', 'data-bind' => 'value: viewModel.data.formPenghapusan().tglsk']) !!}
-</div>
+</div> -->
 
 <!-- Keterangan Field -->
-<div class="form-group col-sm-6">
+<!-- <div class="form-group col-sm-6">
     {!! Form::label('keterangan', 'Keterangan:') !!}
     {!! Form::textarea('keterangan', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data.formPenghapusan().keterangan']) !!}
-</div>
+</div> -->
 
 
 <div class="form-group col-sm-12">
@@ -84,18 +84,18 @@
 <script src="<?= url('js/thirdparty/dataTables.editor.min.js') ?>"></script>
 <!-- why imported here because it would overwrite colvis button javascript which is affected on button create click event. -->
 <?php
-                $dataDetils = json_encode([]);
-                if (isset($penghapusan)) {
-                    $dataDetils = json_encode(\App\Models\inventaris_penghapusan::where('pid_penghapusan', $penghapusan->id)
-                        ->select([
-                            'inventaris_penghapusan.id_pk as DT_RowId',
-                            'm_barang.nama_rek_aset as inventarisNama',
-                            'inventaris_penghapusan.id as inventaris',
-                            'inventaris_penghapusan.tahun_perolehan as tahun_perolehan',
-                        ])
-                        ->join('m_barang', 'm_barang.id', 'inventaris_penghapusan.pidbarang')
-                        ->get());
-                }
+$dataDetils = json_encode([]);
+if (isset($penghapusan)) {
+    $dataDetils = json_encode(\App\Models\inventaris_penghapusan::where('pid_penghapusan', $penghapusan->id)
+        ->select([
+            'inventaris_penghapusan.id_pk as DT_RowId',
+            'm_barang.nama_rek_aset as inventarisNama',
+            'inventaris_penghapusan.id as inventaris',
+            'inventaris_penghapusan.tahun_perolehan as tahun_perolehan',
+        ])
+        ->join('m_barang', 'm_barang.id', 'inventaris_penghapusan.pidbarang')
+        ->get());
+}
 
 ?>
 
@@ -177,7 +177,7 @@
             confirmButtonColor: '#3085d6',
             cancelButtonColor: '#d33',
             confirmButtonText: 'Ya!'
-        }).then((result) => {            
+        }).then((result) => {
             if (result.value) {
                 let url = $("[base-path]").val() + "/api/penghapusans"
                 let formData = new FormData($('#form-penghapusan')[0])

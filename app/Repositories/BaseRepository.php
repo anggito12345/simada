@@ -168,6 +168,10 @@ abstract class BaseRepository
       //  $query = $this->model->withDrafts();
         $query = $this->model->newQuery();
 
+        if (method_exists($this->model, 'withDrafts')) {
+            $query = $this->model->withDrafts();
+        }
+
         $model = $query->findOrFail($id);
 
         $model->fill($input);
@@ -186,7 +190,11 @@ abstract class BaseRepository
      */
     public function delete($id)
     {
-        $query = $this->model->withDrafts();
+        $query = $this->model->newQuery();
+
+        if (method_exists($this->model, 'withDrafts')) {
+            $query = $this->model->withDrafts();
+        }
 
         $model = $query->findOrFail($id);
 

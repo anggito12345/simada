@@ -14,14 +14,14 @@
             <i class="fa fa-angle-left pull-right"></i>
         </span>
     </a>
-   
+
     <ul class="treeview-menu">
         <li class="{{ Request::is('inventaris*') ? 'active' : '' }}">
             <a href="{!! route('inventaris.index') !!}"><i class="fa fa-edit"></i><span>Penata Usahaan</span></a>
         </li>
         <li class="{{ Request::is('penghapusans*') ? 'active' : '' }}">
             <a href="{!! route('penghapusans.index') !!}"><i class="fa fa-edit"></i><span>Penghapusan</span></a>
-        </li> 
+        </li>
         <li class="{{ Request::is('pemeliharaans*') ? 'active' : '' }}">
             <a href="{!! route('pemeliharaans.index') !!}"><i class="fa fa-edit"></i><span>Pemeliharaan</span></a>
         </li>
@@ -33,10 +33,10 @@
         </li>
         <li class="{{ Request::is('rkas*') ? 'active' : '' }}">
             <a href="{!! route('rkas.index') !!}"><i class="fa fa-edit"></i><span>RKA</span></a>
-        </li>        
+        </li>
     </ul>
 </li>
-
+@if(c::is([],[],[-1]))
 <li class="{{ Request::is('barangs*') ? 'active' : '' }}">
     <a href="{!! route('barangs.index') !!}"><i class="fa fa-car"></i><span>Master Barang</span></a>
 </li>
@@ -58,7 +58,7 @@
             <i class="fa fa-angle-left pull-right"></i>
         </span>
     </a>
-   
+
     <ul class="treeview-menu">
         <li class="{{ Request::is('alamats*') ? 'active' : '' }}">
             <a href="{!! route('alamats.index') !!}"><i class="fa fa-edit"></i><span>Lokasi</span></a>
@@ -89,15 +89,15 @@
         </li> -->
         <li class="{{ Request::is('mitras*') ? 'active' : '' }}">
             <a href="{!! route('mitras.index') !!}"><i class="fa fa-edit"></i><span>Mitra</span></a>
-        </li>    
+        </li>
         <li class="{{ Request::is('pengunaans*') ? 'active' : '' }}">
             <a href="{!! route('pengunaans.index') !!}"><i class="fa fa-edit"></i><span>Pengunaan KIB A</span></a>
-        </li>    
+        </li>
     </ul>
 </li>
 
-<?php 
-    $countUserNeedOtor = \App\Models\users::where('aktif','0')->count();
+<?php
+$countUserNeedOtor = \App\Models\users::where('aktif', '0')->count();
 ?>
 
 <li class="treeview {{ Request::is('users*')? 'active' : '' }}">
@@ -106,10 +106,10 @@
         <span>Pengaturan</span>
         <span class="bg-green padding-notif"><?= $countUserNeedOtor ?></span>
         <span class="pull-right-container">
-            
+
             <i class="fa fa-angle-left pull-right"></i>
         </span>
-    </a>   
+    </a>
     <ul class="treeview-menu">
         <li class="{{ Request::is('users*') 
         || Request::is('jabatans*')
@@ -135,3 +135,4 @@
 
     </ul>
 </li>
+@endif
