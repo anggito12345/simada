@@ -168,7 +168,7 @@ abstract class BaseRepository
       //  $query = $this->model->withDrafts();
         $query = $this->model->newQuery();
 
-        if (method_exists($this->model, 'withDrafts')) {
+        if (is_callable(array($this->model, 'withDrafts'))) {
             $query = $this->model->withDrafts();
         }
 
@@ -192,9 +192,10 @@ abstract class BaseRepository
     {
         $query = $this->model->newQuery();
 
-        if (method_exists($this->model, 'withDrafts')) {
+        if (is_callable(array($this->model, 'withDrafts'))) {
             $query = $this->model->withDrafts();
         }
+
 
         $model = $query->findOrFail($id);
 

@@ -109,11 +109,11 @@ if (isset($penghapusan)) {
         buttonClear: true,
     });
 
-    new inlineDatepicker(document.getElementById('tglsk'), {
-        format: 'DD-MM-YYYY',
-        buttonClear: true,
-        value: viewModel.data.formPenghapusan().tglhapus
-    });
+    // new inlineDatepicker(document.getElementById('tglsk'), {
+    //     format: 'DD-MM-YYYY',
+    //     buttonClear: true,
+    //     value: viewModel.data.formPenghapusan().tglhapus
+    // });
 
 
     fileGallery = new FileGallery(document.getElementById('dokumen'), {
