@@ -60,6 +60,10 @@ class mutasiAPIController extends AppBaseController
     {
         $input = $request->all();
 
+        if (empty($request->input('draft'))) {
+            $input['status'] = "CODE1";
+        }
+
         $mutasi = $this->mutasiRepository->create($input);
 
         $request->merge(['idmutasi' => $mutasi->id]); 
@@ -158,6 +162,10 @@ class mutasiAPIController extends AppBaseController
 
                 return $systemUpload;
             });             
+
+            if (empty($request->input('draft'))) {
+                $input['status'] = "CODE1";
+            }
 
             $rka = $this->mutasiRepository->update($input, $id);
 

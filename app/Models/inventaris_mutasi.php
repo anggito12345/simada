@@ -43,6 +43,9 @@ class inventaris_mutasi extends Model
 {
     // use SoftDeletes;
 
+
+    protected $primaryKey = 'id_pk';
+
     public $table = 'inventaris_mutasi';
     
     const CREATED_AT = 'created_at';
@@ -83,7 +86,9 @@ class inventaris_mutasi extends Model
         'pid_organisasi',
         'mutasi_at',
         'mutasi_id',
-        'status'
+        'status',
+        'cancel_note',
+        
     ];
 
     /**

@@ -22,7 +22,7 @@ viewModel.clickEvent = Object.assign(viewModel.clickEvent, {
         viewModel.data.currentTab(tab)
     },
     setCurrentHighlight: (currentHighlight) => {
-        $(`#table-${currentHighlight}`).DataTable().ajax.reload(); 
+        $(`#table-${currentHighlight}`).DataTable().ajax.reload();
         viewModel.data.currentHighlight(currentHighlight)
     }
 })
@@ -288,6 +288,21 @@ function approvementMutasiStep2(step) {
         })
 }
 
+function cancelMutasiStep2(step) {
+    viewModel.services.cancelMutasi($('#table-mutasi-bpkad').DataTable().rows('.selected').data().toArray(), step)
+        .then((d) => {
+            swal.fire({
+                type: 'success',
+                text: 'inventaris berhasil di setujui!'
+            }).then((d) => {
+                viewModel.clickEvent.setCurrentHighlight(viewModel.data.currentHighlight())
+                $('#modal-mutasi-bpkad').modal('hide')
+                $('#modal-mutasi-bpkad-cancel-form').modal('hide')
+                countMutasiProgress();
+            })
+        })
+}
+
 
 
 
@@ -381,8 +396,13 @@ function approvementMutasiStep3(step) {
  */
 
 
-function beforeApproveStep2(step) {
-    $('#modal-mutasi-bpkad-form').modal('show')
+function beforeApproveStep2(isApprovement) {
+    if (isApprovement) {
+        $('#modal-mutasi-bpkad-form').modal('show')
+    } else {
+        $('#modal-mutasi-bpkad-cancel-form').modal('show')
+    }
+
 }
 
 
@@ -400,27 +420,27 @@ function beforeApproveKonfirmasiPenghapusan() {
  * @param {e} e parameter of datatable itself
  */
 function onloadDataTableMutasiMutasiMasuk(e) {
-  //  $(`#${e.sTableId} tbody`).unbind()
+    //  $(`#${e.sTableId} tbody`).unbind()
     $(`#${e.sTableId} tbody`).unbind('click').on('click', 'td.details-control i', function (i, n) {
-            var tr = $(this).closest('tr');
-                var row = $(`#${e.sTableId}`).DataTable().row( tr );
-               // alert (row.child.isShown())
-                if ( row.child.isShown() ) {
-                    // This row is already open - close it
-                    $(this).attr('class',$(this).attr('class').replace('minus-circle', 'plus-circle'))
+        var tr = $(this).closest('tr');
+        var row = $(`#${e.sTableId}`).DataTable().row(tr);
+        // alert (row.child.isShown())
+        if (row.child.isShown()) {
+            // This row is already open - close it
+            $(this).attr('class', $(this).attr('class').replace('minus-circle', 'plus-circle'))
 
-                    row.child.hide();
-                    tr.removeClass('shown');
-                }
-                else {
-                    $(this).attr('class',$(this).attr('class').replace('plus-circle', 'minus-circle'))
+            row.child.hide();
+            tr.removeClass('shown');
+        }
+        else {
+            $(this).attr('class', $(this).attr('class').replace('plus-circle', 'minus-circle'))
 
-                    $.get(`${$("[base-path]").val()}/partials/view.mutasi/${row.data().id}`).then((data) => {                                                
+            $.get(`${$("[base-path]").val()}/partials/view.mutasi/${row.data().id}`).then((data) => {
 
-                        row.child(`<div class='container container-view'>${data}</div>`).show();
-                    })
-                }
-        })
+                row.child(`<div class='container container-view'>${data}</div>`).show();
+            })
+        }
+    })
 }
 
 /**

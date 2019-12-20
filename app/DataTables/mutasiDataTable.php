@@ -54,7 +54,7 @@ class mutasiDataTable extends DataTable
 
         if(isset($_GET['opd_tujuan']) || isset($_GET['status'])) {
             $query = $query
-                ->join('inventaris_mutasi','inventaris_mutasi.mutasi_id', 'mutasi.id');
+                ->leftJoin('inventaris_mutasi','inventaris_mutasi.mutasi_id', 'mutasi.id');
 
             if (isset($_GET['opd_tujuan'])) {
                 $query = $query ->where([
@@ -99,9 +99,20 @@ class mutasiDataTable extends DataTable
                     d.draft = $("[name=draft]").val()                                                      
                 }',
             ])
+            
             ->addAction(['width' => '120px', 'printable' => false])
             ->parameters([
                 'drawCallback' => 'function(e) { onLoadDataTable(e) }',
+                "createdRow" => "function( row, data, dataIndex){
+                    
+                    if(data.status  == `CODE1`){
+                        $(row).addClass('bg-yellow');
+                    } else if(data.status  ==  `CODE2`){
+                        $(row).addClass('bg-red');
+                    } else if(data.status  ==  `CODE3`){
+                        $(row).addClass('bg-green');
+                    }
+                }",
                 'dom'       => 'Bfrtip',
                 'stateSave' => true,
                 'order'     => [[0, 'desc']],

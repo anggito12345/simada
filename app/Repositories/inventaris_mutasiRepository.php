@@ -106,18 +106,16 @@ class inventaris_mutasiRepository extends BaseRepository
     }
 
     /**
-     * for approvements each item of inventaris mutasis
+     * for cancel each item of inventaris mutasi
      */
 
-    public function approvements($req, $inventaris_historyRepository)
+    public function cancel($req, $inventaris_historyRepository)
     {
         $isAlreadyUpload = false;
         $fileDokumens = [];
-        
+
         foreach (json_decode($req->get('items'), true) as $key => $item) {
-            $theItem = $this->allQuery([
-                
-            ])->where([
+            $theItem = $this->allQuery([])->where([
                 'mutasi_id' => $item['id']
             ])->get();
 
@@ -125,102 +123,191 @@ class inventaris_mutasiRepository extends BaseRepository
                 return response('No Found', 404);
             }
 
-            foreach ($theItem as $k => $each) { 
+            foreach ($theItem as $k => $each) {
 
-                switch($req->get('step')) {
-                    case 'STEP-1': {
-                        if ($each['status'] == 'STEP-1') {
-                            $each->update([
-                                'status' => 'STEP-2'
-                            ]);
-                        }
-                        
-                        break;
-                    }
+                switch ($req->get('step')) {
+                  
                     case 'STEP-2': {
-                        if ($each['status'] == 'STEP-2') {
+                            if ($each['status'] == 'STEP-2') {
+                                DB::beginTransaction();
+                                try {
+                                    $req->merge(['mutasi_id' => $each["mutasi_id"]]);
+
+                                    if (!$isAlreadyUpload) {
+                                        $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen', $req, "inventaris_mutasi", function ($metadatas, $index, $systemUpload) {
+
+                                            $systemUpload->foreign_field = 'id';
+                                            $systemUpload->jenis = 'Dokumen Pembatalan Mutasi (BPKAD)';
+                                            $systemUpload->foreign_table = 'inventaris_mutasi';
+                                            $systemUpload->foreign_id = $metadatas['mutasi_id'];
+
+
+                                            return $systemUpload;
+                                        });
+
+                                        $isAlreadyUpload = true;
+                                    }
+
+                                    $inventaris = \App\Models\inventaris::withTrashed()->find($each['id']);
+
+                                    if (empty($inventaris)) {
+                                        return response()->json([
+                                            'message' => 'Inventaris not found'
+                                        ], 405);
+                                    }
+
+                                    $each->update([
+                                        'status' => 'CANCELLED'
+                                    ]);
+
+                                    $inventaris->restore();
+
+                                    $mutasi = \App\Models\mutasi::find($each['mutasi_id']);
+
+                                    if (empty($mutasi)) {
+                                        return response()->json([
+                                            'message' => 'Mutasi not found'
+                                        ], 405);
+                                    }
+
+                                    $mutasi->cancel_note = $req->get('cancel_note');
+                                    $mutasi->status = 'CODE2';
+                                    $mutasi->save();
+
+                                    DB::commit();
+                                } catch (\Exception $e) {
+                                    \App\Helpers\FileHelpers::deleteAll($fileDokumens);
+                                    DB::rollBack();
+                                    return response()->json([
+                                        'message' => $e->getMessage()
+                                    ], 500);
+                                }
+                            }
+                            break;
+                        }                  
+                }
+            }
+        }
+
+        return response()->json([
+            'message' => 'Berhasil dibatalkan'
+        ], 200);
+    }
+
+    /**
+     * for approvements each item of inventaris mutasis
+     */
+
+    public function approvements($req, $inventaris_historyRepository)
+    {
+        $isAlreadyUpload = false;
+        $fileDokumens = [];
+
+        foreach (json_decode($req->get('items'), true) as $key => $item) {
+            $theItem = inventaris_mutasi::where([
+                'mutasi_id' => $item['id'],
+            ])->get();
+
+            if (empty($theItem)) {
+                return response('No Found', 404);
+            }
+
+            foreach ($theItem as $k => $each) {
+
+                switch ($req->get('step')) {
+                    case 'STEP-1': {
+                            if ($each['status'] == 'STEP-1') {
+                                $each->update([
+                                    'status' => 'STEP-2'
+                                ]);
+                            }
+
+                            break;
+                        }
+                    case 'STEP-2': {
+                            if ($each['status'] == 'STEP-2') {
+                                DB::beginTransaction();
+                                try {
+                                    $req->merge(['mutasi_id' => $each["mutasi_id"]]);
+
+                                    if (!$isAlreadyUpload) {
+                                        $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen', $req, "inventaris_mutasi", function ($metadatas, $index, $systemUpload) {
+
+                                            $systemUpload->foreign_field = 'id';
+                                            $systemUpload->jenis = 'Dokumen Persetujuan Mutasi (BPKAD)';
+                                            $systemUpload->foreign_table = 'inventaris_mutasi';
+                                            $systemUpload->foreign_id = $metadatas['mutasi_id'];
+
+
+                                            return $systemUpload;
+                                        });
+
+                                        $isAlreadyUpload = true;
+                                    }
+
+
+                                    $each->update([
+                                        'status' => 'STEP-3'
+                                    ]);
+
+                                    DB::commit();
+                                } catch (\Exception $e) {
+                                    \App\Helpers\FileHelpers::deleteAll($fileDokumens);
+                                    DB::rollBack();
+                                    return response()->json([
+                                        'message' => $e->getMessage()
+                                    ], 500);
+                                }
+                            }
+                            break;
+                        }
+                    case 'STEP-3': {
                             DB::beginTransaction();
                             try {
-                                $req->merge(['mutasi_id' => $each["mutasi_id"]]);            
-                        
-                                if (!$isAlreadyUpload) {
-                                    $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen', $req, "inventaris_mutasi", function($metadatas, $index, $systemUpload) {
-                                            
-                                        $systemUpload->foreign_field = 'id';
-                                        $systemUpload->jenis = 'Dokumen Persetujuan Mutasi (BPKAD)';
-                                        $systemUpload->foreign_table = 'inventaris_mutasi';
-                                        $systemUpload->foreign_id = $metadatas['mutasi_id'];
-                                                       
-                    
-                                        return $systemUpload;
-                                    });
+                                $each->delete();
 
-                                    $isAlreadyUpload = true;
+                                // getting information of mutasi
+                                $mutasi = \App\Models\mutasi::find($each['mutasi_id']);
+
+                                if (empty($mutasi)) {
+                                    return response()->json([
+                                        'message' => 'mutasi not found'
+                                    ], 500);
                                 }
-                                
-    
-                                $each->update([
-                                    'status' => 'STEP-3'
-                                ]);
+
+                                $mutasi->status = 'CODE3';
+                                $mutasi->save();
+
+                                $inventaris = \App\Models\inventaris::withTrashed()->find($each['id']);
+
+
+                                if (empty($inventaris)) {
+                                    return response()->json([
+                                        'message' => 'inventaris not found'
+                                    ], 500);
+                                }
+
+                                $preForCreteKodeLokasi = $inventaris->toArray();
+                                $preForCreteKodeLokasi['pid_organisasi'] = $mutasi->opd_tujuan;
+                                $preForCreteKodeLokasi['pidopd'] = $mutasi->opd_tujuan;
+                                $preForCreteKodeLokasi['kode_lokasi'] = \App\Repositories\inventarisRepository::generateKodeLokasi($preForCreteKodeLokasi);
+
+                                $inventaris->save();
+
+                                $inventaris_historyRepository->postHistory($preForCreteKodeLokasi, Constant::$ACTION_HISTORY['MUT']);
+
+                                $inventaris->restore();
 
                                 DB::commit();
                             } catch (\Exception $e) {
-                                \App\Helpers\FileHelpers::deleteAll($fileDokumens);
                                 DB::rollBack();
                                 return response()->json([
                                     'message' => $e->getMessage()
                                 ], 500);
                             }
-                            
+                            break;
                         }
-                        break;
-                    }
-                    case 'STEP-3': {
-                        DB::beginTransaction();
-                        try {
-                            $each->delete();
-
-                            // getting information of mutasi
-                            $mutasi = \App\Models\mutasi::find($each['mutasi_id']);
-
-                            if (empty($mutasi)) {
-                                return response()->json([
-                                    'message' => 'mutasi not found'
-                                ], 500);
-                            }
-
-                            $inventaris = \App\Models\inventaris::withTrashed()->find($each['id']);
-
-
-                            if (empty($inventaris)) {
-                                return response()->json([
-                                    'message' => 'inventaris not found'
-                                ], 500);
-                            }                            
-
-                            $preForCreteKodeLokasi = $inventaris->toArray();
-                            $preForCreteKodeLokasi['pid_organisasi'] = $mutasi->opd_tujuan;
-                            $preForCreteKodeLokasi['pidopd'] = $mutasi->opd_tujuan;   
-                            $preForCreteKodeLokasi['kode_lokasi'] = \App\Repositories\inventarisRepository::generateKodeLokasi($preForCreteKodeLokasi);
-
-                            $inventaris->save();
-
-                            $inventaris_historyRepository->postHistory($preForCreteKodeLokasi, Constant::$ACTION_HISTORY['MUT']);
-
-                            $inventaris->restore();
-
-                            DB::commit();
-                        } catch (\Exception $e) {
-                            DB::rollBack();
-                            return response()->json([
-                                'message' => $e->getMessage()
-                            ], 500);
-                        }
-                        break;
-                    }
                 }
-
-                
             }
         }
 
@@ -233,62 +320,62 @@ class inventaris_mutasiRepository extends BaseRepository
      * count all mutasi workflow
      */
 
-     public function count($req) {
+    public function count($req)
+    {
         $count = [
-            'step1'=> 0,
-            'step2'=> 0,
+            'step1' => 0,
+            'step2' => 0,
             'step3' => 0
         ];
-        
-        $count['step1'] = count($this->allQuery([            
-        ])->select([
+
+        $count['step1'] = count($this->allQuery([])->select([
             'inventaris_mutasi.mutasi_id'
         ])->join('mutasi', 'mutasi.id', 'inventaris_mutasi.mutasi_id')
-        ->groupBy(['inventaris_mutasi.mutasi_id'])
-        ->whereRaw('mutasi.draft IS NULL')
-        ->where([
-            'mutasi.opd_tujuan' => Auth::user()->pid_organisasi,
-            'inventaris_mutasi.status' => 'STEP-1'
-        ])->get());
-
-        if (c::is([],[],[0])) {
-            $count['step2'] = count($this->allQuery()->select([
-                'inventaris_mutasi.mutasi_id'
-            ])
+            ->groupBy(['inventaris_mutasi.mutasi_id'])
             ->whereRaw('mutasi.draft IS NULL')
             ->where([
                 'mutasi.opd_tujuan' => Auth::user()->pid_organisasi,
-                'inventaris_mutasi.status' => 'STEP-2'
+                'inventaris_mutasi.status' => 'STEP-1'
+            ])->get());
+
+        if (c::is([], [], [0])) {
+            $count['step2'] = count($this->allQuery()->select([
+                'inventaris_mutasi.mutasi_id'
             ])
-            ->join('mutasi', 'mutasi.id', 'inventaris_mutasi.mutasi_id')
-            ->groupBy(['inventaris_mutasi.mutasi_id'])->get());
+                ->whereRaw('mutasi.draft IS NULL')
+                ->where([
+                    'mutasi.opd_tujuan' => Auth::user()->pid_organisasi,
+                    'inventaris_mutasi.status' => 'STEP-2'
+                ])
+                ->join('mutasi', 'mutasi.id', 'inventaris_mutasi.mutasi_id')
+                ->groupBy(['inventaris_mutasi.mutasi_id'])->get());
         } else {
             $count['step2'] = count($this->allQuery()->select([
                 'inventaris_mutasi.mutasi_id'
             ])
-            ->whereRaw('mutasi.draft IS NULL')
-            ->where([
-                'inventaris_mutasi.status' => 'STEP-2'
-            ])
-            ->join('mutasi', 'mutasi.id', 'inventaris_mutasi.mutasi_id')
-            ->groupBy(['inventaris_mutasi.mutasi_id'])->get());
+                ->whereRaw('mutasi.draft IS NULL')
+                ->where([
+                    'inventaris_mutasi.status' => 'STEP-2'
+                ])
+                ->join('mutasi', 'mutasi.id', 'inventaris_mutasi.mutasi_id')
+                ->groupBy(['inventaris_mutasi.mutasi_id'])->get());
         }
-        
+
 
         $count['step3'] = count($this->allQuery([
             'mutasi.opd_tujuan' => Auth::user()->pid_organisasi,
         ])->select([
             'inventaris_mutasi.mutasi_id'
         ])->join('mutasi', 'mutasi.id', 'inventaris_mutasi.mutasi_id')
-        ->groupBy(['inventaris_mutasi.mutasi_id'])
-        ->whereRaw('mutasi.draft IS NULL')
-        ->where([
-            'mutasi.opd_tujuan' => Auth::user()->pid_organisasi,
-            'inventaris_mutasi.status' => 'STEP-3'
-        ])->get());
+            ->groupBy(['inventaris_mutasi.mutasi_id'])
+            ->whereRaw('mutasi.draft IS NULL')
+            ->where([
+                'mutasi.opd_tujuan' => Auth::user()->pid_organisasi,
+                'inventaris_mutasi.status' => 'STEP-3'
+            ])->get());
 
         return response()->json([
             'data' => $count
         ]);
-     }
+    }
 }

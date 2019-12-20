@@ -41,7 +41,9 @@ class mutasi extends Model
         'idpegawai',
         'alasan_mutasi',
         'keterangan',
-        'draft'
+        'draft',
+        'status',
+        'cancel_note'
     ];
 
     /**

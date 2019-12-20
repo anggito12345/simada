@@ -41,6 +41,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class inventaris_penghapusan extends Model
 {
     // use SoftDeletes;
+    protected $primaryKey = 'id_pk';
+
 
     public $table = 'inventaris_penghapusan';
     

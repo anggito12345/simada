@@ -64,6 +64,14 @@ Route::middleware('auth:api')->post('inventaris_mutasi/approvements', function(
     return $inventaris_mutasiRepository->approvements($request, $inventaris_historyRepository);
 });
 
+Route::middleware('auth:api')->post('inventaris_mutasi/cancel', function( 
+    \App\Repositories\inventaris_mutasiRepository $inventaris_mutasiRepository, 
+    inventaris_historyRepository $inventaris_historyRepository,
+    Request $request) {     
+    return $inventaris_mutasiRepository->cancel($request, $inventaris_historyRepository);
+});
+
+
 Route::middleware('auth:api')->post('inventaris_penghapusan/approvements', function( 
     \App\Repositories\inventaris_penghapusanRepository $inventaris_penghapusanRepository, 
     inventaris_historyRepository $inventaris_historyRepository,

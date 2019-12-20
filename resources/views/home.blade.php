@@ -192,7 +192,7 @@
             <div class="panel-body" data-bind="visible: viewModel.data.currentHighlight() == 'mutasi-masuk'">
                 <table class="table table-striped" id="table-mutasi-masuk">
                 </table>
-                                
+
                 <button type="button" class="btn btn-primary" onclick="approvementMutasi('STEP-1')">Konfirmasi</button>
             </div>
             <div class="panel-body" data-bind="visible: viewModel.data.currentHighlight() == 'mutasi-bpkad'">
@@ -200,7 +200,13 @@
                 </table>
 
                 @if(c::is([],[],[-1]))
-                    <button type="button" class="btn btn-primary" onclick="beforeApproveStep2()">Setujui</button>
+                <div class="d-flex justify-content-center mt-5">
+                    <div class="btn-group">
+                        <button type="button" class="btn btn-primary" onclick="beforeApproveStep2(true)">Setujui</button>
+                        <button type="button" class="btn btn-danger" onclick="beforeApproveStep2(false)">Batalkan</button>
+                    </div>
+                </div>
+
                 @endif
             </div>
 
@@ -235,9 +241,6 @@
     </div>
 </div>
 
-
-
-
 <div class="modal fade" id="modal-mutasi-bpkad-form" role="dialog">
     <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
@@ -259,6 +262,38 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" onclick="approvementMutasiStep2('STEP-2')">Submit</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+
+<div class="modal fade" id="modal-mutasi-bpkad-cancel-form" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Mutasi Batal</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    {!! Form::open(['id' => 'form-bpkad-mutasi-cancel' ]) !!}
+                    <div class="form-group">
+                        <label>Dokumen Pembatalan:</label>
+                        {!! Form::file('dokumen', ['class' => 'form-control', 'id' => 'dokumen-mutasi-cancel']) !!}
+                    </div>
+                    <div class="form-group">
+                        <label>Catatan Pembatalan:</label>
+                        {!! Form::textarea('cancel_note', null, ['class' => 'form-control', 'id' => 'cancel_note', 'row' => 5]) !!}
+                    </div>
+                    {!! Form::close() !!}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="cancelMutasiStep2('STEP-2')">Submit</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
             </div>
         </div>

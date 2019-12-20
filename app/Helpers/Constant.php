@@ -23,5 +23,19 @@ class Constant {
         ]
     ];
 
+    public static $STATUS = [
+        'CODE1' => [
+            'nama' => 'PROGRESS',
+            'class' => 'bg-yellow'
+        ],
+        'CODE2' => [
+            'nama' => 'CANCELLED',
+            'class' => 'bg-red'
+        ],
+        'CODE3' => [
+            'nama' => 'DONE',
+            'class' => 'bg-green'
+        ],
+    ]
 
 }

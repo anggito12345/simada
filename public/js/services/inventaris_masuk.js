@@ -31,6 +31,25 @@ viewModel.services = Object.assign(viewModel.services, {
         }
         
     },
+    cancelMutasi: (tableListSelected, step) => {
+        let formData = new FormData($('#form-bpkad-mutasi')[0])
+
+        if (document.getElementById('dokumen-mutasi-cancel').files.length > 0) {
+            formData.append('dokumen[]', document.getElementById('dokumen-mutasi-cancel').files[0])
+        }
+        formData.append('items', JSON.stringify(tableListSelected))
+        formData.append('step', step)
+        formData.append('cancel_note', document.getElementById('cancel_note').value)
+        
+        return __ajax({
+            url: `${$("[base-path]").val()}/api/inventaris_mutasi/cancel`,
+            method: 'POST',
+            data: formData,
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+        })
+    },
     approvementPenghapusanBPKAD: (tableListSelected, step) => {
         let formData = new FormData($('#form-penghapusan-mutasi')[0])
         if (step == 'STEP-1') { 
