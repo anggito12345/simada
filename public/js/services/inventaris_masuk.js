@@ -57,6 +57,9 @@ viewModel.services = Object.assign(viewModel.services, {
                 formData.append('dokumen[]', document.getElementById('dokumen-penghapusan').files[0])
             }            
             formData.append('nomor_surat', document.getElementById('nomor-persetujuan-step1').value)
+            formData.append('nosk', document.getElementById('nosk').value)
+            formData.append('tglsk', document.getElementById('tglsk').value)
+            formData.append('keterangan', document.getElementById('keterangan').value)
         } else if(step == 'STEP-2') {
             if (document.getElementById('berita-acara').files.length > 0) {
                 formData.append('dokumen[]', document.getElementById('berita-acara').files[0])

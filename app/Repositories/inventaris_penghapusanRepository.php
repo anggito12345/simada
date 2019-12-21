@@ -148,8 +148,10 @@ class inventaris_penghapusanRepository extends BaseRepository
                                 }
 
                                 $penghapusan->nomor_surat_persetujuan_bpkad = $req->get('nomor_surat');
+                                $penghapusan->nosk = $req->get('nosk');
+                                $penghapusan->tglsk = $req->get('tglsk');
+                                $penghapusan->keterangan = $req->get('keterangan');
                                 $penghapusan->save();
-
 
                                 $each->update([
                                     'status' => 'STEP-2'
