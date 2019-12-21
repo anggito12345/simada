@@ -36,6 +36,6 @@ class Constant {
             'nama' => 'DONE',
             'class' => 'bg-green'
         ],
-    ]
+    ];
 
 }

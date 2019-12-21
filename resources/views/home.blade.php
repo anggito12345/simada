@@ -347,6 +347,19 @@
                         <label>Dokumen Persetujuan:</label>
                         {!! Form::file('dokumen', ['class' => 'form-control', 'id' => 'dokumen-penghapusan']) !!}
                     </div>
+                    <label><strong>Dasar SK Gubernur</strong></label>
+                    <div class="form-group">
+                        <label>Nomor SK Gubernur:</label>
+                        {!! Form::text('nosk', null, ['class' => 'form-control', 'id' => 'nosk']) !!}
+                    </div>
+                    <div class="form-group">
+                        <label>Tanggal:</label>
+                        {!! Form::text('tglsk', null, ['class' => 'form-control','id'=>'tglsk']) !!}
+                    </div>
+                    <div class="form-group">
+                        <label>Keterangan:</label>
+                        {!! Form::textarea('keterangan', null, ['class' => 'form-control', 'id' => 'keterangan']) !!}
+                    </div>
                     {!! Form::close() !!}
                 </div>
             </div>

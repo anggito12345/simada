@@ -1,3 +1,8 @@
+new inlineDatepicker(document.getElementById('tglsk'), {
+    format: 'DD-MM-YYYY',
+    buttonClear: true,
+});
+
 /**
  * mutasi section
  */
