@@ -101,7 +101,8 @@ class inventaris_penghapusanRepository extends BaseRepository
      */
     public function approvements($req, $inventaris_historyRepository)
     {
-        $isAlreadyUpload = true;
+        // $isAlreadyUpload = true;
+        $isAlreadyUpload = false;
 
         foreach (json_decode($req->get('items'), true) as $key => $item) {
             $fileDokumens = [];
@@ -212,6 +213,22 @@ class inventaris_penghapusanRepository extends BaseRepository
 
                             DB::beginTransaction();
                             try {
+
+                                $req->merge(['pid_penghapusan' => $each["pid_penghapusan"]]);
+
+                                if (!$isAlreadyUpload) {
+                                    $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen', $req, "inventaris_penghapusan", function ($metadatas, $index, $systemUpload) {
+
+                                        $systemUpload->foreign_field = 'id';
+                                        $systemUpload->jenis = 'penghapusan-step3';
+                                        $systemUpload->foreign_table = 'inventaris_penghapusan';
+                                        $systemUpload->foreign_id = $metadatas['pid_penghapusan'];
+
+                                        return $systemUpload;
+                                    });
+
+                                    $isAlreadyUpload = true;
+                                }
 
                                 $each->update([
                                     'status' => 'STEP-4'
