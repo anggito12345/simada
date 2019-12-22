@@ -101,7 +101,6 @@ class inventaris_penghapusanRepository extends BaseRepository
      */
     public function approvements($req, $inventaris_historyRepository)
     {
-        // $isAlreadyUpload = true;
         $isAlreadyUpload = false;
 
         foreach (json_decode($req->get('items'), true) as $key => $item) {
