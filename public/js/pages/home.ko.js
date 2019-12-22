@@ -368,7 +368,8 @@ function approvementValidasiPenghapusan() {
                 text: 'Penghapusan inventaris berhasil di setujui!'
             }).then((d) => {
                 viewModel.clickEvent.setCurrentHighlight(viewModel.data.currentHighlight())
-                $('#modal-penghapusan-validasi').modal('hide')
+                $('#modal-validasi-penghapusan-konfirmasi-form').modal('hide')
+                $('#dokumen-validasi-penghapusan').val('');
                 countPenghapusanProgress();
             })
         })
@@ -419,6 +420,9 @@ function beforeApproveKonfirmasiPenghapusan() {
     $('#modal-penghapusan-konfirmasi-form').modal('show')
 }
 
+function beforeApproveValidasiPenghapusan() {
+    $('#modal-validasi-penghapusan-konfirmasi-form').modal('show')
+}
 
 /**
  * onDrawCallback DataTable

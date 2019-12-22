@@ -234,7 +234,7 @@
                 <table class="table table-striped" id="table-penghapusan-validasi">
                 </table>
 
-                <button type="button" class="btn btn-primary" onclick="approvementValidasiPenghapusan()">Setujui</button>
+                <button type="button" class="btn btn-primary" onclick="beforeApproveValidasiPenghapusan()">Setujui</button>
             </div>
         </div>
 
@@ -365,6 +365,33 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" onclick="approvementPenghapusanBPKAD('STEP-2')">Submit</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<div class="modal fade" id="modal-validasi-penghapusan-konfirmasi-form" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Validasi Penghapusan</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    {!! Form::open(['id' => 'form-validasi-penghapusan' ]) !!}
+                    <div class="form-group">
+                        <label>Dokumen:</label>
+                        {!! Form::file('dokumen', ['class' => 'form-control', 'id' => 'dokumen-validasi-penghapusan']) !!}
+                    </div>
+                    {!! Form::close() !!}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="approvementValidasiPenghapusan()">Submit</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
             </div>
         </div>
