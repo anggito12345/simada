@@ -31,6 +31,7 @@ class rka extends Model
         'no_spk',
         'no_bast',
         'nilai_kontrak',
+        'created_by',
         'draft'
     ];
 

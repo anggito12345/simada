@@ -48,6 +48,7 @@ class pemeliharaan extends Model
         'menambah',
         'keterangan',
         'umur_ekonomis',
+        'created_by',
         'draft'
     ];
 

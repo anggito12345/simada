@@ -11,6 +11,7 @@ use App\Http\Controllers\AppBaseController;
 use Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class pemanfaatanController
@@ -25,6 +26,7 @@ class pemanfaatanAPIController extends AppBaseController
     public function __construct(pemanfaatanRepository $pemanfaatanRepo)
     {
         $this->pemanfaatanRepository = $pemanfaatanRepo;
+        $this->middleware('auth:api');
     }
 
     /**
@@ -56,6 +58,7 @@ class pemanfaatanAPIController extends AppBaseController
     public function store(CreatepemanfaatanAPIRequest $request)
     {
         $input = $request->all();
+        $input['created_by'] = Auth::id();
 
         $pemanfaatan = $this->pemanfaatanRepository->create($input);
 
