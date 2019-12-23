@@ -575,65 +575,65 @@
                             order : [[ 1, "asc"]],
                             dom: 'Bfrtip',
                             buttons: [
-                                {
-                                    extend: 'collection',
-                                    text: 'Aksi',
-                                    buttons: [
-                                        {
-                                            text: "Ubah",
-                                            action: function () {
-                                                var count = table.rows('.selected').count();
+                                // {
+                                //     extend: 'collection',
+                                //     text: 'Aksi',
+                                //     buttons: [
+                                //         {
+                                //             text: "Ubah",
+                                //             action: function () {
+                                //                 var count = table.rows('.selected').count();
                             
-                                                if (count != 1) {
-                                                    swal.fire({
-                                                        type: 'error',
-                                                        text: 'Silahkan pilih 1 data',
-                                                        title: 'Pemeliharaan'
-                                                    })
-                                                    return
-                                                }
+                                //                 if (count != 1) {
+                                //                     swal.fire({
+                                //                         type: 'error',
+                                //                         text: 'Silahkan pilih 1 data',
+                                //                         title: 'Pemeliharaan'
+                                //                     })
+                                //                     return
+                                //                 }
 
-                                                onPemeliharaan(table.rows('.selected').data()[0], `#table-pemeliharaan-<?= $uniqId ?>${selectEvent}`)
-                                            }
-                                        },
-                                        {
-                                            text: "Hapus",
-                                            action: function () {
-                                                var count = table.rows('.selected').count();
+                                //                 onPemeliharaan(table.rows('.selected').data()[0], `#table-pemeliharaan-<?= $uniqId ?>${selectEvent}`)
+                                //             }
+                                //         },
+                                //         {
+                                //             text: "Hapus",
+                                //             action: function () {
+                                //                 var count = table.rows('.selected').count();
                             
-                                                if (count < 1) {
-                                                    swal.fire({
-                                                        type: 'error',
-                                                        text: 'Silahkan pilih minimal 1 data',
-                                                        title: 'Pemeliharaan'
-                                                    })
-                                                    return
-                                                }
+                                //                 if (count < 1) {
+                                //                     swal.fire({
+                                //                         type: 'error',
+                                //                         text: 'Silahkan pilih minimal 1 data',
+                                //                         title: 'Pemeliharaan'
+                                //                     })
+                                //                     return
+                                //                 }
 
-                                                __ajax({
-                                                    url : $("[base-path]").val() + "/api/pemeliharaans/" + table.rows('.selected').data().map((d) => {
-                                                    return d.id
-                                                }).join(','),
-                                                    data: {
-                                                        _token: "<?php csrf_token() ?>"
-                                                    },
-                                                    method: "DELETE",
-                                                    dataType: "json"
-                                                }).then(() => {
-                                                    swal.fire({
-                                                        type: 'success',
-                                                        text: 'Data berhasil dihapus',
-                                                        title: 'Hapus',
-                                                        onClose: () => {
-                                                            table.ajax.reload();
-                                                        }
-                                                    })
-                                                })
-                                            }
-                                        }
-                                    ]
+                                //                 __ajax({
+                                //                     url : $("[base-path]").val() + "/api/pemeliharaans/" + table.rows('.selected').data().map((d) => {
+                                //                     return d.id
+                                //                 }).join(','),
+                                //                     data: {
+                                //                         _token: "<?php csrf_token() ?>"
+                                //                     },
+                                //                     method: "DELETE",
+                                //                     dataType: "json"
+                                //                 }).then(() => {
+                                //                     swal.fire({
+                                //                         type: 'success',
+                                //                         text: 'Data berhasil dihapus',
+                                //                         title: 'Hapus',
+                                //                         onClose: () => {
+                                //                             table.ajax.reload();
+                                //                         }
+                                //                     })
+                                //                 })
+                                //             }
+                                //         }
+                                //     ]
                                     
-                                }
+                                // }
                             ],
                             columns: [
                                 {
@@ -684,65 +684,65 @@
                             order : [[ 0, "asc"]],
                             dom: 'Bfrtip',
                             buttons: [
-                                {
-                                    extend: 'collection',
-                                    text: 'Aksi',
-                                    buttons: [
-                                        {
-                                            text: "Ubah",
-                                            action: function () {
-                                                var count = tablePemanfaatan.rows('.selected').count();
+                                // {
+                                //     extend: 'collection',
+                                //     text: 'Aksi',
+                                //     buttons: [
+                                //         {
+                                //             text: "Ubah",
+                                //             action: function () {
+                                //                 var count = tablePemanfaatan.rows('.selected').count();
                             
-                                                if (count != 1) {
-                                                    swal.fire({
-                                                        type: 'error',
-                                                        text: 'Silahkan pilih 1 data',
-                                                        title: 'Pemanfaatan'
-                                                    })
-                                                    return
-                                                }
+                                //                 if (count != 1) {
+                                //                     swal.fire({
+                                //                         type: 'error',
+                                //                         text: 'Silahkan pilih 1 data',
+                                //                         title: 'Pemanfaatan'
+                                //                     })
+                                //                     return
+                                //                 }
 
-                                                onPemanfaatan(tablePemanfaatan.rows('.selected').data()[0], `#table-pemanfaatan-${selectEvent}`)
-                                            }
-                                        },
-                                        {
-                                            text: "Hapus",
-                                            action: function () {
-                                                var count = tablePemanfaatan.rows('.selected').count();
+                                //                 onPemanfaatan(tablePemanfaatan.rows('.selected').data()[0], `#table-pemanfaatan-${selectEvent}`)
+                                //             }
+                                //         },
+                                //         {
+                                //             text: "Hapus",
+                                //             action: function () {
+                                //                 var count = tablePemanfaatan.rows('.selected').count();
                             
-                                                if (count < 1) {
-                                                    swal.fire({
-                                                        type: 'error',
-                                                        text: 'Silahkan pilih minimal 1 data',
-                                                        title: 'Pemanfaatan'
-                                                    })
-                                                    return
-                                                }
+                                //                 if (count < 1) {
+                                //                     swal.fire({
+                                //                         type: 'error',
+                                //                         text: 'Silahkan pilih minimal 1 data',
+                                //                         title: 'Pemanfaatan'
+                                //                     })
+                                //                     return
+                                //                 }
 
-                                                __ajax({
-                                                    url : $("[base-path]").val() + "/api/pemanfaatans/" + tablePemanfaatan.rows('.selected').data().map((d) => {
-                                                    return d.id
-                                                }).join(','),
-                                                    data: {
-                                                        _token: "<?php csrf_token() ?>"
-                                                    },
-                                                    method: "DELETE",
-                                                    dataType: "json"
-                                                }).then(() => {
-                                                    swal.fire({
-                                                        type: 'success',
-                                                        text: 'Data berhasil dihapus',
-                                                        title: 'Hapus',
-                                                        onClose: () => {
-                                                            tablePemanfaatan.ajax.reload();
-                                                        }
-                                                    })
-                                                })
-                                            }
-                                        }
-                                    ]
+                                //                 __ajax({
+                                //                     url : $("[base-path]").val() + "/api/pemanfaatans/" + tablePemanfaatan.rows('.selected').data().map((d) => {
+                                //                     return d.id
+                                //                 }).join(','),
+                                //                     data: {
+                                //                         _token: "<?php csrf_token() ?>"
+                                //                     },
+                                //                     method: "DELETE",
+                                //                     dataType: "json"
+                                //                 }).then(() => {
+                                //                     swal.fire({
+                                //                         type: 'success',
+                                //                         text: 'Data berhasil dihapus',
+                                //                         title: 'Hapus',
+                                //                         onClose: () => {
+                                //                             tablePemanfaatan.ajax.reload();
+                                //                         }
+                                //                     })
+                                //                 })
+                                //             }
+                                //         }
+                                //     ]
                                     
-                                }
+                                // }
                             ],
                             columns: [
                                 {

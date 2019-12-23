@@ -31,6 +31,18 @@ viewModel.services = Object.assign(viewModel.services, {
         }
         
     },
+    approveReklas: (tableListSelected, step) => {
+        
+        return __ajax({
+            url: `${$("[base-path]").val()}/api/inventaris_reklas/approvements`,
+            method: 'POST',
+            data: {
+                items: JSON.stringify(tableListSelected),
+                step: step
+            },
+            dataType: 'json',
+        })
+    },
     cancelMutasi: (tableListSelected, step) => {
         let formData = new FormData($('#form-bpkad-mutasi')[0])
 
@@ -107,6 +119,14 @@ viewModel.services = Object.assign(viewModel.services, {
             dataType: 'json',
         }).then((d) => {
             viewModel.data.countPenghapusan(d)
+        })
+    },
+    countReklas: () => {
+        __ajax({
+            url: `${$("[base-path]").val()}/api/inventaris_reklas/count`,
+            dataType: 'json',
+        }).then((d) => {
+            viewModel.data.countReklas(d)
         })
     }
 })

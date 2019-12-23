@@ -64,6 +64,14 @@ Route::middleware('auth:api')->post('inventaris_mutasi/approvements', function(
     return $inventaris_mutasiRepository->approvements($request, $inventaris_historyRepository);
 });
 
+Route::middleware('auth:api')->post('inventaris_reklas/approvements', function( 
+    \App\Repositories\inventaris_reklasRepository $inventaris_reklasRepository, 
+    inventaris_historyRepository $inventaris_historyRepository,
+    Request $request) {     
+    return $inventaris_reklasRepository->approvements($request, $inventaris_historyRepository);
+});
+
+
 Route::middleware('auth:api')->post('inventaris_mutasi/cancel', function( 
     \App\Repositories\inventaris_mutasiRepository $inventaris_mutasiRepository, 
     inventaris_historyRepository $inventaris_historyRepository,
@@ -85,6 +93,10 @@ Route::middleware('auth:api')->get('inventaris_mutasi/count', function( \App\Rep
 
 Route::middleware('auth:api')->get('inventaris_penghapusan/count', function( \App\Repositories\inventaris_penghapusanRepository $inventaris_penghapusanRepository, Request $request) {        
     return $inventaris_penghapusanRepository->count($request);
+});
+
+Route::middleware('auth:api')->get('inventaris_reklas/count', function( \App\Repositories\inventaris_reklasRepository $inventaris_reklasRepository, Request $request) {        
+    return $inventaris_reklasRepository->count($request);
 });
 
 Route::resource('inventaris', 'inventarisAPIController');
@@ -165,3 +177,5 @@ Route::resource('module_accesses', 'module_accessAPIController');
 Route::resource('pengunaans', 'pengunaanAPIController');
 
 Route::resource('inventaris_histories', 'inventaris_historyAPIController');
+
+Route::resource('inventaris_reklas', 'inventaris_reklasAPIController');

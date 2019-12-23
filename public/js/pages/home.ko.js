@@ -17,6 +17,9 @@ viewModel.data = Object.assign(viewModel.data, {
         step1: 0,
         step2: 0
     }),
+    countReklas: ko.observable({
+        step1: 0
+    }),
     currentTab: ko.observable('mutasi'),
     currentHighlight: ko.observable('')
 })
@@ -31,6 +34,35 @@ viewModel.clickEvent = Object.assign(viewModel.clickEvent, {
         viewModel.data.currentHighlight(currentHighlight)
     }
 })
+
+/**
+ * load datatble reklas step-1
+ */
+function loadDataTableReklas() {
+    $('#table-reklas-bpkad').DataTable({
+        ajax: `${$("[base-path]").val()}/inventarisReklas?status=STEP-1`,
+        dom: 'Bfrtip',
+        'drawCallback': onloadDataTableMutasiMutasiMasuk,
+        'select': {
+            'style': 'multi'
+        },
+        columns: [
+        {
+            title: 'Nama Inventaris',
+            data: 'nama_awal'
+        },
+        {
+            title: 'Nama Inventaris  tujuan',
+            data: 'nama_tujuan'
+        },
+        {
+            title: 'Tanggal Permohonan',
+            data: 'reklas_at'
+        },
+        ]
+    })
+}
+
 /**
  * load datatble mutasi step-1
  */
@@ -397,6 +429,24 @@ function approvementMutasiStep3(step) {
 }
 
 /**
+ * approvement for reklas step 1
+ * 
+ */
+
+function approvementReklas(step) {
+    viewModel.services.approveReklas($('#table-reklas-bpkad').DataTable().rows('.selected').data().toArray(), step)
+        .then((d) => {
+            swal.fire({
+                type: 'success',
+                text: 'inventaris berhasil di setujui!'
+            }).then((d) => {
+                viewModel.clickEvent.setCurrentHighlight(viewModel.data.currentHighlight())
+                countReklasProgress();
+            })
+        })
+}
+
+/**
  * form before bpkad giving approvement to mutation
  * 
  */
@@ -557,18 +607,28 @@ function countPenghapusanProgress() {
     viewModel.services.countPenghapusan()
 }
 
+/**
+ * counting penghapusan
+ * etc
+ */
+
+function countReklasProgress() {
+    viewModel.services.countReklas()
+}
 
 /**
  * load functions
  */
 countMutasiProgress()
 countPenghapusanProgress()
+countReklasProgress()
 loadDataTableMutasi()
 loadDataTableMutasiBPKAD();
 loadDataTableMutasiStep3();
 loadDataTablePenghapusanBPKAD();
 loadDataTableKonfirmasiPenghapusan();
 loadDataTableValidasiPenghapusan();
+loadDataTableReklas()
 
 
 /**
