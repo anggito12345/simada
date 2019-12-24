@@ -1,6 +1,8 @@
+
 @extends('layouts.app')
 
 @section('content')
+
 <style>
     .tab-header {
         background: #039151;
@@ -51,8 +53,18 @@
         }">
         Penghapusan
     </div>
+    @if(c::is([],[],[-1]))
+    <div class="item" data-bind="{ 
+            click: viewModel.clickEvent.setCurrentTab.bind(this, 'reklas'), 
+            class: viewModel.data.currentTab() === 'reklas' ? 'active' : ''
+        }">
+        Reklas
+    </div>
+    @endif
 </div>
+
 <div class="container p-3">
+
     @if(c::is([],[],[0, 1]))
     <div class="row" data-bind="if: viewModel.data.currentTab() === 'mutasi'">
         <div class="col-md-4">
@@ -184,6 +196,27 @@
         </div>
     </div>
     @endif
+
+    @if(c::is([],[],[-1]))
+        <div class="row" data-bind="if: viewModel.data.currentTab() === 'reklas'">
+            <div class="col-md-4">
+                <div class="info-box" data-bind="{
+                        click: viewModel.clickEvent.setCurrentHighlight.bind(this, 'reklas-bpkad'),
+                        class: viewModel.data.currentHighlight() === 'reklas-bpkad' ? 'active' : ''
+                    }">
+                    <span class="info-box-icon bg-green"><i class="fa fa-check"></i></span>
+
+                    <div class="info-box-content">
+                        <span class="info-box-text">Persetujuan
+                            <i class="flag-active fa fa-circle text-success"></i>
+                        </span>
+                        <span class="info-box-number" data-bind="text: viewModel.data.countReklas().step1"></span>
+                    </div>
+                    <!-- /.info-box-content -->
+                </div>
+            </div>
+        </div>
+    @endif
 </div>
 
 <div class="container">
@@ -235,6 +268,12 @@
                 </table>
 
                 <button type="button" class="btn btn-primary" onclick="beforeApproveValidasiPenghapusan()">Setujui</button>
+            </div>
+            <div class="panel-body" data-bind="visible: viewModel.data.currentHighlight() == 'reklas-bpkad'">
+                <table class="table table-striped" id="table-reklas-bpkad">
+                </table>
+
+                <button type="button" class="btn btn-primary" onclick="approvementReklas('STEP-1')">Setujui</button>
             </div>
         </div>
 

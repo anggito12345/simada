@@ -104,7 +104,8 @@ class inventarisDataTable extends DataTable
                 "m_jenis_barang.kelompok_kib",
                 "detil_mesin.bahan as bahan",
                 "m_organisasi.setting as setauth",
-                "inventaris_penghapusan.id as ip"                
+                "inventaris_penghapusan.id as ip",
+                "inventaris_reklas.id as ir"                
             ])
             ->selectRaw('CONCAT(detil_tanah.nomor_sertifikat,\'/\',detil_mesin.nopabrik,\'/\', detil_mesin.norangka,\'/\', detil_mesin.nomesin) as nomor')            
             ->selectRaw('CONCAT(\'1 \',m_satuan_barang.nama) as barang')             
@@ -113,6 +114,7 @@ class inventarisDataTable extends DataTable
             // role =================
             ->join("users","users.id", "inventaris.idpegawai")
             ->join("m_jabatan", "m_jabatan.id", 'users.jabatan')
+            ->leftJoin("inventaris_reklas", "inventaris.id", "inventaris_reklas.id")
             // role end
             ->leftJoin("detil_tanah", "detil_tanah.pidinventaris", "inventaris.id")
             ->leftJoin("m_satuan_barang", "m_satuan_barang.id", "inventaris.satuan")

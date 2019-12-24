@@ -11,6 +11,7 @@ use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use App\Models\barang;
 use App\Repositories\inventaris_historyRepository;
+use App\Repositories\inventaris_reklasRepository;
 use Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
@@ -27,12 +28,17 @@ class inventarisAPIController extends AppBaseController
     /** @var  inventarisRepository */
     private $inventarisRepository;
     private $inventaris_historyRepository;
+    private $inventaris_reklasRepository;
 
-    public function __construct(inventarisRepository $inventarisRepo, inventaris_historyRepository $inventaris_historyRepository)
-    {
+    public function __construct(
+        inventarisRepository $inventarisRepo, 
+        inventaris_historyRepository $inventaris_historyRepository,
+        inventaris_reklasRepository $inventaris_reklasRepository)
+    {        
+        $this->middleware('auth:api');
         $this->inventarisRepository = $inventarisRepo;
         $this->inventaris_historyRepository = $inventaris_historyRepository;
-        $this->middleware('auth:api');
+        $this->inventaris_reklasRepository = $inventaris_reklasRepository;
     }
 
     /**
@@ -243,151 +249,8 @@ class inventarisAPIController extends AppBaseController
      * @return Response
      */
     public function mutasi($id, Request $request)
-    {
-        $input = $request->all();
-
-        /** @var inventaris $inventaris */
-        $inventaris = inventaris::withDrafts()->find($id);
-
-        if (empty($inventaris)) {
-            return $this->sendError('Inventaris not found');
-        }
-
-        DB::beginTransaction();
-        try {
-
-            $detilKontruksi = \App\Models\detilkonstruksi::where('pidinventaris', $id);
-
-            $detilKontruksiArray = $detilKontruksi->first()->toArray();
-
-            if (empty($detilKontruksi)) {
-                return $this->sendError('Kontruksi not found');
-            }
-
-            $tipe_kib = chr(64 + (int) $input['tipe_kib']);
-
-            if ($tipe_kib == 'A') {
-                $prepareSave = $detilKontruksiArray;
-
-                if (isset($detilKontruksiArray['kodetanah'])) {
-
-                    $detilTanahFromForeign = \App\Models\detiltanah::find($detilKontruksiArray['kodetanah'])->toArray();
-                    $prepareSave['hak'] = $detilTanahFromForeign['hak'];
-                    $prepareSave['luas'] = $detilTanahFromForeign['luas'];
-                    $prepareSave['status_sertifikat'] = $detilTanahFromForeign['status_sertifikat'];
-                    $prepareSave['tgl_sertifikat'] = $detilTanahFromForeign['tgl_sertifikat'];
-                    $prepareSave['nomor_sertifikat'] = $detilTanahFromForeign['nomor_sertifikat'];
-                    $prepareSave['penggunaan'] = $detilTanahFromForeign['penggunaan'];
-                } else {
-                    $prepareSave['hak'] = null;
-                    $prepareSave['luas'] = null;
-                    $prepareSave['status_sertifikat'] = null;
-                    $prepareSave['tgl_sertifikat'] = null;
-                    $prepareSave['nomor_sertifikat'] = null;
-                    $prepareSave['penggunaan'] = null;
-                }
-
-
-                DB::table('detil_tanah')->insert([
-                    'pidinventaris' => $prepareSave['pidinventaris'],
-                    'luas' => $prepareSave['luasbangunan'],
-                    'alamat' => $prepareSave['alamat'],
-                    'idkota' => $prepareSave['idkota'],
-                    'idkecamatan' => $prepareSave['idkecamatan'],
-                    'idkelurahan' => $prepareSave['idkelurahan'],
-                    'koordinatlokasi' => $prepareSave['koordinatlokasi'],
-                    'koordinattanah' => $prepareSave['koordinattanah'],
-                    'hak' => $prepareSave['hak'],
-                    'status_sertifikat' => $prepareSave['status_sertifikat'],
-                    'tgl_sertifikat' => $prepareSave['tgl_sertifikat'],
-                    'nomor_sertifikat' => $prepareSave['nomor_sertifikat'],
-                    'penggunaan' => $prepareSave['penggunaan'],
-                    'keterangan' => $prepareSave['keterangan'],
-                ]);
-            } else if ($tipe_kib == 'B') {
-                DB::table('detil_mesin')->insert([
-                    'pidinventaris' => $detilKontruksiArray['pidinventaris'],
-                    'keterangan' => $detilKontruksiArray['keterangan'],
-                ]);
-            } else if ($tipe_kib == 'C') {
-                DB::table('detil_bangunan')->insert([
-                    'pidinventaris' => $detilKontruksiArray['pidinventaris'],
-                    'konstruksi'  => $detilKontruksiArray['konstruksi'],
-                    'bertingkat' => $detilKontruksiArray['bertingkat'],
-                    'beton' => $detilKontruksiArray['beton'],
-                    'luasbangunan' => $detilKontruksiArray['luasbangunan'],
-                    'alamat' => $detilKontruksiArray['alamat'],
-                    'idkota' => $detilKontruksiArray['idkota'],
-                    'idkecamatan' => $detilKontruksiArray['idkecamatan'],
-                    'idkelurahan' => $detilKontruksiArray['idkelurahan'],
-                    'koordinatlokasi' => $detilKontruksiArray['koordinatlokasi'],
-                    'koordinattanah' => $detilKontruksiArray['koordinattanah'],
-                    'tgldokumen' => $detilKontruksiArray['tgldokumen'],
-                    'nodokumen' => $detilKontruksiArray['nodokumen'],
-                    'luastanah' => $detilKontruksiArray['luastanah'],
-                    'statustanah' => $detilKontruksiArray['statustanah'],
-                    'kodetanah' => $detilKontruksiArray['kodetanah'],
-                    'keterangan' => $detilKontruksiArray['keterangan'],
-                ]);
-            } else if ($tipe_kib == 'D') {
-                DB::table('detil_jalan')->insert([
-                    'pidinventaris' => $detilKontruksiArray['pidinventaris'],
-                    'konstruksi'  => $detilKontruksiArray['konstruksi'],
-                    'luas' => $detilKontruksiArray['luasbangunan'],
-                    'alamat' => $detilKontruksiArray['alamat'],
-                    'idkota' => $detilKontruksiArray['idkota'],
-                    'idkecamatan' => $detilKontruksiArray['idkecamatan'],
-                    'idkelurahan' => $detilKontruksiArray['idkelurahan'],
-                    'koordinatlokasi' => $detilKontruksiArray['koordinatlokasi'],
-                    'koordinattanah' => $detilKontruksiArray['koordinattanah'],
-                    'tgldokumen' => $detilKontruksiArray['tgldokumen'],
-                    'nodokumen' => $detilKontruksiArray['nodokumen'],
-                    'luastanah' => $detilKontruksiArray['luastanah'],
-                    'statustanah' => $detilKontruksiArray['statustanah'],
-                    'kodetanah' => $detilKontruksiArray['kodetanah'],
-                    'keterangan' => $detilKontruksiArray['keterangan'],
-                ]);
-            } else if ($tipe_kib == 'E') {
-                DB::table('detil_aset_lainnya')->insert([
-                    'pidinventaris' => $detilKontruksiArray['pidinventaris'],
-                    'keterangan' => $detilKontruksiArray['keterangan'],
-                ]);
-            }
-
-            // $detilKontruksi->delete();
-
-            $barangMaster = \App\Models\barang::find($input['newidbarang']);
-
-            $currentNoReg = DB::table('inventaris')
-                ->select([
-                    'inventaris.*',
-                ])
-                ->join('m_barang', 'm_barang.id', 'inventaris.pidbarang')
-                ->where('m_barang.kode_jenis', '=', $barangMaster->kode_jenis)
-                ->where('inventaris.tahun_perolehan', '=', $inventaris->tahun_perolehan)
-                ->where('inventaris.harga_satuan', '=', str_replace(".", "", $inventaris->harga_satuan))
-                ->orderBy('inventaris.noreg', 'desc')
-                ->lockForUpdate()->first();
-
-            $lastNoReg = 0;
-            if ($currentNoReg != null) {
-                $lastNoReg = (int) $currentNoReg->noreg;
-            }
-
-            $inventaris->noreg = sprintf('%03d', $lastNoReg + 1);
-            $inventaris->pidbarang = $input['newidbarang'];
-
-            $inventaris->update();
-
-            DB::commit();
-
-            return $this->sendResponse($inventaris->toArray(), 'inventaris updated successfully');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            return $this->sendError($e->getMessage() . $e->getTraceAsString());
-        }
-
-        return $this->sendResponse($inventaris->toArray(), 'inventaris updated successfully');
+    {                   
+        return $this->inventaris_reklasRepository->doMutationStageFirst($request, $id);
     }
 
     /**
