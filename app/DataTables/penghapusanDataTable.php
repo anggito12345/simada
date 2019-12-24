@@ -5,6 +5,8 @@ namespace App\DataTables;
 use App\Models\penghapusan;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
+use c;
+use Auth;
 
 class penghapusanDataTable extends DataTable
 {
@@ -29,28 +31,31 @@ class penghapusanDataTable extends DataTable
      * @return \Illuminate\Database\Eloquent\Builder
      */
     public function query(penghapusan $model)
-    {   
+    {
         $query = $model
             ->newQuery();
 
-        if (isset($_GET['draft']) && $_GET['draft'] == "1") {            
+        if (isset($_GET['draft']) && $_GET['draft'] == "1") {
             $query = penghapusan::onlyDrafts();
         }
-            
+
         $query = $query->select([
                 'penghapusan.*'
-            ]);   
+            ])
+            ->join('users', 'users.id', 'penghapusan.created_by')
+            ->join('m_organisasi', 'm_organisasi.id', 'users.pid_organisasi');
+
+        if (isset($_GET['isFromMainGrid']) && c::is([],[],[0])) {
+            $query = $query->where('m_organisasi.id', Auth::user()->pid_organisasi);
+        }
 
         if (isset($_GET['status'])) {
             $query = $query->join('inventaris_penghapusan','inventaris_penghapusan.pid_penghapusan', 'penghapusan.id')
                 ->where([
-                    'inventaris_penghapusan.status' => $_GET['status'],                    
+                    'inventaris_penghapusan.status' => $_GET['status'],
                 ])
-                ->join('users', 'users.id', 'penghapusan.created_by')
                 ->groupBy('penghapusan.id');
-        
         }
-        
 
         if (isset($_GET['pid_organisasi'])) {
             $query = $query->where([
@@ -74,8 +79,9 @@ class penghapusanDataTable extends DataTable
                 'url' => route('penghapusans.index'),
                 'type' => 'GET',
                 'dataType' => 'json',
-                'data' => 'function(d) { 
-                    d.draft = $("[name=draft]").val()                                                      
+                'data' => 'function(d) {
+                    d.draft = $("[name=draft]").val()
+                    d.isFromMainGrid = 1
                 }',
             ])
             ->addAction(['width' => '120px', 'printable' => false])

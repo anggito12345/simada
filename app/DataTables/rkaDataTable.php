@@ -5,6 +5,8 @@ namespace App\DataTables;
 use App\Models\rka;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
+use Auth;
+use c;
 
 class rkaDataTable extends DataTable
 {
@@ -40,6 +42,13 @@ class rkaDataTable extends DataTable
             $query = rka::onlyDrafts();
         }
 
+        $query = $query->join('users', 'users.id', 'rka.created_by')
+            ->join('m_organisasi', 'm_organisasi.id', 'users.pid_organisasi');
+
+        if (isset($_GET['isFromMainGrid']) && c::is([],[],[0])) {
+            $query = $query->where('m_organisasi.id', Auth::user()->pid_organisasi);
+        }
+
         return $query;
     }
 
@@ -56,8 +65,9 @@ class rkaDataTable extends DataTable
                 'url' => route('rkas.index'),
                 'type' => 'GET',
                 'dataType' => 'json',
-                'data' => 'function(d) { 
-                    d.draft = $("[name=draft]").val()                                                      
+                'data' => 'function(d) {
+                    d.draft = $("[name=draft]").val()
+                    d.isFromMainGrid = 1
                 }',
             ])
             ->addAction(['width' => '120px', 'printable' => false])
@@ -88,7 +98,7 @@ class rkaDataTable extends DataTable
                 'className' => 'details-control text-center',
                 'orderable' => false,
                 'title' => '',
-                'data' => 'detail',                
+                'data' => 'detail',
                 "defaultContent" =>'',
                 "width" => '1px'
             ],

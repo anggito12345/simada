@@ -38,7 +38,7 @@ class mutasiDataTable extends DataTable
     {
         $query = $model->newQuery();
 
-        if (isset($_GET['draft']) && $_GET['draft'] == "1") {            
+        if (isset($_GET['draft']) && $_GET['draft'] == "1") {
             $query = mutasi::onlyDrafts();
         }
 
@@ -48,9 +48,9 @@ class mutasiDataTable extends DataTable
             'mo2.nama as nama_mo2',
         ])
         ->join('m_organisasi as mo1', 'mo1.id', 'mutasi.opd_asal')
-        ->join('m_organisasi as mo2', 'mo2.id', 'mutasi.opd_tujuan');
-
-        
+        ->join('m_organisasi as mo2', 'mo2.id', 'mutasi.opd_tujuan')
+        ->join('users', 'users.id', 'mutasi.created_by')
+        ->join('m_organisasi', 'm_organisasi.id', 'users.pid_organisasi');
 
         if(isset($_GET['opd_tujuan']) || isset($_GET['status'])) {
             $query = $query
@@ -59,27 +59,24 @@ class mutasiDataTable extends DataTable
             if (isset($_GET['opd_tujuan'])) {
                 $query = $query ->where([
                     'mutasi.opd_tujuan' => $_GET['opd_tujuan']
-                    
+
                 ]);
             }
 
             if (isset($_GET['status'])) {
-                $query = $query ->where([   
-                    'inventaris_mutasi.status' => $_GET['status']             
+                $query = $query ->where([
+                    'inventaris_mutasi.status' => $_GET['status']
                 ]);
             }
-               
-            $query = $query->groupBy(['mutasi.id','mo1.nama', 'mo2.nama']);   
+
+            $query = $query->groupBy(['mutasi.id','mo1.nama', 'mo2.nama']);
         } else {
-            if (c::is([],[],[0])) {
+            if (isset($_GET['isFromMainGrid']) && c::is([],[],[0])) {
                 $query = $query->where('mutasi.opd_asal', Auth::user()->pid_organisasi);
             }
         }
-    //   echo $query;exit;
 
-        
-
-        return $query;            
+        return $query;
     }
 
     /**
@@ -95,16 +92,17 @@ class mutasiDataTable extends DataTable
                 'url' => route('mutasis.index'),
                 'type' => 'GET',
                 'dataType' => 'json',
-                'data' => 'function(d) { 
-                    d.draft = $("[name=draft]").val()                                                      
+                'data' => 'function(d) {
+                    d.draft = $("[name=draft]").val()
+                    d.isFromMainGrid = 1
                 }',
             ])
-            
+
             ->addAction(['width' => '120px', 'printable' => false])
             ->parameters([
                 'drawCallback' => 'function(e) { onLoadDataTable(e) }',
                 "createdRow" => "function( row, data, dataIndex){
-                    
+
                     if(data.status  == `CODE1`){
                         $(row).addClass('bg-yellow');
                     } else if(data.status  ==  `CODE2`){
@@ -138,7 +136,7 @@ class mutasiDataTable extends DataTable
                 'className' => 'details-control',
                 'orderable' => false,
                 'title' => '',
-                'data' => 'detail',                
+                'data' => 'detail',
                 "defaultContent" =>''
             ],
             [

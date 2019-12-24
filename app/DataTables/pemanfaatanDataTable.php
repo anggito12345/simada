@@ -5,6 +5,8 @@ namespace App\DataTables;
 use App\Models\pemanfaatan;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
+use c;
+use Auth;
 
 class pemanfaatanDataTable extends DataTable
 {
@@ -52,6 +54,9 @@ class pemanfaatanDataTable extends DataTable
         if (isset($_GET['draft']) && $_GET['draft'] == '1') {
             $query = pemanfaatan::onlyDrafts();
         }
+
+        $query = $query->join('users', 'users.id', 'pemanfaatan.created_by')
+            ->join('m_organisasi', 'm_organisasi.id', 'users.pid_organisasi');
           /*  ->select([
                 'pemanfaatan.*',
                 'inventaris.noreg',
@@ -59,6 +64,10 @@ class pemanfaatanDataTable extends DataTable
             ])
             ->join('inventaris', 'inventaris.id', 'pemanfaatan.pidinventaris')
             ->leftjoin('m_mitra', 'm_mitra.id', 'pemanfaatan.mitra');*/
+
+        if (isset($_GET['isFromMainGrid']) && c::is([],[],[0])) {
+            $query = $query->where('m_organisasi.id', Auth::user()->pid_organisasi);
+        }
 
         if (isset($_GET['pidinventaris'])) {
             $query = $query->where('pidinventaris', $_GET['pidinventaris']);
@@ -79,8 +88,9 @@ class pemanfaatanDataTable extends DataTable
                 'url' => route('pemanfaatans.index'),
                 'type' => 'GET',
                 'dataType' => 'json',
-                'data' => 'function(d) { 
-                    d.draft = $("[name=draft]").val()                                                      
+                'data' => 'function(d) {
+                    d.draft = $("[name=draft]").val()
+                    d.isFromMainGrid = 1
                 }',
             ])
             ->addAction(['width' => '120px', 'printable' => false])
