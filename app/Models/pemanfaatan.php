@@ -53,6 +53,7 @@ class pemanfaatan extends Model
         'aktif',
         'tetap',
         'bagi_hasil',
+        'created_by',
         'draft'
     ];
 

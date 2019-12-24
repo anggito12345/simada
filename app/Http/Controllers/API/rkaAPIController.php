@@ -11,6 +11,7 @@ use App\Http\Controllers\AppBaseController;
 use Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class rkaController
@@ -25,6 +26,7 @@ class rkaAPIController extends AppBaseController
     public function __construct(rkaRepository $rkaRepo)
     {
         $this->rkaRepository = $rkaRepo;
+        $this->middleware('auth:api');
     }
 
     /**
@@ -56,6 +58,7 @@ class rkaAPIController extends AppBaseController
     public function store(CreaterkaAPIRequest $request)
     {
         $input = $request->all();
+        $input['created_by'] = Auth::id();
 
         $rka = $this->rkaRepository->create($input);
 

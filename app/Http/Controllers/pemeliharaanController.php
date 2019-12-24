@@ -15,6 +15,7 @@ use Response;
 use App\Helpers\Constant;
 use App\Models\pemeliharaan;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 class pemeliharaanController extends AppBaseController
 {
@@ -59,6 +60,7 @@ class pemeliharaanController extends AppBaseController
     public function store(CreatepemeliharaanRequest $request)
     {
         $input = $request->all();
+        $input['created_by'] = Auth::id();
 
         DB::beginTransaction();
         try {

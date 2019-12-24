@@ -43,6 +43,7 @@ class mutasi extends Model
         'keterangan',
         'draft',
         'status',
+        'created_by',
         'cancel_note'
     ];
 

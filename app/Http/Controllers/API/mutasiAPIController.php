@@ -12,6 +12,7 @@ use App\Http\Controllers\AppBaseController;
 use Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class mutasiController
@@ -28,6 +29,7 @@ class mutasiAPIController extends AppBaseController
     {
         $this->mutasiRepository = $mutasiRepo;
         $this->inventaris_mutasiRepository = $inventaris_mutasiRepository;
+        $this->middleware('auth:api');
     }
 
     /**
@@ -59,6 +61,7 @@ class mutasiAPIController extends AppBaseController
     public function store(CreatemutasiAPIRequest $request)
     {
         $input = $request->all();
+        $input['created_by'] = Auth::id();
 
         if (empty($request->input('draft'))) {
             $input['status'] = "CODE1";
