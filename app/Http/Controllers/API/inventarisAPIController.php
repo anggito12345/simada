@@ -382,4 +382,21 @@ class inventarisAPIController extends AppBaseController
 
         return $this->sendResponse($id, 'Inventaris deleted successfully');
     }
+
+    /**
+     * Handle geenerate lokasi request.
+     * POST /generateLokasi
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function generateKodeLokasi(Request $request)
+    {
+        try {
+            $kodeLokasi = $this->inventarisRepository->generateKodeLokasi($request);
+            return $this->sendResponse($kodeLokasi, 'success');
+        } catch (\Exception $e) {
+            return $this->sendError($e->getMessage());
+        }
+    }
 }

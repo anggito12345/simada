@@ -100,6 +100,7 @@ Route::middleware('auth:api')->get('inventaris_reklas/count', function( \App\Rep
 });
 
 Route::resource('inventaris', 'inventarisAPIController');
+Route::post('/generateKodeLokasi', 'inventarisAPIController@generateKodeLokasi');
 
 Route::get('/jenisbarangsget/getbykode/{id}', 'jenisbarangAPIController@getbykode');
 
