@@ -782,71 +782,39 @@
             onSave(false)            
         })
 
-        <?php 
-            $kodeStatus = \App\Models\setting::where('nama', 'KODE_LOKASI_STATUS')->first()->nilai;
-            $kodePropinsi = \App\Models\setting::where('nama', 'KODE_PROPINSI')->first()->nilai;
-            $kodeKota = \App\Models\setting::where('nama', 'KODE_KOTA')->first()->nilai;
-            /*$kodeKecamatan = \App\Models\setting::where('nama', 'KODE_KECAMATAN')->first()->nilai;
-            $kodeKelurahan = \App\Models\setting::where('nama', 'KODE_KELURAHAN')->first()->nilai;*/
-        ?>
-
         $("#pidbarang, #tahun_perolehan, #harga_satuan, #pidopd, #pidopd_cabang, #pidupt, #alamat_propinsi, #alamat_kota, #alamat_kecamatan, #alamat_kelurahan").change(() => {
 
-            let propinsiKode = 0
+            let propinsiId = 0
             if ($("#alamat_propinsi").select2('val') != null) {
-                propinsiKode = $("#alamat_propinsi").select2('data')[0].kode            
+                propinsiId = $("#alamat_propinsi").select2('data')[0].id
             }
 
-            if (propinsiKode == undefined && $("#alamat_propinsi").select2('val') != null &&  $("#alamat_propinsi").select2('val') != "") {                
-                propinsiKode = $("#alamat_propinsi").select2('data')[0].element.dataset.kode                
+            if (propinsiId == undefined && $("#alamat_propinsi").select2('val') != null &&  $("#alamat_propinsi").select2('val') != "") {                
+                propinsiId = $("#alamat_propinsi").select2('data')[0].element.dataset.id                
             }
 
-            if (propinsiKode == undefined)
-                propinsiKode = 0
+            if (propinsiId == undefined)
+                propinsiId = 0
 
-            let kotaKode = 0
+            let kotaId = 0
             if ($("#alamat_kota").select2('val') != null) {
-                kotaKode = $("#alamat_kota").select2('data')[0].kode            
+                kotaId = $("#alamat_kota").select2('data')[0].id            
             }
 
-            if (kotaKode == undefined && $("#alamat_kota").select2('val') != null &&  $("#alamat_kota").select2('val') != "") {                
-                kotaKode = $("#alamat_kota").select2('data')[0].element.dataset.kode                
+            if (kotaId == undefined && $("#alamat_kota").select2('val') != null &&  $("#alamat_kota").select2('val') != "") {                
+                kotaId = $("#alamat_kota").select2('data')[0].element.dataset.id                
             }
 
-            if (kotaKode == undefined)
-                kotaKode = 0
-
-            let kecamatanKode = 0
-            if ($("#alamat_kecamatan").select2('val') != null) {
-                kecamatanKode = $("#alamat_kecamatan").select2('data')[0].kode            
-            }
-
-            if (kecamatanKode == undefined && $("#alamat_kecamatan").select2('val') != null &&  $("#alamat_kecamatan").select2('val') != "") {                
-                kecamatanKode = $("#alamat_kecamatan").select2('data')[0].element.dataset.kode                
-            }
-
-            if (kecamatanKode == undefined)
-                kecamatanKode = 0
-
-            let kelurahanKode = 0
-            if ($("#alamat_kelurahan").select2('val') != null) {
-                kelurahanKode = $("#alamat_kelurahan").select2('data')[0].kode            
-            }
-
-            if (kelurahanKode == undefined && $("#alamat_kelurahan").select2('val') != null &&  $("#alamat_kelurahan").select2('val') != "") {                
-                kelurahanKode = $("#alamat_kelurahan").select2('data')[0].element.dataset.kode                
-            }
-
-            if (kelurahanKode == undefined)
-                kelurahanKode = 0
+            if (kotaId == undefined)
+                kotaId = 0
 
             let pidOpd = 0
             if ($("#pidopd").select2('val') != null) {
-                pidOpd = $("#pidopd").select2('data')[0].kode            
+                pidOpd = $("#pidopd").select2('data')[0].id
             }
 
             if (pidOpd == undefined && $("#pidopd").select2('val') != null &&  $("#pidopd").select2('val') != "") {                
-                pidOpd = $("#pidopd").select2('data')[0].element.dataset.kode                
+                pidOpd = $("#pidopd").select2('data')[0].element.dataset.id                
             }
 
             if (pidOpd == undefined)
@@ -854,11 +822,11 @@
 
             let pidOpdCabang = 0
             if ($("#pidopd_cabang").select2('val') != null) {
-                pidOpdCabang = $("#pidopd_cabang").select2('data')[0].kode             
+                pidOpdCabang = $("#pidopd_cabang").select2('data')[0].id             
             }
 
             if (pidOpdCabang == undefined && $("#pidopd_cabang").select2('val') != null && $("#pidopd_cabang").select2('val') != "") {                
-                pidOpdCabang = $("#pidopd_cabang").select2('data')[0].element.dataset.kode                
+                pidOpdCabang = $("#pidopd_cabang").select2('data')[0].element.dataset.id                
             } 
 
             if (pidOpdCabang == undefined)
@@ -866,11 +834,11 @@
 
             let pidUpt = 0
             if ($("#pidupt").select2('val') != null) {
-                pidUpt = $("#pidupt").select2('data')[0].kode                
+                pidUpt = $("#pidupt").select2('data')[0].id                
             }
 
             if (pidUpt == undefined && $("#pidupt").select2('val') != null && $("#pidupt").select2('val') != "") {                
-                pidUpt = $("#pidupt").select2('data')[0].element.dataset.kode                                   
+                pidUpt = $("#pidupt").select2('data')[0].element.dataset.id                                   
             }
 
             if (pidUpt == undefined)
@@ -879,22 +847,19 @@
             
             if ($("#tahun_perolehan").val() != "" && $("#harga_satuan").val() != "") {
                 __ajax({
-                    method:'GET',
-                    url: "<?= url('api/intraorekstra') ?>",
+                    method: 'POST',
+                    url: "<?= url('api/generateKodeLokasi') ?>",
                     data: {
-                        "tahun_perolehan" : $("#tahun_perolehan").val(),
-                        "harga_satuan": $("#harga_satuan").val()
+                        'alamat_propinsi': propinsiId,
+                        'alamat_kota': kotaId,
+                        'pidopd': pidOpd,
+                        'pidopd_cabang': pidOpdCabang,
+                        'pidupt': pidUpt,
+                        'tahun_perolehan': $('#tahun_perolehan').val(),
                     }
-                }).then(() => {
-                    $("#kode_lokasi").val(
-                        "<?= $kodeStatus ?>" + "." 
-                        + propinsiKode + "." 
-                        + kotaKode + "." 
-                        + pidOpd + "."
-                        + pidOpdCabang + "." 
-                        + pidUpt + "." 
-                        + $("#tahun_perolehan").val() )
-                })
+                }).then((data) => {
+                    $('#kode_lokasi').val(data);
+                });
             } else {
                 $("#kode_lokasi").val("Isi tahun perolehan dan harga satuan terlebih dahulu!")
             }
