@@ -52,7 +52,7 @@ class mutasiDataTable extends DataTable
         ->join('users', 'users.id', 'mutasi.created_by')
         ->join('m_organisasi', 'm_organisasi.id', 'users.pid_organisasi');
 
-        if(isset($_GET['opd_tujuan']) || isset($_GET['status'])) {
+        if(!isset($_GET['isFromMainGrid']) && (isset($_GET['opd_tujuan']) || isset($_GET['status']))) {
             $query = $query
                 ->leftJoin('inventaris_mutasi','inventaris_mutasi.mutasi_id', 'mutasi.id');
 
@@ -71,8 +71,18 @@ class mutasiDataTable extends DataTable
 
             $query = $query->groupBy(['mutasi.id','mo1.nama', 'mo2.nama']);
         } else {
-            if (isset($_GET['isFromMainGrid']) && c::is([],[],[0])) {
-                $query = $query->where('mutasi.opd_asal', Auth::user()->pid_organisasi);
+            if (isset($_GET['isFromMainGrid'])) {
+                if (c::is([],[],[0])) {
+                    $query = $query->where('mutasi.opd_asal', Auth::user()->pid_organisasi);
+                } else if (c::is([],[],[-1])) {
+                    if (isset($_GET['opd_asal']) && !empty($_GET['opd_asal'])) {
+                        $query = $query->where('mutasi.opd_asal', $_GET['opd_asal']);
+                    }
+
+                    if (isset($_GET['opd_tujuan']) && !empty($_GET['opd_tujuan'])) {
+                        $query = $query->where('mutasi.opd_tujuan', $_GET['opd_tujuan']);
+                    }
+                }
             }
         }
 
@@ -94,6 +104,8 @@ class mutasiDataTable extends DataTable
                 'dataType' => 'json',
                 'data' => 'function(d) {
                     d.draft = $("[name=draft]").val()
+                    d.opd_asal = $("[name=opd_asal]").val()
+                    d.opd_tujuan = $("[name=opd_tujuan]").val()
                     d.isFromMainGrid = 1
                 }',
             ])
