@@ -2,11 +2,7 @@
     <a href="{!! url('/home') !!}"><i class="fa fa-home"></i><span>Dashboard</span></a>
 </li>
 
-<li class="treeview {{ 
-    Request::is('inventaris*')      || 
-    Request::is('pemeliharaans*')   || 
-    Request::is('rkas*')            ||
-    Request::is('penghapusans*')    ? 'active' : '' }}">
+<li class="treeview {{ Request::is('inventaris*', 'penghapusans*', 'pemeliharaans*', 'pemanfaatans*', 'mutasis*', 'rkas*') ? 'active' : '' }}">
     <a href="#">
         <i class="fa fa-edit"></i>
         <span>Transaksi</span>

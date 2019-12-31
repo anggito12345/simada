@@ -11,19 +11,8 @@
 
   <div class="clearfix"></div>
 
-  @include('flash::message')
-
-  <div class="clearfix"></div>
-
   <div class="box box-primary">
-    <div class="box-body">
-      <div class="row">
-        <div class="col-4">
-          {{ Form::label('Draft') }}
-          {{ Form::select('draft', ['Tidak', 'Ya'], null, ['class' => 'form-control', 'onchange' => 'viewModel.changeEvent.refreshDatatable()'])}}
-        </div>
-      </div>
-    </div>
+    @include('layouts.default_transaction_table_filter')
   </div>
 
   <div class="clearfix"></div>
