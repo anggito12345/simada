@@ -168,7 +168,7 @@ abstract class BaseRepository
       //  $query = $this->model->withDrafts();
         $query = $this->model->newQuery();
 
-        if (is_callable(array($this->model, 'withDrafts'))) {
+        if (in_array('App\Traits\Draftable', class_uses($this->model))) {
             $query = $this->model->withDrafts();
         }
 
@@ -192,7 +192,7 @@ abstract class BaseRepository
     {
         $query = $this->model->newQuery();
 
-        if (is_callable(array($this->model, 'withDrafts'))) {
+        if (in_array('App\Traits\Draftable', class_uses($this->model))) {
             $query = $this->model->withDrafts();
         }
 
