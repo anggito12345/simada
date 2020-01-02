@@ -341,7 +341,7 @@ class inventaris extends Model
 
     public function Organisasi()
     {
-        return $this->hasOne('App\Models\organisasi', 'id', 'pidopd');
+        return $this->hasOne('App\Models\organisasi', 'id', 'pid_organisasi');
     }
 
     public function Organisasicabang()
