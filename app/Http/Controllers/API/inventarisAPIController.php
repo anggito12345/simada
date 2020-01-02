@@ -17,7 +17,6 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Auth;
 use Exception;
-use App\Models\organisasi;
 use c;
 
 /**
