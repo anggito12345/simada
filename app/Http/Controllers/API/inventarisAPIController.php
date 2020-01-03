@@ -17,6 +17,7 @@ use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Auth;
 use Exception;
+use c;
 
 /**
  * Class inventarisController
@@ -267,10 +268,16 @@ class inventarisAPIController extends AppBaseController
         $input = $request->all();
 
         /** @var inventaris $inventaris */
-        $inventaris = inventaris::withDrafts()->find($id);
+        $inventaris = inventaris::withDrafts()
+            ->with('Organisasi')
+            ->find($id);
 
         if (empty($inventaris)) {
             return $this->sendError('Inventaris not found');
+        }
+
+        if (c::is([],[],[0]) && empty($inventaris->organisasi->setting)) {
+            return $this->sendError('Setting OPD dikunci. Inventaris tidak dapat diubah');
         }
 
         $fileDokumens = [];
