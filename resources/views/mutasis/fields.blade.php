@@ -268,6 +268,7 @@
 
     let buttonsOpt = [
         { extend: "create", editor: editor },
+        { extend: "edit", editor: editor },
         { extend: "remove", editor: editor },
     ]
 
