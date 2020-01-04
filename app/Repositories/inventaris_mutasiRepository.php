@@ -292,6 +292,11 @@ class inventaris_mutasiRepository extends BaseRepository
                                 $preForCreteKodeLokasi['pidopd'] = $mutasi->opd_tujuan;
                                 $preForCreteKodeLokasi['kode_lokasi'] = \App\Repositories\inventarisRepository::generateKodeLokasi($preForCreteKodeLokasi);
 
+                                // update inventaris ownership
+                                $inventaris->pidopd = $mutasi->opd_tujuan;
+                                $inventaris->pid_organisasi = $mutasi->opd_tujuan;
+                                $inventaris->kode_lokasi = $preForCreteKodeLokasi['kode_lokasi'];
+
                                 $inventaris->save();
 
                                 $inventaris_historyRepository->postHistory($preForCreteKodeLokasi, Constant::$ACTION_HISTORY['MUT']);
