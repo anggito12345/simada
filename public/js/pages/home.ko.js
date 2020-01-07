@@ -561,12 +561,9 @@ function onloadDataTableMutasiMutasiStep3(e) {
  * onDrawCallback DataTable Penghapusan
  * @param {e} e parameter of datatable itself
  */
-/*<<<<<<< HEAD
-function onloadDataTablePenghapusanBPKAD(e) {
-    $(`#${e.sTableId} tbody`).unbind('click').on('click', 'td.details-control i', function (i, n) {
-=======*/
+
 function onloadDataTablePenghapusan(e) {
-    $(`#${e.sTableId} tbody`).on('click', 'td.details-control i', function (i, n) {
+    $(`#${e.sTableId} tbody`).unbind('click').on('click', 'td.details-control i', function (i, n) {
 
         var tr = $(this).closest('tr');
         var row = $(`#${e.sTableId}`).DataTable().row(tr);
