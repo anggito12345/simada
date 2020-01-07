@@ -11,6 +11,7 @@ viewModel.data = Object.assign(viewModel.data, {
         tglsk: moment().format("DD-MM-YYYY"),
         keterangan: "",
     }),
+    tipeKontribusi: ko.observable()
 })
 
 viewModel.changeEvent = Object.assign(viewModel.changeEvent, {

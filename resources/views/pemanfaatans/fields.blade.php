@@ -58,11 +58,11 @@
 <!-- Tipe Kontribusi Field -->
 <div class="form-group col-6">
     {!! Form::label('tipe_kontribusi', 'Tipe Kontribusi:') !!}
-    {!! Form::select('tipe_kontribusi', \App\Models\BaseModel::$tipeKontribusiDs ,null, ['onchange' => 'notifySubscribersManually()', 'class' => 'form-control']) !!}
+    {!! Form::select('tipe_kontribusi', \App\Models\BaseModel::$tipeKontribusiDs ,null, ['onchange' => 'notifySubscribersManually()', 'class' => 'form-control', "data-bind" => "value: viewModel.data.tipeKontribusi"]) !!}
 </div>
 
 <!-- Tetap Field -->
-<!-- ko if: viewModel.data.formPemanfaatan().tipe_kontribusi == '2' -->
+<!-- ko if: viewModel.data.tipeKontribusi() == '2' -->
 <div class="form-group col-6">
     {!! Form::label('tetap', 'Tetap:') !!}
     {!! Form::number('tetap' , "", ['class' => 'form-control']) !!}
@@ -75,7 +75,7 @@
 </div>
 <!-- /ko -->
 
-<!-- ko if: viewModel.data.formPemanfaatan().tipe_kontribusi != '2' -->
+<!-- ko if: viewModel.data.tipeKontribusi() != '2' -->
 <div class="form-group col-6">
     {!! Form::label('jumlah_kontribusi', 'Jumlah Kontribusi:') !!}
     {!! Form::number('jumlah_kontribusi', null, ['class' => 'form-control']) !!}
@@ -117,6 +117,8 @@
     <a href="{!! route('pemanfaatans.index') !!}" class="btn btn-default">Batal</a>
 </div> -->
 <script>
+    
+
     if ($("#pidinventaris_pemanfaatan").length > 0) {
 
         $("#pidinventaris_pemanfaatan").LookupTable({
@@ -173,7 +175,7 @@
 
     function notifySubscribersManually() {
         setTimeout(() => {
-            viewModel.data.formPemanfaatan.notifySubscribers()
+            viewModel.data.tipeKontribusi.notifySubscribers()
         }, 100);
     }
 

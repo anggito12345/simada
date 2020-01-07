@@ -4,7 +4,7 @@
 ?>
 <div class="box box-primary" data-bind="visible: viewModel.data.tipeKib() != undefined">
   <div class="box-header bg-blue" >
-    <div class="collapse-toggle" data-toggle="collapse" data-target="#detilkib" data-bind="text: 'Tampilkan ' + viewModel.data.tipeKib()">
+    <div class="collapse-toggle collapsed" data-toggle="collapse" data-target="#detilkib" data-bind="text: 'Tampilkan ' + viewModel.data.tipeKib()">
     </div>
   </div>    
   <div class="box-body collapse" id="detilkib">

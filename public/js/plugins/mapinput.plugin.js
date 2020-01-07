@@ -15,9 +15,20 @@ let MapInput = function(element, config) {
         element = element[0]        
     }
 
+    let position = {
+        coords: {
+            latitude: -6.121435,
+            longitude: 106.774124,
+        }
+    }
+
     if (!navigator.geolocation) {
         console.error('Geolocation not supported on this browser!')
-        return false
+        
+    } else {
+        navigator.geolocation.getCurrentPosition((pos) => {
+            position = pos
+        })
     }
 
     this.defaultConfig = {
@@ -31,14 +42,9 @@ let MapInput = function(element, config) {
         value: null,
     }
 
-    let position = {
-      coords: {langitude: 0, longitude:0}
-    }
+    
 
-    navigator.geolocation.getCurrentPosition((pos) => {
-        position = pos
-
-    })
+    
 
     if  (config != null) {
         self.defaultConfig = Object.assign(self.defaultConfig, config)
@@ -163,8 +169,12 @@ let MapInput = function(element, config) {
 
 
             $(`#${modalIdGoogleMap}`).on('shown.bs.modal', function () {
-                self.map.updateSize();       
-                
+                if (self.map == null) {
+                    self.loadMap();
+                }
+
+                self.map.updateSize();                               
+
                 initValue(element.value)
             })
 
@@ -184,8 +194,6 @@ let MapInput = function(element, config) {
                     source: source,
                     type: value
                   });
-
-                  console.log(value, "info")
     
 
                   self.draw.on('drawstart', function(ev) {
@@ -343,7 +351,7 @@ let MapInput = function(element, config) {
             source.addFeature(self.marker)
         }
 
-        self.loadMap();
+        
 
         
     })

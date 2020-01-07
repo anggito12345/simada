@@ -115,6 +115,37 @@ if (isset($penghapusan)) {
     //     value: viewModel.data.formPenghapusan().tglhapus
     // });
 
+    const funcGetDokumenFileList = () => {
+        __ajax({
+            method: 'GET',
+            url: "<?= url('api/system_uploads') ?>",
+            data: {
+                jenis: 'dokumen',
+                foreign_field: 'id',
+                foreign_id: <?= isset($penghapusan) ? $penghapusan->id : 'null' ?>,
+                foreign_table: 'penghapusan',                    
+            },
+        }).then((files) => {                
+            fileGallery.fileList(files)
+        }) 
+    }
+
+    const funcGetDokumenFotoList = () => {
+        __ajax({
+            method: 'GET',
+            url: "<?= url('api/system_uploads') ?>",
+            data: {
+                jenis: 'foto',
+                foreign_field: 'id',
+                foreign_id: <?= isset($penghapusan) ? $penghapusan->id : 'null' ?>,
+                foreign_table: 'penghapusan',                    
+            },
+        }).then((files) => {                
+            foto.fileList(files)
+        }) 
+    }
+
+
 
     fileGallery = new FileGallery(document.getElementById('dokumen'), {
         title: 'File Dokumen',
@@ -200,7 +231,7 @@ if (isset($penghapusan)) {
                         formData.append(`dokumen_metadata_${key}[${index}]`, d[key])
                     })
 
-                    formData.append(`dokumen_metadata_id_inventaris[${index}]`, $("#table-inventaris").DataTable().rows('.selected').data()[0].id)
+                    //formData.append(`dokumen_metadata_id_inventaris[${index}]`, $("#table-inventaris").DataTable().rows('.selected').data()[0].id)
                 }
 
                 foto.fileList().forEach((d, index) => {
@@ -219,7 +250,7 @@ if (isset($penghapusan)) {
                         formData.append(`foto_metadata_${key}[${index}]`, d[key])
                     })
 
-                    formData.append(`foto_metadata_id_inventaris[${index}]`, $("#table-inventaris").DataTable().rows('.selected').data()[0].id)
+                    // formData.append(`foto_metadata_id_inventaris[${index}]`, $("#table-inventaris").DataTable().rows('.selected').data()[0].id)
 
                     return d.rawFile
                 })
@@ -433,4 +464,11 @@ if (isset($penghapusan)) {
         ]
     })
 </script>
+
+@if(isset($penghapusan))
+<script>
+    funcGetDokumenFileList()
+    funcGetDokumenFotoList()
+</script>
+@endif
 @endsection
