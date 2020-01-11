@@ -249,6 +249,8 @@
                     { data: 'nama_rek_aset', title: 'Nama Barang' },
                     
                 ],
+                "dom": `<'row'<'col-sm-6'l><'col-sm-6'f>><'row'<'col-sm-12'tr>><'row'<'table-responsive'<'col-sm-5'i><'col-sm-7'p>>>`,
+                "pageLength": 10,
                 "processing": true,
                 "serverSide": true,
                 "searching": false,      
