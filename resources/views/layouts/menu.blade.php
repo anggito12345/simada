@@ -37,16 +37,7 @@
     <a href="{!! route('barangs.index') !!}"><i class="fa fa-car"></i><span>Master Barang</span></a>
 </li>
 
-<li class="treeview {{ Request::is('alamats*') 
-    || Request::is('jenisbarangs*') 
-    || Request::is('kondisis*') 
-    || Request::is('merkbarangs*') 
-    || Request::is('organisasis*') 
-    || Request::is('perolehans*') 
-    || Request::is('satuanbarangs*')    
-    || Request::is('pengunaans*') 
-    || Request::is('mitras*')
-    || Request::is('statustanahs*') ? 'active' : '' }}">
+<li class="treeview {{ Request::is('alamats*', 'jenisbarangs*', 'kondisis*', 'merkbarangs*', 'organisasis*', 'perolehans*', 'satuanbarangs*', 'pengunaans*', 'mitras*', 'statustanahs*') && !Request::is('organisasis/settings') ? 'active' : '' }}">
     <a href="#">
         <i class="fa fa-edit"></i>
         <span>Master Data</span>
@@ -68,7 +59,7 @@
         <li class="{{ Request::is('merkbarangs*') ? 'active' : '' }}">
             <a href="{!! route('merkbarangs.index') !!}"><i class="fa fa-edit"></i><span>Merk Barang</span></a>
         </li>
-        <li class="{{ Request::is('organisasis*') ? 'active' : '' }}">
+        <li class="{{ Request::is('organisasis*') && !Request::is('organisasis/settings') ? 'active' : '' }}">
             <a href="{!! route('organisasis.index') !!}"><i class="fa fa-edit"></i><span>Organisasi</span></a>
         </li>
         <!-- <li class="{{ Request::is('perolehans*') ? 'active' : '' }}">
@@ -96,7 +87,7 @@
 $countUserNeedOtor = \App\Models\users::where('aktif', '0')->count();
 ?>
 
-<li class="treeview {{ Request::is('users*')? 'active' : '' }}">
+<li class="treeview {{ Request::is('users*', 'organisasis/settings', 'jabatans', 'settings')? 'active' : '' }}">
     <a href="#">
         <i class="fa fa-wrench"></i>
         <span>Pengaturan</span>
