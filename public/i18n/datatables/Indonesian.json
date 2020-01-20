@@ -20,6 +20,7 @@
 	"buttons": {
 		"create": "Tambah Baru",
 		"edit": "Ubah",
-		"delete": "Hapus"
+		"delete": "Hapus",
+		"remove": "Hapus"
 	}
 }

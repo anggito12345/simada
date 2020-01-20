@@ -2,7 +2,7 @@
     <a href="{!! url('/home') !!}"><i class="fa fa-home"></i><span>Dashboard</span></a>
 </li>
 
-<li class="treeview {{ Request::is('inventaris*', 'penghapusans*', 'pemeliharaans*', 'pemanfaatans*', 'mutasis*', 'rkas*') ? 'active' : '' }}">
+<li class="treeview {{ Request::is('inventaris*', 'penghapusans*', 'pemeliharaans*', 'pemanfaatans*', 'mutasis*', 'rkas*', 'reklas*') ? 'active' : '' }}">
     <a href="#">
         <i class="fa fa-edit"></i>
         <span>Transaksi</span>
@@ -29,6 +29,9 @@
         </li>
         <li class="{{ Request::is('rkas*') ? 'active' : '' }}">
             <a href="{!! route('rkas.index') !!}"><i class="fa fa-edit"></i><span>RKA</span></a>
+        </li>
+        <li class="{{ Request::is('reklas*') ? 'active' : '' }}">
+            <a href="{!! route('reklas.index') !!}"><i class="fa fa-edit"></i><span>Reklas</span></a>
         </li>
     </ul>
 </li>
