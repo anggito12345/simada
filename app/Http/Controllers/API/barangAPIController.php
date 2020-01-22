@@ -27,17 +27,23 @@ class barangAPIController extends AppBaseController
     }
 
     public function lookup(Request $request)
-    {
+    {       
         $barang = new Barang();
 
         $queryFiltered = \App\Helpers\LookupHelper::build($barang, $request)
             ->whereRaw('kode_sub_sub_rincian_objek IS NOT NULL');
         
         $recordsFiltered = $queryFiltered->count();
+
+        if ($request->input('start') != null) {
+            $queryFiltered = $queryFiltered->skip($request->input('start'));
+        }
+
+        if ($request->input('length') != null) {
+            $queryFiltered = $queryFiltered->limit($request->input('length'));
+        }
         
-        $rows = $queryFiltered->skip($request->input('start'))     
-            ->limit($request->input('length'))
-            ->get();
+        $rows = $queryFiltered->get();
            
         return json_encode([
             'data' => $rows->toArray(),
@@ -125,6 +131,9 @@ class barangAPIController extends AppBaseController
         if (empty($barang)) {
             return $this->sendError('Barang not found');
         }
+
+        $barang->kode_barang = Barang::buildKodeBarang($barang);
+        $barang->nama_kode_barang_formated = "{$barang->kode_barang} - {$barang->nama_rek_aset}";
 
         return $this->sendResponse($barang->toArray(), 'Barang retrieved successfully');
     }

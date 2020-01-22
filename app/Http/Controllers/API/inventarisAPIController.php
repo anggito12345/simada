@@ -55,11 +55,17 @@ class inventarisAPIController extends AppBaseController
             'inventaris.noreg as text',
             'inventaris.id',
             'inventaris.tahun_perolehan',
-            'm_barang.nama_rek_aset'
+            'm_barang.nama_rek_aset',
+            'm_barang.kode_akun',
+            'm_barang.kode_kelompok',
+            'm_barang.kode_jenis',
+            'm_barang.kode_objek',
+            'm_barang.kode_rincian_objek',
+            'm_barang.kode_sub_rincian_objek',
+            'm_barang.kode_sub_sub_rincian_objek',
         ])
             ->whereRaw("(inventaris.noreg ~* '" . $request->input("q") . "' OR m_barang.nama_rek_aset ~* '" . $request->input("q") . "' )")
             ->join('m_barang', 'm_barang.id', 'inventaris.pidbarang');
-
 
         if ($request->has('own')) {
             $mineJabatan = \App\Models\jabatan::find(Auth::user()->jabatan);
@@ -69,7 +75,6 @@ class inventarisAPIController extends AppBaseController
                 ->where('m_jabatan.level', '<=', $mineJabatan->level)
                 ->where('inventaris.pid_organisasi', '=', Auth::user()->pid_organisasi);
         }
-
 
         if ($request->has('same_org')) {
 
@@ -229,13 +234,23 @@ class inventarisAPIController extends AppBaseController
         /** @var inventaris $inventaris */
         $inventaris = \App\Models\inventaris::withDrafts()->select([
             'inventaris.*',
-            'm_barang.nama_rek_aset'
+            'm_barang.nama_rek_aset',
+            'm_barang.kode_akun',
+            'm_barang.kode_kelompok',
+            'm_barang.kode_jenis',
+            'm_barang.kode_objek',
+            'm_barang.kode_rincian_objek',
+            'm_barang.kode_sub_rincian_objek',
+            'm_barang.kode_sub_sub_rincian_objek',
         ])->join('m_barang', 'm_barang.id', 'inventaris.pidbarang')
             ->find($id);
 
         if (empty($inventaris)) {
             return $this->sendError('Inventaris not found');
         }
+
+        $inventaris->kode_barang = Barang::buildKodeBarang($inventaris);
+        $inventaris->nama_kode_barang_formated = "{$inventaris->kode_barang} - {$inventaris->nama_rek_aset}";
 
         return $this->sendResponse($inventaris->toArray(), 'Inventaris retrieved successfully');
     }

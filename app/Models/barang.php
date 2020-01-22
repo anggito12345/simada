@@ -67,5 +67,44 @@ class barang extends Model
     public static $rules = [
         
     ];
+
+    /**
+     * Build kode barang string
+     * @param object $barang
+     * @return string
+     */
+    public static function buildKodeBarang($barang = null)
+    {
+        $kodeBarang = "";
+        if (isset($barang->kode_akun) && strlen($barang->kode_akun) != 0) {
+            $kodeBarang .= $barang->kode_akun;
+        }
+
+        if (isset($barang->kode_kelompok) && strlen($barang->kode_kelompok) != 0) {
+            $kodeBarang .= ".{$barang->kode_kelompok}";
+        }
+
+        if (isset($barang->kode_jenis) && strlen($barang->kode_jenis) != 0) {
+            $kodeBarang .= ".{$barang->kode_jenis}";
+        }
+
+        if (isset($barang->kode_objek) && strlen($barang->kode_objek) != 0) {
+            $kodeBarang .= ".{$barang->kode_objek}";
+        }
+
+        if (isset($barang->kode_rincian_objek) && strlen($barang->kode_rincian_objek) != 0) {
+            $kodeBarang .= ".{$barang->kode_rincian_objek}";
+        }
+
+        if (isset($barang->kode_sub_rincian_objek) && strlen($barang->kode_sub_rincian_objek) != 0) {
+            $kodeBarang .= ".{$barang->kode_sub_rincian_objek}";
+        }
+
+        if (isset($barang->kode_sub_sub_rincian_objek) && strlen($barang->kode_sub_sub_rincian_objek) != 0) {
+            $kodeBarang .= ".{$barang->kode_sub_sub_rincian_objek}";
+        }
+
+        return $kodeBarang;
+    }
     
 }

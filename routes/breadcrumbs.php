@@ -91,6 +91,17 @@ Breadcrumbs::for('rkas.show', function ($trail,$data) {
     $trail->push('Lihat', route('rkas.show',$data));
 });
 
+// Reklas
+Breadcrumbs::for('reklas.index', function ($trail) {
+    $trail->push('Reklas', route('reklas.index'));
+});
+
+// Reklas > Buat
+Breadcrumbs::for('reklas.create', function ($trail) {
+    $trail->parent('reklas.index');
+    $trail->push('Buat', route('reklas.create'));
+});
+
 
 // Master Barang
 Breadcrumbs::for('barangs.index', function ($trail) {
