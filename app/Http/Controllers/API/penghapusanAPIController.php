@@ -60,8 +60,7 @@ class penghapusanAPIController extends AppBaseController
      */
     public function store(CreatepenghapusanAPIRequest $request)
     {
-        $input = $request->all();
-        dd(Auth::id());
+        $input = $request->all();        
 
         $fileDokumens = [];
         $fileFotos = [];
