@@ -117,7 +117,7 @@ class inventaris_penghapusanRepository extends BaseRepository
                 switch ($req->get('step')) {
                     case 'STEP-1': {
                             if ($each['status'] != 'STEP-1') {
-                                continue;
+                                break;
                             }
 
 
@@ -169,7 +169,7 @@ class inventaris_penghapusanRepository extends BaseRepository
                         }
                     case 'STEP-2': {
                             if ($each['status'] != 'STEP-2') {
-                                continue;
+                                break;
                             }
                             DB::beginTransaction();
                             try {
@@ -207,7 +207,7 @@ class inventaris_penghapusanRepository extends BaseRepository
                         }
                     case 'STEP-3': {
                             if ($each['status'] != 'STEP-3') {
-                                continue;
+                                break;
                             }
 
                             DB::beginTransaction();

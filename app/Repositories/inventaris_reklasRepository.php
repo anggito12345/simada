@@ -102,7 +102,7 @@ class inventaris_reklasRepository extends BaseRepository
                     case 'STEP-1': {
                             if ($each['status'] != 'STEP-1') {
 
-                                continue;
+                                break;
                             }
 
 
