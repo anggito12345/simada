@@ -229,10 +229,6 @@ editor.on('preSubmit', (e, data, action) => {
     }
 } );
 
-editor.on('preEdit', (e, json, data, id) => {
-    console.log(json);
-});
-
 const detailTable = $('#table-detil-reklas').DataTable({
     buttons: buttonsOpt,
     data: [],
