@@ -179,8 +179,8 @@ class pemeliharaanController extends AppBaseController
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            Flash::error($e->getMessage());         
-            dd($e->getLine(). $e->getMessage(). $e->getFile());
+            Flash::error($e->getMessage());
+            
             return redirect(route('pemeliharaans.index'));
         }
 
