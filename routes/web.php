@@ -108,3 +108,5 @@ Route::resource('inventarisHistories', 'inventaris_historyController');
 Route::resource('inventarisReklas', 'inventaris_reklasController');
 
 Route::resource('reklas', 'reklasController');
+
+Route::resource('koreksis', 'koreksiController');

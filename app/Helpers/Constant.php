@@ -20,7 +20,10 @@ class Constant {
         ],
         "UPDATE" => [
             'nama' => 'Update'
-        ]
+        ],
+        "KOREKSI" => [
+            'nama' => 'Koreksi'
+        ],
     ];
 
     public static $STATUS = [

@@ -55,6 +55,7 @@ class inventarisAPIController extends AppBaseController
             'inventaris.noreg as text',
             'inventaris.id',
             'inventaris.tahun_perolehan',
+            'inventaris.harga_satuan',
             'm_barang.nama_rek_aset',
             'm_barang.kode_akun',
             'm_barang.kode_kelompok',
