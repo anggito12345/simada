@@ -201,6 +201,10 @@ function loadDataTablePenghapusanBPKAD() {
             data: 'kondisi'
         },
         {
+            title: 'Pemohon',
+            data: 'pemohon'
+        },
+        {
             title: 'Tanggal SK',
             data: 'tglsk'
         }
