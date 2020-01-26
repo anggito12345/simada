@@ -75,6 +75,7 @@ if ( ! $.fn.DataTable.isDataTable( '#table-detil-penghapusan-<?= $uniqID  ?>' ) 
             'inventaris_penghapusan.id_pk as DT_RowId',
             'm_barang.nama_rek_aset as inventarisNama',
             'inventaris_penghapusan.id as inventaris',
+            'inventaris_penghapusan.harga_apprisal',
         ])
         ->join('m_barang','m_barang.id', 'inventaris_penghapusan.pidbarang')
         ->get()) ?>')
@@ -95,6 +96,12 @@ if ( ! $.fn.DataTable.isDataTable( '#table-detil-penghapusan-<?= $uniqID  ?>' ) 
                 data: 'inventarisNama',
                 title: 'Barang',
                 orderable: false,
+            },
+            {
+                data: 'harga_apprisal',
+                title: 'Harga Appraisal',
+                orderable: false,
+                render: $.fn.dataTable.render.number('.', ','),
             },
         ],
     })

@@ -26,10 +26,10 @@
 </div>
 
 <!-- Harga Apprisal Field -->
-<div class="form-group col-sm-6">
+{{-- <div class="form-group col-sm-6">
     {!! Form::label('harga_apprisal', 'Harga Appraisal:') !!}
     {!! Form::number('harga_apprisal', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data.formPenghapusan().harga_apprisal']) !!}
-</div>
+</div> --}}
 
 <!-- Dokumen Field -->
 <div class="form-group col-sm-12">
@@ -82,6 +82,8 @@
 
 @section('scripts')
 <script src="<?= url('js/thirdparty/dataTables.editor.min.js') ?>"></script>
+<script src="<?= url('js/thirdparty/jquery.number.min.js') ?>"></script>
+
 <!-- why imported here because it would overwrite colvis button javascript which is affected on button create click event. -->
 <?php
 $dataDetils = json_encode([]);
@@ -290,11 +292,18 @@ if (isset($penghapusan)) {
 
     editor = new $.fn.dataTable.Editor({
         table: "#table-detil-penghapusan",
-        fields: [{
-            label: "Inventaris:",
-            name: "inventaris",
-            type: "select"
-        }]
+        fields: [
+            {
+                label: "Inventaris:",
+                name: "inventaris",
+                type: "select"
+            },
+            {
+                label: "Harga Appraisal:",
+                name: "harga_apprisal",
+                type: 'text'
+            },
+    ]
     });
 
     let buttonsOpt = [{
@@ -311,8 +320,9 @@ if (isset($penghapusan)) {
     let DTE_Field_inventaris = null
 
     editor.on('open', function(e, type) {
-
-        $('#DTE_Field_inventaris').val('')
+        $('#DTE_Field_inventaris, #DTE_Field_harga_apprisal').val('');
+        $('#DTE_Field_harga_apprisal').unmask();
+        $('#DTE_Field_harga_apprisal').mask("#.##0", {reverse: true});
 
         if (DTE_Field_inventaris == null) {
             DTE_Field_inventaris = new lookupTable(document.getElementById('DTE_Field_inventaris'), {
@@ -369,8 +379,14 @@ if (isset($penghapusan)) {
 
 
     editor.on('preSubmit', function(e, data, action) {
+        const hargaApprisalEl = $('#DTE_Field_harga_apprisal');
+
         if (DTE_Field_inventaris.selectedValues.length <= 0) {
             this.field('inventaris').error('Mohon pilih inventaris terlebih dahulu!');
+        }
+
+        if (Object.keys(hargaApprisalEl).length != 0 && hargaApprisalEl.val().length == 0) {
+            this.field('harga_apprisal').error('Mohon isi Harga Appraisal terlebih dahulu!');
         }
 
         if (this.inError()) {
@@ -387,11 +403,13 @@ if (isset($penghapusan)) {
                         inventaris: parseInt(dataVal.id),
                         inventarisNama: dataVal.nama_rek_aset,
                         tahun_perolehan: dataVal.tahun_perolehan,
+                        harga_apprisal: hargaApprisalEl.val()
                     }
                 } else {
                     data.data[0].inventaris = parseInt(dataVal.id);
                     data.data[0].inventarisNama = dataVal.nama_rek_aset;
                     data.data[0].tahun_perolehan = dataVal.tahun_perolehan;
+                    data.data[0].harga_apprisal = hargaApprisalEl.val();
                 }
 
             })
@@ -401,6 +419,7 @@ if (isset($penghapusan)) {
                 data.data[key]['inventaris'] = parseInt(dataSelect[0].id);
                 data.data[key]['inventarisNama'] = dataSelect[0].nama_rek_aset;
                 data.data[key]['tahun_perolehan'] = dataSelect[0].tahun_perolehan;
+                data.data[key]['harga_apprisal'] = hargaApprisalEl.val();
             });
         }
 
@@ -460,7 +479,12 @@ if (isset($penghapusan)) {
                 data: 'tahun_perolehan',
                 title: 'Tahun Perolehan',
                 orderable: false,
-            }
+            },
+            {
+                data: 'harga_apprisal',
+                title: 'Harga Appraisal',
+                orderable: false,
+            },
         ]
     })
 </script>
