@@ -84,7 +84,8 @@ class inventaris_penghapusan extends Model
         'pid_organisasi',
         'pid_penghapusan',
         'status',
-        'nomor_surat_persetujuan_bpkad'
+        'nomor_surat_persetujuan_bpkad',
+        'harga_apprisal',
     ];
 
     /**
@@ -122,7 +123,8 @@ class inventaris_penghapusan extends Model
         'idpegawai' => 'integer',
         'pid_organisasi' => 'integer',
         'id_pk' => 'integer',
-        'pid_penghapusan' => 'integer'
+        'pid_penghapusan' => 'integer',
+        'harga_apprisal' => 'integer',
     ];
 
     /**
@@ -163,5 +165,13 @@ class inventaris_penghapusan extends Model
         }
 
         return date("d/m/Y", strtotime($value));
+    }
+
+    /**
+     * Harga apprisal setter
+     */
+    public function setHargaApprisalAttribute($value)
+    {
+        $this->attributes['harga_apprisal'] = str_replace('.', '', $value);
     }
 }

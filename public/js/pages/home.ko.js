@@ -241,6 +241,10 @@ function loadDataTableKonfirmasiPenghapusan() {
             data: 'kondisi'
         },
         {
+            title: 'Pemohon',
+            data: 'pemohon'
+        },
+        {
             title: 'Tanggal SK',
             data: 'tglsk'
         }
@@ -275,6 +279,10 @@ function loadDataTableValidasiPenghapusan() {
         {
             title: 'Kondisi',
             data: 'kondisi'
+        },
+        {
+            title: 'Pemohon',
+            data: 'pemohon'
         },
         {
             title: 'Tanggal SK',

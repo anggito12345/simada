@@ -102,6 +102,17 @@ Breadcrumbs::for('reklas.create', function ($trail) {
     $trail->push('Buat', route('reklas.create'));
 });
 
+// Koreksi
+Breadcrumbs::for('koreksis.index', function ($trail) {
+    $trail->push('Koreksi', route('koreksis.index'));
+});
+
+// Koreksi > Buat
+Breadcrumbs::for('koreksis.create', function ($trail) {
+    $trail->parent('koreksis.index');
+    $trail->push('Buat', route('koreksis.create'));
+});
+
 
 // Master Barang
 Breadcrumbs::for('barangs.index', function ($trail) {

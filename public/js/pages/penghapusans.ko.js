@@ -6,7 +6,7 @@ viewModel.data = Object.assign(viewModel.data, {
         tglhapus: moment().format("DD-MM-YYYY"),
         kriteria: "",
         kondisi: "",
-        harga_apprisal: "",
+        // harga_apprisal: "",
         nosk: "",
         tglsk: moment().format("DD-MM-YYYY"),
         keterangan: "",
