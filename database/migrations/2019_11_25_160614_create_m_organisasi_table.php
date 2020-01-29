@@ -14,7 +14,7 @@ class CreateMOrganisasiTable extends Migration {
 	{
 		Schema::create('m_organisasi', function(Blueprint $table)
 		{
-			$table->integer('id', true);
+			$table->integer('id');
 			$table->integer('pid')->nullable();
 			$table->string('nama')->nullable();
 			$table->string('alamat')->nullable();
@@ -24,6 +24,7 @@ class CreateMOrganisasiTable extends Migration {
 			$table->string('kode')->nullable();
 			$table->integer('level')->nullable();
 			$table->string('jabatans')->nullable();
+			$table->primary('id');
 		});
 	}
 

@@ -14,7 +14,7 @@ class CreateMBarangTable extends Migration {
 	{
 		Schema::create('m_barang', function(Blueprint $table)
 		{
-			$table->integer('id', true);
+			$table->integer('id');
 			$table->string('nama_rek_aset')->nullable();
 			$table->smallInteger('umur_ekononomis')->nullable();
 			$table->date('updated_at')->nullable();
@@ -26,6 +26,7 @@ class CreateMBarangTable extends Migration {
 			$table->string('kode_rincian_objek', 4)->nullable();
 			$table->string('kode_sub_rincian_objek', 4)->nullable();
 			$table->string('kode_sub_sub_rincian_objek', 4)->nullable();
+			$table->primary('id');
 		});
 	}
 
