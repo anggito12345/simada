@@ -89,6 +89,7 @@ class inventaris_penghapusanRepository extends BaseRepository
             $inventariPrepareToCopy = \App\Models\inventaris::where('id', $dataDetil['inventaris'])->first()->toArray();
             $inventariPrepareToCopy['pid_penghapusan'] = $id;
             $inventariPrepareToCopy['status'] = 'STEP-1';
+            $inventariPrepareToCopy['harga_apprisal'] = $dataDetil['harga_apprisal'];
 
             $this->create($inventariPrepareToCopy);
 
