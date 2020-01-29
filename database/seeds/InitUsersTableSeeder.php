@@ -54,7 +54,7 @@ class InitUsersTableSeeder extends Seeder
                 'no_hp' => '123123',
                 'tgl_lahir' => '1984-11-03',
                 'jenis_kelamin' => 'L',
-                'pid_organisasi' => 39,
+                'pid_organisasi' => 202,
                 'role' => NULL,
                 'username' => 'admin_bpkad',
                 'aktif' => '1',
