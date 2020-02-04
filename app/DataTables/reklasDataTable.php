@@ -6,6 +6,7 @@ use App\Models\reklas;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 use c;
+use Illuminate\Support\Facades\Auth;
 
 class reklasDataTable extends DataTable
 {
@@ -51,11 +52,15 @@ class reklasDataTable extends DataTable
             'reklas.id as headerid',
             'reklas_detil.*',
             'inventaris.pidbarang',
+            'm_organisasi.nama as pemohon',
+            'm_jenis_barang.kelompok_kib as kelompok_kib_tujuan',
         ])
         ->join('reklas_detil', 'reklas_detil.idreklas', 'reklas.id')
         ->join('users', 'users.id', 'reklas.created_by')
         ->join('m_organisasi', 'm_organisasi.id', 'users.pid_organisasi')
-        ->join('inventaris', 'inventaris.id', 'reklas_detil.pidinventaris');
+        ->join('inventaris', 'inventaris.id', 'reklas_detil.pidinventaris')
+        ->join('m_barang', 'm_barang.id', 'reklas_detil.pidbarang_tujuan')
+        ->join('m_jenis_barang', 'm_jenis_barang.kode', 'm_barang.kode_jenis');
 
         if (isset($_GET['isFromMainGrid'])) {
             if (c::is([],[],[0])) {
@@ -63,6 +68,10 @@ class reklasDataTable extends DataTable
             } else if (c::is([],[],[-1]) && isset($_GET['opd']) && !empty($_GET['opd'])) {
                 $query = $query->where('m_organisasi.id', $_GET['opd']);
             }
+        }
+
+        if (isset($_GET['status'])) {
+            $query = $query->where('reklas_detil.status', $_GET['status']);
         }
         
         return $query->orderBy('reklas.created_at', 'desc');

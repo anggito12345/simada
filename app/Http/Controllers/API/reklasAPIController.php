@@ -84,6 +84,7 @@ class reklasAPIController extends AppBaseController
                     'idreklas' => $reklas->id,
                     'pidinventaris' => $detail['kode_awal'],
                     'pidbarang_tujuan' => $detail['kode_tujuan'],
+                    'status' => 'STEP-1',
                 ];
 
                 reklas_detil::create($detailRecord);

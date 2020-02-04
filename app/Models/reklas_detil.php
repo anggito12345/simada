@@ -27,7 +27,8 @@ class reklas_detil extends Model
     public $fillable = [
         'idreklas',
         'pidinventaris',
-        'pidbarang_tujuan'
+        'pidbarang_tujuan',
+        'status',
     ];
 
     /**
@@ -39,6 +40,7 @@ class reklas_detil extends Model
         'id' => 'integer',
         'idreklas' => 'integer',
         'pidbarang_tujuan' => 'integer',
+        'status' => 'string',
     ];
 
     /**

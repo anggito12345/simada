@@ -40,25 +40,29 @@ viewModel.clickEvent = Object.assign(viewModel.clickEvent, {
  */
 function loadDataTableReklas() {
     $('#table-reklas-bpkad').DataTable({
-        ajax: `${$("[base-path]").val()}/inventarisReklas?status=STEP-1`,
+        ajax: `${$("[base-path]").val()}/reklas?status=STEP-1`,
         dom: 'Bfrtip',
         'drawCallback': onloadDataTableMutasiMutasiMasuk,
         'select': {
             'style': 'multi'
         },
         columns: [
-        {
-            title: 'Nama Inventaris',
-            data: 'nama_awal'
-        },
-        {
-            title: 'Nama Inventaris  tujuan',
-            data: 'nama_tujuan'
-        },
-        {
-            title: 'Tanggal Permohonan',
-            data: 'reklas_at'
-        },
+            {
+                title: 'Nama Inventaris',
+                data: 'kode_awal'
+            },
+            {
+                title: 'Nama Inventaris  tujuan',
+                data: 'kode_tujuan'
+            },
+            {
+                title: 'Pemohon',
+                data: 'pemohon'
+            },
+            {
+                title: 'Tanggal Permohonan',
+                data: 'tglsurat'
+            },
         ]
     })
 }

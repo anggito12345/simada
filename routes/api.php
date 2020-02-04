@@ -71,6 +71,13 @@ Route::middleware('auth:api')->post('inventaris_reklas/approvements', function(
     return $inventaris_reklasRepository->approvements($request, $inventaris_historyRepository);
 });
 
+Route::middleware('auth:api')->post('reklas/approvements', function(
+    Request $request,
+    \App\Repositories\reklasRepository $reklasRepository,
+    inventaris_historyRepository $inventaris_historyRepository) {
+    return $reklasRepository->approvements($request, $inventaris_historyRepository);
+});
+
 
 Route::middleware('auth:api')->post('inventaris_mutasi/cancel', function( 
     \App\Repositories\inventaris_mutasiRepository $inventaris_mutasiRepository, 
@@ -98,6 +105,10 @@ Route::middleware('auth:api')->get('inventaris_penghapusan/count', function( \Ap
 Route::middleware('auth:api')->get('inventaris_reklas/count', function( \App\Repositories\inventaris_reklasRepository $inventaris_reklasRepository, Request $request) {        
     return $inventaris_reklasRepository->count($request);
 });
+
+Route::middleware('auth:api')->get('reklas/count', function (\App\Repositories\reklasRepository $reklasRepository, Request $request) {
+    return $reklasRepository->count($request);
+}) ;
 
 Route::resource('inventaris', 'inventarisAPIController');
 Route::post('/generateKodeLokasi', 'inventarisAPIController@generateKodeLokasi');

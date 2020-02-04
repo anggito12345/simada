@@ -118,7 +118,7 @@ editor.on('open', (e, type) => {
     if (!editorInit) {
         $('#DTE_Field_kode_awal').select2({
             ajax: {
-                url: "<?= url('api/inventaris') ?>",
+                url: "<?= url('api/inventaris?is_exist_reklas=1') ?>",
                 dataType: 'json',
                 headers: {
                     'Authorization':'Bearer ' + sessionStorage.getItem('api token'),
