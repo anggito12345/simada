@@ -112,8 +112,8 @@ class inventarisDataTable extends DataTable
             ->join("m_barang", "m_barang.id", "inventaris.pidbarang")
             ->join("m_jenis_barang", "m_jenis_barang.kode", "m_barang.kode_jenis")
             // role =================
-            ->join("users","users.id", "inventaris.idpegawai")
-            ->join("m_jabatan", "m_jabatan.id", 'users.jabatan')
+            ->leftJoin("users","users.id", "inventaris.idpegawai")
+            ->leftJoin("m_jabatan", "m_jabatan.id", 'users.jabatan')
             ->leftJoin("inventaris_reklas", "inventaris.id", "inventaris_reklas.id")
             // role end
             ->leftJoin("detil_tanah", "detil_tanah.pidinventaris", "inventaris.id")

@@ -32,7 +32,6 @@
 </div>
 @endsection
 
-
 <?php
 $isInventarisPage = true;
 ?>
