@@ -66,7 +66,8 @@ class inventarisAPIController extends AppBaseController
             'm_barang.kode_sub_sub_rincian_objek',
         ])
             ->whereRaw("(inventaris.noreg ~* '" . $request->input("q") . "' OR m_barang.nama_rek_aset ~* '" . $request->input("q") . "' )")
-            ->join('m_barang', 'm_barang.id', 'inventaris.pidbarang');
+            ->join('m_barang', 'm_barang.id', 'inventaris.pidbarang')
+            ->leftJoin('reklas_detil', 'reklas_detil.pidinventaris', 'inventaris.id');
 
         if ($request->has('own')) {
             $mineJabatan = \App\Models\jabatan::find(Auth::user()->jabatan);
@@ -85,6 +86,10 @@ class inventarisAPIController extends AppBaseController
 
         if ($request->has('nin') && $request->input('nin') != "") {
             $query = $query->whereRaw('inventaris.id NOT IN (' . $request->input('nin') . ')');
+        }
+
+        if ($request->has('is_exist_reklas')) {
+            $query = $query->whereRaw('reklas_detil.id is null');
         }
 
         $inventaris = $query

@@ -34,7 +34,7 @@ viewModel.services = Object.assign(viewModel.services, {
     approveReklas: (tableListSelected, step) => {
         
         return __ajax({
-            url: `${$("[base-path]").val()}/api/inventaris_reklas/approvements`,
+            url: `${$("[base-path]").val()}/api/reklas/approvements`,
             method: 'POST',
             data: {
                 items: JSON.stringify(tableListSelected),
@@ -123,7 +123,7 @@ viewModel.services = Object.assign(viewModel.services, {
     },
     countReklas: () => {
         __ajax({
-            url: `${$("[base-path]").val()}/api/inventaris_reklas/count`,
+            url: `${$("[base-path]").val()}/api/reklas/count`,
             dataType: 'json',
         }).then((d) => {
             viewModel.data.countReklas(d)
