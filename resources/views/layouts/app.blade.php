@@ -231,7 +231,7 @@
                                         <a href="{!! url('/users-ubah-password') !!}" class="btn btn-default btn-flat">Ubah Password</a>
                                     </div>
                                     <div class="pull-right">
-                                        <a href="{!! url('/logout') !!}" class="btn btn-default btn-flat" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
+                                        <a href="{!! url('/logout') !!}" class="btn btn-default btn-flat btn-logout" onclick="event.preventDefault(); document.getElementById('logout-form').submit();">
                                             Sign out
                                         </a>
                                         <form id="logout-form" action="{{ url('/logout') }}" method="POST" style="display: none;">
@@ -401,6 +401,12 @@
                 };
             }
         })
+        
+        $( document ).ajaxError(function( event, jqxhr, settings, thrownError ) {
+            if (jqxhr.status == 401) {
+                $('.btn-logout').click();
+            }
+        });
     </script>
     @yield('before_pages')
     @include('layouts.pages')

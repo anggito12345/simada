@@ -100,3 +100,5 @@ let viewModel = {
     },
     jsLoaded: ko.observable(false)
 }
+
+

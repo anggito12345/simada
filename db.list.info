@@ -1,0 +1,13 @@
+DB_CONNECTION=pgsql
+DB_HOST=proyek-do-user-6635809-0.db.ondigitalocean.com
+DB_PORT=25060
+DB_DATABASE=aset_dev_5
+DB_USERNAME=doadmin
+DB_PASSWORD=i68yzzc48wtz7ss8 
+
+DB_CONNECTION=pgsql
+DB_HOST=127.0.0.1
+DB_PORT=5433
+DB_DATABASE=aset_3
+DB_USERNAME=postgres
+DB_PASSWORD=password
