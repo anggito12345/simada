@@ -19,7 +19,13 @@
 <!-- Jabatan Field -->
 <div class="form-group col-sm-6 row">
     {!! Form::label('jabatans', 'Akses Jabatan:') !!}
-    {!! Form::select('jabatans[]', \App\Models\jabatan ::pluck('nama', 'id'), null, ['id' => 'jabatans', 'class' => 'form-control']) !!}
+    {!! Form::select('jabatans', \App\Models\jabatan::pluck('nama', 'id'), [], ['id' => 'jabatans', 'class' => 'form-control']) !!}
+</div>
+
+<!-- Jabatan Field -->
+<div class="form-group col-sm-6 row">
+    {!! Form::label('level', 'Level:') !!}
+    {!! Form::select('level', \App\Models\BaseModel::$kelompokJabatanDs, null, ['id' => 'jabatans', 'class' => 'form-control']) !!}
 </div>
 
 <!-- Alamat Field -->
@@ -36,7 +42,6 @@
         {!! Form::radio('aktif', 0, isset($organisasi) ? $organisasi->aktif == 0 : false) !!} Tidak
     </div>
 </div>
-
 <!-- Submit Field -->
 <div class="form-group col-sm-12">
     {!! Form::submit('Simpan', ['class' => 'btn btn-primary submit']) !!}
@@ -61,8 +66,7 @@
     })
     
   
-    $('#jabatans').select2({
-        multiple: true,
+    $('#jabatans').select2({    
         theme: 'bootstrap' ,
     })
 </script>
