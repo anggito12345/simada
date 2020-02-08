@@ -94,9 +94,9 @@
     {!! Form::file('dokumen_pemanfaatan', ['class' => 'form-control', 'name' => 'dummy-dokumen']) !!}
 </div>
 
-<!-- Foto/Video Field -->
+<!-- Media Field -->
 <div class="form-group col-md-12">
-    {!! Form::label('foto_pemanfaatan', 'Foto atau Video:') !!}
+    {!! Form::label('foto_pemanfaatan', 'Media:') !!}
     {!! Form::file('foto_pemanfaatan', ['class' => 'form-control', 'name' => 'dummy-foto']) !!}
 </div>
 
@@ -231,7 +231,7 @@
         }
     })
     fotoPemanfaatan = new FileGallery(document.getElementById('foto_pemanfaatan'), {
-        title: 'Foto atau Video',
+        title: 'Media',
         maxSize: 50000000,
         accept: "image/*|video/*",
         onDelete: () => {

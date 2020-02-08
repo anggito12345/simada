@@ -657,7 +657,7 @@
         })
 
         var foto = new FileGallery(document.getElementById('foto'), {
-            title: 'Foto atau Video',
+            title: 'Media',
             maxSize: 50000000,
             accept: "image/*|video/*",
             onDelete: () => {                

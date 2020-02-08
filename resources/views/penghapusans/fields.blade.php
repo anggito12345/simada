@@ -37,9 +37,9 @@
     {!! Form::file('dokumen', ['class' => 'form-control', 'name' => 'dummy-dokumen']) !!}
 </div>
 
-<!-- Foto/Video Field -->
+<!-- Media Field -->
 <div class="form-group col-sm-12">
-    {!! Form::label('foto', 'Foto atau Video:') !!}
+    {!! Form::label('foto', 'Media:') !!}
     {!! Form::file('foto', ['class' => 'form-control', 'name' => 'dummy-foto']) !!}
 </div>
 
@@ -176,7 +176,7 @@ if (isset($penghapusan)) {
     })
 
     foto = new FileGallery(document.getElementById('foto'), {
-        title: 'Foto atau Video',
+        title: 'Media',
         maxSize: 50000000,
         accept: "image/*|video/*",
         onDelete: () => {
