@@ -592,7 +592,6 @@ let quantumArray = function(defaultValue) {
     })
 }
 
-  
 let FileGalleryGenerated = 0;
 let FileGallery = function(element, config) {
 
@@ -612,11 +611,19 @@ let FileGallery = function(element, config) {
     const buttonSaveId = `file-gallery-button-${FileGalleryGenerated}`
     const checkBoxClass = `file-gallery-checkbox-${FileGalleryGenerated}`
     const checkBoxClassAll = `file-gallery-checkbox-${FileGalleryGenerated}-all`
+
+    const PDF = 'application/pdf';
+    const MSWORD = 'application/msword';
+    const IMAGE = 'image/.*';
+    const VIDEO = 'video/.*';
+    const OTHER = '.*';
+
     const iconFontAwesome = {
-        "application/pdf": "fa fa-pdf",
-        "application/msword": "fa fa-word",
-        "image/.*": "fa fa-picture-o",
-        ".*": "fa fa-file"
+        [PDF]: "fa fa-pdf",
+        [MSWORD]: "fa fa-word",
+        [IMAGE]: "fa fa-picture-o",
+        [VIDEO]: "fa fa-video-camera",
+        [OTHER]: "fa fa-file"
     }
 
     const classEnablePreview = "data-on-preview"
@@ -625,22 +632,21 @@ let FileGallery = function(element, config) {
         $(`#${tableId}`).DataTable().clear();
         $(`#${tableId}`).DataTable().rows.add(items);
         $(`#${tableId}`).DataTable().draw();        
-    }   
-
+    }
+    
     const previewFile = (full) => {
         const fontKeys = Object.keys(iconFontAwesome)
+        let previewImage = '';
         for (let i = 0; i < fontKeys.length ; i++) {
             if (full.type.match(new RegExp(fontKeys[i]))) {
-                previewImage = ""
-                if (fontKeys[i] == "image/.*") {
-                    previewImage = classEnablePreview
-                } 
+                previewImage = fontKeys.indexOf(fontKeys[i]) !== -1 ? classEnablePreview : "";
+
                 return `class="${iconFontAwesome[fontKeys[i]]}" ${previewImage} data-uid="${full.uid}"`
             }
         }
         
     }
-    
+
     this.rawFiles = []     
     this.fileList = new quantumArray([])
     this.fileList.subscriber = function(newValue) {        
@@ -652,7 +658,7 @@ let FileGallery = function(element, config) {
 
     let defaultConfig = {
         title: '',
-        accept: "image/*|application/*",
+        accept: "image/*|application/*|video/*",
         maxSize: 5000000
     }
 
@@ -690,10 +696,11 @@ let FileGallery = function(element, config) {
     const containerPreviewImage = `file-gallery-preview-container${FileGalleryGenerated}`
 
     const modalPreview = `<div class="modal fade" id="${modalIdPreview}" tabindex="-1" role="dialog">
-    <div class="modal-dialog" role="document">
+    <div class="modal-dialog modal-lg" role="document">
         <div class="modal-content">
-            <div class="modal-body">
-                <img src=""  id="${containerPreviewImage}"/>
+            <div class="modal-body text-center">
+                <img src=""  id="${containerPreviewImage}" width="500" height="420"/>
+                <video autoplay controls src="" width="500" height="420"  id="${containerPreviewImage}"/>
             </div>
             <div class="modal-footer">            
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
@@ -704,7 +711,6 @@ let FileGallery = function(element, config) {
 
     $('body').append(modalContent)
     $('body').append(modalPreview)
-
 
     $(`#${fileTempId}`).change((e) => {       
         element.dispatchEvent(new Event("change"));
@@ -943,11 +949,38 @@ let FileGallery = function(element, config) {
                     return file.uid == uid
                 })
 
+                const fileTypes = Object.keys(iconFontAwesome);
+                $(`img#${containerPreviewImage}`).hide();
+                $(`video#${containerPreviewImage}`).hide();
+
+                let fileType = null;
+                for (let i = 0; i < fileTypes.length ; i++) {
+                    if (selectedFile.type.match(new RegExp(fileTypes[i])) && fileType === null) {
+                        fileType = fileTypes[i];
+                    }
+                }
+
+                let selectorSuffix = '';
+                switch (fileType) {
+                    case IMAGE:
+                        selectorSuffix = 'img';
+                        $(`img#${containerPreviewImage}`).show();
+                        break;
+                    
+                    case VIDEO:
+                        selectorSuffix = 'video';
+                        $(`video#${containerPreviewImage}`).show();
+                        break;
+                
+                    default:
+                        break;
+                }
+
                 if (selectedFile.path != undefined) {
-                    $(`#${containerPreviewImage}`)[0].src = $("[base-path]").val().replace("public", "storage/") + "app/" + selectedFile.path
+                    $(`${selectorSuffix}#${containerPreviewImage}`)[0].src = $("[base-path]").val().replace("public", "storage/") + "app/" + selectedFile.path
                     $(`#${modalIdPreview}`).modal('show')
                 } else {
-                    readURL(selectedFile.rawFile, $(`#${containerPreviewImage}`))
+                    readURL(selectedFile.rawFile, $(`${selectorSuffix}#${containerPreviewImage}`))
                     $(`#${modalIdPreview}`).modal('show')
                 }
 

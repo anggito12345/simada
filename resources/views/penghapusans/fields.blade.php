@@ -37,9 +37,9 @@
     {!! Form::file('dokumen', ['class' => 'form-control', 'name' => 'dummy-dokumen']) !!}
 </div>
 
-<!-- Foto Field -->
+<!-- Media Field -->
 <div class="form-group col-sm-12">
-    {!! Form::label('foto', 'Foto:') !!}
+    {!! Form::label('foto', 'Media:') !!}
     {!! Form::file('foto', ['class' => 'form-control', 'name' => 'dummy-foto']) !!}
 </div>
 
@@ -176,9 +176,9 @@ if (isset($penghapusan)) {
     })
 
     foto = new FileGallery(document.getElementById('foto'), {
-        title: 'Foto',
-        maxSize: 3000000,
-        accept: "image/*",
+        title: 'Media',
+        maxSize: 50000000,
+        accept: "image/*|video/*",
         onDelete: () => {
             return new Promise((resolve, reject) => {
                 let checkIfIdExist = foto.checkedRow().filter((d) => {

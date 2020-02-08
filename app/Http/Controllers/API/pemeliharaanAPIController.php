@@ -13,6 +13,7 @@ use App\Models\inventaris;
 use App\Repositories\inventaris_historyRepository;
 use Response;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Support\Facades\Auth;
 
 /**
  * Class pemeliharaanController
@@ -27,6 +28,7 @@ class pemeliharaanAPIController extends AppBaseController
 
     public function __construct(pemeliharaanRepository $pemeliharaanRepo, inventaris_historyRepository $inventaris_historyRepository)
     {
+        $this->middleware('auth:api');
         $this->pemeliharaanRepository = $pemeliharaanRepo;
         $this->inventaris_historyRepository = $inventaris_historyRepository;
     }
@@ -60,8 +62,11 @@ class pemeliharaanAPIController extends AppBaseController
     public function store(CreatepemeliharaanAPIRequest $request)
     {
         $input = $request->all();
+        $input['created_by'] = Auth::id();
 
         DB::beginTransaction();
+        $fileMedias = [];
+
         try {
             $inventaris = inventaris::find($input['pidinventaris']);
 
@@ -81,10 +86,29 @@ class pemeliharaanAPIController extends AppBaseController
             }
 
             $pemeliharaan = $this->pemeliharaanRepository->create($input);
+            $request->merge(['idpemeliharaan' => $pemeliharaan->id]); 
+
+            $fileMedias = \App\Helpers\FileHelpers::uploadMultiple('media_pemeliharaan', $request, 'pemeliharaan', function($metadatas, $index, $systemUpload) {
+                if (isset($metadatas['media_pemeliharaan_metadata_keterangan'][$index]) && $metadatas['media_pemeliharaan_metadata_keterangan'][$index] != null) {
+                    $systemUpload->keterangan = $metadatas['media_pemeliharaan_metadata_keterangan'][$index];
+                }
+
+                $systemUpload->uid = $metadatas['media_pemeliharaan_metadata_uid'][$index];             
+                $systemUpload->foreign_field = 'id';
+                $systemUpload->jenis = 'media';
+                $systemUpload->foreign_table = 'pemeliharaan';
+                $systemUpload->foreign_id = $metadatas['idpemeliharaan'];
+                                
+                return $systemUpload;
+            });
+
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();
-            return $this->sendError($e->getMessage(), 500);
+
+            \App\Helpers\FileHelpers::deleteAll($fileMedias);
+
+            return $this->sendError($e->getMessage() . $e->getTraceAsString() . $e->getFile() . $e->getLine(), 500);
         }
 
 
