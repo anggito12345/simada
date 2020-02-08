@@ -16,6 +16,7 @@ use App\Helpers\Constant;
 use App\Models\pemeliharaan;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Support\Facades\Auth;
+use Illuminate\Support\Facades\Storage;
 
 class pemeliharaanController extends AppBaseController
 {
@@ -198,18 +199,45 @@ class pemeliharaanController extends AppBaseController
      */
     public function destroy($id)
     {
-        $pemeliharaan = pemeliharaan::withDrafts()->find($id);
+        $ids = explode("|", $id);
 
-        if (empty($pemeliharaan)) {
-            Flash::error('Pemeliharaan not found');
+        foreach ($ids as $key => $id) {
+            DB::beginTransaction();
+            try {
+                $pemeliharaan = pemeliharaan::withDrafts()->find($id);
 
-            return redirect(route('pemeliharaans.index'));
+                if (empty($pemeliharaan)) {
+                    Flash::error('Pemeliharaan not found');
+                    return redirect(route('pemeliharaans.index'));
+                }
+
+                $pemeliharaan->delete();
+
+                $querySystemUpload = \App\Models\system_upload::where([
+                    'foreign_table' => 'pemeliharaan',
+                    'foreign_id' => $id,
+                ]);
+        
+        
+                $dataSystemUploads = $querySystemUpload->get();
+        
+                foreach ($dataSystemUploads as $key => $value) {
+                    Storage::delete($value->path);
+                }
+        
+                $querySystemUpload->delete();   
+    
+                
+                DB::commit(); 
+            } catch(\Exception $e) {
+                DB::rollBack();
+
+                Flash::error('Delete pemeliharaan failed');
+                return redirect(route('pemeliharaans.index'));
+            }
         }
 
-        $this->pemeliharaanRepository->delete($id);
-
         Flash::success('Pemeliharaan deleted successfully.');
-
         return redirect(route('pemeliharaans.index'));
     }
 }
