@@ -154,7 +154,7 @@ const mediaPemeliharaan = new FileGallery(document.getElementById('media'), {
     accept: "image/*|video/*",
     onDelete: () => {
         return new Promise((resolve, reject) => {
-            let checkIfIdExist = fotopemeliharaan.checkedRow().filter((d) => {
+            let checkIfIdExist = mediaPemeliharaan.checkedRow().filter((d) => {
                 return d.id != undefined
             })
             if (checkIfIdExist.length < 1) {
