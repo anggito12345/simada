@@ -11,7 +11,7 @@
 </div>
 
 <!-- Dokumen -->
-<div class="form-group col-6">
+<div class="form-group col-12">
     {!! Form::label('dokumen', 'Dokumen:') !!}
     {!! Form::file('dokumen', ['class' => 'form-control', 'id' => 'dokumen']) !!}
 </div>
@@ -49,6 +49,32 @@ document.querySelector('#form-reklas').addEventListener('submit', (e) => {
     doSave(false);
 });
 
+const dokumenReklas = new FileGallery(document.getElementById('dokumen'), {
+    title: 'File Dokumen',
+    maxSize: 5000000,
+    accept: App.Constant.MimeOffice,
+    onDelete: () => {
+        return new Promise((resolve, reject) => {
+            let checkIfIdExist = dokumenReklas.checkedRow().filter((d) => {
+                return d.id != undefined
+            })
+            if (checkIfIdExist.length < 1) {
+                resolve(true)
+                return
+            }
+            __ajax({
+                method: 'DELETE',
+                url: "<?= url('api/system_uploads') ?>/" + checkIfIdExist.map((d) => {
+                    return d.id
+                }),
+            }).then((d) => {
+                resolve(true)
+                onDokumenReklasGetFiles(checkIfIdExist[0].foreign_id, () => {})
+            })
+        })
+    }
+});
+
 const doSave = (isDraft) => {
     Swal.fire({
         title: 'Anda yakin?',
@@ -62,9 +88,24 @@ const doSave = (isDraft) => {
         if (result.value) {
             let formData = new FormData($('#form-reklas')[0]);
 
-            if (document.getElementById('dokumen').files.length > 0) {
-                formData.append('dokumen[]', document.getElementById('dokumen').files[0])
-            }
+            dokumenReklas.fileList().forEach((d, index) => {
+                if (d.rawFile) {
+                    formData.append(`dokumen_reklas[${index}]`, d.rawFile)
+                } else {
+                    formData.append(`dokumen_reklas[${index}]`, false)
+                }
+
+                let keys = Object.keys(d)
+
+                keys.forEach((key) => {
+                    if (key == 'rawFile') {
+                        return
+                    }
+                    formData.append(`dokumen_reklas_metadata_${key}[${index}]`, d[key])
+                })
+
+                return d.rawFile
+            });
 
             formData.append('data-detil', JSON.stringify($("#table-detil-reklas").DataTable().rows().data().toArray()));
             formData.append('draft', isDraft ? '1' : '');
