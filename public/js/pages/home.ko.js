@@ -3,6 +3,129 @@ new inlineDatepicker(document.getElementById('tglsk'), {
     buttonClear: true,
 });
 
+function onDokumenPenghapusanGetFiles(foreignId, callback) {
+    return __ajax({
+        method: 'GET',
+        url: "<?= url('api/system_uploads') ?>",
+        data: {
+            jenis: 'penghapusan-step1',
+            foreign_field: 'id',
+            foreign_id: foreignId,
+            foreign_table: 'inventaris_penghapusan',
+        },  
+    }).then((files) => {                
+        dokumenPenghapusan.fileList(files);
+        callback();
+    });
+}
+
+const dokumenPenghapusan = new FileGallery(document.getElementById('dokumen-penghapusan'), {
+    title: 'Dokumen',
+    accept: "image/*|application/pdf",
+    onDelete: () => {
+        return new Promise((resolve, reject) => {
+            let checkIfIdExist = dokumenPenghapusan.checkedRow().filter((d) => {
+                return d.id != undefined
+            })
+            if (checkIfIdExist.length < 1) {
+                resolve(true)
+                return
+            }
+            __ajax({
+                method: 'DELETE',
+                url: "<?= url('api/system_uploads') ?>/" + checkIfIdExist.map((d) => {
+                    return d.id
+                }),
+            }).then((d) => {
+                resolve(true)
+                onDokumenPenghapusanGetFiles(checkIfIdExist[0].foreign_id, () => {})
+            })
+        })
+    }
+});
+
+function onBeritaAcaraPenghapusanGetFiles(foreignId, callback) {
+    return __ajax({
+        method: 'GET',
+        url: "<?= url('api/system_uploads') ?>",
+        data: {
+            jenis: 'penghapusan-step2',
+            foreign_field: 'id',
+            foreign_id: foreignId,
+            foreign_table: 'inventaris_penghapusan',
+        },  
+    }).then((files) => {                
+        dokumenPenghapusan.fileList(files);
+        callback();
+    });
+}
+
+const beritaAcaraPenghapusan = new FileGallery(document.getElementById('berita-acara'), {
+    title: 'Dokumen',
+    accept: "image/*|application/pdf",
+    onDelete: () => {
+        return new Promise((resolve, reject) => {
+            let checkIfIdExist = beritaAcaraPenghapusan.checkedRow().filter((d) => {
+                return d.id != undefined
+            })
+            if (checkIfIdExist.length < 1) {
+                resolve(true)
+                return
+            }
+            __ajax({
+                method: 'DELETE',
+                url: "<?= url('api/system_uploads') ?>/" + checkIfIdExist.map((d) => {
+                    return d.id
+                }),
+            }).then((d) => {
+                resolve(true)
+                onBeritaAcaraPenghapusanGetFiles(checkIfIdExist[0].foreign_id, () => {})
+            })
+        })
+    }
+});
+
+function onDokumenValidasiPenghapusanGetFiles(foreignId, callback) {
+    return __ajax({
+        method: 'GET',
+        url: "<?= url('api/system_uploads') ?>",
+        data: {
+            jenis: 'penghapusan-step3',
+            foreign_field: 'id',
+            foreign_id: foreignId,
+            foreign_table: 'inventaris_penghapusan',
+        },  
+    }).then((files) => {                
+        dokumenValidasiPenghapusan.fileList(files);
+        callback();
+    });
+}
+
+const dokumenValidasiPenghapusan = new FileGallery(document.getElementById('dokumen-validasi-penghapusan'), {
+    title: 'Dokumen',
+    accept: "image/*|application/pdf",
+    onDelete: () => {
+        return new Promise((resolve, reject) => {
+            let checkIfIdExist = dokumenValidasiPenghapusan.checkedRow().filter((d) => {
+                return d.id != undefined
+            })
+            if (checkIfIdExist.length < 1) {
+                resolve(true)
+                return
+            }
+            __ajax({
+                method: 'DELETE',
+                url: "<?= url('api/system_uploads') ?>/" + checkIfIdExist.map((d) => {
+                    return d.id
+                }),
+            }).then((d) => {
+                resolve(true)
+                onDokumenValidasiPenghapusanGetFiles(checkIfIdExist[0].foreign_id, () => {})
+            })
+        })
+    }
+});
+
 /**
  * mutasi section
  */
@@ -477,16 +600,18 @@ function beforeApproveStep2(isApprovement) {
 
 }
 
-
 function beforeApproveBPKADPenghapusan() {
+    dokumenPenghapusan.fileList([]);
     $('#modal-penghapusan-bpkad-form').modal('show')
 }
 
 function beforeApproveKonfirmasiPenghapusan() {
+    beritaAcaraPenghapusan.fileList([]);
     $('#modal-penghapusan-konfirmasi-form').modal('show')
 }
 
 function beforeApproveValidasiPenghapusan() {
+    dokumenValidasiPenghapusan.fileList([]);
     $('#modal-validasi-penghapusan-konfirmasi-form').modal('show')
 }
 
