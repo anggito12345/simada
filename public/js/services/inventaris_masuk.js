@@ -14,9 +14,25 @@ viewModel.services = Object.assign(viewModel.services, {
         } else if (step === 'STEP-2') {
             let formData = new FormData($('#form-bpkad-mutasi')[0])
 
-            if (document.getElementById('dokumen').files.length > 0) {
-                formData.append('dokumen[]', document.getElementById('dokumen').files[0])
-            }
+            dokumenPersetujuanMutasiBpkad.fileList().forEach((d, index) => {
+                if (d.rawFile) {
+                    formData.append(`dokumen_persetujuan_mutasi[${index}]`, d.rawFile)
+                } else {
+                    formData.append(`dokumen_persetujuan_mutasi[${index}]`, false)
+                }
+
+                let keys = Object.keys(d)
+
+                keys.forEach((key) => {
+                    if (key == 'rawFile') {
+                        return
+                    }
+                    formData.append(`dokumen_persetujuan_mutasi_metadata_${key}[${index}]`, d[key])
+                })
+
+                return d.rawFile
+            });
+
             formData.append('items', JSON.stringify(tableListSelected))
             formData.append('step', step)
             
@@ -46,9 +62,26 @@ viewModel.services = Object.assign(viewModel.services, {
     cancelMutasi: (tableListSelected, step) => {
         let formData = new FormData($('#form-bpkad-mutasi')[0])
 
-        if (document.getElementById('dokumen-mutasi-cancel').files.length > 0) {
-            formData.append('dokumen[]', document.getElementById('dokumen-mutasi-cancel').files[0])
-        }
+        dokumenMutasiCancel.fileList().forEach((d, index) => {
+            if (d.rawFile) {
+                formData.append(`dokumen_mutasi_cancel[${index}]`, d.rawFile)
+            } else {
+                formData.append(`dokumen_mutasi_cancel[${index}]`, false)
+            }
+
+            let keys = Object.keys(d)
+
+            keys.forEach((key) => {
+                if (key == 'rawFile') {
+                    return
+                }
+                formData.append(`dokumen_mutasi_cancel_metadata_${key}[${index}]`, d[key])
+            })
+
+            return d.rawFile
+        });
+
+
         formData.append('items', JSON.stringify(tableListSelected))
         formData.append('step', step)
         formData.append('cancel_note', document.getElementById('cancel_note').value)

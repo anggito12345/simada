@@ -130,17 +130,22 @@ class inventaris_mutasiRepository extends BaseRepository
                     case 'STEP-2': {
                             if ($each['status'] == 'STEP-2') {
                                 DB::beginTransaction();
+                                $fileDokumens = [];
+
                                 try {
                                     $req->merge(['mutasi_id' => $each["mutasi_id"]]);
 
                                     if (!$isAlreadyUpload) {
-                                        $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen', $req, "inventaris_mutasi", function ($metadatas, $index, $systemUpload) {
-
+                                        $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen_mutasi_cancel', $req, "inventaris_mutasi", function ($metadatas, $index, $systemUpload) {
+                                            if (isset($metadatas['dokumen_mutasi_cancel_metadata_keterangan'][$index]) && $metadatas['dokumen_mutasi_cancel_metadata_keterangan'][$index] != null) {
+                                                $systemUpload->keterangan = $metadatas['dokumen_mutasi_cancel_metadata_keterangan'][$index];
+                                            }
+    
+                                            $systemUpload->uid = $metadatas['dokumen_mutasi_cancel_metadata_uid'][$index];
                                             $systemUpload->foreign_field = 'id';
                                             $systemUpload->jenis = 'Dokumen Pembatalan Mutasi (BPKAD)';
                                             $systemUpload->foreign_table = 'inventaris_mutasi';
                                             $systemUpload->foreign_id = $metadatas['mutasi_id'];
-
 
                                             return $systemUpload;
                                         });
@@ -227,12 +232,17 @@ class inventaris_mutasiRepository extends BaseRepository
                     case 'STEP-2': {
                             if ($each['status'] == 'STEP-2') {
                                 DB::beginTransaction();
+                                $fileDokumens = [];
                                 try {
                                     $req->merge(['mutasi_id' => $each["mutasi_id"]]);
 
                                     if (!$isAlreadyUpload) {
-                                        $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen', $req, "inventaris_mutasi", function ($metadatas, $index, $systemUpload) {
-
+                                        $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen_persetujuan_mutasi', $req, "inventaris_mutasi", function ($metadatas, $index, $systemUpload) {
+                                            if (isset($metadatas['dokumen_persetujuan_mutasi_metadata_keterangan'][$index]) && $metadatas['dokumen_persetujuan_mutasi_metadata_keterangan'][$index] != null) {
+                                                $systemUpload->keterangan = $metadatas['dokumen_persetujuan_mutasi_metadata_keterangan'][$index];
+                                            }
+    
+                                            $systemUpload->uid = $metadatas['dokumen_persetujuan_mutasi_metadata_uid'][$index];
                                             $systemUpload->foreign_field = 'id';
                                             $systemUpload->jenis = 'Dokumen Persetujuan Mutasi (BPKAD)';
                                             $systemUpload->foreign_table = 'inventaris_mutasi';

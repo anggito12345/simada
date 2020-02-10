@@ -294,7 +294,7 @@
                     {!! Form::open(['id' => 'form-bpkad-mutasi' ]) !!}
                     <div class="form-group">
                         <label>Dokumen Persetujuan:</label>
-                        {!! Form::file('dokumen', ['class' => 'form-control', 'id' => 'dokumen']) !!}
+                        {!! Form::file('dokumen', ['class' => 'form-control', 'id' => 'dokumen-persetujuan-mutasi-bpkad']) !!}
                     </div>
                     {!! Form::close() !!}
                 </div>
