@@ -59,6 +59,7 @@ class reklasAPIController extends AppBaseController
     {
         $input = $request->all();
         $input['created_by'] = Auth::id();
+        $fileDokumens = [];
 
         try {
             DB::beginTransaction();
@@ -67,8 +68,12 @@ class reklasAPIController extends AppBaseController
 
             $request->merge(['idreklas' => $reklas->id]);
 
-            $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen', $request, "reklas", function($metadatas, $index, $systemUpload) {
+            $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen_reklas', $request, "reklas", function($metadatas, $index, $systemUpload) {
+                if (isset($metadatas['dokumen_reklas_metadata_keterangan'][$index]) && $metadatas['dokumen_reklas_metadata_keterangan'][$index] != null) {
+                    $systemUpload->keterangan = $metadatas['dokumen_reklas_metadata_keterangan'][$index];
+                }
 
+                $systemUpload->uid = $metadatas['dokumen_reklas_metadata_uid'][$index];      
                 $systemUpload->foreign_field = 'id';
                 $systemUpload->jenis = 'dokumen';
                 $systemUpload->foreign_table = 'reklas';

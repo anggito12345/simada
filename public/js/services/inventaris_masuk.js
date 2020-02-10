@@ -14,9 +14,25 @@ viewModel.services = Object.assign(viewModel.services, {
         } else if (step === 'STEP-2') {
             let formData = new FormData($('#form-bpkad-mutasi')[0])
 
-            if (document.getElementById('dokumen').files.length > 0) {
-                formData.append('dokumen[]', document.getElementById('dokumen').files[0])
-            }
+            dokumenPersetujuanMutasiBpkad.fileList().forEach((d, index) => {
+                if (d.rawFile) {
+                    formData.append(`dokumen_persetujuan_mutasi[${index}]`, d.rawFile)
+                } else {
+                    formData.append(`dokumen_persetujuan_mutasi[${index}]`, false)
+                }
+
+                let keys = Object.keys(d)
+
+                keys.forEach((key) => {
+                    if (key == 'rawFile') {
+                        return
+                    }
+                    formData.append(`dokumen_persetujuan_mutasi_metadata_${key}[${index}]`, d[key])
+                })
+
+                return d.rawFile
+            });
+
             formData.append('items', JSON.stringify(tableListSelected))
             formData.append('step', step)
             
@@ -46,9 +62,26 @@ viewModel.services = Object.assign(viewModel.services, {
     cancelMutasi: (tableListSelected, step) => {
         let formData = new FormData($('#form-bpkad-mutasi')[0])
 
-        if (document.getElementById('dokumen-mutasi-cancel').files.length > 0) {
-            formData.append('dokumen[]', document.getElementById('dokumen-mutasi-cancel').files[0])
-        }
+        dokumenMutasiCancel.fileList().forEach((d, index) => {
+            if (d.rawFile) {
+                formData.append(`dokumen_mutasi_cancel[${index}]`, d.rawFile)
+            } else {
+                formData.append(`dokumen_mutasi_cancel[${index}]`, false)
+            }
+
+            let keys = Object.keys(d)
+
+            keys.forEach((key) => {
+                if (key == 'rawFile') {
+                    return
+                }
+                formData.append(`dokumen_mutasi_cancel_metadata_${key}[${index}]`, d[key])
+            })
+
+            return d.rawFile
+        });
+
+
         formData.append('items', JSON.stringify(tableListSelected))
         formData.append('step', step)
         formData.append('cancel_note', document.getElementById('cancel_note').value)
@@ -67,9 +100,25 @@ viewModel.services = Object.assign(viewModel.services, {
 
         switch (step) {
             case 'STEP-1':
-                if (document.getElementById('dokumen-penghapusan').files.length > 0) {
-                    formData.append('dokumen[]', document.getElementById('dokumen-penghapusan').files[0])
-                }            
+                dokumenPenghapusan.fileList().forEach((d, index) => {
+                    if (d.rawFile) {
+                        formData.append(`dokumen_penghapusan[${index}]`, d.rawFile)
+                    } else {
+                        formData.append(`dokumen_penghapusan[${index}]`, false)
+                    }
+
+                    let keys = Object.keys(d)
+
+                    keys.forEach((key) => {
+                        if (key == 'rawFile') {
+                            return
+                        }
+                        formData.append(`dokumen_penghapusan_metadata_${key}[${index}]`, d[key])
+                    })
+
+                    return d.rawFile
+                });
+
                 formData.append('nomor_surat', document.getElementById('nomor-persetujuan-step1').value)
                 formData.append('nosk', document.getElementById('nosk').value)
                 formData.append('tglsk', document.getElementById('tglsk').value)
@@ -77,15 +126,45 @@ viewModel.services = Object.assign(viewModel.services, {
                 break;
 
             case 'STEP-2':
-                if (document.getElementById('berita-acara').files.length > 0) {
-                    formData.append('dokumen[]', document.getElementById('berita-acara').files[0])
-                }
+                beritaAcaraPenghapusan.fileList().forEach((d, index) => {
+                    if (d.rawFile) {
+                        formData.append(`berita_acara_penghapusan[${index}]`, d.rawFile)
+                    } else {
+                        formData.append(`berita_acara_penghapusan[${index}]`, false)
+                    }
+
+                    let keys = Object.keys(d)
+
+                    keys.forEach((key) => {
+                        if (key == 'rawFile') {
+                            return
+                        }
+                        formData.append(`berita_acara_penghapusan_metadata_${key}[${index}]`, d[key])
+                    })
+
+                    return d.rawFile
+                });
                 break;
 
             case 'STEP-3':
-                if (document.getElementById('dokumen-validasi-penghapusan').files.length > 0) {
-                    formData.append('dokumen[]', document.getElementById('dokumen-validasi-penghapusan').files[0])
-                }
+                dokumenValidasiPenghapusan.fileList().forEach((d, index) => {
+                    if (d.rawFile) {
+                        formData.append(`dokumen_validasi_penghapusan[${index}]`, d.rawFile)
+                    } else {
+                        formData.append(`dokumen_validasi_penghapusan[${index}]`, false)
+                    }
+
+                    let keys = Object.keys(d)
+
+                    keys.forEach((key) => {
+                        if (key == 'rawFile') {
+                            return
+                        }
+                        formData.append(`dokumen_validasi_penghapusan_metadata_${key}[${index}]`, d[key])
+                    })
+
+                    return d.rawFile
+                });
                 break;
         
             default:
