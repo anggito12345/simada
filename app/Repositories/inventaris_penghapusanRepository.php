@@ -79,13 +79,13 @@ class inventaris_penghapusanRepository extends BaseRepository
     }
 
     /**
-     * copy invetaris to inventaris mutasi temporary 
+     * copy invetaris to inventaris mutasi temporary
      */
 
     public function moveInventaris($dataDetils = [], $id)
     {
         foreach ($dataDetils as $dataDetil) {
-            // move 
+            // move
             $inventariPrepareToCopy = \App\Models\inventaris::where('id', $dataDetil['inventaris'])->first()->toArray();
             $inventariPrepareToCopy['pid_penghapusan'] = $id;
             $inventariPrepareToCopy['status'] = 'STEP-1';
@@ -132,7 +132,7 @@ class inventaris_penghapusanRepository extends BaseRepository
                                             $systemUpload->keterangan = $metadatas['dokumen_penghapusan_metadata_keterangan'][$index];
                                         }
 
-                                        $systemUpload->uid = $metadatas['dokumen_penghapusan_metadata_uid'][$index];             
+                                        $systemUpload->uid = $metadatas['dokumen_penghapusan_metadata_uid'][$index];
                                         $systemUpload->foreign_field = 'id';
                                         $systemUpload->jenis = 'penghapusan-step1';
                                         $systemUpload->foreign_table = 'inventaris_penghapusan';
@@ -153,8 +153,8 @@ class inventaris_penghapusanRepository extends BaseRepository
                                 }
 
                                 $penghapusan->nomor_surat_persetujuan_bpkad = $req->get('nomor_surat');
-                                $penghapusan->nosk = $req->get('nosk');
-                                $penghapusan->tglsk = $req->get('tglsk');
+                               /*  $penghapusan->nosk = $req->get('nosk'); */
+                                $penghapusan->tglsp = $req->get('tglsp');
                                 $penghapusan->keterangan = $req->get('keterangan');
                                 $penghapusan->save();
 
@@ -200,6 +200,18 @@ class inventaris_penghapusanRepository extends BaseRepository
                                     $isAlreadyUpload = true;
                                 }
 
+                                $penghapusan = \App\Models\penghapusan::find($each['pid_penghapusan']);
+
+
+                                if (empty($penghapusan)) {
+                                    throw new NotFoundHttpException("Data tidak ditemukan");
+                                }
+
+                                $penghapusan->nomor_berita_acara = $req->get('nomor_berita_acara');
+                                $penghapusan->tglba = $req->get('tglba');
+                              /*   $penghapusan->keterangan = $req->get('keterangan'); */
+                                $penghapusan->save();
+
 
                                 $each->update([
                                     'status' => 'STEP-3'
@@ -243,18 +255,29 @@ class inventaris_penghapusanRepository extends BaseRepository
                                     $isAlreadyUpload = true;
                                 }
 
+                                $penghapusan = \App\Models\penghapusan::find($each['pid_penghapusan']);
+
+
+                                if (empty($penghapusan)) {
+                                    throw new NotFoundHttpException("Data tidak ditemukan");
+                                }
+
+                                $penghapusan->nosk = $req->get('nosk');
+                                $penghapusan->tglsk = $req->get('tglsk');
+                                $penghapusan->save();
+
                                 $each->update([
                                     'status' => 'STEP-4'
                                 ]);
 
-                                $newInventaris = inventaris::find($each['id'])->toArray();                            
+                                $newInventaris = inventaris::find($each['id'])->toArray();
 
                                 $inventaris_historyRepository->postHistory($newInventaris, Constant::$ACTION_HISTORY['PENGHAPUSAN']);
 
                                 \App\Models\inventaris::withTrashed()->find($each['id'])->delete();
 
                                 DB::commit();
-                            } catch (\Exception $e) { 
+                            } catch (\Exception $e) {
 
                                 DB::rollBack();
                                 return response()->json([
