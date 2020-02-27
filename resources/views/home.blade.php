@@ -42,6 +42,12 @@
 </style>
 <div class="tab-header">
     <div class="item" data-bind="{ 
+        click: viewModel.clickEvent.setCurrentTab.bind(this, 'home-map'), 
+        class: viewModel.data.currentTab() === 'home-map' ? 'active' : ''
+    }">
+        <i class="fa fa-globe"></i>
+    </div>
+    <div class="item" data-bind="{ 
             click: viewModel.clickEvent.setCurrentTab.bind(this, 'mutasi'), 
             class: viewModel.data.currentTab() === 'mutasi' ? 'active' : ''
         }">
@@ -63,7 +69,12 @@
     @endif
 </div>
 
-<div class="container p-3">
+<div class="container-fluid p-3">
+    <div class="row" data-bind="if: viewModel.data.currentTab() === 'home-map'">
+        <div class="col-md-12">
+            <div id="home-map-container"></div>
+        </div>
+    </div>
 
     @if(c::is([],[],[0, 1]))
     <div class="row" data-bind="if: viewModel.data.currentTab() === 'mutasi'">

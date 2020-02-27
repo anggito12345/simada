@@ -209,6 +209,19 @@ const dokumenMutasiCancel = new FileGallery(document.getElementById('dokumen-mut
 });
 
 /**
+ * Handle make home map
+ */
+function makeHomeMap() {
+    const element = document.getElementById('home-map-container');
+    $(element).html(`<i class="fa fa-refresh fa-spin fa-lg fa-fw"></i> Mohon tunggu...`);
+
+    new MapInput(element, {
+        autoClose: false,
+        isNotInput: true,
+    });
+}
+
+/**
  * mutasi section
  */
 
@@ -225,7 +238,7 @@ viewModel.data = Object.assign(viewModel.data, {
     countReklas: ko.observable({
         step1: 0
     }),
-    currentTab: ko.observable('mutasi'),
+    currentTab: ko.observable('home-map'),
     currentHighlight: ko.observable('')
 })
 
@@ -233,6 +246,9 @@ viewModel.data = Object.assign(viewModel.data, {
 viewModel.clickEvent = Object.assign(viewModel.clickEvent, {
     setCurrentTab: (tab) => {
         viewModel.data.currentTab(tab)
+        if (tab == 'home-map') {
+            makeHomeMap();
+        }
     },
     setCurrentHighlight: (currentHighlight) => {
         $(`#table-${currentHighlight}`).DataTable().ajax.reload();
@@ -851,6 +867,7 @@ loadDataTablePenghapusanBPKAD();
 loadDataTableKonfirmasiPenghapusan();
 loadDataTableValidasiPenghapusan();
 loadDataTableReklas()
+makeHomeMap();
 
 
 /**
