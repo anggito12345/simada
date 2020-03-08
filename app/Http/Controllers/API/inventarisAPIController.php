@@ -146,6 +146,7 @@ class inventarisAPIController extends AppBaseController
             }
 
             $input['umur_ekonomis'] = $barang->umur_ekonomis;
+            $input['kode_lokasi'] = inventarisRepository::generateKodeLokasi($input['tahun_perolehan'], $input['harga_satuan']);
 
             $inventaris = $this->inventarisRepository->create($input);
 
@@ -334,6 +335,8 @@ class inventarisAPIController extends AppBaseController
 
                 return $systemUpload;
             });
+
+            $input['kode_lokasi'] = inventarisRepository::generateKodeLokasi($input['tahun_perolehan'], $input['harga_satuan']);
 
             $inventaris = $this->inventarisRepository->update($input, $id);
 

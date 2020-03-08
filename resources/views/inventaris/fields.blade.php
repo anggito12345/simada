@@ -144,10 +144,10 @@
 </div>
 
 <!-- Kode Lokasi Field -->
-<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
+<!--<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
     {!! Form::label('kode_lokasi', 'Kode Lokasi:') !!}
     {!! Form::text('kode_lokasi', null, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
-</div>
+</div>-->
 
 <div data-bind='visible:viewModel.data.tipeKib() == "KIB A"' class="form-group col-sm-12 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-12' : 'col-md-12' ?> row">
     {!! Form::file('dokumen', ['class' => 'form-control','id'=>'dokumen', 'name' => 'dummy', 'multiple' => true]) !!}
@@ -410,8 +410,11 @@
                 }
             },
             theme: 'bootstrap' ,
-            value: 32
         })
+
+        App.Helpers.defaultSelect2($('#alamat_propinsi'), "<?= url('api/alamats/32') ?>", 'id', 'nama', () => {
+            $('#alamat_propinsi').val("32").trigger('change');
+        });
 
 
         $('#alamat_propinsi').on('change', function (e) {
@@ -746,7 +749,7 @@
                         })
                         
                         formData.append(`kib`, JSON.stringify(viewModel.data[viewModel.data.tipeKib()]()))
-                        formData.append(`kode_lokasi`, $('#kode_lokasi').val())
+                        //formData.append(`kode_lokasi`, $('#kode_lokasi').val())
                         formData.append('tipe_kib', viewModel.data.tipeKib().replace(/KIB /g,""))
 
                         if (!isNaN(parseInt($('#pidopd').select2('val'))))
