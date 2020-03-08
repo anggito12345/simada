@@ -27,13 +27,15 @@ class Access {
             }
         }
 
-        $query = \App\Models\jabatan::where([
-            'm_jabatan.id' => Auth::user()->jabatan,
-        ]);
+        $query = \App\Models\users::where([
+            'users.id' => Auth::user()->id,
+        ])
+        ->join('m_jabatan', 'm_jabatan.id', 'users.jabatan')
+        ->join('m_organisasi', 'm_organisasi.id', 'users.pid_organisasi');
 
         if (count($names) > 0 || count($access) > 0) {
             $query = $query
-                ->join('module_access', 'module_access.pid_jabatan', 'm_jabatan.id');
+                ->join('module_access', 'module_access.pid_jabatan', 'users.jabatan');
         }
 
         if (count($access) > 0) {
@@ -43,8 +45,9 @@ class Access {
         }
 
         if (count($kel) > 0) {
+            array_walk($kel, function(&$x) {$x = "'$x'";});
             $query = $query
-                ->whereRaw('m_jabatan.kelompok IN ('.implode(',', $kel).')');
+                ->whereRaw('m_organisasi.jabatans IN ('.implode(',', $kel).')');
         }
 
         if (count($names) > 0) {
@@ -69,9 +72,12 @@ class Access {
     }
 
     public static function isKel($kel = []) {
-        return \App\Models\jabatan::where([
-            'id' => Auth::user()->jabatan,
-        ])->where('kelompok', 'IN', '('.implode(',', $kel).')')->count() > 0;
+        return \App\Models\users::where([
+            'users.id' => Auth::user()->jabatan,
+        ])
+        ->join('m_jabatan', 'm_jabatan.id', 'users.jabatan')
+        ->join('m_organisasi', 'm_organisasi.id', 'users.pid_organisasi')
+        ->where('m_organisasi.jabatans', 'IN', '('.implode(',', $kel).')')->count() > 0;
     }
 
 

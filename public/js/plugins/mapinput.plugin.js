@@ -356,3 +356,7 @@ let MapInput = function(element, config) {
         
     })
 }
+
+let GoogleMap = (element, config) => {
+
+}

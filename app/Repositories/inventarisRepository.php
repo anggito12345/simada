@@ -55,6 +55,7 @@ class inventarisRepository extends BaseRepository
     public static function generateKodeLokasi($req) {
         $kodeStatus = \App\Models\setting::where('nama', 'KODE_LOKASI_STATUS')->first()->nilai;
         $kodePropinsi = \App\Models\setting::where('nama', 'KODE_PROPINSI')->first()->nilai;
+        $intraEkstra = \App\Models\inventaris::CalculateIsIntraOrEkstra($req['tahun_perolehan'], $req['harga_satuan']);
         $kodeKota = \App\Models\setting::where('nama', 'KODE_KOTA')->first()->nilai;    
 
         $propinsi = \App\Models\alamat::find($req['alamat_propinsi']);
@@ -80,20 +81,26 @@ class inventarisRepository extends BaseRepository
 
         $organisasiOpdCabang = \App\Models\organisasi::find($req['pidopd_cabang']);
         if (empty($organisasiOpdCabang)) {
-            $organisasiOpdCabang = 0;
+            $organisasiOpdCabang = '00';
         } else {
-            $organisasiOpdCabang = $organisasiOpdCabang->kode;
+            if(strlen($organisasiOpdCabang->kode) > 2) {
+                $organisasiOpdCabang = substr($organisasiOpdCabang->kode, strlen($organisasiOpdCabang->kode) - 2, strlen($organisasiOpdCabang->kode));
+            } else {
+                $organisasiOpdCabang = $organisasiOpdCabang->kode;
+            }
+            
         }
 
         $organisasiUpt = \App\Models\organisasi::find($req['pidupt']);
         if (empty($organisasiUpt)) {
-            $organisasiUpt = 0;
+            $organisasiUpt = '';
         } else {
             $organisasiUpt = $organisasiUpt->kode;
         }
 
 
         return $kodeStatus . '.' . 
+        $intraEkstra . '.' .
         $propinsi . '.' .
         $kota . '.' .
         $organisasiOpd . '.' .

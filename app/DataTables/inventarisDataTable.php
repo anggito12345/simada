@@ -124,7 +124,8 @@ class inventarisDataTable extends DataTable
             ->leftJoin('m_organisasi', 'm_organisasi.id', 'inventaris.pid_organisasi')
             // role =================
             // ->where('m_jabatan.level', '<=', $mineJabatan->level)
-            ->where('inventaris.pid_organisasi', '=', Auth::user()->pid_organisasi);
+            ->where('inventaris.pid_organisasi', '=', Auth::user()->pid_organisasi)
+            ->orWhere('m_organisasi.jabatans', '>', Auth::user()->pid_organisasi);
         
         if (isset($_GET['jenisbarangs']) && $_GET['jenisbarangs'] != "" && $_GET['jenisbarangs'] != null) {
             $buildingModel = $buildingModel->where('m_jenis_barang.id', $_GET['jenisbarangs']);

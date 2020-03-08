@@ -105,7 +105,7 @@
 <!-- Provinsi Field -->
 <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
     {!! Form::label('alamat_propinsi', 'Provinsi:') !!} <span class="text-danger">*</span>
-    {!! Form::select('alamat_propinsi', [] , "", ['class' => 'form-control']) !!}
+    {!! Form::select('alamat_propinsi', [] , 32, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Kota Kabupaten Field -->
@@ -410,6 +410,7 @@
                 }
             },
             theme: 'bootstrap' ,
+            value: 32
         })
 
 
@@ -784,7 +785,7 @@
             onSave(false)            
         })
 
-        $("#pidbarang, #tahun_perolehan, #harga_satuan, #pidopd, #pidopd_cabang, #pidupt, #alamat_propinsi, #alamat_kota, #alamat_kecamatan, #alamat_kelurahan").change(() => {
+        /*$("#pidbarang, #tahun_perolehan, #harga_satuan, #pidopd, #pidopd_cabang, #pidupt, #alamat_propinsi, #alamat_kota, #alamat_kecamatan, #alamat_kelurahan").change(() => {
 
             let propinsiId = 0
             if ($("#alamat_propinsi").select2('val') != null) {
@@ -866,7 +867,7 @@
                 $("#kode_lokasi").val("Isi tahun perolehan dan harga satuan terlebih dahulu!")
             }
                 
-        })
+        })*/
     </script>
 
     @if (isset($inventaris))
