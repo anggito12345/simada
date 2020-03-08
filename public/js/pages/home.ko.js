@@ -3,6 +3,224 @@ new inlineDatepicker(document.getElementById('tglsk'), {
     buttonClear: true,
 });
 
+function onDokumenPenghapusanGetFiles(foreignId, callback) {
+    return __ajax({
+        method: 'GET',
+        url: "<?= url('api/system_uploads') ?>",
+        data: {
+            jenis: 'penghapusan-step1',
+            foreign_field: 'id',
+            foreign_id: foreignId,
+            foreign_table: 'inventaris_penghapusan',
+        },  
+    }).then((files) => {                
+        dokumenPenghapusan.fileList(files);
+        callback();
+    });
+}
+
+const dokumenPenghapusan = new FileGallery(document.getElementById('dokumen-penghapusan'), {
+    title: 'Dokumen',
+    accept: `${App.Constant.MimeOffice}|image/*`,
+    onDelete: () => {
+        return new Promise((resolve, reject) => {
+            let checkIfIdExist = dokumenPenghapusan.checkedRow().filter((d) => {
+                return d.id != undefined
+            })
+            if (checkIfIdExist.length < 1) {
+                resolve(true)
+                return
+            }
+            __ajax({
+                method: 'DELETE',
+                url: "<?= url('api/system_uploads') ?>/" + checkIfIdExist.map((d) => {
+                    return d.id
+                }),
+            }).then((d) => {
+                resolve(true)
+                onDokumenPenghapusanGetFiles(checkIfIdExist[0].foreign_id, () => {})
+            })
+        })
+    }
+});
+
+function onBeritaAcaraPenghapusanGetFiles(foreignId, callback) {
+    return __ajax({
+        method: 'GET',
+        url: "<?= url('api/system_uploads') ?>",
+        data: {
+            jenis: 'penghapusan-step2',
+            foreign_field: 'id',
+            foreign_id: foreignId,
+            foreign_table: 'inventaris_penghapusan',
+        },  
+    }).then((files) => {                
+        dokumenPenghapusan.fileList(files);
+        callback();
+    });
+}
+
+const beritaAcaraPenghapusan = new FileGallery(document.getElementById('berita-acara'), {
+    title: 'Dokumen',
+    accept: `${App.Constant.MimeOffice}|image/*`,
+    onDelete: () => {
+        return new Promise((resolve, reject) => {
+            let checkIfIdExist = beritaAcaraPenghapusan.checkedRow().filter((d) => {
+                return d.id != undefined
+            })
+            if (checkIfIdExist.length < 1) {
+                resolve(true)
+                return
+            }
+            __ajax({
+                method: 'DELETE',
+                url: "<?= url('api/system_uploads') ?>/" + checkIfIdExist.map((d) => {
+                    return d.id
+                }),
+            }).then((d) => {
+                resolve(true)
+                onBeritaAcaraPenghapusanGetFiles(checkIfIdExist[0].foreign_id, () => {})
+            })
+        })
+    }
+});
+
+function onDokumenValidasiPenghapusanGetFiles(foreignId, callback) {
+    return __ajax({
+        method: 'GET',
+        url: "<?= url('api/system_uploads') ?>",
+        data: {
+            jenis: 'penghapusan-step3',
+            foreign_field: 'id',
+            foreign_id: foreignId,
+            foreign_table: 'inventaris_penghapusan',
+        },  
+    }).then((files) => {                
+        dokumenValidasiPenghapusan.fileList(files);
+        callback();
+    });
+}
+
+const dokumenValidasiPenghapusan = new FileGallery(document.getElementById('dokumen-validasi-penghapusan'), {
+    title: 'Dokumen',
+    accept: `${App.Constant.MimeOffice}|image/*`,
+    onDelete: () => {
+        return new Promise((resolve, reject) => {
+            let checkIfIdExist = dokumenValidasiPenghapusan.checkedRow().filter((d) => {
+                return d.id != undefined
+            })
+            if (checkIfIdExist.length < 1) {
+                resolve(true)
+                return
+            }
+            __ajax({
+                method: 'DELETE',
+                url: "<?= url('api/system_uploads') ?>/" + checkIfIdExist.map((d) => {
+                    return d.id
+                }),
+            }).then((d) => {
+                resolve(true)
+                onDokumenValidasiPenghapusanGetFiles(checkIfIdExist[0].foreign_id, () => {})
+            })
+        })
+    }
+});
+
+function onDokumenPersetujuanMutasiBpkadGetFiles(foreignId, callback) {
+    return __ajax({
+        method: 'GET',
+        url: "<?= url('api/system_uploads') ?>",
+        data: {
+            jenis: 'Dokumen Persetujuan Mutasi (BPKAD)',
+            foreign_field: 'id',
+            foreign_id: foreignId,
+            foreign_table: 'inventaris_mutasi',
+        },  
+    }).then((files) => {                
+        dokumenPersetujuanMutasiBpkad.fileList(files);
+        callback();
+    });
+}
+
+const dokumenPersetujuanMutasiBpkad = new FileGallery(document.getElementById('dokumen-persetujuan-mutasi-bpkad'), {
+    title: 'Dokumen',
+    accept: `${App.Constant.MimeOffice}|image/*`,
+    onDelete: () => {
+        return new Promise((resolve, reject) => {
+            let checkIfIdExist = dokumenPersetujuanMutasiBpkad.checkedRow().filter((d) => {
+                return d.id != undefined
+            })
+            if (checkIfIdExist.length < 1) {
+                resolve(true)
+                return
+            }
+            __ajax({
+                method: 'DELETE',
+                url: "<?= url('api/system_uploads') ?>/" + checkIfIdExist.map((d) => {
+                    return d.id
+                }),
+            }).then((d) => {
+                resolve(true)
+                onDokumenPersetujuanMutasiBpkadGetFiles(checkIfIdExist[0].foreign_id, () => {})
+            })
+        })
+    }
+});
+
+function onDokumenMutasiCancelGetFiles(foreignId, callback) {
+    return __ajax({
+        method: 'GET',
+        url: "<?= url('api/system_uploads') ?>",
+        data: {
+            jenis: 'Dokumen Pembatalan Mutasi (BPKAD)',
+            foreign_field: 'id',
+            foreign_id: foreignId,
+            foreign_table: 'inventaris_mutasi',
+        },  
+    }).then((files) => {                
+        dokumenMutasiCancel.fileList(files);
+        callback();
+    });
+}
+
+const dokumenMutasiCancel = new FileGallery(document.getElementById('dokumen-mutasi-cancel'), {
+    title: 'Dokumen',
+    accept: `${App.Constant.MimeOffice}|image/*`,
+    onDelete: () => {
+        return new Promise((resolve, reject) => {
+            let checkIfIdExist = dokumenMutasiCancel.checkedRow().filter((d) => {
+                return d.id != undefined
+            })
+            if (checkIfIdExist.length < 1) {
+                resolve(true)
+                return
+            }
+            __ajax({
+                method: 'DELETE',
+                url: "<?= url('api/system_uploads') ?>/" + checkIfIdExist.map((d) => {
+                    return d.id
+                }),
+            }).then((d) => {
+                resolve(true)
+                onDokumenMutasiCancelGetFiles(checkIfIdExist[0].foreign_id, () => {})
+            })
+        })
+    }
+});
+
+/**
+ * Handle make home map
+ */
+function makeHomeMap() {
+    const element = document.getElementById('home-map-container');
+    $(element).html(`<i class="fa fa-refresh fa-spin fa-lg fa-fw"></i> Mohon tunggu...`);
+
+    new MapInput(element, {
+        autoClose: false,
+        isNotInput: true,
+    });
+}
+
 /**
  * mutasi section
  */
@@ -20,7 +238,7 @@ viewModel.data = Object.assign(viewModel.data, {
     countReklas: ko.observable({
         step1: 0
     }),
-    currentTab: ko.observable('mutasi'),
+    currentTab: ko.observable('home-map'),
     currentHighlight: ko.observable('')
 })
 
@@ -28,6 +246,9 @@ viewModel.data = Object.assign(viewModel.data, {
 viewModel.clickEvent = Object.assign(viewModel.clickEvent, {
     setCurrentTab: (tab) => {
         viewModel.data.currentTab(tab)
+        if (tab == 'home-map') {
+            makeHomeMap();
+        }
     },
     setCurrentHighlight: (currentHighlight) => {
         $(`#table-${currentHighlight}`).DataTable().ajax.reload();
@@ -470,23 +691,27 @@ function approvementReklas(step) {
 
 function beforeApproveStep2(isApprovement) {
     if (isApprovement) {
+        dokumenPersetujuanMutasiBpkad.fileList([]);
         $('#modal-mutasi-bpkad-form').modal('show')
     } else {
+        dokumenMutasiCancel.fileList([]);
         $('#modal-mutasi-bpkad-cancel-form').modal('show')
     }
 
 }
 
-
 function beforeApproveBPKADPenghapusan() {
+    dokumenPenghapusan.fileList([]);
     $('#modal-penghapusan-bpkad-form').modal('show')
 }
 
 function beforeApproveKonfirmasiPenghapusan() {
+    beritaAcaraPenghapusan.fileList([]);
     $('#modal-penghapusan-konfirmasi-form').modal('show')
 }
 
 function beforeApproveValidasiPenghapusan() {
+    dokumenValidasiPenghapusan.fileList([]);
     $('#modal-validasi-penghapusan-konfirmasi-form').modal('show')
 }
 
@@ -642,6 +867,7 @@ loadDataTablePenghapusanBPKAD();
 loadDataTableKonfirmasiPenghapusan();
 loadDataTableValidasiPenghapusan();
 loadDataTableReklas()
+makeHomeMap();
 
 
 /**

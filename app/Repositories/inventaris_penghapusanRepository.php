@@ -146,8 +146,12 @@ class inventaris_penghapusanRepository extends BaseRepository
                                 $req->merge(['pid_penghapusan' => $each["pid_penghapusan"]]);
 
                                 if (!$isAlreadyUpload) {
-                                    $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen', $req, "inventaris_penghapusan", function ($metadatas, $index, $systemUpload) {
+                                    $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen_penghapusan', $req, "inventaris_penghapusan", function ($metadatas, $index, $systemUpload) {
+                                        if (isset($metadatas['dokumen_penghapusan_metadata_keterangan'][$index]) && $metadatas['dokumen_penghapusan_metadata_keterangan'][$index] != null) {
+                                            $systemUpload->keterangan = $metadatas['dokumen_penghapusan_metadata_keterangan'][$index];
+                                        }
 
+                                        $systemUpload->uid = $metadatas['dokumen_penghapusan_metadata_uid'][$index];             
                                         $systemUpload->foreign_field = 'id';
                                         $systemUpload->jenis = 'penghapusan-step1';
                                         $systemUpload->foreign_table = 'inventaris_penghapusan';
@@ -191,13 +195,18 @@ class inventaris_penghapusanRepository extends BaseRepository
                             if ($each['status'] != 'STEP-2') {
                                 break;
                             }
+
                             DB::beginTransaction();
                             try {
                                 $req->merge(['pid_penghapusan' => $each["pid_penghapusan"]]);
 
                                 if (!$isAlreadyUpload) {
-                                    $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen', $req, "inventaris_penghapusan", function ($metadatas, $index, $systemUpload) {
+                                    $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('berita_acara_penghapusan', $req, "inventaris_penghapusan", function ($metadatas, $index, $systemUpload) {
+                                        if (isset($metadatas['berita_acara_penghapusan_metadata_keterangan'][$index]) && $metadatas['berita_acara_penghapusan_metadata_keterangan'][$index] != null) {
+                                            $systemUpload->keterangan = $metadatas['berita_acara_penghapusan_metadata_keterangan'][$index];
+                                        }
 
+                                        $systemUpload->uid = $metadatas['berita_acara_penghapusan_metadata_uid'][$index];
                                         $systemUpload->foreign_field = 'id';
                                         $systemUpload->jenis = 'penghapusan-step2';
                                         $systemUpload->foreign_table = 'inventaris_penghapusan';
@@ -236,8 +245,12 @@ class inventaris_penghapusanRepository extends BaseRepository
                                 $req->merge(['pid_penghapusan' => $each["pid_penghapusan"]]);
 
                                 if (!$isAlreadyUpload) {
-                                    $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen', $req, "inventaris_penghapusan", function ($metadatas, $index, $systemUpload) {
+                                    $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen_validasi_penghapusan', $req, "inventaris_penghapusan", function ($metadatas, $index, $systemUpload) {
+                                        if (isset($metadatas['dokumen_validasi_penghapusan_metadata_keterangan'][$index]) && $metadatas['dokumen_validasi_penghapusan_metadata_keterangan'][$index] != null) {
+                                            $systemUpload->keterangan = $metadatas['dokumen_validasi_penghapusan_metadata_keterangan'][$index];
+                                        }
 
+                                        $systemUpload->uid = $metadatas['dokumen_validasi_penghapusan_metadata_uid'][$index];
                                         $systemUpload->foreign_field = 'id';
                                         $systemUpload->jenis = 'penghapusan-step3';
                                         $systemUpload->foreign_table = 'inventaris_penghapusan';

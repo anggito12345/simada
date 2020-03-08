@@ -40,16 +40,11 @@ let MapInput = function(element, config) {
         ],
         isNotInput: false,
         value: null,
-    }
-
-    
-
-    
+    }    
 
     if  (config != null) {
         self.defaultConfig = Object.assign(self.defaultConfig, config)
     }
-
 
     new Promise((resolve, reject) => {
         let TIMEOUT = 10
@@ -80,8 +75,7 @@ let MapInput = function(element, config) {
         let mapId = `ol-map-${MapInputCurrentInc}`
         const modalIdGoogleMap = `ol-map-id-${MapInputCurrentInc}`
         
-
-        if (element.tagName != "INPUT" ) {
+        if (element.tagName != "INPUT" && !self.defaultConfig.isNotInput) {
             element.setAttribute('id', mapId)
 
             self.defaultConfig.isNotInput = true
@@ -225,7 +219,20 @@ let MapInput = function(element, config) {
                   self.map.addInteraction(self.draw);
                 }
             }
-        }        
+        } else {
+            const mapElement = `<div id='${mapId}' style='width:100%; height:auto;'></div>`;
+            $(element).html(mapElement);
+            
+            setTimeout(() => {
+                if (self.map == null) {
+                    this.loadMap();
+                }
+    
+                self.map.updateSize();                               
+    
+                initValue(element.value)
+            }, 1000);
+        }
         
         let raster =  new ol.layer.Tile({
             source: new ol.source.OSM()

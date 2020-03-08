@@ -94,9 +94,9 @@
     {!! Form::file('dokumen_pemanfaatan', ['class' => 'form-control', 'name' => 'dummy-dokumen']) !!}
 </div>
 
-<!-- Foto Field -->
+<!-- Media Field -->
 <div class="form-group col-md-12">
-    {!! Form::label('foto_pemanfaatan', 'Foto:') !!}
+    {!! Form::label('foto_pemanfaatan', 'Media:') !!}
     {!! Form::file('foto_pemanfaatan', ['class' => 'form-control', 'name' => 'dummy-foto']) !!}
 </div>
 
@@ -231,9 +231,9 @@
         }
     })
     fotoPemanfaatan = new FileGallery(document.getElementById('foto_pemanfaatan'), {
-        title: 'Foto',
-        maxSize: 3000000,
-        accept: "image/*",
+        title: 'Media',
+        maxSize: 50000000,
+        accept: "image/*|video/*",
         onDelete: () => {
             return new Promise((resolve, reject) => {
                 let checkIfIdExist = fotoPemanfaatan.checkedRow().filter((d) => {
