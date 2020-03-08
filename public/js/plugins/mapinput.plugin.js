@@ -17,8 +17,8 @@ let MapInput = function(element, config) {
 
     let position = {
         coords: {
-            latitude: -6.121435,
-            longitude: 106.774124,
+            latitude: -6.8638114,
+            longitude: 106.4835186,
         }
     }
 
@@ -254,7 +254,7 @@ let MapInput = function(element, config) {
                 ],
                 view: new ol.View({
                   center: ol.proj.fromLonLat([position.coords.longitude, position.coords.latitude]),
-                  zoom: 12
+                  zoom: 8
                 })
             }
         

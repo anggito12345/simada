@@ -13993,6 +13993,21 @@ class InitMOrganisasiTableSeeder extends Seeder
             ),
             498 => 
             array (
+                'id' => 202,
+                'pid' => NULL,
+                'nama' => 'Badan Pengelolaan Keuangan Dan Aset Daerah
+Kabid BMD ( BPKAD )',
+                'alamat' => NULL,
+                'aktif' => NULL,
+                'created_at' => NULL,
+                'updated_at' => NULL,
+                'kode' => '00',
+                'level' => NULL,
+                'jabatans' => '-1',
+                'setting' => NULL,
+            ),
+            499 => 
+            array (
                 'id' => 186,
                 'pid' => NULL,
                 'nama' => 'Badan Kepegawaian Daerah',
@@ -14005,7 +14020,9 @@ class InitMOrganisasiTableSeeder extends Seeder
                 'jabatans' => '0',
                 'setting' => NULL,
             ),
-            499 => 
+        ));
+        \DB::table('m_organisasi')->insert(array (
+            0 => 
             array (
                 'id' => 187,
                 'pid' => NULL,
@@ -14019,9 +14036,7 @@ class InitMOrganisasiTableSeeder extends Seeder
                 'jabatans' => '0',
                 'setting' => NULL,
             ),
-        ));
-        \DB::table('m_organisasi')->insert(array (
-            0 => 
+            1 => 
             array (
                 'id' => 188,
                 'pid' => NULL,
@@ -14035,7 +14050,7 @@ class InitMOrganisasiTableSeeder extends Seeder
                 'jabatans' => '0',
                 'setting' => NULL,
             ),
-            1 => 
+            2 => 
             array (
                 'id' => 189,
                 'pid' => NULL,
@@ -14049,7 +14064,7 @@ class InitMOrganisasiTableSeeder extends Seeder
                 'jabatans' => '0',
                 'setting' => NULL,
             ),
-            2 => 
+            3 => 
             array (
                 'id' => 190,
                 'pid' => NULL,
@@ -14063,7 +14078,7 @@ class InitMOrganisasiTableSeeder extends Seeder
                 'jabatans' => '0',
                 'setting' => NULL,
             ),
-            3 => 
+            4 => 
             array (
                 'id' => 191,
                 'pid' => NULL,
@@ -14077,7 +14092,7 @@ class InitMOrganisasiTableSeeder extends Seeder
                 'jabatans' => '0',
                 'setting' => NULL,
             ),
-            4 => 
+            5 => 
             array (
                 'id' => 192,
                 'pid' => NULL,
@@ -14091,7 +14106,7 @@ class InitMOrganisasiTableSeeder extends Seeder
                 'jabatans' => '0',
                 'setting' => NULL,
             ),
-            5 => 
+            6 => 
             array (
                 'id' => 193,
                 'pid' => NULL,
@@ -14105,7 +14120,7 @@ class InitMOrganisasiTableSeeder extends Seeder
                 'jabatans' => '0',
                 'setting' => NULL,
             ),
-            6 => 
+            7 => 
             array (
                 'id' => 194,
                 'pid' => NULL,
@@ -14119,7 +14134,7 @@ class InitMOrganisasiTableSeeder extends Seeder
                 'jabatans' => '0',
                 'setting' => NULL,
             ),
-            7 => 
+            8 => 
             array (
                 'id' => 195,
                 'pid' => NULL,
@@ -14133,7 +14148,7 @@ class InitMOrganisasiTableSeeder extends Seeder
                 'jabatans' => '0',
                 'setting' => NULL,
             ),
-            8 => 
+            9 => 
             array (
                 'id' => 196,
                 'pid' => NULL,
@@ -14147,7 +14162,7 @@ class InitMOrganisasiTableSeeder extends Seeder
                 'jabatans' => '0',
                 'setting' => NULL,
             ),
-            9 => 
+            10 => 
             array (
                 'id' => 197,
                 'pid' => NULL,
@@ -14161,7 +14176,7 @@ class InitMOrganisasiTableSeeder extends Seeder
                 'jabatans' => '0',
                 'setting' => NULL,
             ),
-            10 => 
+            11 => 
             array (
                 'id' => 198,
                 'pid' => NULL,
@@ -14175,7 +14190,7 @@ class InitMOrganisasiTableSeeder extends Seeder
                 'jabatans' => '0',
                 'setting' => NULL,
             ),
-            11 => 
+            12 => 
             array (
                 'id' => 199,
                 'pid' => NULL,
@@ -14189,7 +14204,7 @@ class InitMOrganisasiTableSeeder extends Seeder
                 'jabatans' => '0',
                 'setting' => NULL,
             ),
-            12 => 
+            13 => 
             array (
                 'id' => 200,
                 'pid' => NULL,
@@ -14203,7 +14218,7 @@ class InitMOrganisasiTableSeeder extends Seeder
                 'jabatans' => '0',
                 'setting' => NULL,
             ),
-            13 => 
+            14 => 
             array (
                 'id' => 201,
                 'pid' => NULL,
@@ -14213,21 +14228,6 @@ class InitMOrganisasiTableSeeder extends Seeder
                 'created_at' => NULL,
                 'updated_at' => NULL,
                 'kode' => '4.06.0.00.0.00.01.00',
-                'level' => NULL,
-                'jabatans' => '0',
-                'setting' => NULL,
-            ),
-            14 => 
-            array (
-                'id' => 202,
-                'pid' => NULL,
-                'nama' => 'Badan Pengelolaan Keuangan Dan Aset Daerah
-Kabid BMD ( BPKAD )',
-                'alamat' => NULL,
-                'aktif' => NULL,
-                'created_at' => NULL,
-                'updated_at' => NULL,
-                'kode' => '00',
                 'level' => NULL,
                 'jabatans' => '0',
                 'setting' => NULL,
