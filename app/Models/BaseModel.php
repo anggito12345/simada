@@ -125,6 +125,6 @@ class BaseModel extends Model {
         '-1' => 'BPKAD',
         '0' => 'OPD',
         '1' => 'Cabang OPD',
-        //'2' => 'UPT'
+        '2' => 'UPT'
     ];
 }
