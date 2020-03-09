@@ -9,7 +9,7 @@ class Access {
 
 
     public static function is($names = [], $access = [], $kel = []) {
-        if (in_array(Constant::$GROUP_CABANGOPD_ORG, $key)) {
+        if (in_array(Constant::$GROUP_CABANGOPD_ORG, $kel)) {
             $kel = array_push($kel, Constant::$GROUP_UPT_ORG);
         }
 
