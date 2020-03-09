@@ -58,7 +58,7 @@ class inventarisRepository extends BaseRepository
         $intraEkstra = \App\Models\inventaris::CalculateIsIntraOrEkstra($req['tahun_perolehan'], $req['harga_satuan']);
         $kodeKota = \App\Models\setting::where('nama', 'KODE_KOTA')->first()->nilai;    
 
-        $propinsi = \App\Models\alamat::find(!array_key_exists('alamat_propinsi', $req) ? "" : $req['alamat_propinsi']);
+        $propinsi = \App\Models\alamat::find(!array_key_exists('alamat_propinsi', $req) ? -1 : $req['alamat_propinsi']);
         if (empty($propinsi)) {
             $propinsi = 0;
         } else {
@@ -66,21 +66,21 @@ class inventarisRepository extends BaseRepository
         }
 
 
-        $kota = \App\Models\alamat::find(!array_key_exists('alamat_kota', $req) ? "" : $req['alamat_kota']);
+        $kota = \App\Models\alamat::find(!array_key_exists('alamat_kota', $req) ? -1 : $req['alamat_kota']);
         if (empty($kota)) {
             $kota = 0;
         } else {
             $kota = $kota->kode;
         }
 
-        $organisasiOpd = \App\Models\organisasi::find(!array_key_exists('pidopd', $req) ? "" : $req['pidopd']);
+        $organisasiOpd = \App\Models\organisasi::find(!array_key_exists('pidopd', $req) ? -1 : $req['pidopd']);
         if (empty($organisasiOpd)) {
             $organisasiOpd = 0;
         } else {
             $organisasiOpd = $organisasiOpd->kode;
         }
 
-        $organisasiOpdCabang = \App\Models\organisasi::find(!array_key_exists('pidopd_cabang', $req) ? "" : $req['pidopd_cabang']);
+        $organisasiOpdCabang = \App\Models\organisasi::find(!array_key_exists('pidopd_cabang', $req) ? -1 : $req['pidopd_cabang']);
         if (empty($organisasiOpdCabang)) {
             $organisasiOpdCabang = '00';
         } else {
@@ -92,7 +92,7 @@ class inventarisRepository extends BaseRepository
             
         }
 
-        $organisasiUpt = \App\Models\organisasi::find(!array_key_exists('pidupt', $req) ? "" : $req['pidupt']);
+        $organisasiUpt = \App\Models\organisasi::find(!array_key_exists('pidupt', $req) ? -1 : $req['pidupt']);
         if (empty($organisasiUpt)) {
             $organisasiUpt = '';
         } else {
