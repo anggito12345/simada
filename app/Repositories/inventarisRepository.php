@@ -58,28 +58,28 @@ class inventarisRepository extends BaseRepository
         $intraEkstra = \App\Models\inventaris::CalculateIsIntraOrEkstra($req['tahun_perolehan'], $req['harga_satuan']);
         $kodeKota = \App\Models\setting::where('nama', 'KODE_KOTA')->first()->nilai;    
 
-        $propinsi = \App\Models\alamat::find($req['alamat_propinsi']);
+        $propinsi = \App\Models\alamat::find($req['alamat_propinsi']  == null ? "" : $req['alamat_propinsi']);
         if (empty($propinsi)) {
             $propinsi = 0;
         } else {
             $propinsi = $propinsi->kode;
         }
 
-        $kota = \App\Models\alamat::find($req['alamat_kota']);
+        $kota = \App\Models\alamat::find($req['alamat_kota'] == null ? "" : $req['alamat_kota']);
         if (empty($kota)) {
             $kota = 0;
         } else {
             $kota = $kota->kode;
         }
 
-        $organisasiOpd = \App\Models\organisasi::find($req['pidopd']);
+        $organisasiOpd = \App\Models\organisasi::find($req['pidopd']  == null ? "" : $req['pidopd']);
         if (empty($organisasiOpd)) {
             $organisasiOpd = 0;
         } else {
             $organisasiOpd = $organisasiOpd->kode;
         }
 
-        $organisasiOpdCabang = \App\Models\organisasi::find($req['pidopd_cabang']);
+        $organisasiOpdCabang = \App\Models\organisasi::find($req['pidopd_cabang']  == null ? "" : $req['pidopd_cabang']);
         if (empty($organisasiOpdCabang)) {
             $organisasiOpdCabang = '00';
         } else {
@@ -91,7 +91,7 @@ class inventarisRepository extends BaseRepository
             
         }
 
-        $organisasiUpt = \App\Models\organisasi::find($req['pidupt']);
+        $organisasiUpt = \App\Models\organisasi::find($req['pidupt']  == null ? "" : $req['pidupt']);
         if (empty($organisasiUpt)) {
             $organisasiUpt = '';
         } else {
