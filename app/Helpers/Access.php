@@ -3,11 +3,16 @@ namespace App\Helpers;
 
 use Auth;
 use Illuminate\Support\Facades\Session;
+use Constant;
 
 class Access {
 
 
     public static function is($names = [], $access = [], $kel = []) {
+        if (in_array(Constant::GROUP_CABANGOPD_ORG, $key)) {
+            $kel = array_push($kel, Constant::GROUP_UPT_ORG);
+        }
+
         $combination = 'NAMES:' . json_encode($names) . 'ACCESS:' . json_encode($access) . 'KEL:' . json_encode($kel);        
 
         if (!empty(session('cache-user', null))) {

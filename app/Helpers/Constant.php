@@ -45,4 +45,5 @@ class Constant {
     public static $GROUP_BPKAD_ORG = -1;
     public static $GROUP_OPD_ORG = 0;
     public static $GROUP_CABANGOPD_ORG = 1;
+    public static $GROUP_UPT_ORG = 2;
 }
