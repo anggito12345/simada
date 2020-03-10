@@ -273,7 +273,7 @@
             <div class="panel-body" data-bind="visible: viewModel.data.currentHighlight() == 'penghapusan-bpkad'">
                 <table class="table table-striped" id="table-penghapusan-bpkad">
                 </table>
-                @if(c::is([],[],[Constant::$GROUP_OPD_ORG]))
+                @if(c::is([],[],[Constant::$GROUP_BPKAD_ORG]))
                     <button type="button" class="btn btn-primary" onclick="beforeApproveBPKADPenghapusan()">Setujui</button>
                 @endif
             </div>
@@ -287,7 +287,7 @@
             <div class="panel-body" data-bind="visible: viewModel.data.currentHighlight() == 'reklas-bpkad'">
                 <table class="table table-striped" id="table-reklas-bpkad">
                 </table>
-                @if(c::is([],[],[Constant::$GROUP_OPD_ORG]))
+                @if(c::is([],[],[Constant::$GROUP_BPKAD_ORG]))
                     <button type="button" class="btn btn-primary" onclick="approvementReklas('STEP-1')">Setujui</button>
                 @endif
             </div>

@@ -7,6 +7,7 @@ use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 use Auth;
 use Illuminate\Support\Facades\DB;
+use Constant;
 
 class inventarisDataTable extends DataTable
 {
@@ -43,6 +44,9 @@ class inventarisDataTable extends DataTable
             })
             ->addColumn('detail', function($data) {
                 return "<i class='fa fa-plus-circle text-success'></i>";
+            })
+            ->addColumn('organisasi', function($data) {
+                return \App\Models\organisasi::find($data->pid_organisasi)->nama;
             })
             ->addColumn('kode_barang', function($data) {
                 $barang = \App\Models\barang::find($data->pidbarang);
@@ -96,6 +100,11 @@ class inventarisDataTable extends DataTable
         if (isset($_GET['draft']) && $_GET['draft'] == '1') {
             $buildingModel = inventaris::onlyDrafts();
         }
+
+        $organisasiUser = \App\Models\organisasi::find(Auth::user()->pid_organisasi);
+        if ($organisasiUser == null) {
+            $organisasiUser = new \App\Models\organisasi();
+        }
             
         $buildingModel = $buildingModel->select([
                 "inventaris.*",
@@ -121,11 +130,22 @@ class inventarisDataTable extends DataTable
             ->leftJoin("detil_mesin", "detil_mesin.pidinventaris", "inventaris.id")
             ->leftJoin("m_merk_barang", "m_merk_barang.id", "detil_mesin.merk")
             ->leftJoin('inventaris_penghapusan', 'inventaris_penghapusan.id', 'inventaris.id')
-            ->leftJoin('m_organisasi', 'm_organisasi.id', 'inventaris.pid_organisasi')
+            ->leftJoin('m_organisasi', 'm_organisasi.id', 'inventaris.pid_organisasi');
             // role =================
             // ->where('m_jabatan.level', '<=', $mineJabatan->level)
-            ->where('inventaris.pid_organisasi', '=', Auth::user()->pid_organisasi)
-            ->orWhere('m_organisasi.jabatans', '>', Auth::user()->pid_organisasi);
+            
+            
+        
+        if ($organisasiUser->jabatans == Constant::$GROUP_OPD_ORG) {
+            $buildingModel = $buildingModel
+                ->where('inventaris.pid_organisasi', '=', $organisasiUser->id)
+                ->orWhere('m_organisasi.jabatans', '>=', $organisasiUser);
+        } else if ($organisasiUser->jabatans == Constant::$GROUP_CABANGOPD_ORG) {
+            $buildingModel = $buildingModel
+                ->where('inventaris.pid_organisasi', '=', $organisasiUser->id)
+                ->orWhere('m_organisasi.jabatans', '=', $organisasiUser);
+        }
+        
         
         if (isset($_GET['jenisbarangs']) && $_GET['jenisbarangs'] != "" && $_GET['jenisbarangs'] != null) {
             $buildingModel = $buildingModel->where('m_jenis_barang.id', $_GET['jenisbarangs']);
@@ -142,6 +162,9 @@ class inventarisDataTable extends DataTable
         if (isset($_GET['kodesubrincianobjek']) && $_GET['kodesubrincianobjek'] != "" && $_GET['kodesubrincianobjek'] != null) {
             $buildingModel = $buildingModel->where('m_barang.kode_sub_rincian_objek', $_GET['kodesubrincianobjek']);
         }
+
+        // role conditional please check this whenever u are customizing role
+        
 
         // take data which is doesn't has any duplicate data in inventaris_penghapusan
         if(isset($_GET['is_exist_inventaris_penghapusan'])) {
@@ -260,6 +283,7 @@ class inventarisDataTable extends DataTable
             'kondisi' => [
                 'title' => 'Keadaan Barang'
             ], 
+            'organisasi',
             // 'barang',
             'harga_satuan',
             // 'keterangan'
