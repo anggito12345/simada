@@ -50,7 +50,7 @@ class organisasiAPIController extends AppBaseController
         }
 
         if ($request->has('level')) {
-            $querys = $querys->where('m_organisasi.jabatans', $request->input('jabatans'));
+            $querys = $querys->where('m_organisasi.jabatans', $request->input('level'));
         }
 
         if ($request->has('q')) {
