@@ -134,18 +134,16 @@ class inventarisDataTable extends DataTable
             // role =================
             // ->where('m_jabatan.level', '<=', $mineJabatan->level)
             
-            
-        
-        if ($organisasiUser->jabatans == Constant::$GROUP_OPD_ORG) {
+        // role conditional please check this whenever u are customizing role
+        if ($organisasiUser->jabatans == Constant::$GROUP_OPD_ORG) {            
             $buildingModel = $buildingModel
                 ->where('inventaris.pid_organisasi', '=', $organisasiUser->id)
-                ->orWhere('m_organisasi.jabatans', '>=', $organisasiUser);
-        } else if ($organisasiUser->jabatans == Constant::$GROUP_CABANGOPD_ORG) {
+                ->orWhere('m_organisasi.jabatans', '>=', $organisasiUser->jabatans);
+        } else if ($organisasiUser->jabatans == Constant::$GROUP_CABANGOPD_ORG) {            
             $buildingModel = $buildingModel
                 ->where('inventaris.pid_organisasi', '=', $organisasiUser->id)
-                ->orWhere('m_organisasi.jabatans', '=', $organisasiUser);
+                ->orWhere('m_organisasi.jabatans', '=', $organisasiUser->jabatans);
         }
-        
         
         if (isset($_GET['jenisbarangs']) && $_GET['jenisbarangs'] != "" && $_GET['jenisbarangs'] != null) {
             $buildingModel = $buildingModel->where('m_jenis_barang.id', $_GET['jenisbarangs']);
@@ -161,9 +159,7 @@ class inventarisDataTable extends DataTable
 
         if (isset($_GET['kodesubrincianobjek']) && $_GET['kodesubrincianobjek'] != "" && $_GET['kodesubrincianobjek'] != null) {
             $buildingModel = $buildingModel->where('m_barang.kode_sub_rincian_objek', $_GET['kodesubrincianobjek']);
-        }
-
-        // role conditional please check this whenever u are customizing role
+        }        
         
 
         // take data which is doesn't has any duplicate data in inventaris_penghapusan

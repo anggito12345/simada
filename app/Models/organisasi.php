@@ -74,14 +74,5 @@ class organisasi extends Model
         return $this->hasOne('App\Models\jenisopd', 'id', 'jenis');
     }
 
-    public function setJabatansAttribute($value)
-    {          
-        $this->attributes['jabatans'] = implode(",", $value);
-    }    
 
-    public function getJabatansAttribute($value)
-    {
-
-        return explode(",",$value);
-    }
 }

@@ -17,10 +17,10 @@
 </div>
 
 <!-- Jabatan Field -->
-<div class="form-group col-sm-6 row">
+<!--<div class="form-group col-sm-6 row">
     {!! Form::label('jabatans', 'Akses Jabatan:') !!}
     {!! Form::select('jabatans', \App\Models\jabatan::pluck('nama', 'id'), [], ['id' => 'jabatans', 'class' => 'form-control']) !!}
-</div>
+</div>-->
 
 <!-- Jabatan Field -->
 <div class="form-group col-sm-6 row">
@@ -66,16 +66,10 @@
     })
     
   
-    $('#jabatans').select2({    
-        theme: 'bootstrap' ,
-    })
 </script>
 
 @if(isset($organisasi))
 <script>
-    App.Helpers.defaultSelect2($('#pid'), `${$('[base-path]').val()}/api/organisasis/<?= $organisasi->pid ?>`,"id","nama",() => {          
-        $('#jabatans').select2().val(<?= json_encode($organisasi->jabatans) ?>).trigger('change')
-    })
 </script>
 @endif
 @endsection
