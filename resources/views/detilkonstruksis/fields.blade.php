@@ -40,23 +40,6 @@
     {!! Form::textarea('alamat', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB F"]().alamat']) !!}
 </div>
 
-<!-- Idkota Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('idkota', 'Kota:') !!}
-    {!! Form::select('idkota', [], null, ['class' => 'form-control', 'id' => 'idkota-detilkonstruksi', 'data-bind' => 'value: viewModel.data["KIB F"]().idkota']) !!}
-</div>
-
-<!-- Idkecamatan Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('idkecamatan', 'Kecamatan:') !!}
-    {!! Form::select('idkecamatan', [], null, ['class' => 'form-control', 'id' => 'idkecamatan-detilkonstruksi', 'data-bind' => 'value: viewModel.data["KIB F"]().idkecamatan']) !!}
-</div>
-
-<!-- Idkelurahan Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('idkelurahan', 'Kelurahan:') !!}
-    {!! Form::select('idkelurahan', [], null, ['class' => 'form-control', 'id' => 'idkelurahan-detilkonstruksi', 'data-bind' => 'value: viewModel.data["KIB F"]().idkelurahan']) !!}
-</div>
 
 <!-- Koordinatlokasi Field -->
 <div class="form-group col-sm-6">
@@ -135,88 +118,7 @@ viewModel.jsLoaded.subscribe(() => {
             'Polygon'
         ]
     })
-    $('#idkota-detilkonstruksi').select2({
-        ajax: {
-            url: "<?= url('api/alamats') ?>",
-            dataType: 'json',
-            data: function (params) {
-                var query = {
-                    q: params.term,                                           
-                    addWhere: [
-                        "jenis = '1'"
-                    ]
-                } 
-                return query;
-            },
-            processResults: function (data) {
-                // Transforms the top-level key of the response object from 'items' to 'results'
-                return {
-                    results: data.data
-                };
-            }
-        },
-        theme: 'bootstrap' ,
-    })
-
-
-    $('#idkota-detilkonstruksi').on('change', function (e) {
-        $("#idkecamatan-detilkonstruksi").val("").trigger("change")
-    });
-
-
-    $('#idkecamatan-detilkonstruksi').select2({
-        ajax: {
-            url: "<?= url('api/alamats') ?>",
-            dataType: 'json',
-            data: function (params) {
-                var query = {
-                    q: params.term,                                           
-                    addWhere: [
-                        "jenis = '2'",
-                        "pid = " + $("#idkota-detilkonstruksi").val()
-                    ]
-                }                    
-
-                return query;
-            },
-            processResults: function (data) {
-                // Transforms the top-level key of the response object from 'items' to 'results'
-                return {
-                    results: data.data
-                };
-            }
-        },
-        theme: 'bootstrap' ,
-    })
-
-    $('#idkecamatan-detilkonstruksi').on('change', function (e) {
-        $("#idkelurahan-detilkonstruksi").val("").trigger("change")
-    });
-
-    $('#idkelurahan-detilkonstruksi').select2({
-        ajax: {
-            url: "<?= url('api/alamats') ?>",
-            dataType: 'json',
-            data: function (params) {
-                var query = {
-                    q: params.term,                                           
-                    addWhere: [
-                        "jenis = '3'",
-                        "pid = " + $("#idkecamatan-detilkonstruksi").val()
-                    ]
-                }                    
-
-                return query;
-            },
-            processResults: function (data) {
-                // Transforms the top-level key of the response object from 'items' to 'results'
-                return {
-                    results: data.data
-                };
-            }
-        },
-        theme: 'bootstrap' ,
-    })
+   
 
     $('#statustanah-detilkonstruksi').select2({
         ajax: {

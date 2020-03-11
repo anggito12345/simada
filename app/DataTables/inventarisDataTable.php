@@ -137,12 +137,12 @@ class inventarisDataTable extends DataTable
         // role conditional please check this whenever u are customizing role
         if ($organisasiUser->jabatans == Constant::$GROUP_OPD_ORG) {            
             $buildingModel = $buildingModel
-                ->where('inventaris.pid_organisasi', '=', $organisasiUser->id)
-                ->orWhere('m_organisasi.jabatans', '>=', $organisasiUser->jabatans);
+                ->whereRaw('inventaris.pid_organisasi = '.$organisasiUser->id.' OR m_organisasi.pid = '.$organisasiUser->id)
+                ->where('m_organisasi.jabatans', '>=', $organisasiUser->jabatans);
         } else if ($organisasiUser->jabatans == Constant::$GROUP_CABANGOPD_ORG) {            
             $buildingModel = $buildingModel
                 ->where('inventaris.pid_organisasi', '=', $organisasiUser->id)
-                ->orWhere('m_organisasi.jabatans', '=', $organisasiUser->jabatans);
+                ->where('m_organisasi.jabatans', '=', $organisasiUser->jabatans);
         }
         
         if (isset($_GET['jenisbarangs']) && $_GET['jenisbarangs'] != "" && $_GET['jenisbarangs'] != null) {

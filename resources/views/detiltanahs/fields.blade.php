@@ -15,23 +15,7 @@
     {!! Form::textarea('alamat', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB A"]().alamat']) !!}
 </div>
 
-<!-- Idkota Field -->
-<div class="form-group col-sm-6 row">
-    {!! Form::label('idkota', __('field.idkota')) !!}
-    {!! Form::select('idkota',[], null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB A"]().idkota']) !!}
-</div>
 
-<!-- Idkecamatan Field -->
-<div class="form-group col-sm-6 row">
-    {!! Form::label('idkecamatan', __('field.idkecamatan')) !!}
-    {!! Form::select('idkecamatan', [], null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB A"]().idkecamatan']) !!}
-</div>
-
-<!-- Idkelurahan Field -->
-<div class="form-group col-sm-6 row">
-    {!! Form::label('idkelurahan', __('field.idkelurahan')) !!}
-    {!! Form::select('idkelurahan', [], null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB A"]().idkelurahan']) !!}
-</div>
 
 <!-- Koordinatlokasi Field -->
 <div class="form-group col-sm-6 row">
@@ -135,88 +119,7 @@
             theme: 'bootstrap' ,
         })
 
-        $('#idkota').select2({
-            ajax: {
-                url: "<?= url('api/alamats') ?>",
-                dataType: 'json',
-                data: function (params) {
-                    var query = {
-                        q: params.term,                                           
-                        addWhere: [
-                            "jenis = '1'"
-                        ]
-                    } 
-                    return query;
-                },
-                processResults: function (data) {
-                    // Transforms the top-level key of the response object from 'items' to 'results'
-                    return {
-                        results: data.data
-                    };
-                }
-            },
-            theme: 'bootstrap' ,
-        })
-
-
-        $('#idkota').on('change', function (e) {
-            $("#idkecamatan").val("").trigger("change")
-        });
-
-
-        $('#idkecamatan').select2({
-            ajax: {
-                url: "<?= url('api/alamats') ?>",
-                dataType: 'json',
-                data: function (params) {
-                    var query = {
-                        q: params.term,                                           
-                        addWhere: [
-                            "jenis = '2'",
-                            "pid = " + $("#idkota").val()
-                        ]
-                    }                    
-
-                    return query;
-                },
-                processResults: function (data) {
-                    // Transforms the top-level key of the response object from 'items' to 'results'
-                    return {
-                        results: data.data
-                    };
-                }
-            },
-            theme: 'bootstrap' ,
-        })
-
-        $('#idkecamatan').on('change', function (e) {
-            $("#idkelurahan").val("").trigger("change")
-        });
-
-        $('#idkelurahan').select2({
-            ajax: {
-                url: "<?= url('api/alamats') ?>",
-                dataType: 'json',
-                data: function (params) {
-                    var query = {
-                        q: params.term,                                           
-                        addWhere: [
-                            "jenis = '3'",
-                            "pid = " + $("#idkecamatan").val()
-                        ]
-                    }                    
-
-                    return query;
-                },
-                processResults: function (data) {
-                    // Transforms the top-level key of the response object from 'items' to 'results'
-                    return {
-                        results: data.data
-                    };
-                }
-            },
-            theme: 'bootstrap' ,
-        })
+       
         
     })
 </script>
