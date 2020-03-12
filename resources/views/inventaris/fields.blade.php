@@ -79,22 +79,20 @@
 </div>
 
 <!-- Kode Ruang Field -->
-<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
+<<!--div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
     {!! Form::label('kode_ruang',  __('field.kode_ruang').':') !!}
     {!! Form::text('kode_ruang', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Kode Gedung Field -->
 <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
     {!! Form::label('kode_gedung',  __('field.kode_gedung').':') !!}
     {!! Form::text('kode_gedung', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Penangguna Jawab Field -->
 <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
     {!! Form::label('penanggung_jawab',  __('field.penanggung_jawab').':') !!}
     {!! Form::text('penanggung_jawab', null, ['class' => 'form-control']) !!}
-</div>
+</div>-->
 
 <!-- Tgl Sensus Field -->
 <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
