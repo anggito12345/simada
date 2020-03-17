@@ -12,6 +12,17 @@
 */
 
 
+/**
+ * Export route
+ */
+
+Route::get('inventaris/export/', 'InventarisController@export');
+
+ /**
+  * Export route end!!!
+  */
+
+
 Route::get('/', function () {
     return redirect('login');
 });

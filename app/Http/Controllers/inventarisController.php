@@ -13,6 +13,8 @@ use App\Models\inventaris;
 use Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Excel;
+use App\Exports\AsetExportPhpSpread;
 
 class inventarisController extends AppBaseController
 {
@@ -167,5 +169,15 @@ class inventarisController extends AppBaseController
         Flash::success('Inventaris deleted successfully.');
 
         return redirect(route('inventaris.index'));
+    }
+
+    /*
+    Export Excel
+    */
+
+    public function export() 
+    {
+        $asetExp = new AsetExportPhpSpread();
+        $asetExp->export();
     }
 }

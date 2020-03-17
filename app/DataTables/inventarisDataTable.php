@@ -235,7 +235,7 @@ class inventarisDataTable extends DataTable
                         // ['text' => '<i class="fa fa-trash"></i> Hapus', 'action' => 'function(){onDelete()}', ],                       
                       /*  ['text' => '<i class="fa fa-eraser"></i> Penghapusan', 'action' => 'function(){onPenghapusan()}', ],*/
                     ]],           
-                    ['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner', 'buttons' => [ 'csv', 'excel']],
+                    //['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner', 'buttons' => [ 'csv', 'excel']],
                     ['extend' => 'print', 'className' => 'btn btn-default btn-sm no-corner'],                                        
                 ],
             ]);

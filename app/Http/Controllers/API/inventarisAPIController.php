@@ -112,8 +112,8 @@ class inventarisAPIController extends AppBaseController
 
         $input['idpegawai'] = $request->user()->id;
         $input['pid_organisasi'] = $request->user()->pid_organisasi;
-
-
+        $input['harga_satuan'] = str_replace(",",".",str_replace(".", "", $input['harga_satuan']));
+        
         // generate no register
         $modelInventaris = new \App\Models\inventaris();
 
@@ -126,7 +126,7 @@ class inventarisAPIController extends AppBaseController
             ->join('m_barang', 'm_barang.id', 'inventaris.pidbarang')
             ->where('m_barang.kode_jenis', '=', $barangMaster->kode_jenis)
             ->where('inventaris.tahun_perolehan', '=', $input['tahun_perolehan'])
-            ->where('inventaris.harga_satuan', '=', str_replace(".", "", $input['harga_satuan']))
+            ->where('inventaris.harga_satuan', '=', str_replace(",",".",str_replace(".", "", $input['harga_satuan'])))
             ->orderBy('inventaris.noreg', 'desc')
             ->lockForUpdate()->first();
 
@@ -144,9 +144,11 @@ class inventarisAPIController extends AppBaseController
                 throw new Exception('Barang not found');
                 return;
             }
-
+            
             $input['umur_ekonomis'] = $barang->umur_ekonomis;
             $input['kode_lokasi'] = inventarisRepository::generateKodeLokasi($input);
+
+            
 
             $inventaris = $this->inventarisRepository->create($input);
 
@@ -221,7 +223,7 @@ class inventarisAPIController extends AppBaseController
     public function intraorekstra(Request $request)
     {
         try {
-            $calculated = \App\Models\inventaris::CalculateIsIntraOrEkstra($request->tahun_perolehan, (int) str_replace(".", "", $request->harga_satuan));
+            $calculated = \App\Models\inventaris::CalculateIsIntraOrEkstra($request->tahun_perolehan, (int) str_replace(",",".",str_replace(".", "", $request->harga_satuan)));
             return $this->sendResponse($calculated, 'success');
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());

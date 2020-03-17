@@ -4,6 +4,8 @@ namespace App\Repositories;
 
 use App\Models\inventaris;
 use App\Repositories\BaseRepository;
+use Constant;
+use Auth;
 
 /**
  * Class inventarisRepository
@@ -50,6 +52,67 @@ class inventarisRepository extends BaseRepository
     public function model()
     {        
         return inventaris::class;
+    }
+
+    public static function getData($isDraft = null) {
+        $buildingModel = new \App\Models\inventaris();
+
+        $buildingModel = $buildingModel->newQuery();
+
+
+        if (isset($isDraft) && $isDraft == '1') {
+            $buildingModel = inventaris::onlyDrafts();
+        }
+
+        $organisasiUser = \App\Models\organisasi::find(Auth::user()->pid_organisasi);
+        if ($organisasiUser == null) {
+            $organisasiUser = new \App\Models\organisasi();
+        }
+            
+        $buildingModel = $buildingModel->select([
+                "inventaris.*",
+                "m_barang.nama_rek_aset",
+                "m_merk_barang.nama as merk",
+                "m_jenis_barang.kelompok_kib",
+                "m_jenis_barang.nama as jenis",
+                "detil_mesin.bahan as bahan",
+                "m_organisasi.setting as setauth",
+                "inventaris_penghapusan.id as ip",
+                "inventaris_reklas.id as ir",
+                "detil_mesin.norangka",                
+                "detil_mesin.nomesin",
+                "detil_mesin.nopol",
+            ])
+            ->selectRaw('CONCAT(detil_tanah.nomor_sertifikat,\'/\',detil_mesin.nopabrik,\'/\', detil_mesin.norangka,\'/\', detil_mesin.nomesin) as nomor')            
+            ->selectRaw('CONCAT(\'1 \',m_satuan_barang.nama) as barang')             
+            ->join("m_barang", "m_barang.id", "inventaris.pidbarang")
+            ->join("m_jenis_barang", "m_jenis_barang.kode", "m_barang.kode_jenis")
+            // role =================
+            ->leftJoin("users","users.id", "inventaris.idpegawai")
+            ->leftJoin("m_jabatan", "m_jabatan.id", 'users.jabatan')
+            ->leftJoin("inventaris_reklas", "inventaris.id", "inventaris_reklas.id")
+            // role end
+            ->leftJoin("detil_tanah", "detil_tanah.pidinventaris", "inventaris.id")
+            ->leftJoin("m_satuan_barang", "m_satuan_barang.id", "inventaris.satuan")
+            ->leftJoin("detil_mesin", "detil_mesin.pidinventaris", "inventaris.id")
+            ->leftJoin("m_merk_barang", "m_merk_barang.id", "detil_mesin.merk")
+            ->leftJoin('inventaris_penghapusan', 'inventaris_penghapusan.id', 'inventaris.id')
+            ->leftJoin('m_organisasi', 'm_organisasi.id', 'inventaris.pid_organisasi');
+            // role =================
+            // ->where('m_jabatan.level', '<=', $mineJabatan->level)
+            
+        // role conditional please check this whenever u are customizing role
+        if ($organisasiUser->jabatans == Constant::$GROUP_OPD_ORG) {            
+            $buildingModel = $buildingModel
+                ->whereRaw('inventaris.pid_organisasi = '.$organisasiUser->id.' OR m_organisasi.pid = '.$organisasiUser->id)
+                ->where('m_organisasi.jabatans', '>=', $organisasiUser->jabatans);
+        } else if ($organisasiUser->jabatans == Constant::$GROUP_CABANGOPD_ORG) {            
+            $buildingModel = $buildingModel
+                ->where('inventaris.pid_organisasi', '=', $organisasiUser->id)
+                ->where('m_organisasi.jabatans', '=', $organisasiUser->jabatans);
+        }
+
+        return $buildingModel;
     }
 
     public static function generateKodeLokasi($req) {
@@ -109,5 +172,39 @@ class inventarisRepository extends BaseRepository
         $organisasiUpt . '.' .
         $req['tahun_perolehan'];
 
+    }
+
+    public static function kodeBarang($pidBarang) {
+        $barang = \App\Models\barang::find($pidBarang);
+        $kode = "";
+        if ($barang->kode_akun != null) {
+            $kode .= $barang->kode_akun;
+        }
+
+        if ($barang->kode_kelompok != null) {
+            $kode .= ".".$barang->kode_kelompok;
+        }
+
+        if ($barang->kode_jenis != null) {
+            $kode .= ".".$barang->kode_jenis;
+        }
+
+        if ($barang->kode_objek != null) {
+            $kode .= ".".$barang->kode_objek;
+        }
+
+        if ($barang->kode_rincian_objek != null) {
+            $kode .= ".".$barang->kode_rincian_objek;
+        }
+
+        if ($barang->kode_sub_rincian_objek != null) {
+            $kode .= ".".$barang->kode_sub_rincian_objek;
+        }
+
+        if ($barang->kode_sub_sub_rincian_objek != null) {
+            $kode .= ".".$barang->kode_sub_sub_rincian_objek;
+        }
+
+        return $kode;
     }
 }
