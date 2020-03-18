@@ -43,6 +43,27 @@ class inventarisAPIController extends AppBaseController
     }
 
     /**
+     * displaying sum of value based on current filter parameters
+     */
+    public function getSumHargaSatuan(Request $request) {
+        $buildingModel = inventarisRepository::getData(null);
+
+        $buildingModel = inventarisRepository::appendInventarisGridFilter($buildingModel, $_GET);
+
+        $hargaSatuanPerpage = 0;
+        
+        $dataPerPage = $buildingModel->skip((int)$request->get('start'))->take((int)$request->get('length'))->get()->toArray();
+        foreach ($dataPerPage as $key => $value) {
+            $hargaSatuanPerpage += (float)$value['harga_satuan'];
+        }
+        
+        return $this->sendResponse([
+            'per_page' => number_format($hargaSatuanPerpage, 2),
+            'all_page' => number_format(inventarisRepository::appendInventarisGridFilter(inventarisRepository::getData(null), $_GET)->sum('inventaris.harga_satuan'), 2),
+        ], 'Inventaris retrieved successfully');
+    }
+
+    /**
      * Display a listing of the inventaris.
      * GET|HEAD /inventaris
      *

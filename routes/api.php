@@ -86,7 +86,24 @@ Route::middleware('auth:api')->post('inventaris_mutasi/cancel', function(
     return $inventaris_mutasiRepository->cancel($request, $inventaris_historyRepository);
 });
 
+/**
+ * inventaris route api
+ */
 
+Route::get('/inventaris-api/sum-harga-satuan', 'inventarisAPIController@getSumHargaSatuan');
+
+ /**
+  * inventaris route api END
+  */
+
+
+  /**
+   * public api path
+   */
+  Route::get('/public/get-organisasi', 'publicAPIController@getOrganisasi');
+   /**
+    * end public api route
+    */
 Route::middleware('auth:api')->post('inventaris_penghapusan/approvements', function( 
     \App\Repositories\inventaris_penghapusanRepository $inventaris_penghapusanRepository, 
     inventaris_historyRepository $inventaris_historyRepository,

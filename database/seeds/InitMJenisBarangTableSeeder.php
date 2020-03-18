@@ -20,7 +20,7 @@ class InitMJenisBarangTableSeeder extends Seeder
             0 => 
             array (
                 'id' => 5,
-                'nama' => 'Mesin dan Peralatan',
+                'nama' => 'Peralatan dan Mesin',
                 'aktif' => NULL,
                 'created_at' => NULL,
                 'updated_at' => NULL,

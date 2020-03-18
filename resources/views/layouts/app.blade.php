@@ -67,6 +67,11 @@
             -webkit-transform: scale(0) !important;
             transform: scale(0) !important;
         }
+
+        .summarize{
+            float:right;
+            font-weight: 600;
+        }
     </style>
 
     <!-- Bootstrap 3.3.7 -->

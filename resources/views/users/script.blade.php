@@ -9,7 +9,7 @@ new inlineDatepicker(document.getElementById('tgl_lahir'), {
 
 $('#pid_organisasi').select2({
     ajax: {
-        url: "<?= url('api/organisasis') ?>",
+        url: "<?= url('api/public/get-organisasi') ?>",
         dataType: 'json',
         processResults: function (data) {
         // Transforms the top-level key of the response object from 'items' to 'results'

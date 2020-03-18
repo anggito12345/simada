@@ -5,12 +5,16 @@
 
 {!! $dataTable->table(['id' => 'table-inventaris', 'width' => '100%', 'class' => 'table table-striped ']) !!}
 
+<div class="summarize">
+    NILAI PEROLEHAN PER PAGE: <span class="per_page_harga_satuan"></span> &nbsp;&nbsp;
+    TOTAL NILAI PEROLEHAN : <span class="total_harga_satuan"></span>
+</div>
+
 @section('scripts')
     <script>
-       
-</script> 
-    </script>
-    <script>
+
+        //store recent filter of grid, this varible would be use on calculating grand total
+        let recFilter = {}
 
         let colspan = {
             "Kode Barang": {
@@ -387,57 +391,7 @@
             let createdMerge = document.createElement("tr")
             createdMerge.setAttribute("row-cloned" ,true)
             let headerByPass = 0
-            
-            // for (let i = 0; i < allHeader.length ; i ++) {
-            //     const col = allHeader[i]
-            //     let th = document.createElement("th")
-            //     let title = col.getAttribute('title')
-            //     if (colspan[title] != undefined && headerByPass == 0) {
-                    
-            //         th.setAttribute("colspan",2)
-            //         th.innerHTML = colspan[title].title
-            //         th.style.textAlign = "center"
-                    
-            //         createdMerge.appendChild(th)
-            //         headerByPass = colspan[title].value                    
-            //     }
-
-            //     if (headerByPass > 0) {                    
-            //         headerByPass--
-            //     } else {
-
-            //         th = col.cloneNode(true)
-
-            //         th.setAttribute("rowspan",2)
-
-            //         th.addEventListener("click", (ev) => {
-            //             col.click();     
-            //             let currentClassname = ev.target.className                   
-
-            //             $("[row-cloned] th[col-cloned]").attr("class", "sorting")
-
-            //             if ( currentClassname  == "sorting_asc") {
-            //                 ev.target.className = "sorting_desc"
-            //             } else {
-            //                 ev.target.className = "sorting_asc"
-            //             }
-                        
-            //         })
-
-            //         if (th.className.indexOf("sorting_disabled") < 0) {
-            //             th.setAttribute("col-cloned", true)
-            //         }
-                    
-
-            //         th.style.verticalAlign = "middle"
-            //         createdMerge.appendChild(th)
-
-            //         col.style.display = "none"
-
-            //     }
-
-
-            // }
+                  
 
             isReady[e.sTableId] = true
 
@@ -575,65 +529,7 @@
                             order : [[ 1, "asc"]],
                             dom: 'Bfrtip',
                             buttons: [
-                                // {
-                                //     extend: 'collection',
-                                //     text: 'Aksi',
-                                //     buttons: [
-                                //         {
-                                //             text: "Ubah",
-                                //             action: function () {
-                                //                 var count = table.rows('.selected').count();
-                            
-                                //                 if (count != 1) {
-                                //                     swal.fire({
-                                //                         type: 'error',
-                                //                         text: 'Silahkan pilih 1 data',
-                                //                         title: 'Pemeliharaan'
-                                //                     })
-                                //                     return
-                                //                 }
-
-                                //                 onPemeliharaan(table.rows('.selected').data()[0], `#table-pemeliharaan-<?= $uniqId ?>${selectEvent}`)
-                                //             }
-                                //         },
-                                //         {
-                                //             text: "Hapus",
-                                //             action: function () {
-                                //                 var count = table.rows('.selected').count();
-                            
-                                //                 if (count < 1) {
-                                //                     swal.fire({
-                                //                         type: 'error',
-                                //                         text: 'Silahkan pilih minimal 1 data',
-                                //                         title: 'Pemeliharaan'
-                                //                     })
-                                //                     return
-                                //                 }
-
-                                //                 __ajax({
-                                //                     url : $("[base-path]").val() + "/api/pemeliharaans/" + table.rows('.selected').data().map((d) => {
-                                //                     return d.id
-                                //                 }).join(','),
-                                //                     data: {
-                                //                         _token: "<?php csrf_token() ?>"
-                                //                     },
-                                //                     method: "DELETE",
-                                //                     dataType: "json"
-                                //                 }).then(() => {
-                                //                     swal.fire({
-                                //                         type: 'success',
-                                //                         text: 'Data berhasil dihapus',
-                                //                         title: 'Hapus',
-                                //                         onClose: () => {
-                                //                             table.ajax.reload();
-                                //                         }
-                                //                     })
-                                //                 })
-                                //             }
-                                //         }
-                                //     ]
-                                    
-                                // }
+                  
                             ],
                             columns: [
                                 {
@@ -683,66 +579,7 @@
                             },
                             order : [[ 0, "asc"]],
                             dom: 'Bfrtip',
-                            buttons: [
-                                // {
-                                //     extend: 'collection',
-                                //     text: 'Aksi',
-                                //     buttons: [
-                                //         {
-                                //             text: "Ubah",
-                                //             action: function () {
-                                //                 var count = tablePemanfaatan.rows('.selected').count();
-                            
-                                //                 if (count != 1) {
-                                //                     swal.fire({
-                                //                         type: 'error',
-                                //                         text: 'Silahkan pilih 1 data',
-                                //                         title: 'Pemanfaatan'
-                                //                     })
-                                //                     return
-                                //                 }
-
-                                //                 onPemanfaatan(tablePemanfaatan.rows('.selected').data()[0], `#table-pemanfaatan-${selectEvent}`)
-                                //             }
-                                //         },
-                                //         {
-                                //             text: "Hapus",
-                                //             action: function () {
-                                //                 var count = tablePemanfaatan.rows('.selected').count();
-                            
-                                //                 if (count < 1) {
-                                //                     swal.fire({
-                                //                         type: 'error',
-                                //                         text: 'Silahkan pilih minimal 1 data',
-                                //                         title: 'Pemanfaatan'
-                                //                     })
-                                //                     return
-                                //                 }
-
-                                //                 __ajax({
-                                //                     url : $("[base-path]").val() + "/api/pemanfaatans/" + tablePemanfaatan.rows('.selected').data().map((d) => {
-                                //                     return d.id
-                                //                 }).join(','),
-                                //                     data: {
-                                //                         _token: "<?php csrf_token() ?>"
-                                //                     },
-                                //                     method: "DELETE",
-                                //                     dataType: "json"
-                                //                 }).then(() => {
-                                //                     swal.fire({
-                                //                         type: 'success',
-                                //                         text: 'Data berhasil dihapus',
-                                //                         title: 'Hapus',
-                                //                         onClose: () => {
-                                //                             tablePemanfaatan.ajax.reload();
-                                //                         }
-                                //                     })
-                                //                 })
-                                //             }
-                                //         }
-                                //     ]
-                                    
-                                // }
+                            buttons: [                            
                             ],
                             columns: [
                                 {
@@ -773,6 +610,22 @@
                     
                 }
             });
+
+
+            
+        }
+
+
+        function onLoadComplete() {
+            __ajax({
+                method: 'GET',
+                url: `${$("[base-path]").val()}/api/inventaris-api/sum-harga-satuan`,
+                data: recFilter
+            }).then((d) => {
+                $('.total_harga_satuan').html(d.all_page)     
+                $('.per_page_harga_satuan').html(d.per_page)
+                
+            })
         }
         
     </script>

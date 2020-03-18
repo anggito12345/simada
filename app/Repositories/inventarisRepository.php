@@ -54,7 +54,60 @@ class inventarisRepository extends BaseRepository
         return inventaris::class;
     }
 
-    public static function getData($isDraft = null) {
+    /**
+     * its need to be trigger when there are more than 1 filter is filled.
+     * @jenisbarangs
+     * @kodeobjek
+     * @koderincianobjek
+     * @kodesubrincianobjek
+     * @organisasi_filter
+     * 
+     * @is_exist_inventaris_penghapusan
+     */
+    public static function appendInventarisGridFilter($buildingModel = null, $theFilter = [])
+    {
+        $defRet = new \App\Models\inventaris();
+
+        if ($buildingModel == null) {
+            return  $defRet->newQuery();
+        }
+
+
+        if (isset($theFilter['jenisbarangs']) && $theFilter['jenisbarangs'] != "" && $theFilter['jenisbarangs'] != null) {
+            $buildingModel = $buildingModel->where('m_jenis_barang.id', $_GET['jenisbarangs']);
+        }
+
+        if (isset($theFilter['kodeobjek']) && $theFilter['kodeobjek'] != "" && $theFilter['kodeobjek'] != null) {
+            $buildingModel = $buildingModel->where('m_barang.kode_objek', $theFilter['kodeobjek']);
+        }
+
+        if (isset($theFilter['koderincianobjek']) && $theFilter['koderincianobjek'] != "" && $theFilter['koderincianobjek'] != null) {
+            $buildingModel = $buildingModel->where('m_barang.kode_rincian_objek', $theFilter['koderincianobjek']);
+        }
+
+        if (isset($theFilter['kodesubrincianobjek']) && $theFilter['kodesubrincianobjek'] != "" && $theFilter['kodesubrincianobjek'] != null) {
+            $buildingModel = $buildingModel->where('m_barang.kode_sub_rincian_objek', $theFilter['kodesubrincianobjek']);
+        }     
+        
+        if (isset($theFilter['organisasi_filter']) && $theFilter['organisasi_filter'] != "" && $theFilter['organisasi_filter'] != null) {
+            $buildingModel = $buildingModel->where('m_organisasi.id', $theFilter['organisasi_filter']);
+        }   
+        
+
+        // take data which is doesn't has any duplicate data in inventaris_penghapusan
+        if(isset($theFilter['is_exist_inventaris_penghapusan'])) {
+
+            // false it mean must not be in there
+            if ($theFilter['is_exist_inventaris_penghapusan'] == 'false') {
+                $buildingModel = $buildingModel
+                                        ->whereRaw('inventaris_penghapusan.id IS NULL');    
+            }             
+        }
+
+        return $buildingModel;
+    }
+
+    public static function getData($isDraft = null, $rawSelect = "") {
         $buildingModel = new \App\Models\inventaris();
 
         $buildingModel = $buildingModel->newQuery();
@@ -69,7 +122,8 @@ class inventarisRepository extends BaseRepository
             $organisasiUser = new \App\Models\organisasi();
         }
             
-        $buildingModel = $buildingModel->select([
+        if ($rawSelect == "") {
+            $buildingModel = $buildingModel->select([
                 "inventaris.*",
                 "m_barang.nama_rek_aset",
                 "m_merk_barang.nama as merk",
@@ -84,8 +138,12 @@ class inventarisRepository extends BaseRepository
                 "detil_mesin.nopol",
             ])
             ->selectRaw('CONCAT(detil_tanah.nomor_sertifikat,\'/\',detil_mesin.nopabrik,\'/\', detil_mesin.norangka,\'/\', detil_mesin.nomesin) as nomor')            
-            ->selectRaw('CONCAT(\'1 \',m_satuan_barang.nama) as barang')             
-            ->join("m_barang", "m_barang.id", "inventaris.pidbarang")
+            ->selectRaw('CONCAT(\'1 \',m_satuan_barang.nama) as barang');
+        } else {
+            $buildingModel = $buildingModel->selectRaw($rawSelect);
+        }
+                     
+        $buildingModel = $buildingModel->join("m_barang", "m_barang.id", "inventaris.pidbarang")
             ->join("m_jenis_barang", "m_jenis_barang.kode", "m_barang.kode_jenis")
             // role =================
             ->leftJoin("users","users.id", "inventaris.idpegawai")

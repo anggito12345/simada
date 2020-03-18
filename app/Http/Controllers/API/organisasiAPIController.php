@@ -9,6 +9,8 @@ use App\Repositories\organisasiRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use c;
+use Constant;
 
 /**
  * Class organisasiController
@@ -22,8 +24,17 @@ class organisasiAPIController extends AppBaseController
 
     public function __construct(organisasiRepository $organisasiRepo)
     {
+        $this->middleware('auth:api');
         $this->organisasiRepository = $organisasiRepo;
     }
+
+    /**
+     * public API USAGE
+     */
+
+     public function get(Request $request) {
+         
+     }
 
     /**
      * Display a listing of the organisasi.
@@ -45,8 +56,12 @@ class organisasiAPIController extends AppBaseController
         if ($request->has('pid')) {
             if ($request->input('pid') == "") {
                 return $this->sendResponse([], 'Organisasis retrieved successfully');
+            }            
+
+            if (!c::is([],[],[Constant::$GROUP_BPKAD_ORG])) {
+                $querys = $querys->where('m_organisasi.pid', $request->input('pid'));
             }
-            $querys = $querys->where('m_organisasi.pid', $request->input('pid'));
+            
         }
 
         if ($request->has('level')) {
@@ -57,12 +72,19 @@ class organisasiAPIController extends AppBaseController
             $querys = $querys->whereRaw("m_organisasi.nama ~* '".$request->input('q')."'");
         }
 
+
+        if ($request->has('term')) {
+            $querys = $querys->whereRaw("m_organisasi.nama ~* '".$request->input('term')."'");
+        }
+
         $organisasis = $querys 
-        ->get();
+            ->get();
 
 
         return $this->sendResponse($organisasis->toArray(), 'Organisasis retrieved successfully');
-    }/**
+    }
+    
+    /**
      * Display a listing of the organisasi.
      * GET|HEAD /organisasis
      *
