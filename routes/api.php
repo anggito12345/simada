@@ -4,6 +4,7 @@ use App\Repositories\inventaris_historyRepository;
 use App\Repositories\inventarisRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
+use App\Helpers\Api;
 
 /*
 |--------------------------------------------------------------------------
@@ -92,18 +93,215 @@ Route::middleware('auth:api')->post('inventaris_mutasi/cancel', function(
 
 Route::get('/inventaris-api/sum-harga-satuan', 'inventarisAPIController@getSumHargaSatuan');
 
- /**
-  * inventaris route api END
-  */
+/**
+ * inventaris route api END
+*/
 
 
-  /**
-   * public api path
-   */
-  Route::get('/public/get-organisasi', 'publicAPIController@getOrganisasi');
-   /**
-    * end public api route
-    */
+/**
+ * public api path
+ */
+Route::get('/public/get-organisasi', 'publicAPIController@getOrganisasi');
+/**
+* end public api route
+*/
+
+
+/**
+ * API PUBLIC 
+ */
+
+
+/**
+ * generate token for authenticated
+ */
+Route::post('token', function(Request $request) {
+    //$token = Str::random(60);
+    //
+
+    $input = $request->all();
+
+    
+    Api::mandatory($input, [
+        'username',
+        'password'
+    ]);
+
+
+    if (Auth::attempt([
+        'username' => $input['username'],
+        'password' => $input['password'],
+    ])) {
+        // if yes generating token 
+
+        $token = Str::random(60);
+        //
+        \App\Models\users::where('username', $input['username'])->update([
+            'api_token' => hash('sha256', $token),
+        ]);
+
+        return response([
+            'token' => $token,
+        ] , 200);
+    }
+   
+
+    return response([
+        'message' => 'Username or Password does not match',
+    ] , 404);
+});
+
+
+/**
+ * get user info
+ */
+
+
+Route::middleware('auth:api')->get('user/info', function(Request $request) {
+    //$token = Str::random(60);           
+
+    $loggedUser = Auth::user();
+
+    return response([
+        'data' => \App\Models\users::selectRaw(
+            'users.username,
+            m_jabatan.nama jabatan,
+            m_organisasi.nama organisasi'
+        )
+        ->leftJoin('m_organisasi', 'm_organisasi.id', 'users.pid_organisasi')
+        ->leftJoin('m_jabatan', 'm_jabatan.id', 'users.jabatan')
+        ->where('users.id', $loggedUser->id)->first(),
+    ] , 200);
+});
+
+Route::middleware('auth:api')->get('user', function(Request $request) {
+    //$token = Str::random(60);           
+    return response([
+        'data' => \App\Models\users::selectRaw(
+            'users.username,
+            m_jabatan.nama jabatan,
+            m_organisasi.nama organisasi'
+        )
+        ->leftJoin('m_organisasi', 'm_organisasi.id', 'users.pid_organisasi')
+        ->leftJoin('m_jabatan', 'm_jabatan.id', 'users.jabatan')
+        ->get(),
+    ] , 200);
+});
+
+/**
+ * SKPD API
+ */
+
+Route::middleware('auth:api')->get('skpd', function(Request $request) {
+    //$token = Str::random(60);           
+
+    return response([
+        'data' => \App\Models\organisasi::selectRaw('id, nama, pid, created_at, updated_at, jabatans as level')->get(),
+        'total' => \App\Models\organisasi::count()
+    ] , 200);
+});
+
+
+/**
+ * get master lokasi
+ */
+Route::middleware('auth:api')->get('lokasi/{level}', function($level, Request $request) {
+
+    $level = ucfirst($level);
+    
+    if(array_search($level, \App\Models\BaseModel::$jenisKotaDs) < 0) {
+        return response('', 404);
+    }
+
+    return response([
+        'data' => \App\Models\alamat::where('jenis', array_search($level, \App\Models\BaseModel::$jenisKotaDs))->get(),
+        'total' => \App\Models\alamat::where('jenis', array_search($level, \App\Models\BaseModel::$jenisKotaDs))->count()
+    ] , 200);
+});
+
+/**
+ *  master aset all
+ */
+
+Route::middleware('auth:api')->get('master-aset', function(Request $request) {
+
+    $take = 1000;
+    $skip = 0;
+
+    $input = $request->all();
+    
+    Api::rules($input, [
+        'take' => 'integer',
+        'skip' => 'integer'
+    ]);
+    
+    if (array_key_exists('skip', $input)) {
+        $skip = $input['skip'];
+    }
+
+    if (array_key_exists('take', $input)) {
+        $take = $input['take'];
+    }
+    
+    $query = \App\Models\barang::orderBy('id')->offset($skip)->limit($take);
+    $data = $query->get();
+
+    return response([
+        'data' => $data,
+        'total' =>  count($data)
+    ] , 200);
+});
+
+/**
+ * inventaris
+ */
+Route::middleware('auth:api')->get('aset/{jenis}', function($jenis, Request $request) {
+
+    $take = 1000;
+    $skip = 0;
+
+    $input = $request->all();
+    
+    Api::rules($input, [
+        'take' => 'integer',
+        'skip' => 'integer'
+    ]);
+    
+    if (array_key_exists('skip', $input)) {
+        $skip = $input['skip'];
+    }
+
+    if (array_key_exists('take', $input)) {
+        $take = $input['take'];
+    }
+
+    /**
+     * check which table to show
+     */
+    $jenisBarang = \App\Models\jenisbarang::whereRaw("LOWER(nama) = '".str_replace('-', ' ', strtolower($jenis))."'")->first()->toArray();
+
+    
+    
+    $query = inventarisRepository::getData(null, 'inventaris.*, to_json('.\App\Models\BaseModel::$mappedKibTable[$jenisBarang['kelompok_kib']].') detail ')        
+        ->whereRaw("LOWER(m_jenis_barang.nama) = '".str_replace('-', ' ', strtolower($jenis))."'")->offset($skip)->limit($take);
+
+    
+    $data = $query->get();
+
+    foreach ($data as $key => $value) {
+        # code...
+
+        $value['detail'] = json_decode($value['detail'], true);
+
+        $data[$key] = $value;        
+    }
+
+    return response([
+        'data' => $data,
+        'total' =>  count($data)
+    ] , 200);
+});
+
 Route::middleware('auth:api')->post('inventaris_penghapusan/approvements', function( 
     \App\Repositories\inventaris_penghapusanRepository $inventaris_penghapusanRepository, 
     inventaris_historyRepository $inventaris_historyRepository,

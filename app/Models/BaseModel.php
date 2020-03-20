@@ -127,4 +127,13 @@ class BaseModel extends Model {
         '1' => 'Cabang OPD',
         '2' => 'UPT'
     ];
+
+    public static $mappedKibTable = [
+        'A' => 'detil_tanah',
+        'B' => 'detil_mesin',
+        'C' => 'detil_bangunan',
+        'D' => 'detil_jalan',
+        'E' => 'detil_aset_lainnya',
+        'F' => 'detil_konstruksi',
+    ];
 }

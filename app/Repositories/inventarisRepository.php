@@ -153,6 +153,10 @@ class inventarisRepository extends BaseRepository
             ->leftJoin("detil_tanah", "detil_tanah.pidinventaris", "inventaris.id")
             ->leftJoin("m_satuan_barang", "m_satuan_barang.id", "inventaris.satuan")
             ->leftJoin("detil_mesin", "detil_mesin.pidinventaris", "inventaris.id")
+            ->leftJoin("detil_bangunan", "detil_bangunan.pidinventaris", "inventaris.id")
+            ->leftJoin("detil_aset_lainnya", "detil_aset_lainnya.pidinventaris", "inventaris.id")
+            ->leftJoin("detil_jalan", "detil_jalan.pidinventaris", "inventaris.id")
+            ->leftJoin("detil_konstruksi", "detil_konstruksi.pidinventaris", "inventaris.id")
             ->leftJoin("m_merk_barang", "m_merk_barang.id", "detil_mesin.merk")
             ->leftJoin('inventaris_penghapusan', 'inventaris_penghapusan.id', 'inventaris.id')
             ->leftJoin('m_organisasi', 'm_organisasi.id', 'inventaris.pid_organisasi');
