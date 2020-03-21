@@ -329,7 +329,7 @@ class inventaris extends Model
     public function setHargaSatuanAttribute($value)
     {
         $secondValue = str_replace('.', '', $value);
-        $this->attributes['harga_satuan'] = str_replace(',', '.', $secondValue);        
+        $this->attributes['harga_satuan'] = (float)str_replace(',', '.', $secondValue);        
     }
 
     public function setTglSensusAttribute($value)

@@ -106,7 +106,7 @@ class inventaris_history extends Model
         'tgl_sensus' => 'date',
         'volume' => 'integer',
         'pembagi' => 'integer',
-        'harga_satuan' => 'integer',
+        'harga_satuan' => 'decimal:2',
         'perolehan' => 'string',
         'kondisi' => 'string',
         'lokasi_detil' => 'string',

@@ -146,6 +146,7 @@ class inventarisAPIController extends AppBaseController
             ])
             ->join('m_barang', 'm_barang.id', 'inventaris.pidbarang')
             ->where('m_barang.kode_jenis', '=', $barangMaster->kode_jenis)
+            ->where('inventaris.pid_organisasi', '=', $request->user()->pid_organisasi)
             ->where('inventaris.tahun_perolehan', '=', $input['tahun_perolehan'])
             ->orderBy('inventaris.noreg', 'desc')
             ->lockForUpdate()->first();
