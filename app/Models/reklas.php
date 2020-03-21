@@ -67,7 +67,7 @@ class reklas extends Model
      */
     public function setTglsuratAttribute($value)
     {
-        $value = date("d-m-Y", strtotime($value));
+        $value = date("Y-m-d", strtotime($value));
         $this->attributes['tglsurat'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
     }
 

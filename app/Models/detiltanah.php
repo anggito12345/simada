@@ -93,7 +93,7 @@ class detiltanah extends Model
     public function setTglSertifikatAttribute($value)
     {
         if ($value == null) {
-            $value = date("d-m-Y");
+            $value = date("Y-m-d");
         }
         
         $value = date("Y-m-d", strtotime($value));

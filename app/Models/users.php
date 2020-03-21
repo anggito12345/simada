@@ -77,7 +77,7 @@ class users extends Model
 
     public function setTglLahirAttribute($value)
     {
-        $value = date("d-m-Y", strtotime($value));
+        $value = date("Y-m-d", strtotime($value));
         $this->attributes['tgl_lahir'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
     }
 

@@ -140,7 +140,7 @@ class inventaris_mutasi extends Model
 
     public function setTglSensusAttribute($value)
     {
-        $value = date("d-m-Y", strtotime($value));
+        $value = date("Y-m-d", strtotime($value));
         $this->attributes['tgl_sensus'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
     }
 
@@ -156,7 +156,7 @@ class inventaris_mutasi extends Model
 
     public function setTglDibukukanAttribute($value)
     {        
-        $value = date("d-m-Y", strtotime($value));
+        $value = date("Y-m-d", strtotime($value));
         $this->attributes['tgl_dibukukan'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
     }    
 
@@ -172,7 +172,7 @@ class inventaris_mutasi extends Model
 
     public function setMutasiAtAttribute($value)
     {        
-        $value = date("d-m-Y", strtotime($value));
+        $value = date("Y-m-d", strtotime($value));
         $this->attributes['mutasi_at'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
     }    
 

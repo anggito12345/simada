@@ -83,7 +83,7 @@ class pemeliharaan extends Model
 
     public function setTglAttribute($value)
     {
-        $value = date("d-m-Y", strtotime($value));
+        $value = date("Y-m-d", strtotime($value));
         $this->attributes['tgl'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
     }
 
@@ -98,7 +98,7 @@ class pemeliharaan extends Model
 
     public function setTglkontrakAttribute($value)
     {
-        $value = date("d-m-Y", strtotime($value));
+        $value = date("Y-m-d", strtotime($value));
         $this->attributes['tglkontrak'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
     }
 
