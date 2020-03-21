@@ -142,7 +142,7 @@ class inventaris extends Model
                 if (array_key_exists('tgl_sertifikat', $dataKib)) {
                     $dataKib['tgl_sertifikat'] = date("Y-m-d", strtotime($dataKib['tgl_sertifikat']));
                 } else {
-                    $dataKib['tgl_sertifikat'] = date('Y-m-d')
+                    $dataKib['tgl_sertifikat'] = date('Y-m-d');
                 }
                 
 
@@ -191,10 +191,10 @@ class inventaris extends Model
                     $dataKib['koordinattanah'] = json_encode($dataKib['koordinattanah']);
                 }
 
-                if(array_key_exists('tgl_dokumen', $dataKib) && $dataKib['tgl_dokumen'] != '') {
-                    $dataKib['tgl_dokumen'] = date("Y-m-d", strtotime($dataKib['tgl_dokumen']));
+                if(array_key_exists('tgldokumen', $dataKib) && $dataKib['tgldokumen'] != '') {
+                    $dataKib['tgldokumen'] = date("Y-m-d", strtotime($dataKib['tgldokumen']));
                 } else {
-                    $dataKib['tgl_sertifikat'] = date('Y-m-d');
+                    $dataKib['tgldokumen'] = date('Y-m-d');
                 }
 
                 if (isset($dataKib['pidinventaris']) && $dataKib['pidinventaris'] != null && $dataKib['pidinventaris'] != "") {                    
@@ -229,10 +229,10 @@ class inventaris extends Model
                     $dataKib['koordinattanah'] = json_encode($dataKib['koordinattanah']);
                 }
 
-                if (array_key_exists('tgl_dokumen', $dataKib) && $dataKib['tgl_dokumen'] != '') {
-                    $dataKib['tgl_dokumen'] = date("Y-m-d", strtotime($dataKib['tgl_dokumen']));
+                if (array_key_exists('tgldokumen', $dataKib) && $dataKib['tgldokumen'] != '') {
+                    $dataKib['tgldokumen'] = date("Y-m-d", strtotime($dataKib['tgldokumen']));
                 } else {
-                    $dataKib['tgl_sertifikat'] = date('Y-m-d');
+                    $dataKib['tgldokumen'] = date('Y-m-d');
                 }
 
                 if (isset($dataKib['pidinventaris']) && $dataKib['pidinventaris'] != null && $dataKib['pidinventaris'] != "") {                    
@@ -281,15 +281,15 @@ class inventaris extends Model
                 }
 
                 if(array_key_exists('tgl_dokumen', $dataKib) && $dataKib['tgl_dokumen'] != '') {
-                    $dataKib['tgl_dokumen'] = date("Y-m-d", strtotime($dataKib['tgl_dokumen']));
+                    $dataKib['tgldokumen'] = date("Y-m-d", strtotime($dataKib['tgl_dokumen']));
                 } else {
-                    $dataKib['tgl_sertifikat'] = date('Y-m-d');
+                    $dataKib['tgldokumen'] = date('Y-m-d');
                 }
 
-                if(array_key_exists('tgl_mulai', $dataKib) && $dataKib['tgl_mulai'] != '') {
-                    $dataKib['tgl_mulai'] = date("Y-m-d", strtotime($dataKib['tgl_mulai']));
+                if(array_key_exists('tglmulai', $dataKib) && $dataKib['tglmulai'] != '') {
+                    $dataKib['tglmulai'] = date("Y-m-d", strtotime($dataKib['tglmulai']));
                 } else {
-                    $dataKib['tgl_sertifikat'] = date('Y-m-d');
+                    $dataKib['tglmulai'] = date('Y-m-d');
                 }
 
 
