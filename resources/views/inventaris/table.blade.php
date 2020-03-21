@@ -317,7 +317,15 @@
         }
 
         function onEdit() {
-            
+            if($("#table-inventaris").DataTable().rows('.selected').data()[0].pid_organisasi != '<?= Auth::user()->pid_organisasi ?>') {
+                swal.fire({
+                    type: 'error',
+                    text: 'Tidak bisa mengubah data inventaris organisasi lain!',
+                    title: 'Ubah'
+                })
+                return
+            }
+                
             if ($("#table-inventaris").DataTable().rows('.selected').count()!= 1 ) {
                 swal.fire({
                     type: 'error',

@@ -13,7 +13,7 @@
        <div class="box box-primary">
            <div class="box-body">
                <div class="">
-                   {!! Form::model($users, ['route' => ['users.update', $users->id], 'method' => 'patch']) !!}
+                   {!! Form::model($users, ['route' => ['users.update', $users->id], 'method' => 'patch', 'id' => 'new-password']) !!}
 
                         @include('users.fields')
 

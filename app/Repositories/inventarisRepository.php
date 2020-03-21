@@ -163,15 +163,15 @@ class inventarisRepository extends BaseRepository
             // role =================
             // ->where('m_jabatan.level', '<=', $mineJabatan->level)
             
-        // role conditional please check this whenever u are customizing role
+        // role conditional please check this whenever u want customizing role
         if ($organisasiUser->jabatans == Constant::$GROUP_OPD_ORG) {            
             $buildingModel = $buildingModel
-                ->whereRaw('inventaris.pid_organisasi = '.$organisasiUser->id.' OR m_organisasi.pid = '.$organisasiUser->id)
+                ->whereRaw('( inventaris.pid_organisasi = '.$organisasiUser->id.' OR m_organisasi.pid = '.$organisasiUser->id . ')')
                 ->where('m_organisasi.jabatans', '>=', $organisasiUser->jabatans);
         } else if ($organisasiUser->jabatans == Constant::$GROUP_CABANGOPD_ORG) {            
             $buildingModel = $buildingModel
-                ->where('inventaris.pid_organisasi', '=', $organisasiUser->id)
-                ->where('m_organisasi.jabatans', '=', $organisasiUser->jabatans);
+                ->whereRaw(' ( inventaris.pid_organisasi = '.$organisasiUser->id . ' OR m_organisasi.id = ' . $organisasiUser->pid . ' ) ')
+                ->where('m_organisasi.jabatans', '>=', Constant::$GROUP_OPD_ORG);
         }
 
         return $buildingModel;

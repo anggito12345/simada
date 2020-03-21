@@ -11,6 +11,7 @@ use App\Http\Controllers\AppBaseController;
 use Response;
 use c;
 use Constant;
+use Auth;
 
 /**
  * Class organisasiController
@@ -59,7 +60,21 @@ class organisasiAPIController extends AppBaseController
             }            
 
             if (!c::is([],[],[Constant::$GROUP_BPKAD_ORG])) {
-                $querys = $querys->where('m_organisasi.pid', $request->input('pid'));
+                $organisasiUser = \App\Models\organisasi::find(Auth::user()->pid_organisasi);
+                if ($organisasiUser == null) {
+                    $organisasiUser = new \App\Models\organisasi();
+                }
+
+                if (c::is([],[],[Constant::$GROUP_CABANGOPD_ORG])) {
+                    $querys = $querys->whereRaw('id = '.$organisasiUser->pid);
+                }
+
+                if (c::is([],[],[Constant::$GROUP_OPD_ORG])) {
+                    $querys = $querys
+                        ->whereRaw('m_organisasi.id = '.$organisasiUser->id.' OR m_organisasi.pid = '.$organisasiUser->id)
+                        ->where('jabatans','>=',$organisasiUser->jabatans);
+                }
+                
             }
             
         }

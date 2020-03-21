@@ -70,6 +70,13 @@
 
 @if(isset($organisasi))
 <script>
+App.Helpers.defaultSelect2(
+    $("#pid"), 
+        `${$('[base-path]').val()}/api/organisasis/${<?= $organisasi->pid ?>}`,
+        "id",
+        "nama",
+        () => {}
+)
 </script>
 @endif
 @endsection

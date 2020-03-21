@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html>
-
+@if(env('APPLICATION_STATE', 'UNLOCK') == 'LOCK')
+<style type="text/css">
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+</style>
+<img src="<?= url('images/maintanance_1.png') ?>" class="center" />
+@else
 <head>
     <meta charset="UTF-8">
     <title>SIMADA</title>
@@ -14,6 +24,7 @@
         }
     </style>
     <style type="text/css">
+
         .loading {
             font-size: 0;
             width: 30px;
@@ -377,8 +388,10 @@
 
         $(function() {
             $('input').attr('autocomplete', 'off');
-            $('input').attr('autocorrect', 'off');
             $('form').attr('autocomplete', 'off');
+            $('form#new-password').attr('autocomplete', 'new-password');
+            $('input[name=username]').attr('autocomplete', 'off');
+            $('input[name=password]').attr('autocomplete', 'off');
 
             $('input[type=number]').keyup((obj) => {
                 let valueNumber = parseInt(obj.target.value)
@@ -449,5 +462,7 @@
         ko.applyBindings(viewModel)
     </script>
 </body>
+@endif
+
 
 </html>

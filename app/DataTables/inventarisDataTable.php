@@ -96,7 +96,7 @@ class inventarisDataTable extends DataTable
     {
         $mineJabatan = \App\Models\jabatan::find(Auth::user()->jabatan);        
 
-        $buildingModel = inventarisRepository::getData(isset($_GET['draft']) ? $_GET['draft'] : null);
+        $buildingModel = inventarisRepository::getData(isset($_GET['draft']) && $_GET['draft'] != 0 ? $_GET['draft'] : null);
         
         $buildingModel = inventarisRepository::appendInventarisGridFilter($buildingModel, $_GET);
         
@@ -165,8 +165,8 @@ class inventarisDataTable extends DataTable
                     // ['extend' => 'create', 'className' => 'btn btn-default btn-sm no-corner'],
                     ['extend' => 'collection', 'text' => 'Aksi', 'className' => 'btn btn-default btn-sm no-corner',  'buttons' => [                        
                         ['extend' => 'create'],  
-                        ['text' => '<i class="fa fa-edit"></i> Ubah', 'action' => 'function(){onEdit()}', ],                        
-                        // ['text' => '<i class="fa fa-trash"></i> Hapus', 'action' => 'function(){onDelete()}', ],                       
+                       ['text' => '<i class="fa fa-edit"></i> Ubah', 'action' => 'function(){onEdit()}', ],                        
+                       // ['text' => '<i class="fa fa-trash"></i> Hapus', 'action' => 'function(){onDelete()}', ],                       
                       /*  ['text' => '<i class="fa fa-eraser"></i> Penghapusan', 'action' => 'function(){onPenghapusan()}', ],*/
                     ]],           
                     //['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner', 'buttons' => [ 'csv', 'excel']],

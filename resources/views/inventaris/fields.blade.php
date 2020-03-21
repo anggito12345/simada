@@ -505,7 +505,7 @@
             theme: 'bootstrap' ,
         })
 
-        $('#harga_satuan').mask("#,##0.00", {reverse: true});
+        $('#harga_satuan').mask("#.##0,00", {reverse: true});
 
         $('#tahun_perolehan').mask("0000");
 

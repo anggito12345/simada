@@ -133,7 +133,7 @@ class inventarisAPIController extends AppBaseController
 
         $input['idpegawai'] = $request->user()->id;
         $input['pid_organisasi'] = $request->user()->pid_organisasi;
-        $input['harga_satuan'] = str_replace(",",".",str_replace(".", "", $input['harga_satuan']));
+        $input['harga_satuan'] = str_replace(".", "", $input['harga_satuan']);
         
         // generate no register
         $modelInventaris = new \App\Models\inventaris();
@@ -147,7 +147,6 @@ class inventarisAPIController extends AppBaseController
             ->join('m_barang', 'm_barang.id', 'inventaris.pidbarang')
             ->where('m_barang.kode_jenis', '=', $barangMaster->kode_jenis)
             ->where('inventaris.tahun_perolehan', '=', $input['tahun_perolehan'])
-            ->where('inventaris.harga_satuan', '=', str_replace(",",".",str_replace(".", "", $input['harga_satuan'])))
             ->orderBy('inventaris.noreg', 'desc')
             ->lockForUpdate()->first();
 
@@ -416,6 +415,7 @@ class inventarisAPIController extends AppBaseController
                     'foreign_id' => $id,
                 ]);
 
+                // delete all history
 
                 $dataSystemUploads = $querySystemUpload->get();
 
@@ -429,7 +429,11 @@ class inventarisAPIController extends AppBaseController
 
                 DB::commit();
             } catch (\Exception $e) {
+                
+
                 DB::rollBack();
+
+                return $this->sendError($e->getMessage() . $e->getTraceAsString());
             }
         }
 

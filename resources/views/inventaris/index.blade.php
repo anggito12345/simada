@@ -265,6 +265,36 @@ $isInventarisPage = true;
         }
       })
     },
+    deleteInventaris: (id) => {
+      let url = $("[base-path]").val() + "/api/inventaris/" + id
+      let method = "DELETE"
+
+      Swal.fire({
+        title: 'Anda yakin?',
+        text: "Anda tidak akan bisa mengembalikan data yang sudah dihapus",
+        type: 'warning',
+        showCancelButton: true,
+        confirmButtonColor: '#3085d6',
+        cancelButtonColor: '#d33',
+        confirmButtonText: 'Ya!'
+      }).then((result) => {
+        if (result) {
+          __ajax({
+            url: url,
+            method: method,
+            dataType: "json",
+          }).then((d) => {
+            swal.fire({
+              type: "success",
+              text: "Berhasil menghapus data inventaris!",
+              onClose: () => {          
+                $("#table-inventaris").DataTable().ajax.reload();
+              }
+            })
+          })
+        }        
+      })
+    },
     savePemeliharaan: () => {
       let url = $("[base-path]").val() + "/api/pemeliharaans"
       let method = "POST"

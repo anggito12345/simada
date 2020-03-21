@@ -14,6 +14,7 @@ use Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Excel;
+use Auth;
 use App\Exports\AsetExportPhpSpread;
 
 class inventarisController extends AppBaseController
@@ -135,6 +136,14 @@ class inventarisController extends AppBaseController
     public function edit($id)
     {
         $inventaris = inventaris::withDrafts()->find($id);
+
+        $organisasi = \App\Models\organisasi::find(Auth::user()->pid_organisasi);
+
+        if ($organisasi->id != $inventaris->pid_organisasi) {
+            Flash::error('Tidak bisa mengubah data inventaris organisasi lain!');
+
+            return redirect(route('inventaris.index'));
+        }
 
         if (empty($inventaris)) {
             Flash::error('Inventaris not found');
