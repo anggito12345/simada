@@ -107,8 +107,8 @@ class detilkonstruksi extends Model
             $value = date("d-m-Y");
         }
 
-        $value = date("d-m-Y", strtotime($value));
-        $this->attributes['tgldokumen'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
+        $value = date("Y-m-d", strtotime($value));
+        $this->attributes['tgldokumen'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
     }
 
     public function getTgldokumenAttribute($value)

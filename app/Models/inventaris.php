@@ -136,7 +136,7 @@ class inventaris extends Model
 
                 if(is_array($dataKib['koordinattanah'])) {
                     $dataKib['koordinattanah'] = json_encode($dataKib['koordinattanah']);
-                }
+                }                
 
                 if (isset($dataKib['pidinventaris']) && $dataKib['pidinventaris'] != null && $dataKib['pidinventaris'] != "") {                    
                     $exist = DB::table('detil_tanah')->where('pidinventaris', $dataKib['pidinventaris'])->count();
