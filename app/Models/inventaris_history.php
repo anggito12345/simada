@@ -146,7 +146,7 @@ class inventaris_history extends Model
     public function setHistoryAtAttribute($value)
     {
         $value = date("Y-m-d", strtotime($value));
-        $this->attributes['history_at'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
+        $this->attributes['history_at'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
     }
 
     public function getHistoryAtAttribute($value)
@@ -161,7 +161,7 @@ class inventaris_history extends Model
     public function setTglSensusAttribute($value)
     {
         $value = date("Y-m-d", strtotime($value));
-        $this->attributes['tgl_sensus'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
+        $this->attributes['tgl_sensus'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
     }
 
     public function getTglSensusAttribute($value)
@@ -177,7 +177,7 @@ class inventaris_history extends Model
     public function setTglDibukukanAttribute($value)
     {        
         $value = date("Y-m-d", strtotime($value));
-        $this->attributes['tgl_dibukukan'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
+        $this->attributes['tgl_dibukukan'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
     }    
 
     public function getTglDibukukanAttribute($value)

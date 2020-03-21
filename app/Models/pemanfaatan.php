@@ -90,7 +90,7 @@ class pemanfaatan extends Model
     public function setTglMulaiAttribute($value)
     {
         $value = date("Y-m-d", strtotime($value));
-        $this->attributes['tgl_mulai'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
+        $this->attributes['tgl_mulai'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
     }
 
     public function getTglMulaiAttribute($value)
@@ -105,7 +105,7 @@ class pemanfaatan extends Model
     public function setTglAkhirAttribute($value)
     {
         $value = date("Y-m-d", strtotime($value));
-        $this->attributes['tgl_akhir'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
+        $this->attributes['tgl_akhir'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
     }
 
     public function getTglAkhirAttribute($value)
