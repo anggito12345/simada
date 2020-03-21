@@ -97,7 +97,7 @@ class inventaris extends Model
         'volume' => 'integer',
         'pembagi' => 'integer',
         'satuan' => 'integer',
-        'harga_satuan' => 'integer',
+        'harga_satuan' => 'decimal:2',
         'perolehan' => 'string',
         'kondisi' => 'string',
         'tgl_dibukukan' => 'date',
