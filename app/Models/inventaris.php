@@ -194,7 +194,7 @@ class inventaris extends Model
                 if(array_key_exists('tgl_dokumen', $dataKib) && $dataKib['tgl_dokumen'] != '') {
                     $dataKib['tgl_dokumen'] = date("Y-m-d", strtotime($dataKib['tgl_dokumen']));
                 } else {
-                    $dataKib['tgl_sertifikat'] = date('Y-m-d')
+                    $dataKib['tgl_sertifikat'] = date('Y-m-d');
                 }
 
                 if (isset($dataKib['pidinventaris']) && $dataKib['pidinventaris'] != null && $dataKib['pidinventaris'] != "") {                    
@@ -232,7 +232,7 @@ class inventaris extends Model
                 if (array_key_exists('tgl_dokumen', $dataKib) && $dataKib['tgl_dokumen'] != '') {
                     $dataKib['tgl_dokumen'] = date("Y-m-d", strtotime($dataKib['tgl_dokumen']));
                 } else {
-                    $dataKib['tgl_sertifikat'] = date('Y-m-d')
+                    $dataKib['tgl_sertifikat'] = date('Y-m-d');
                 }
 
                 if (isset($dataKib['pidinventaris']) && $dataKib['pidinventaris'] != null && $dataKib['pidinventaris'] != "") {                    
@@ -283,13 +283,13 @@ class inventaris extends Model
                 if(array_key_exists('tgl_dokumen', $dataKib) && $dataKib['tgl_dokumen'] != '') {
                     $dataKib['tgl_dokumen'] = date("Y-m-d", strtotime($dataKib['tgl_dokumen']));
                 } else {
-                    $dataKib['tgl_sertifikat'] = date('Y-m-d')
+                    $dataKib['tgl_sertifikat'] = date('Y-m-d');
                 }
 
                 if(array_key_exists('tgl_mulai', $dataKib) && $dataKib['tgl_mulai'] != '') {
                     $dataKib['tgl_mulai'] = date("Y-m-d", strtotime($dataKib['tgl_mulai']));
                 } else {
-                    $dataKib['tgl_sertifikat'] = date('Y-m-d')
+                    $dataKib['tgl_sertifikat'] = date('Y-m-d');
                 }
 
 
