@@ -134,7 +134,7 @@ class inventaris extends Model
                     return;
                 }
 
-                if(is_array($dataKib['koordinattanah'])) {
+                if(array_key_exists('koordinattanah', $dataKib) && is_array($dataKib['koordinattanah'])) {
                     $dataKib['koordinattanah'] = json_encode($dataKib['koordinattanah']);
                 }                
 
@@ -270,7 +270,7 @@ class inventaris extends Model
 
                 $dataKib['luasbangunan'] = str_replace('.', '', $dataKib['luasbangunan']);
 
-                if(is_array($dataKib['koordinattanah'])) {
+                if(array_key_exists('koordinattanah', $dataKib) && is_array($dataKib['koordinattanah'])) {
                     $dataKib['koordinattanah'] = json_encode($dataKib['koordinattanah']);
                 }
 
