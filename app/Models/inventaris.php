@@ -134,14 +134,14 @@ class inventaris extends Model
                     return;
                 }
 
-                $dataKib = new \App\Models\detiltanah($dataKib);
-
-                $dataKib = $dataKib->toArray();
-
                 if(is_array($dataKib['koordinattanah'])) {
                     $dataKib['koordinattanah'] = json_encode($dataKib['koordinattanah']);
                 }                
-                
+
+
+                if(array_key_exists('tgl_sertifikat', $dataKib)) {
+                    $dataKib['tgl_sertifikat'] = date("Y-m-d", strtotime($dataKib['tgl_sertifikat']));
+                } 
                 
 
                 if (isset($dataKib['pidinventaris']) && $dataKib['pidinventaris'] != null && $dataKib['pidinventaris'] != "") {                    
@@ -156,7 +156,7 @@ class inventaris extends Model
                 DB::table('detil_tanah')->insert($dataKib);
                 break;
             case 'B':
-                $rules = \App\Models\detiltanah::$rules;
+                $rules = \App\Models\detilmesin::$rules;
                 $validator = Validator::make($dataKib, $rules);
 
                 if ($validator->fails()) {
@@ -189,6 +189,10 @@ class inventaris extends Model
                     $dataKib['koordinattanah'] = json_encode($dataKib['koordinattanah']);
                 }
 
+                if(array_key_exists('tgl_dokumen', $dataKib)) {
+                    $dataKib['tgl_dokumen'] = date("Y-m-d", strtotime($dataKib['tgl_dokumen']));
+                } 
+
                 if (isset($dataKib['pidinventaris']) && $dataKib['pidinventaris'] != null && $dataKib['pidinventaris'] != "") {                    
                     $exist = DB::table('detil_bangunan')->where('pidinventaris', $dataKib['pidinventaris'])->count();
                     
@@ -220,6 +224,10 @@ class inventaris extends Model
                 if(is_array($dataKib['koordinattanah'])) {
                     $dataKib['koordinattanah'] = json_encode($dataKib['koordinattanah']);
                 }
+
+                if (array_key_exists('tgl_dokumen', $dataKib)) {
+                    $dataKib['tgl_dokumen'] = date("Y-m-d", strtotime($dataKib['tgl_dokumen']));
+                } 
 
                 if (isset($dataKib['pidinventaris']) && $dataKib['pidinventaris'] != null && $dataKib['pidinventaris'] != "") {                    
                     $exist = DB::table('detil_jalan')->where('pidinventaris', $dataKib['pidinventaris'])->count();
@@ -265,6 +273,15 @@ class inventaris extends Model
                 if(is_array($dataKib['koordinattanah'])) {
                     $dataKib['koordinattanah'] = json_encode($dataKib['koordinattanah']);
                 }
+
+                if(array_key_exists('tgl_dokumen', $dataKib)) {
+                    $dataKib['tgl_dokumen'] = date("Y-m-d", strtotime($dataKib['tgl_dokumen']));
+                } 
+
+                if(array_key_exists('tgl_mulai', $dataKib)) {
+                    $dataKib['tgl_mulai'] = date("Y-m-d", strtotime($dataKib['tgl_mulai']));
+                } 
+
 
                 if (isset($dataKib['pidinventaris']) && $dataKib['pidinventaris'] != null && $dataKib['pidinventaris'] != "") {                    
                     $exist = DB::table('detil_konstruksi')->where('pidinventaris', $dataKib['pidinventaris'])->count();
