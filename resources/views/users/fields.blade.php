@@ -59,7 +59,7 @@
 
 <div class="form-group <?=  isset($isFromRegister) ? 'col-md-12' : 'col-md-6' ?>">
     {!! Form::label('username', 'Username:') !!} <span class='text text-danger'>*</span>
-    {!! Form::text('username', null, ['class' => 'form-control', 'readonly' => 'true']) !!}
+    {!! Form::text('username', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Password Field -->

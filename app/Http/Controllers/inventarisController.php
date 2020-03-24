@@ -16,6 +16,8 @@ use Illuminate\Support\Facades\DB;
 use Excel;
 use Auth;
 use App\Exports\AsetExportPhpSpread;
+use c;
+use Constant;
 
 class inventarisController extends AppBaseController
 {
@@ -139,8 +141,14 @@ class inventarisController extends AppBaseController
 
         $organisasi = \App\Models\organisasi::find(Auth::user()->pid_organisasi);
 
-        if ($organisasi->id != $inventaris->pid_organisasi) {
-            Flash::error('Tidak bisa mengubah data inventaris organisasi lain!');
+        if ($organisasi->id != $inventaris->pid_organisasi && !c::is(['inventaris'],['update'],[Constant::$GROUP_BPKAD_ORG])) {
+            Flash::error('Tidak bisa mengubah data inventaris');
+
+            return redirect(route('inventaris.index'));
+        }
+
+        if (empty($inventaris->draft)) {
+            Flash::error('Tidak bisa mengubah data inventaris yang bukan draft');
 
             return redirect(route('inventaris.index'));
         }

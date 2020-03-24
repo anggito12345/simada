@@ -2,7 +2,7 @@
 <div class="form-group col-sm-6 row">
     {!! Form::label('luas', 'Luas Tanah:') !!}
     <div class="input-group">
-        {!! Form::number('luas', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB A"]().luas']) !!}
+        {!! Form::text('luas', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB A"]().luas']) !!}
         <div class="input-group-append">
             <span class="input-group-text text-danger" id="basic-addon2">Pemisah pecahan dengan titik (misal: 1.5)</span>
         </div>
@@ -83,6 +83,8 @@
 
 <script type="text/javascript"> 
     
+    $('#luas').mask("#.##0", {reverse: true});
+
     viewModel.jsLoaded.subscribe((newVal) => {    
         // document is ready. Do your stuff here
         const googleMapKoordinatLokasi = new MapInput(document.getElementById('koordinatlokasi'), {})

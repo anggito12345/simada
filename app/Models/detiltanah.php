@@ -64,7 +64,7 @@ class detiltanah extends Model
     protected $casts = [
         'id' => 'integer',
         'pidinventaris' => 'integer',
-        'luas' => 'integer',
+        'luas' => 'float',
         'alamat' => 'string',
         'idkota' => 'integer',
         'idkecamatan' => 'integer',

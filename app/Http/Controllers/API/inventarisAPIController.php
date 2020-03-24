@@ -317,6 +317,16 @@ class inventarisAPIController extends AppBaseController
             ->with('Organisasi')
             ->find($id);
 
+        $organisasi = \App\Models\organisasi::find(Auth::user()->pid_organisasi);
+
+        if ($organisasi->id != $inventaris->pid_organisasi && !c::is(['inventaris'],['update'],[Constant::$GROUP_BPKAD_ORG])) {
+            return $this->sendError('Tidak bisa mengubah data inventaris');
+        }
+
+        if (empty($inventaris->draft)) {
+            return $this->sendError('Tidak bisa mengubah data inventaris yang bukan draft');
+        }
+
         if (empty($inventaris)) {
             return $this->sendError('Inventaris not found');
         }

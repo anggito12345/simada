@@ -15,13 +15,13 @@
         <li class="{{ Request::is('inventaris*') ? 'active' : '' }}">
             <a href="{!! route('inventaris.index') !!}"><i class="fa fa-edit"></i><span>Penata Usahaan</span></a>
         </li>
-        @if(c::is([],[],[Constant::$GROUP_OPD_ORG, Constant::$GROUP_BPKAD_ORG]))
-        <li class="{{ Request::is('penghapusans*') ? 'active' : '' }}">
-            <a href="{!! route('penghapusans.index') !!}"><i class="fa fa-edit"></i><span>Penghapusan</span></a>
-        </li>
         <li class="{{ Request::is('pemeliharaans*') ? 'active' : '' }}">
             <a href="{!! route('pemeliharaans.index') !!}"><i class="fa fa-edit"></i><span>Pemeliharaan</span></a>
         </li>
+        @if(c::is([],[],[Constant::$GROUP_OPD_ORG, Constant::$GROUP_BPKAD_ORG]))
+        <li class="{{ Request::is('penghapusans*') ? 'active' : '' }}">
+            <a href="{!! route('penghapusans.index') !!}"><i class="fa fa-edit"></i><span>Penghapusan</span></a>
+        </li>        
         <li class="{{ Request::is('pemanfaatans*') ? 'active' : '' }}">
             <a href="{!! route('pemanfaatans.index') !!}"><i class="fa fa-edit"></i><span>Pemanfaatan</span></a>
         </li>

@@ -6,7 +6,7 @@ let inlineDatepicker = function(element, config) {
 
     defaultConfig = {
         format: 'YYYY/MM/DD',
-        minYear: 2010,
+        minYear: 1970,
         maxYear: new Date().getFullYear(),
         formatDefault: 'DD/MM/YYYY',
         buttonClear: false,

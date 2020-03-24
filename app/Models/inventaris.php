@@ -318,9 +318,9 @@ class inventaris extends Model
                 return self::EXTRACODE;
             }
         } else if ($tahun >= 2011 && $tahun <= 2014) {
-            if ($harga > 499999) {
+            /*if ($harga > 499999) {
                 throw new \Exception("Harga harus dibawah 500rb!");
-            }
+            }*/
         } else if ($tahun < 2011) {
             return self::INTRACODE;
         }
