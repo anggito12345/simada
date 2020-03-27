@@ -146,6 +146,11 @@
 
     <script src="<?= url('js/app.ko.js?key=' . sha1(time())) ?>"></script>
 
+    <!-- jQuery 3.1.1 -->
+
+    <script src="<?= url('js/thirdparty/jquery.min.js') ?>"></script>
+    <script src="<?= url('js/thirdparty/jquery.mask.min.js') ?>"></script>
+
     @include('layouts.datatables_css')
 
     @yield('css')
@@ -325,10 +330,7 @@
 
     <script src="<?= url('js/thirdparty/handlebars-v4.3.1.js') ?>"></script>
 
-    <!-- jQuery 3.1.1 -->
-
-    <script src="<?= url('js/thirdparty/jquery.min.js') ?>"></script>
-    <script src="<?= url('js/thirdparty/jquery.mask.min.js') ?>"></script>
+    
 
     @include('layouts.datatables_js')
 
