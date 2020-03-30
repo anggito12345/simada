@@ -211,7 +211,7 @@ Route::middleware('auth:api')->get('skpd', function(Request $request) {
 /**
  * get master lokasi
  */
-Route::middleware('auth:api')->get('lokasi/{level}', function($level, Request $request) {
+Route::middleware('auth:api')->get('lokasi/{level}/{pid?}', function($level, $pid = null, Request $request) {
 
     $level = ucfirst($level);
 
@@ -228,11 +228,17 @@ Route::middleware('auth:api')->get('lokasi/{level}', function($level, Request $r
         $appendedSelectField = ', pid as '.$levelForFieldName.'_id , NULL as latitude, NULL as longitude' ;
     }
 
+    $query = \App\Models\alamat::selectRaw('id, nama '. $appendedSelectField)->where('jenis', array_search($level, \App\Models\BaseModel::$jenisKotaDs));
     
+    if ($pid != null) {
+        $query = $query->where('pid', $pid);
+    }
+
+    $data = $query->get();
 
     return response([
-        'data' => \App\Models\alamat::selectRaw('id, nama '. $appendedSelectField)->where('jenis', array_search($level, \App\Models\BaseModel::$jenisKotaDs))->get(),
-        'total' => \App\Models\alamat::where('jenis', array_search($level, \App\Models\BaseModel::$jenisKotaDs))->count()
+        'data' => $data,
+        'total' => count($data)
     ] , 200);
 });
 
