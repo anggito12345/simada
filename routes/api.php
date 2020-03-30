@@ -218,6 +218,12 @@ Route::middleware('auth:api')->get('lokasi/{level}', function($level, Request $r
         return response('', 404);
     }
 
+    $levelForFieldName = array_search($level, \App\Models\BaseModel::$jenisKotaDs);
+
+    if ($levelForFieldName > 0) {
+        $levelForFieldName = \App\Models\BaseModel::$jenisKotaDs[$levelForFieldName-1];
+    }
+
     return response([
         'data' => \App\Models\alamat::selectRaw('id, nama, pid as '.$level.'_id')->where('jenis', array_search($level, \App\Models\BaseModel::$jenisKotaDs))->get(),
         'total' => \App\Models\alamat::where('jenis', array_search($level, \App\Models\BaseModel::$jenisKotaDs))->count()
@@ -228,7 +234,7 @@ Route::middleware('auth:api')->get('lokasi/{level}', function($level, Request $r
 /**
  * inventaris
  */
-Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 'all', $query1 = 'no', Request $request) {
+Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 'all', $query1 = null, Request $request) {
 
     $take = 1000;
     $skip = 0;
@@ -248,15 +254,15 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
         $take = $input['take'];
     }
 
-    $queryWithJenisAset = ', NULL as detail';
-
-    if ($jenis != 'all') {
-        $jenisBarang = \App\Models\jenisbarang::whereRaw("LOWER(nama) = '".str_replace('-', ' ', strtolower($jenis))."'")->first()->toArray();
-
-        if (isset($jenisBarang)) {
-            $queryWithJenisAset = ',  to_json('.\App\Models\BaseModel::$mappedKibTable[$jenisBarang['kelompok_kib']].')  detail ';
-        }        
-    }
+    $queryWithJenisAset = ', 
+    detil_tanah.status_sertifikat as tanah_status_sertifikat,
+    detil_tanah.nomor_sertifikat as tanah_nomor_sertifikat,
+    detil_tanah.tgl_sertifikat as tanah_tgl_sertifikat,
+    detil_tanah.id as tanah_id,
+    detil_bangunan.id as bangunan_id,
+    detil_bangunan.tgldokumen as bangunan_tgldokumen,
+    detil_bangunan.nodokumen as bangunan_nodokumen
+    ';
 
     $mappedRaw = 'inventaris.*, m_jenis_barang.nama nama_jenis, m_organisasi.kode as kode_organisasi, m_barang.nama_rek_aset as nama_barang '.$queryWithJenisAset;
 
@@ -280,6 +286,8 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
             }  
         }
         
+    } else {
+        $query =  $query->whereRaw("m_jenis_barang.kelompok_kib IN ('A','C')"); //
     }
 
 
@@ -287,13 +295,6 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
 
     foreach ($data as $key => $value) {
         # code...
-        if (!empty($value['detail'])) {
-            $value['detail'] = json_decode($value['detail'], true);
-        } else {
-            $value['detail'] = null;
-        }
-        
-
         /**
          * mapping by aset tipe
          */
@@ -305,10 +306,10 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                     'kode_barang' => inventarisRepository::kodeBarang($value['pidbarang']),
                     'unit_kerja_id' => '?',
                     'nama_barang' => $value['nama_barang'],
-                    'tanggal_perolehan' => $value['tgl_perolehan'],
+                    'tanggal_perolehan' => $value['tgl_dibukukan'],
                     'aset_tipe' => 'tanah',
                     'kondisi' => $value['kondisi'],
-                    'fisik' => empty($value['detail']) ? null : $value['detail']['status_sertifikat'],
+                    'fisik' => $value['tanah_status_sertifikat'],
                     'harga_perolehan' => null, 
                     'nilai_aset' => $value['harga_satuan'],
                     'foto_aset' => \App\Models\system_upload::where('foreign_id', $value['id'])->pluck('path')->toArray(),
@@ -316,10 +317,10 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
             } else if (strtolower($query1) == 'bersertifikat') {
                 $value = [
                     'id' => $value['id'],
-                    'aset_id' => $value['detail']['id'],
+                    'aset_id' => $value['tanah_id'],
                     'jenis_bukti' => 'sertifikat',
-                    'no_bukti' => $value['detail']['nomor_sertifikat'],
-                    'tanggal_bukti' => $value['detail']['tgl_sertifikat']
+                    'no_bukti' => $value['tanah_nomor_sertifikat'],
+                    'tanggal_bukti' => $value['tanah_tgl_sertifikat']
                 ];
             } 
             
@@ -330,7 +331,7 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                     'kode_skpd' => $value['kode_organisasi'],
                     'kode_barang' => inventarisRepository::kodeBarang($value['pidbarang']),
                     'nama_barang' => $value['nama_barang'],
-                    'tanggal_perolehan' => $value['tgl_perolehan'],
+                    'tanggal_perolehan' => $value['tgl_dibukukan'],
                     'aset_tipe' => 'bangunan',
                     'harga_perolehan' => null, 
                     'nilai_aset' => $value['harga_satuan'],
@@ -339,9 +340,9 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
             } else if (strtolower($query1) == 'imb') {               
                 $value = [
                     'id' => $value['id'],
-                    'aset_bangunan_id' => $value['detail']['id'],
-                    'no_bukti' => $value['detail']['tgldokumen'],
-                    'tanggal_bukti' => $value['detail']['nodokumen']
+                    'aset_bangunan_id' => $value['bangunan_id'],
+                    'no_bukti' => $value['bangunan_tgldokumen'],
+                    'tanggal_bukti' => $value['bangunan_nodokumen']
                 ];
             }
             
