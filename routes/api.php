@@ -185,6 +185,7 @@ Route::middleware('auth:api')->get('user', function(Request $request) {
             users.aktif as is_verified,
             users.created_at, 
             users.updated_at,
+            users.password,
             m_organisasi.kode kode_skpd'
         )
         ->leftJoin('m_organisasi', 'm_organisasi.id', 'users.pid_organisasi')
@@ -213,19 +214,24 @@ Route::middleware('auth:api')->get('skpd', function(Request $request) {
 Route::middleware('auth:api')->get('lokasi/{level}', function($level, Request $request) {
 
     $level = ucfirst($level);
+
+    $appendedSelectField = '';
     
     if(array_search($level, \App\Models\BaseModel::$jenisKotaDs) < 0) {
         return response('', 404);
-    }
+    }    
 
     $levelForFieldName = array_search($level, \App\Models\BaseModel::$jenisKotaDs);
 
     if ($levelForFieldName > 0) {
         $levelForFieldName = \App\Models\BaseModel::$jenisKotaDs[$levelForFieldName-1];
+        $appendedSelectField = ', pid as '.$levelForFieldName.'_id , NULL as latitude, NULL as longitude' ;
     }
 
+    
+
     return response([
-        'data' => \App\Models\alamat::selectRaw('id, nama, pid as '.$level.'_id')->where('jenis', array_search($level, \App\Models\BaseModel::$jenisKotaDs))->get(),
+        'data' => \App\Models\alamat::selectRaw('id, nama '. $appendedSelectField)->where('jenis', array_search($level, \App\Models\BaseModel::$jenisKotaDs))->get(),
         'total' => \App\Models\alamat::where('jenis', array_search($level, \App\Models\BaseModel::$jenisKotaDs))->count()
     ] , 200);
 });

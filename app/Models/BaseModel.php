@@ -88,7 +88,7 @@ class BaseModel extends Model {
         '0' => 'Provinsi',
         '1' => 'Kota',
         '2' => 'Kecamatan',
-        '3' => 'Kelurahan/Desa',
+        '3' => 'Kelurahan',
     ];
 
     public static $konstruksiDs = [
