@@ -393,8 +393,16 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                 } else {
                     $coordinate = '';
                     if ($value['bangunan_koordinattanah'] != '' && $value['bangunan_koordinattanah'] != null) {
-                        $coordinate = json_decode(json_decode($value['bangunan_koordinattanah']), true);
-                        $coordinate = $coordinate['features'][0]['geometry']['coordinates'][0];
+
+                        $coordinate = json_decode($value['bangunan_koordinattanah']);
+                        if (!is_array($coordinate)) {
+                            $coordinate = json_decode($coordinate, true);
+                        }
+                        
+                        if(array_key_exists('features',$coordinate)) {
+                            $coordinate = $coordinate['features'][0]['geometry']['coordinates'][0];
+                        }
+                        
                         $coordinateTranslated = [];
                         foreach ($coordinate as $keycoor => $coor) {
                             array_push($coordinateTranslated, [
