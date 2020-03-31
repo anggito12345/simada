@@ -333,8 +333,8 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'aset_tipe' => 'tanah',
                         'kondisi' => $value['kondisi'],
                         'fisik' => $value['tanah_status_sertifikat'],
-                        'harga_perolehan' => null, 
-                        'nilai_aset' => $value['harga_satuan'],
+                        'harga_perolehan' => $value['harga_satuan'], 
+                        'nilai_aset' => 0.00,
                         'foto_aset' => \App\Models\system_upload::where('foreign_id', $value['id'])->pluck('path')->toArray(),
                     ];
                 } else {
@@ -386,8 +386,8 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'nama_barang' => $value['nama_barang'],
                         'tanggal_perolehan' => $value['tgl_dibukukan'],
                         'aset_tipe' => 'bangunan',
-                        'harga_perolehan' => null, 
-                        'nilai_aset' => $value['harga_satuan'],
+                        'harga_perolehan' => $value['harga_satuan'], 
+                        'nilai_aset' => 0.00,
                         'foto_aset' => \App\Models\system_upload::where('foreign_id', $value['id'])->pluck('path')->toArray(),
                     ];
                 } else {
