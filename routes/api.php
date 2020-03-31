@@ -270,10 +270,20 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
     detil_tanah.status_sertifikat as tanah_status_sertifikat,
     detil_tanah.nomor_sertifikat as tanah_nomor_sertifikat,
     detil_tanah.tgl_sertifikat as tanah_tgl_sertifikat,
+    detil_tanah.luas as tanah_luas,
+    detil_tanah.alamat as tanah_alamat,
+    detil_tanah.koordinattanah as tanah_koordinattanah,
+    detil_tanah.koordinatlokasi as tanah_koordinatlokasi,
     detil_tanah.id as tanah_id,
     detil_bangunan.id as bangunan_id,
     detil_bangunan.tgldokumen as bangunan_tgldokumen,
-    detil_bangunan.nodokumen as bangunan_nodokumen
+    detil_bangunan.nodokumen as bangunan_nodokumen,
+    detil_bangunan.luastanah as bangunan_luastanah,
+    detil_bangunan.alamat as bangunan_alamat,
+    detil_bangunan.statustanah as bangunan_statustanah,
+    detil_bangunan.koordinattanah as bangunan_koordinattanah,
+    detil_bangunan.koordinatlokasi as bangunan_koordinatlokasi,
+    detil_bangunan.kodetanah as bangunan_kodetanah
     ';
 
     $mappedRaw = 'inventaris.*, m_jenis_barang.nama nama_jenis, m_organisasi.kode as kode_organisasi, m_barang.nama_rek_aset as nama_barang '.$queryWithJenisAset;
@@ -312,20 +322,50 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
          */
         if (strtolower($value['nama_jenis']) == 'tanah') {
             if ($query1 == null) {
-                $value = [
-                    'id' => $value['id'],
-                    'kode_skpd' => $value['kode_organisasi'],
-                    'kode_barang' => inventarisRepository::kodeBarang($value['pidbarang']),
-                    'unit_kerja_id' => '?',
-                    'nama_barang' => $value['nama_barang'],
-                    'tanggal_perolehan' => $value['tgl_dibukukan'],
-                    'aset_tipe' => 'tanah',
-                    'kondisi' => $value['kondisi'],
-                    'fisik' => $value['tanah_status_sertifikat'],
-                    'harga_perolehan' => null, 
-                    'nilai_aset' => $value['harga_satuan'],
-                    'foto_aset' => \App\Models\system_upload::where('foreign_id', $value['id'])->pluck('path')->toArray(),
-                ];
+                if ($jenis == 'all') {
+                    $value = [
+                        'id' => $value['id'],
+                        'kode_skpd' => $value['kode_organisasi'],
+                        'kode_barang' => inventarisRepository::kodeBarang($value['pidbarang']),
+                        'unit_kerja_id' => '?',
+                        'nama_barang' => $value['nama_barang'],
+                        'tanggal_perolehan' => $value['tgl_dibukukan'],
+                        'aset_tipe' => 'tanah',
+                        'kondisi' => $value['kondisi'],
+                        'fisik' => $value['tanah_status_sertifikat'],
+                        'harga_perolehan' => null, 
+                        'nilai_aset' => $value['harga_satuan'],
+                        'foto_aset' => \App\Models\system_upload::where('foreign_id', $value['id'])->pluck('path')->toArray(),
+                    ];
+                } else {
+                    $coordinate = '';
+                    if ($value['tanah_koordinattanah'] != '' && $value['tanah_koordinattanah'] != null) {
+                        $coordinate = json_decode(json_decode($value['tanah_koordinattanah']), true);
+                        $coordinate = $coordinate['features'][0]['geometry']['coordinates'][0];
+                        $coordinateTranslated = [];
+                        foreach ($coordinate as $keycoor => $coor) {
+                            array_push($coordinateTranslated, [
+                                'latitude' => $coor[1],
+                                'longitude' => $coor[0],
+                            ]);
+                        }
+                    }
+
+                    $value = [
+                        'id' => $value['id'],
+                        'aset_id' => $value['tanah_id'],
+                        'luas' => $value['tanah_luas'],
+                        'alamat' => $value['tanah_alamat'],
+                        'alamat_kabkot_id' => $value['alamat_kota'],
+                        'alamat_pronvinsi_id' => $value['alamat_provinsi'],
+                        'koordinat_latitude' => $value['tanah_koordinatlokasi'] != '' ? explode(',', $value['tanah_koordinatlokasi'])[1] : '',
+                        'koordinat_longitude' => $value['tanah_koordinatlokasi'] != '' ? explode(',', $value['tanah_koordinatlokasi'])[0] : '',
+                        'koordinat' => $coordinateTranslated,              
+                        'penggunaan_nama_mitra' => 'SKPD'          
+                    ];
+
+                }
+                
             } else if (strtolower($query1) == 'bersertifikat') {
                 $value = [
                     'id' => $value['id'],
@@ -338,23 +378,54 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
             
         } else if (strpos(strtolower($value['nama_jenis']), 'bangunan')) {
             if ($query1 == null) {
-                $value = [
-                    'id' => $value['id'],
-                    'kode_skpd' => $value['kode_organisasi'],
-                    'kode_barang' => inventarisRepository::kodeBarang($value['pidbarang']),
-                    'nama_barang' => $value['nama_barang'],
-                    'tanggal_perolehan' => $value['tgl_dibukukan'],
-                    'aset_tipe' => 'bangunan',
-                    'harga_perolehan' => null, 
-                    'nilai_aset' => $value['harga_satuan'],
-                    'foto_aset' => \App\Models\system_upload::where('foreign_id', $value['id'])->pluck('path')->toArray(),
-                ];
+                if ($jenis == 'all') {
+                    $value = [
+                        'id' => $value['id'],
+                        'kode_skpd' => $value['kode_organisasi'],
+                        'kode_barang' => inventarisRepository::kodeBarang($value['pidbarang']),
+                        'nama_barang' => $value['nama_barang'],
+                        'tanggal_perolehan' => $value['tgl_dibukukan'],
+                        'aset_tipe' => 'bangunan',
+                        'harga_perolehan' => null, 
+                        'nilai_aset' => $value['harga_satuan'],
+                        'foto_aset' => \App\Models\system_upload::where('foreign_id', $value['id'])->pluck('path')->toArray(),
+                    ];
+                } else {
+                    $coordinate = '';
+                    if ($value['bangunan_koordinattanah'] != '' && $value['bangunan_koordinattanah'] != null) {
+                        $coordinate = json_decode(json_decode($value['bangunan_koordinattanah']), true);
+                        $coordinate = $coordinate['features'][0]['geometry']['coordinates'][0];
+                        $coordinateTranslated = [];
+                        foreach ($coordinate as $keycoor => $coor) {
+                            array_push($coordinateTranslated, [
+                                'latitude' => $coor[1],
+                                'longitude' => $coor[0],
+                            ]);
+                        }
+                    }
+
+                    $value = [
+                        'id' => $value['id'],
+                        'aset_id' => $value['bangunan_id'],
+                        'luas' => $value['bangunan_luastanah'],
+                        'alamat' => $value['bangunan_alamat'],
+                        'alamat_kabkot_id' => $value['alamat_kota'],
+                        'alamat_pronvinsi_id' => $value['alamat_pronvinsi'],
+                        'sengketa_tipe' => $value['bangunan_statustanah'],
+                        'koordinat_latitude' => $value['bangunan_koordinatlokasi'] != '' ? explode(',', $value['bangunan_koordinatlokasi'])[1] : '',
+                        'koordinat_longitude' => $value['bangunan_koordinatlokasi'] != '' ? explode(',', $value['bangunan_koordinatlokasi'])[0] : '',
+                        'koordinat' => $coordinateTranslated,       
+                        'aset_tanah_id' => $value['bangunan_kodetanah'],
+                        'penggunaan_nama_mitra' => 'SKPD'
+                    ];
+                }
+                
             } else if (strtolower($query1) == 'imb') {               
                 $value = [
                     'id' => $value['id'],
                     'aset_bangunan_id' => $value['bangunan_id'],
-                    'no_bukti' => $value['bangunan_tgldokumen'],
-                    'tanggal_bukti' => $value['bangunan_nodokumen']
+                    'no_bukti' => $value['bangunan_nodokumen'], 
+                    'tanggal_bukti' => $value['bangunan_tgldokumen'],
                 ];
             }
             
