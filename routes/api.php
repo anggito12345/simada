@@ -202,7 +202,7 @@ Route::middleware('auth:api')->get('skpd', function(Request $request) {
     //$token = Str::random(60);           
 
     return response([
-        'data' => \App\Models\organisasi::selectRaw('kode as kode_skpd, nama as satuan_kerja_nama')->get(),
+        'data' => \App\Models\organisasi::selectRaw('kode as kode_skpd, nama as satuan_kerja_nama, jabatans as level')->get(),
         'total' => \App\Models\organisasi::count()
     ] , 200);
 });
@@ -271,6 +271,7 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
     detil_tanah.nomor_sertifikat as tanah_nomor_sertifikat,
     detil_tanah.tgl_sertifikat as tanah_tgl_sertifikat,
     detil_tanah.luas as tanah_luas,
+    detil_tanah.penggunaan as tanah_penggunaan,
     detil_tanah.alamat as tanah_alamat,
     detil_tanah.koordinattanah as tanah_koordinattanah,
     detil_tanah.koordinatlokasi as tanah_koordinatlokasi,
@@ -351,9 +352,11 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         }
                     }
 
+
+
                     $value = [
-                        'id' => $value['id'],
-                        'aset_id' => $value['tanah_id'],
+                        'id' => $value['tanah_id'],
+                        'aset_id' => $value['id'],
                         'luas' => $value['tanah_luas'],
                         'alamat' => $value['tanah_alamat'],
                         'alamat_kabkot_id' => $value['alamat_kota'],
@@ -361,7 +364,7 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'koordinat_latitude' => $value['tanah_koordinatlokasi'] != '' ? explode(',', $value['tanah_koordinatlokasi'])[1] : '',
                         'koordinat_longitude' => $value['tanah_koordinatlokasi'] != '' ? explode(',', $value['tanah_koordinatlokasi'])[0] : '',
                         'koordinat' => $coordinateTranslated,              
-                        'penggunaan_nama_mitra' => 'SKPD'          
+                        'penggunaan_nama_mitra' => empty($value['tanah_penggunaan']) ? '' : \App\Models\pengunaan::find($value['tanah_penggunaan'])->nama       
                     ];
 
                 }
@@ -412,9 +415,22 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         }
                     }
 
+                    $bangunanPenggunaan = '';
+
+                    if(!empty($value['bangunan_kodetanah'])) {
+                        $detil_tanah = \App\Models\detiltanah::find($value['bangunan_kodetanah']);
+                        if (!empty($detil_tanah)) {
+                            $penggunaan = \App\Models\pengunaan::find($detil_tanah->penggunaan);
+                            if (!empty($penggunaan)) {
+                                $bangunanPenggunaan = $penggunaan->nama;
+                            }
+                            
+                        }
+                    }
+
                     $value = [
-                        'id' => $value['id'],
-                        'aset_id' => $value['bangunan_id'],
+                        'id' => $value['bangunan_id'],
+                        'aset_id' => $value['id'],
                         'luas' => $value['bangunan_luastanah'],
                         'alamat' => $value['bangunan_alamat'],
                         'alamat_kabkot_id' => $value['alamat_kota'],
@@ -424,7 +440,7 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'koordinat_longitude' => $value['bangunan_koordinatlokasi'] != '' ? explode(',', $value['bangunan_koordinatlokasi'])[0] : '',
                         'koordinat' => $coordinateTranslated,       
                         'aset_tanah_id' => $value['bangunan_kodetanah'],
-                        'penggunaan_nama_mitra' => 'SKPD'
+                        'penggunaan_nama_mitra' => $bangunanPenggunaan
                     ];
                 }
                 
