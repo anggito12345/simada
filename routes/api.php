@@ -175,22 +175,30 @@ Route::middleware('auth:api')->get('user/info', function(Request $request) {
 });
 
 Route::middleware('auth:api')->get('user', function(Request $request) {
-    //$token = Str::random(60);           
+    //$token = Str::random(60);   
+    $dataUser = \App\Models\users::selectRaw(
+        'users.id,
+        users.username,
+        users.email,
+        users.jabatan as role_id,
+        users.aktif as is_verified,
+        users.created_at as created_at, 
+        users.updated_at as updated_at,
+        users.password,
+        m_organisasi.kode kode_skpd'
+    )
+    ->leftJoin('m_organisasi', 'm_organisasi.id', 'users.pid_organisasi')
+    ->leftJoin('m_jabatan', 'm_jabatan.id', 'users.jabatan')
+    ->get()->toArray();
+    
+    foreach ($dataUser as $index => $user) {
+        # code...
+        $user['created_at'] = strtotime($user['created_at']);
+        $user['updated_at'] = strtotime($user['updated_at']);
+        $dataUser[$index] = $user;
+    }
     return response([
-        'data' => \App\Models\users::selectRaw(
-            'users.id,
-            users.username,
-            users.email,
-            users.jabatan as role_id,
-            users.aktif as is_verified,
-            users.created_at, 
-            users.updated_at,
-            users.password,
-            m_organisasi.kode kode_skpd'
-        )
-        ->leftJoin('m_organisasi', 'm_organisasi.id', 'users.pid_organisasi')
-        ->leftJoin('m_jabatan', 'm_jabatan.id', 'users.jabatan')
-        ->get(),
+        'data' => $dataUser,
     ] , 200);
 });
 
@@ -202,8 +210,8 @@ Route::middleware('auth:api')->get('skpd', function(Request $request) {
     //$token = Str::random(60);           
 
     return response([
-        'data' => \App\Models\organisasi::selectRaw('kode as kode_skpd, nama as satuan_kerja_nama, jabatans as level')->get(),
-        'total' => \App\Models\organisasi::count()
+        'data' => \App\Models\organisasi::selectRaw('kode as kode_skpd, nama as satuan_kerja_nama, jabatans as level')->whereRaw('jabatans <= 0')->get(),
+        'total' => \App\Models\organisasi::whereRaw('jabatans <= 0')->count()
     ] , 200);
 });
 
@@ -330,11 +338,13 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'kode_barang' => inventarisRepository::kodeBarang($value['pidbarang']),
                         'unit_kerja_id' => '?',
                         'nama_barang' => $value['nama_barang'],
-                        'tanggal_perolehan' => $value['tgl_dibukukan'],
+                        'tanggal_perolehan' => strtotime($value['tgl_dibukukan']),
                         'aset_tipe' => 'tanah',
                         'kondisi' => $value['kondisi'],
                         'fisik' => $value['tanah_status_sertifikat'],
                         'harga_perolehan' => $value['harga_satuan'], 
+                        'alamat_keldes_id' => $value['alamat_kelurahan'],
+                        'alamat_kecamatan_id' => $value['alamat_kecamatan'],
                         'nilai_aset' => 0.00,
                         'foto_aset' => \App\Models\system_upload::where('foreign_id', $value['id'])->pluck('path')->toArray(),
                     ];
@@ -371,11 +381,11 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                 
             } else if (strtolower($query1) == 'bersertifikat') {
                 $value = [
-                    'id' => $value['id'],
-                    'aset_id' => $value['tanah_id'],
+                    'id' => $value['tanah_id'],
+                    'aset_id' => $value['id'],
                     'jenis_bukti' => 'sertifikat',
                     'no_bukti' => $value['tanah_nomor_sertifikat'],
-                    'tanggal_bukti' => $value['tanah_tgl_sertifikat']
+                    'tanggal_bukti' => strtotime($value['tanah_tgl_sertifikat'])
                 ];
             } 
             
@@ -387,10 +397,12 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'kode_skpd' => $value['kode_organisasi'],
                         'kode_barang' => inventarisRepository::kodeBarang($value['pidbarang']),
                         'nama_barang' => $value['nama_barang'],
-                        'tanggal_perolehan' => $value['tgl_dibukukan'],
+                        'tanggal_perolehan' => strtotime($value['tgl_dibukukan']),
                         'aset_tipe' => 'bangunan',
                         'harga_perolehan' => $value['harga_satuan'], 
                         'nilai_aset' => 0.00,
+                        'alamat_keldes_id' => $value['alamat_kelurahan'],
+                        'alamat_kecamatan_id' => $value['alamat_kecamatan'],
                         'foto_aset' => \App\Models\system_upload::where('foreign_id', $value['id'])->pluck('path')->toArray(),
                     ];
                 } else {
@@ -428,6 +440,8 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         }
                     }
 
+                    $statusTanah = \App\Models\statustanah::find($value['bangunan_statustanah']);
+
                     $value = [
                         'id' => $value['bangunan_id'],
                         'aset_id' => $value['id'],
@@ -435,7 +449,7 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'alamat' => $value['bangunan_alamat'],
                         'alamat_kabkot_id' => $value['alamat_kota'],
                         'alamat_pronvinsi_id' => $value['alamat_pronvinsi'],
-                        'sengketa_tipe' => $value['bangunan_statustanah'],
+                        'sengketa_tipe' => empty($statusTanah) ? "" : $statusTanah->nama,
                         'koordinat_latitude' => $value['bangunan_koordinatlokasi'] != '' ? explode(',', $value['bangunan_koordinatlokasi'])[1] : '',
                         'koordinat_longitude' => $value['bangunan_koordinatlokasi'] != '' ? explode(',', $value['bangunan_koordinatlokasi'])[0] : '',
                         'koordinat' => $coordinateTranslated,       
