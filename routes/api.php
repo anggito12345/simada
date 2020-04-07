@@ -210,8 +210,8 @@ Route::middleware('auth:api')->get('skpd', function(Request $request) {
     //$token = Str::random(60);           
 
     return response([
-        'data' => \App\Models\organisasi::selectRaw('kode as kode_skpd, nama as satuan_kerja_nama, jabatans as level')->whereRaw('jabatans <= 0')->get(),
-        'total' => \App\Models\organisasi::whereRaw('jabatans <= 0')->count()
+        'data' => \App\Models\organisasi::selectRaw('kode as kode_skpd, nama as satuan_kerja_nama, jabatans as level')->whereRaw('jabatans::int8 <= 0')->get(),
+        'total' => \App\Models\organisasi::whereRaw('jabatans::int8 <= 0')->count()
     ] , 200);
 });
 
@@ -343,8 +343,7 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'kondisi' => $value['kondisi'],
                         'fisik' => $value['tanah_status_sertifikat'],
                         'harga_perolehan' => $value['harga_satuan'], 
-                        'alamat_keldes_id' => $value['alamat_kelurahan'],
-                        'alamat_kecamatan_id' => $value['alamat_kecamatan'],
+                       
                         'nilai_aset' => 0.00,
                         'foto_aset' => \App\Models\system_upload::where('foreign_id', $value['id'])->pluck('path')->toArray(),
                     ];
@@ -371,6 +370,8 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'alamat' => $value['tanah_alamat'],
                         'alamat_kabkot_id' => $value['alamat_kota'],
                         'alamat_pronvinsi_id' => $value['alamat_provinsi'],
+                        'alamat_keldes_id' => $value['alamat_kelurahan'],
+                        'alamat_kecamatan_id' => $value['alamat_kecamatan'],
                         'koordinat_latitude' => $value['tanah_koordinatlokasi'] != '' ? explode(',', $value['tanah_koordinatlokasi'])[1] : '',
                         'koordinat_longitude' => $value['tanah_koordinatlokasi'] != '' ? explode(',', $value['tanah_koordinatlokasi'])[0] : '',
                         'koordinat' => $coordinateTranslated,              
@@ -401,8 +402,7 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'aset_tipe' => 'bangunan',
                         'harga_perolehan' => $value['harga_satuan'], 
                         'nilai_aset' => 0.00,
-                        'alamat_keldes_id' => $value['alamat_kelurahan'],
-                        'alamat_kecamatan_id' => $value['alamat_kecamatan'],
+                        
                         'foto_aset' => \App\Models\system_upload::where('foreign_id', $value['id'])->pluck('path')->toArray(),
                     ];
                 } else {
@@ -449,6 +449,8 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'alamat' => $value['bangunan_alamat'],
                         'alamat_kabkot_id' => $value['alamat_kota'],
                         'alamat_pronvinsi_id' => $value['alamat_pronvinsi'],
+                        'alamat_keldes_id' => $value['alamat_kelurahan'],
+                        'alamat_kecamatan_id' => $value['alamat_kecamatan'],
                         'sengketa_tipe' => empty($statusTanah) ? "" : $statusTanah->nama,
                         'koordinat_latitude' => $value['bangunan_koordinatlokasi'] != '' ? explode(',', $value['bangunan_koordinatlokasi'])[1] : '',
                         'koordinat_longitude' => $value['bangunan_koordinatlokasi'] != '' ? explode(',', $value['bangunan_koordinatlokasi'])[0] : '',
