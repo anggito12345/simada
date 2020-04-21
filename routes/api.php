@@ -284,6 +284,7 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
     detil_tanah.koordinattanah as tanah_koordinattanah,
     detil_tanah.koordinatlokasi as tanah_koordinatlokasi,
     detil_tanah.id as tanah_id,
+
     detil_bangunan.id as bangunan_id,
     detil_bangunan.tgldokumen as bangunan_tgldokumen,
     detil_bangunan.nodokumen as bangunan_nodokumen,
@@ -292,7 +293,31 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
     detil_bangunan.statustanah as bangunan_statustanah,
     detil_bangunan.koordinattanah as bangunan_koordinattanah,
     detil_bangunan.koordinatlokasi as bangunan_koordinatlokasi,
-    detil_bangunan.kodetanah as bangunan_kodetanah
+    detil_bangunan.kodetanah as bangunan_kodetanah,
+
+    detil_mesin.id as mesin_id,
+    
+    detil_jalan.id as jalan_id,
+    detil_jalan.tgldokumen as jalan_tgldokumen,
+    detil_jalan.nodokumen as jalan_nodokumen,
+    detil_jalan.luastanah as jalan_luastanah,
+    detil_jalan.alamat as jalan_alamat,
+    detil_jalan.statustanah as jalan_statustanah,
+    detil_jalan.koordinattanah as jalan_koordinattanah,
+    detil_jalan.koordinatlokasi as jalan_koordinatlokasi,
+    detil_jalan.kodetanah as jalan_kodetanah,
+
+    detil_aset_lainnya.id as aset_lainnya_id,
+
+    detil_konstruksi.id as konstruksi_id,
+    detil_konstruksi.tgldokumen as konstruksi_tgldokumen,
+    detil_konstruksi.nodokumen as konstruksi_nodokumen,
+    detil_konstruksi.luastanah as konstruksi_luastanah,
+    detil_konstruksi.alamat as konstruksi_alamat,
+    detil_konstruksi.statustanah as konstruksi_statustanah,
+    detil_konstruksi.koordinattanah as konstruksi_koordinattanah,
+    detil_konstruksi.koordinatlokasi as konstruksi_koordinatlokasi,
+    detil_konstruksi.kodetanah as konstruksi_kodetanah
     ';
 
     $mappedRaw = 'inventaris.*, m_jenis_barang.nama nama_jenis, m_organisasi.kode as kode_organisasi, m_barang.nama_rek_aset as nama_barang '.$queryWithJenisAset;
@@ -377,7 +402,7 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'luas' => $value['tanah_luas'],
                         'alamat' => $value['tanah_alamat'],
                         'alamat_kabkot_id' => $value['alamat_kota'],
-                        'alamat_pronvinsi_id' => $value['alamat_provinsi'],
+                        'alamat_propinsi_id' => $value['alamat_provinsi'],
                         'alamat_keldes_id' => $value['alamat_kelurahan'],
                         'alamat_kecamatan_id' => $value['alamat_kecamatan'],
                         'koordinat_latitude' => $value['tanah_koordinatlokasi'] != '' ? explode(',', $value['tanah_koordinatlokasi'])[1] : '',
@@ -456,7 +481,7 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'luas' => $value['bangunan_luastanah'],
                         'alamat' => $value['bangunan_alamat'],
                         'alamat_kabkot_id' => $value['alamat_kota'],
-                        'alamat_pronvinsi_id' => $value['alamat_pronvinsi'],
+                        'alamat_propinsi_id' => $value['alamat_propinsi'],
                         'alamat_keldes_id' => $value['alamat_kelurahan'],
                         'alamat_kecamatan_id' => $value['alamat_kecamatan'],
                         'sengketa_tipe' => empty($statusTanah) ? "" : $statusTanah->nama,
@@ -478,20 +503,149 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
             }
             
         } else {
-            $value = [
-                'id' => $value['id'],
-                'kode_skpd' => $kodeSkpd,
-                'kode_barang' => inventarisRepository::kodeBarang($value['pidbarang']),
-                'unit_kerja_id' => '?',
-                'nama_barang' => $value['nama_barang'],
-                'tanggal_perolehan' => strtotime(str_replace('/', '-', $value['tgl_sensus'])),
-                'aset_tipe' => $value['nama_jenis'],
-                'kondisi' => $value['kondisi'],
-                //'fisik' => $value['tanah_status_sertifikat'],
-                'harga_perolehan' => $value['harga_satuan'],                
-                'nilai_aset' => 0.00,
-                'foto_aset' => \App\Models\system_upload::where('foreign_id', $value['id'])->pluck('path')->toArray(),
-            ];
+            if ($jenis == 'all') {
+                $value = [
+                    'id' => $value['id'],
+                    'kode_skpd' => $kodeSkpd,
+                    'kode_barang' => inventarisRepository::kodeBarang($value['pidbarang']),
+                    'unit_kerja_id' => '?',
+                    'nama_barang' => $value['nama_barang'],
+                    'tanggal_perolehan' => strtotime(str_replace('/', '-', $value['tgl_sensus'])),
+                    'aset_tipe' => $value['nama_jenis'],
+                    'kondisi' => $value['kondisi'],
+                    //'fisik' => $value['tanah_status_sertifikat'],
+                    'harga_perolehan' => $value['harga_satuan'],                
+                    'nilai_aset' => 0.00,
+                    'foto_aset' => \App\Models\system_upload::where('foreign_id', $value['id'])->pluck('path')->toArray(),
+                ];
+            } else if (strpos(strtolower($value['nama_jenis']), 'mesin')) {                
+
+                $value = [
+                    'id' => $value['mesin_id'],
+                    'aset_id' => $value['id'],                    
+                    'alamat_kabkot_id' => $value['alamat_kota'],
+                    'alamat_propinsi_id' => $value['alamat_propinsi'],
+                    'alamat_keldes_id' => $value['alamat_kelurahan'],
+                    'alamat_kecamatan_id' => $value['alamat_kecamatan'],                                                           
+                ];
+            } else if (strpos(strtolower($value['nama_jenis']), 'lainnya')) {                
+
+                $value = [
+                    'id' => $value['aset_lainnya_id'],
+                    'aset_id' => $value['id'],                    
+                    'alamat_kabkot_id' => $value['alamat_kota'],
+                    'alamat_propinsi_id' => $value['alamat_propinsi'],
+                    'alamat_keldes_id' => $value['alamat_kelurahan'],
+                    'alamat_kecamatan_id' => $value['alamat_kecamatan'],                                                           
+                ];
+            } else if (strpos(strtolower($value['nama_jenis']), 'irigasi')) {
+                $coordinate = '';
+                if ($value['jalan_koordinattanah'] != '' && $value['jalan_koordinattanah'] != null) {
+
+                    $coordinate = json_decode($value['jalan_koordinattanah']);
+                    if (!is_array($coordinate)) {
+                        $coordinate = json_decode($coordinate, true);
+                    }
+                    
+                    if(array_key_exists('features',$coordinate)) {
+                        $coordinate = $coordinate['features'][0]['geometry']['coordinates'][0];
+                    }
+                    
+                    $coordinateTranslated = [];
+                    foreach ($coordinate as $keycoor => $coor) {
+                        array_push($coordinateTranslated, [
+                            'latitude' => $coor[1],
+                            'longitude' => $coor[0],
+                        ]);
+                    }
+                }
+
+                $jalanPenggunaan = '';
+
+                if(!empty($value['jalan_kodetanah'])) {
+                    $detil_tanah = \App\Models\detiltanah::find($value['jalan_kodetanah']);
+                    if (!empty($detil_tanah)) {
+                        $penggunaan = \App\Models\pengunaan::find($detil_tanah->penggunaan);
+                        if (!empty($penggunaan)) {
+                            $jalanPenggunaan = $penggunaan->nama;
+                        }
+                        
+                    }
+                }
+
+                $statusTanah = \App\Models\statustanah::find($value['jalan_statustanah']);
+
+                $value = [
+                    'id' => $value['jalan_id'],
+                    'aset_id' => $value['id'],
+                    'luas' => $value['jalan_luastanah'],
+                    'alamat' => $value['jalan_alamat'],
+                    'alamat_kabkot_id' => $value['alamat_kota'],
+                    'alamat_propinsi_id' => $value['alamat_propinsi'],
+                    'alamat_keldes_id' => $value['alamat_kelurahan'],
+                    'alamat_kecamatan_id' => $value['alamat_kecamatan'],
+                    'sengketa_tipe' => empty($statusTanah) ? "" : $statusTanah->nama,
+                    'koordinat_latitude' => $value['jalan_koordinatlokasi'] != '' ? explode(',', $value['jalan_koordinatlokasi'])[1] : '',
+                    'koordinat_longitude' => $value['jalan_koordinatlokasi'] != '' ? explode(',', $value['jalan_koordinatlokasi'])[0] : '',
+                    'koordinat' => $coordinateTranslated,       
+                    'aset_tanah_id' => $value['jalan_kodetanah'],
+                    'penggunaan_nama_mitra' => $jalanPenggunaan
+                ];
+            } else if (strpos(strtolower($value['nama_jenis']), 'konstruksi')) {
+                $coordinate = '';
+                if ($value['konstruksi_koordinattanah'] != '' && $value['konstruksi_koordinattanah'] != null) {
+
+                    $coordinate = json_decode($value['konstruksi_koordinattanah']);
+                    if (!is_array($coordinate)) {
+                        $coordinate = json_decode($coordinate, true);
+                    }
+                    
+                    if(array_key_exists('features',$coordinate)) {
+                        $coordinate = $coordinate['features'][0]['geometry']['coordinates'][0];
+                    }
+                    
+                    $coordinateTranslated = [];
+                    foreach ($coordinate as $keycoor => $coor) {
+                        array_push($coordinateTranslated, [
+                            'latitude' => $coor[1],
+                            'longitude' => $coor[0],
+                        ]);
+                    }
+                }
+
+                $konstruksiPenggunaan = '';
+
+                if(!empty($value['konstruksi_kodetanah'])) {
+                    $detil_tanah = \App\Models\detiltanah::find($value['konstruksi_kodetanah']);
+                    if (!empty($detil_tanah)) {
+                        $penggunaan = \App\Models\pengunaan::find($detil_tanah->penggunaan);
+                        if (!empty($penggunaan)) {
+                            $konstruksiPenggunaan = $penggunaan->nama;
+                        }
+                        
+                    }
+                }
+
+                $statusTanah = \App\Models\statustanah::find($value['konstruksi_statustanah']);
+
+                $value = [
+                    'id' => $value['konstruksi_id'],
+                    'aset_id' => $value['id'],
+                    'luas' => $value['konstruksi_luastanah'],
+                    'alamat' => $value['konstruksi_alamat'],
+                    'alamat_kabkot_id' => $value['alamat_kota'],
+                    'alamat_propinsi_id' => $value['alamat_propinsi'],
+                    'alamat_keldes_id' => $value['alamat_kelurahan'],
+                    'alamat_kecamatan_id' => $value['alamat_kecamatan'],
+                    'sengketa_tipe' => empty($statusTanah) ? "" : $statusTanah->nama,
+                    'koordinat_latitude' => $value['konstruksi_koordinatlokasi'] != '' ? explode(',', $value['konstruksi_koordinatlokasi'])[1] : '',
+                    'koordinat_longitude' => $value['konstruksi_koordinatlokasi'] != '' ? explode(',', $value['konstruksi_koordinatlokasi'])[0] : '',
+                    'koordinat' => $coordinateTranslated,       
+                    'aset_tanah_id' => $value['konstruksi_kodetanah'],
+                    'penggunaan_nama_mitra' => $konstruksiPenggunaan
+                ];
+            }
+            
         }
         
         
