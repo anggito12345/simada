@@ -192,7 +192,7 @@ Route::middleware('auth:api')->get('user', function(Request $request) {
     ->get()->toArray();
     
     foreach ($dataUser as $index => $user) {
-        # code...'tanggal_perolehan' => strtotime(str_replace('/', '-', $value['tgl_sensus'])),
+        # code...'tanggal_perolehan' => strtotime(str_replace('/', '-', $value['tgl_dibukukan'])),
         $user['created_at'] = strtotime(str_replace('/', '-',$user['created_at']));
         $user['updated_at'] = strtotime(str_replace('/', '-',$user['updated_at']));
         $dataUser[$index] = $user;
@@ -371,7 +371,7 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'kode_barang' => inventarisRepository::kodeBarang($value['pidbarang']),
                         'unit_kerja_id' => '?',
                         'nama_barang' => $value['nama_barang'],
-                        'tanggal_perolehan' => strtotime(str_replace('/', '-',$value['tgl_sensus'])),
+                        'tanggal_perolehan' => strtotime(str_replace('/', '-',$value['tgl_dibukukan'])),
                         'aset_tipe' => 'tanah',
                         'kondisi' => $value['kondisi'],
                         'fisik' => $value['tanah_status_sertifikat'],
@@ -431,7 +431,7 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'kode_skpd' => $kodeSkpd,
                         'kode_barang' => inventarisRepository::kodeBarang($value['pidbarang']),
                         'nama_barang' => $value['nama_barang'],
-                        'tanggal_perolehan' => strtotime(str_replace('/', '-', $value['tgl_sensus'])),
+                        'tanggal_perolehan' => strtotime(str_replace('/', '-', $value['tgl_dibukukan'])),
                         'aset_tipe' => 'bangunan',
                         'harga_perolehan' => $value['harga_satuan'], 
                         'nilai_aset' => 0.00,
@@ -510,7 +510,7 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                     'kode_barang' => inventarisRepository::kodeBarang($value['pidbarang']),
                     'unit_kerja_id' => '?',
                     'nama_barang' => $value['nama_barang'],
-                    'tanggal_perolehan' => strtotime(str_replace('/', '-', $value['tgl_sensus'])),
+                    'tanggal_perolehan' => strtotime(str_replace('/', '-', $value['tgl_dibukukan'])),
                     'aset_tipe' => $value['nama_jenis'],
                     'kondisi' => $value['kondisi'],
                     //'fisik' => $value['tanah_status_sertifikat'],
