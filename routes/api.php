@@ -399,7 +399,6 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'harga_perolehan' => $value['harga_satuan'],                         
                         'nilai_aset' => 0.00,
                         'OPD' => $opd,
-                        'cabang_opd' => $cabangOPD,
                         'UPT' => $upt,
                         'foto_aset' => \App\Models\system_upload::where('foreign_id', $value['id'])->pluck('path')->toArray(),
                     ];
@@ -459,7 +458,6 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'harga_perolehan' => $value['harga_satuan'], 
                         'nilai_aset' => 0.00,
                         'OPD' => $opd,
-                        'cabang_opd' => $cabangOPD,
                         'UPT' => $upt,
                         'foto_aset' => \App\Models\system_upload::where('foreign_id', $value['id'])->pluck('path')->toArray(),
                     ];
@@ -540,7 +538,6 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                     'kondisi' => $value['kondisi'],
                     //'fisik' => $value['tanah_status_sertifikat'],
                     'OPD' => $opd,
-                    'cabang_opd' => $cabangOPD,
                     'UPT' => $upt,
                     'harga_perolehan' => $value['harga_satuan'],                
                     'nilai_aset' => 0.00,
