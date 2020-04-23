@@ -668,6 +668,8 @@ Route::middleware('auth:api')->post('inventaris_penghapusan/approvements', funct
     return $inventaris_penghapusanRepository->approvements($request, $inventaris_historyRepository);
 });
 
+Route::get('/file/get/{encrypted}', 'system_uploadAPIController@get');
+
 Route::middleware('auth:api')->get('inventaris_mutasi/count', function( \App\Repositories\inventaris_mutasiRepository $inventaris_mutasiRepository, Request $request) {        
     return $inventaris_mutasiRepository->count($request);
 });

@@ -9,6 +9,7 @@ use App\Repositories\system_uploadRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class system_uploadController
@@ -155,5 +156,15 @@ class system_uploadAPIController extends AppBaseController
         }
 
         return $this->sendResponse($id, 'System Upload deleted successfully');
+    }
+
+
+    public function get(Request $request, $encrypted) 
+    {
+        $data = \App\Models\system_upload::where('path', $encrypted)->first();
+
+        return response()->download(storage_path('app/'.$data->path), $data->name, [
+            'Content-Type' => 'application/octet-stream'
+        ]);
     }
 }
