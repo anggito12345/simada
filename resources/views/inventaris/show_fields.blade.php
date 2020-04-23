@@ -102,6 +102,12 @@
     <p class="col-md-8 item-view">{!! $inventaris->tgl_sensus !!}</p>
 </div>
 
+<!-- Tgl Dibukukan Field -->
+<div class="row">
+    {!! Form::label('tgl_dibukukan', 'Tgl Perolehan:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $inventaris->tgl_dibukukan !!}</p>
+</div>
+
 <!-- Volume Field -->
 <div class="row">
     {!! Form::label('volume', 'Volume:', ["class" => 'col-md-4 item-view']) !!}
