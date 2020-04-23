@@ -364,11 +364,17 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
 
         //get opd or upt
         $opd = '';
+        $cabangOPD = '';
         $upt = '';
 
         $dataOPD = \App\Models\organisasi::where('id', $value['pid_organisasi'])->first();
         if(!empty($dataOPD)) {
             $opd = $dataOPD->nama; 
+        }
+
+        $datacabangOPD = \App\Models\organisasi::where('id', $value['pidopd_cabang'])->first();
+        if(!empty($datacabangOPD)) {
+            $cabangOPD = $datacabangOPD->nama; 
         }
 
         $dataUPT = \App\Models\organisasi::where('id', $value['pidupt'])->first();
@@ -393,7 +399,8 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'harga_perolehan' => $value['harga_satuan'],                         
                         'nilai_aset' => 0.00,
                         'OPD' => $opd,
-                        'upt' => $upt,
+                        'cabang_opd' => $cabangOPD,
+                        'UPT' => $upt,
                         'foto_aset' => \App\Models\system_upload::where('foreign_id', $value['id'])->pluck('path')->toArray(),
                     ];
                 } else {
@@ -452,7 +459,8 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'harga_perolehan' => $value['harga_satuan'], 
                         'nilai_aset' => 0.00,
                         'OPD' => $opd,
-                        'upt' => $upt,
+                        'cabang_opd' => $cabangOPD,
+                        'UPT' => $upt,
                         'foto_aset' => \App\Models\system_upload::where('foreign_id', $value['id'])->pluck('path')->toArray(),
                     ];
                 } else {
@@ -525,14 +533,15 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                     'id' => $value['id'],
                     'kode_skpd' => $kodeSkpd,
                     'kode_barang' => inventarisRepository::kodeBarang($value['pidbarang']),
-                    'unit_kerja_id' => '?',
+                    //'unit_kerja_id' => '?',
                     'nama_barang' => $value['nama_barang'],
                     'tanggal_perolehan' => strtotime(str_replace('/', '-', $value['tgl_dibukukan'])),
                     'aset_tipe' => $value['nama_jenis'],
                     'kondisi' => $value['kondisi'],
                     //'fisik' => $value['tanah_status_sertifikat'],
                     'OPD' => $opd,
-                    'upt' => $upt,
+                    'cabang_opd' => $cabangOPD,
+                    'UPT' => $upt,
                     'harga_perolehan' => $value['harga_satuan'],                
                     'nilai_aset' => 0.00,
                     'foto_aset' => \App\Models\system_upload::where('foreign_id', $value['id'])->pluck('path')->toArray(),
