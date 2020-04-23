@@ -1,5 +1,6 @@
 <!DOCTYPE html>
 <html>
+<img src="simada.jabarprov.go.id/api/file/get/8d9f51b40f7d02dfb377d78cd6f8a7824ed4febb5e72f2fcd6cba" class="center" />
 @if(env('APPLICATION_STATE', 'UNLOCK') == 'LOCK')
 <style type="text/css">
 .center {
@@ -9,7 +10,7 @@
     width: 50%;
 }
 </style>
-<img src="<?= url('images/maintanance_1.png') ?>" class="center" />
+
 @else
 <head>
     <meta charset="utf-8">

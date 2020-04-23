@@ -169,7 +169,7 @@ class system_uploadAPIController extends AppBaseController
             ]);
         } else {
             return response()->download(storage_path('app/'.$data->path), $data->name, [
-                'Content-Type' => 'application/octet-stream'
+                'Content-Type' => mime_content_type($data->name)
             ]);
         }
 
