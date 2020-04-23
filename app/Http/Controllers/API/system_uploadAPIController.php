@@ -161,10 +161,18 @@ class system_uploadAPIController extends AppBaseController
 
     public function get(Request $request, $encrypted) 
     {
-        $data = \App\Models\system_upload::where('path', $encrypted)->first();
+        $data = \App\Models\system_upload::whereRaw('path LIKE \'%'.$encrypted.'%\'')->first();
 
-        return response()->download(storage_path('app/'.$data->path), $data->name, [
-            'Content-Type' => 'application/octet-stream'
-        ]);
+        if (!file_exists(storage_path('app/'.$data->path))) {
+            return response([
+                'Data' => 'File does not exists'
+            ]);
+        } else {
+            return response()->download(storage_path('app/'.$data->path), $data->name, [
+                'Content-Type' => 'application/octet-stream'
+            ]);
+        }
+
+        
     }
 }
