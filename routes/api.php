@@ -317,7 +317,9 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
     detil_konstruksi.statustanah as konstruksi_statustanah,
     detil_konstruksi.koordinattanah as konstruksi_koordinattanah,
     detil_konstruksi.koordinatlokasi as konstruksi_koordinatlokasi,
-    detil_konstruksi.kodetanah as konstruksi_kodetanah
+    detil_konstruksi.kodetanah as konstruksi_kodetanah,
+
+    m_satuan_barang.nama as nama_satuan
     ';
 
     $mappedRaw = 'inventaris.*, m_jenis_barang.nama nama_jenis, m_organisasi.kode as kode_organisasi, m_barang.nama_rek_aset as nama_barang '.$queryWithJenisAset;
@@ -400,6 +402,9 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'nilai_aset' => 0.00,
                         'OPD' => $opd,
                         'UPT' => $upt,
+                        'tahun_perolehan' => $value['tahun_perolehan'],
+                        'jumlah_satuan' => $value['jumlah'],
+                        'satuan' => $value['nama_satuan'],
                         'foto_aset' => \App\Models\system_upload::where('foreign_id', $value['id'])->pluck('path')->toArray(),
                     ];
                 } else {
@@ -459,6 +464,9 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'nilai_aset' => 0.00,
                         'OPD' => $opd,
                         'UPT' => $upt,
+                        'tahun_perolehan' => $value['tahun_perolehan'],
+                        'jumlah_satuan' => $value['jumlah'],
+                        'satuan' => $value['nama_satuan'],
                         'foto_aset' => \App\Models\system_upload::where('foreign_id', $value['id'])->pluck('path')->toArray(),
                     ];
                 } else {
@@ -539,6 +547,9 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                     //'fisik' => $value['tanah_status_sertifikat'],
                     'OPD' => $opd,
                     'UPT' => $upt,
+                    'tahun_perolehan' => $value['tahun_perolehan'],
+                    'jumlah_satuan' => $value['jumlah'],
+                    'satuan' => $value['nama_satuan'],
                     'harga_perolehan' => $value['harga_satuan'],                
                     'nilai_aset' => 0.00,
                     'foto_aset' => \App\Models\system_upload::where('foreign_id', $value['id'])->pluck('path')->toArray(),
