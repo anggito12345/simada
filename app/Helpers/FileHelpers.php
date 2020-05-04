@@ -105,4 +105,15 @@ class FileHelpers {
             
         }        
     }
+
+
+    public static function getOnlyFilenameInArray($arrayFilenames = []) {
+        $onlyFilenameArray = [];
+        foreach ($arrayFilenames as $filename) {
+            # code...
+            array_push($onlyFilenameArray, substr($filename, strrpos($filename, '/') + 1));
+        }
+
+        return $onlyFilenameArray;    
+    }
 }

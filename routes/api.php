@@ -5,6 +5,7 @@ use App\Repositories\inventarisRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Mail;
 use App\Helpers\Api;
+use App\Helpers\FileHelpers;
 
 /*
 |--------------------------------------------------------------------------
@@ -405,7 +406,7 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'tahun_perolehan' => $value['tahun_perolehan'],
                         'jumlah_satuan' => $value['jumlah'],
                         'satuan' => $value['nama_satuan'],
-                        'foto_aset' => \App\Models\system_upload::select()->where('foreign_id', $value['id'])->pluck('path')->toArray(),
+                        'foto_aset' => FileHelpers::getOnlyFilenameInArray(\App\Models\system_upload::where('foreign_id', $value['id'])->pluck('path')->toArray()),
                     ];
                 } else {
                     $coordinate = '';
@@ -467,7 +468,7 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'tahun_perolehan' => $value['tahun_perolehan'],
                         'jumlah_satuan' => $value['jumlah'],
                         'satuan' => $value['nama_satuan'],
-                        'foto_aset' => \App\Models\system_upload::where('foreign_id', $value['id'])->pluck('path')->toArray(),
+                        'foto_aset' => FileHelpers::getOnlyFilenameInArray(\App\Models\system_upload::where('foreign_id', $value['id'])->pluck('path')->toArray()),
                     ];
                 } else {
                     $coordinate = '';
@@ -552,7 +553,7 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                     'satuan' => $value['nama_satuan'],
                     'harga_perolehan' => $value['harga_satuan'],                
                     'nilai_aset' => 0.00,
-                    'foto_aset' => \App\Models\system_upload::where('foreign_id', $value['id'])->pluck('path')->toArray(),
+                    'foto_aset' => FileHelpers::getOnlyFilenameInArray(\App\Models\system_upload::where('foreign_id', $value['id'])->pluck('path')->toArray()),
                 ];
             } else if (strpos(strtolower($value['nama_jenis']), 'mesin')) {                
 
