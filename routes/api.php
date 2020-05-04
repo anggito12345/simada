@@ -405,7 +405,7 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'tahun_perolehan' => $value['tahun_perolehan'],
                         'jumlah_satuan' => $value['jumlah'],
                         'satuan' => $value['nama_satuan'],
-                        'foto_aset' => \App\Models\system_upload::where('foreign_id', $value['id'])->pluck('path')->toArray(),
+                        'foto_aset' => \App\Models\system_upload::select()->where('foreign_id', $value['id'])->pluck('path')->toArray(),
                     ];
                 } else {
                     $coordinate = '';
