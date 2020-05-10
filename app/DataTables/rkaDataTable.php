@@ -42,7 +42,11 @@ class rkaDataTable extends DataTable
             $query = rka::onlyDrafts();
         }
 
-        $query = $query->join('users', 'users.id', 'rka.created_by')
+        $query = $query->select([
+            'rka.id',
+            'rka.no_spk',
+            'rka.no_bast'
+        ])->join('users', 'users.id', 'rka.created_by')
             ->join('m_organisasi', 'm_organisasi.id', 'users.pid_organisasi');
 
         if (isset($_GET['isFromMainGrid'])) {
