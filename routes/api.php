@@ -26,12 +26,12 @@ Route::post('/lupa-password', function(Request $request) {
     $update = \App\Models\users::where('email', $request->input('email'))->update([
         'email_forgot_password' => sha1(date('Y-m-d') . uniqid())
     ]);
-    
+
     $users = \App\Models\users::where('email', $request->input('email'))->first();
 
     if (!empty($users)) {
         Mail::to($users->email)->send(new \App\Mail\ForgotPassword($users));
-    }    
+    }
 
     return json_encode([
         'success' => true
@@ -52,24 +52,24 @@ Route::get('/intraorekstra', 'inventarisAPIController@intraorekstra');
 Route::post('penghapusans/edit/{id}', 'penghapusanAPIController@editCustom');
 Route::post('pemanfaatans/edit/{id}', 'pemanfaatanAPIController@editCustom');
 
-Route::middleware('auth:api')->patch('inventaris_mutasi/approvements', function( 
-    \App\Repositories\inventaris_mutasiRepository $inventaris_mutasiRepository, 
+Route::middleware('auth:api')->patch('inventaris_mutasi/approvements', function(
+    \App\Repositories\inventaris_mutasiRepository $inventaris_mutasiRepository,
     inventaris_historyRepository $inventaris_historyRepository,
-    Request $request) {    
+    Request $request) {
     return $inventaris_mutasiRepository->approvements($request, $inventaris_historyRepository);
 });
 
-Route::middleware('auth:api')->post('inventaris_mutasi/approvements', function( 
-    \App\Repositories\inventaris_mutasiRepository $inventaris_mutasiRepository, 
+Route::middleware('auth:api')->post('inventaris_mutasi/approvements', function(
+    \App\Repositories\inventaris_mutasiRepository $inventaris_mutasiRepository,
     inventaris_historyRepository $inventaris_historyRepository,
-    Request $request) {     
+    Request $request) {
     return $inventaris_mutasiRepository->approvements($request, $inventaris_historyRepository);
 });
 
-Route::middleware('auth:api')->post('inventaris_reklas/approvements', function( 
-    \App\Repositories\inventaris_reklasRepository $inventaris_reklasRepository, 
+Route::middleware('auth:api')->post('inventaris_reklas/approvements', function(
+    \App\Repositories\inventaris_reklasRepository $inventaris_reklasRepository,
     inventaris_historyRepository $inventaris_historyRepository,
-    Request $request) {     
+    Request $request) {
     return $inventaris_reklasRepository->approvements($request, $inventaris_historyRepository);
 });
 
@@ -81,10 +81,10 @@ Route::middleware('auth:api')->post('reklas/approvements', function(
 });
 
 
-Route::middleware('auth:api')->post('inventaris_mutasi/cancel', function( 
-    \App\Repositories\inventaris_mutasiRepository $inventaris_mutasiRepository, 
+Route::middleware('auth:api')->post('inventaris_mutasi/cancel', function(
+    \App\Repositories\inventaris_mutasiRepository $inventaris_mutasiRepository,
     inventaris_historyRepository $inventaris_historyRepository,
-    Request $request) {     
+    Request $request) {
     return $inventaris_mutasiRepository->cancel($request, $inventaris_historyRepository);
 });
 
@@ -109,7 +109,7 @@ Route::get('/public/get-organisasi', 'publicAPIController@getOrganisasi');
 
 
 /**
- * API PUBLIC 
+ * API PUBLIC
  */
 
 
@@ -122,7 +122,7 @@ Route::post('token', function(Request $request) {
 
     $input = $request->all();
 
-    
+
     Api::mandatory($input, [
         'username',
         'password'
@@ -133,7 +133,7 @@ Route::post('token', function(Request $request) {
         'username' => $input['username'],
         'password' => $input['password'],
     ])) {
-        // if yes generating token 
+        // if yes generating token
 
         $token = Str::random(60);
         //
@@ -145,7 +145,7 @@ Route::post('token', function(Request $request) {
             'token' => $token,
         ] , 200);
     }
-   
+
 
     return response([
         'message' => 'Username or Password does not match',
@@ -159,7 +159,7 @@ Route::post('token', function(Request $request) {
 
 
 Route::middleware('auth:api')->get('user/info', function(Request $request) {
-    //$token = Str::random(60);           
+    //$token = Str::random(60);
 
     $loggedUser = Auth::user();
 
@@ -176,14 +176,14 @@ Route::middleware('auth:api')->get('user/info', function(Request $request) {
 });
 
 Route::middleware('auth:api')->get('user', function(Request $request) {
-    //$token = Str::random(60);   
+    //$token = Str::random(60);
     $dataUser = \App\Models\users::selectRaw(
         'users.id,
         users.username,
         users.email,
         users.jabatan as role_id,
         users.aktif as is_verified,
-        users.created_at as created_at, 
+        users.created_at as created_at,
         users.updated_at as updated_at,
         users.password,
         m_organisasi.kode kode_skpd'
@@ -191,7 +191,7 @@ Route::middleware('auth:api')->get('user', function(Request $request) {
     ->leftJoin('m_organisasi', 'm_organisasi.id', 'users.pid_organisasi')
     ->leftJoin('m_jabatan', 'm_jabatan.id', 'users.jabatan')
     ->get()->toArray();
-    
+
     foreach ($dataUser as $index => $user) {
         # code...'tanggal_perolehan' => strtotime(str_replace('/', '-', $value['tgl_dibukukan'])),
         $user['created_at'] = strtotime(str_replace('/', '-',$user['created_at']));
@@ -208,7 +208,7 @@ Route::middleware('auth:api')->get('user', function(Request $request) {
  */
 
 Route::middleware('auth:api')->get('skpd', function(Request $request) {
-    //$token = Str::random(60);           
+    //$token = Str::random(60);
 
     return response([
         'data' => \App\Models\organisasi::selectRaw('kode as kode_skpd, nama as satuan_kerja_nama, jabatans as level')->whereRaw('jabatans::int8 <= 0')->get(),
@@ -225,10 +225,10 @@ Route::middleware('auth:api')->get('lokasi/{level}/{pid?}', function($level, $pi
     $level = ucfirst($level);
 
     $appendedSelectField = '';
-    
+
     if(array_search($level, \App\Models\BaseModel::$jenisKotaDs) < 0) {
         return response('', 404);
-    }    
+    }
 
     $levelForFieldName = array_search($level, \App\Models\BaseModel::$jenisKotaDs);
 
@@ -238,7 +238,7 @@ Route::middleware('auth:api')->get('lokasi/{level}/{pid?}', function($level, $pi
     }
 
     $query = \App\Models\alamat::selectRaw('id, nama '. $appendedSelectField)->where('jenis', array_search($level, \App\Models\BaseModel::$jenisKotaDs));
-    
+
     if ($pid != null) {
         $query = $query->where('pid', $pid);
     }
@@ -261,12 +261,12 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
     $skip = 0;
 
     $input = $request->all();
-    
+
     Api::rules($input, [
         'take' => 'integer',
         'skip' => 'integer'
     ]);
-    
+
     if (array_key_exists('skip', $input)) {
         $skip = $input['skip'];
     }
@@ -275,7 +275,7 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
         $take = $input['take'];
     }
 
-    $queryWithJenisAset = ', 
+    $queryWithJenisAset = ',
     detil_tanah.status_sertifikat as tanah_status_sertifikat,
     detil_tanah.nomor_sertifikat as tanah_nomor_sertifikat,
     detil_tanah.tgl_sertifikat as tanah_tgl_sertifikat,
@@ -297,7 +297,7 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
     detil_bangunan.kodetanah as bangunan_kodetanah,
 
     detil_mesin.id as mesin_id,
-    
+
     detil_jalan.id as jalan_id,
     detil_jalan.tgldokumen as jalan_tgldokumen,
     detil_jalan.nodokumen as jalan_nodokumen,
@@ -329,8 +329,8 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
     /**
      * check which table to show
      */
- 
-    $query = inventarisRepository::getData(null, $mappedRaw);        
+
+    $query = inventarisRepository::getData(null, $mappedRaw);
 
     if ($jenis != 'all') {
         $query = $query->whereRaw("LOWER(m_jenis_barang.nama) = '".str_replace('-', ' ', strtolower($jenis))."'");
@@ -338,14 +338,14 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
         if (strpos(strtolower($jenis), 'bangunan')) {
             if (strtolower($query1) == 'imb') {
                 $query = $query->whereRaw("detil_bangunan.nodokumen IS NOT NULL and detil_bangunan.tgldokumen IS NOT NULL");
-            }            
-        } else  if (strtolower($jenis) == 'tanah') { 
+            }
+        } else  if (strtolower($jenis) == 'tanah') {
             if (strtolower($query1) == 'bersertifikat') {
                 $query = $query->whereRaw("detil_tanah.status_sertifikat = 'Ada'");
-            }  
+            }
         }
-        
-    } 
+
+    }
 
 
     $data = $query->offset($skip)->limit($take)->get();
@@ -372,17 +372,17 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
 
         $dataOPD = \App\Models\organisasi::where('id', $value['pid_organisasi'])->first();
         if(!empty($dataOPD)) {
-            $opd = $dataOPD->nama; 
+            $opd = $dataOPD->nama;
         }
 
         $datacabangOPD = \App\Models\organisasi::where('id', $value['pidopd_cabang'])->first();
         if(!empty($datacabangOPD)) {
-            $cabangOPD = $datacabangOPD->nama; 
+            $cabangOPD = $datacabangOPD->nama;
         }
 
         $dataUPT = \App\Models\organisasi::where('id', $value['pidupt'])->first();
         if(!empty($dataUPT)) {
-            $upt = $dataUPT->nama; 
+            $upt = $dataUPT->nama;
         }
 
 
@@ -399,7 +399,7 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'aset_tipe' => 'tanah',
                         'kondisi' => $value['kondisi'],
                         'fisik' => $value['tanah_status_sertifikat'],
-                        'harga_perolehan' => $value['harga_satuan'],                         
+                        'harga_perolehan' => $value['harga_satuan'],
                         'nilai_aset' => 0.00,
                         'OPD' => $opd,
                         'UPT' => $upt,
@@ -435,12 +435,12 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'alamat_kecamatan_id' => $value['alamat_kecamatan'],
                         'koordinat_latitude' => $value['tanah_koordinatlokasi'] != '' ? explode(',', $value['tanah_koordinatlokasi'])[1] : '',
                         'koordinat_longitude' => $value['tanah_koordinatlokasi'] != '' ? explode(',', $value['tanah_koordinatlokasi'])[0] : '',
-                        'koordinat' => $coordinateTranslated,              
-                        'penggunaan_nama_mitra' => empty($value['tanah_penggunaan']) ? '' : \App\Models\pengunaan::find($value['tanah_penggunaan'])->nama       
+                        'koordinat' => $coordinateTranslated,
+                        'penggunaan_nama_mitra' => empty($value['tanah_penggunaan']) ? '' : \App\Models\pengunaan::find($value['tanah_penggunaan'])->nama
                     ];
 
                 }
-                
+
             } else if (strtolower($query1) == 'bersertifikat') {
                 $value = [
                     'id' => $value['tanah_id'],
@@ -449,8 +449,8 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                     'no_bukti' => $value['tanah_nomor_sertifikat'],
                     'tanggal_bukti' => strtotime(str_replace('/', '-',$value['tanah_tgl_sertifikat']))
                 ];
-            } 
-            
+            }
+
         } else if (strpos(strtolower($value['nama_jenis']), 'bangunan')) {
             if ($query1 == null) {
                 if ($jenis == 'all') {
@@ -461,7 +461,7 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'nama_barang' => $value['nama_barang'],
                         'tanggal_perolehan' => strtotime(str_replace('/', '-', $value['tgl_dibukukan'])),
                         'aset_tipe' => 'bangunan',
-                        'harga_perolehan' => $value['harga_satuan'], 
+                        'harga_perolehan' => $value['harga_satuan'],
                         'nilai_aset' => 0.00,
                         'OPD' => $opd,
                         'UPT' => $upt,
@@ -478,11 +478,11 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         if (!is_array($coordinate)) {
                             $coordinate = json_decode($coordinate, true);
                         }
-                        
+
                         if(array_key_exists('features',$coordinate)) {
                             $coordinate = $coordinate['features'][0]['geometry']['coordinates'][0];
                         }
-                        
+
                         $coordinateTranslated = [];
                         foreach ($coordinate as $keycoor => $coor) {
                             array_push($coordinateTranslated, [
@@ -501,7 +501,7 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                             if (!empty($penggunaan)) {
                                 $bangunanPenggunaan = $penggunaan->nama;
                             }
-                            
+
                         }
                     }
 
@@ -519,21 +519,21 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'sengketa_tipe' => empty($statusTanah) ? "" : $statusTanah->nama,
                         'koordinat_latitude' => $value['bangunan_koordinatlokasi'] != '' ? explode(',', $value['bangunan_koordinatlokasi'])[1] : '',
                         'koordinat_longitude' => $value['bangunan_koordinatlokasi'] != '' ? explode(',', $value['bangunan_koordinatlokasi'])[0] : '',
-                        'koordinat' => $coordinateTranslated,       
+                        'koordinat' => $coordinateTranslated,
                         'aset_tanah_id' => $value['bangunan_kodetanah'],
                         'penggunaan_nama_mitra' => $bangunanPenggunaan
                     ];
                 }
-                
-            } else if (strtolower($query1) == 'imb') {               
+
+            } else if (strtolower($query1) == 'imb') {
                 $value = [
                     'id' => $value['id'],
                     'aset_bangunan_id' => $value['bangunan_id'],
-                    'no_bukti' => $value['bangunan_nodokumen'], 
+                    'no_bukti' => $value['bangunan_nodokumen'],
                     'tanggal_bukti' => $value['bangunan_tgldokumen'],
                 ];
             }
-            
+
         } else {
             if ($jenis == 'all') {
                 $value = [
@@ -551,29 +551,29 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                     'tahun_perolehan' => $value['tahun_perolehan'],
                     'jumlah_satuan' => $value['jumlah'],
                     'satuan' => $value['nama_satuan'],
-                    'harga_perolehan' => $value['harga_satuan'],                
+                    'harga_perolehan' => $value['harga_satuan'],
                     'nilai_aset' => 0.00,
                     'foto_aset' => FileHelpers::getOnlyFilenameInArray(\App\Models\system_upload::where('foreign_id', $value['id'])->pluck('path')->toArray()),
                 ];
-            } else if (strpos(strtolower($value['nama_jenis']), 'mesin')) {                
+            } else if (strpos(strtolower($value['nama_jenis']), 'mesin')) {
 
                 $value = [
                     'id' => $value['mesin_id'],
-                    'aset_id' => $value['id'],                    
+                    'aset_id' => $value['id'],
                     'alamat_kabkot_id' => $value['alamat_kota'],
                     'alamat_propinsi_id' => $value['alamat_propinsi'],
                     'alamat_keldes_id' => $value['alamat_kelurahan'],
-                    'alamat_kecamatan_id' => $value['alamat_kecamatan'],                                                           
+                    'alamat_kecamatan_id' => $value['alamat_kecamatan'],
                 ];
-            } else if (strpos(strtolower($value['nama_jenis']), 'lainnya')) {                
+            } else if (strpos(strtolower($value['nama_jenis']), 'lainnya')) {
 
                 $value = [
                     'id' => $value['aset_lainnya_id'],
-                    'aset_id' => $value['id'],                    
+                    'aset_id' => $value['id'],
                     'alamat_kabkot_id' => $value['alamat_kota'],
                     'alamat_propinsi_id' => $value['alamat_propinsi'],
                     'alamat_keldes_id' => $value['alamat_kelurahan'],
-                    'alamat_kecamatan_id' => $value['alamat_kecamatan'],                                                           
+                    'alamat_kecamatan_id' => $value['alamat_kecamatan'],
                 ];
             } else if (strpos(strtolower($value['nama_jenis']), 'irigasi')) {
                 $coordinate = '';
@@ -583,11 +583,11 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                     if (!is_array($coordinate)) {
                         $coordinate = json_decode($coordinate, true);
                     }
-                    
+
                     if(array_key_exists('features',$coordinate)) {
                         $coordinate = $coordinate['features'][0]['geometry']['coordinates'][0];
                     }
-                    
+
                     $coordinateTranslated = [];
                     foreach ($coordinate as $keycoor => $coor) {
                         array_push($coordinateTranslated, [
@@ -606,7 +606,7 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         if (!empty($penggunaan)) {
                             $jalanPenggunaan = $penggunaan->nama;
                         }
-                        
+
                     }
                 }
 
@@ -624,7 +624,7 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                     'sengketa_tipe' => empty($statusTanah) ? "" : $statusTanah->nama,
                     'koordinat_latitude' => $value['jalan_koordinatlokasi'] != '' ? explode(',', $value['jalan_koordinatlokasi'])[1] : '',
                     'koordinat_longitude' => $value['jalan_koordinatlokasi'] != '' ? explode(',', $value['jalan_koordinatlokasi'])[0] : '',
-                    'koordinat' => $coordinateTranslated,       
+                    'koordinat' => $coordinateTranslated,
                     'aset_tanah_id' => $value['jalan_kodetanah'],
                     'penggunaan_nama_mitra' => $jalanPenggunaan
                 ];
@@ -636,11 +636,11 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                     if (!is_array($coordinate)) {
                         $coordinate = json_decode($coordinate, true);
                     }
-                    
+
                     if(array_key_exists('features',$coordinate)) {
                         $coordinate = $coordinate['features'][0]['geometry']['coordinates'][0];
                     }
-                    
+
                     $coordinateTranslated = [];
                     foreach ($coordinate as $keycoor => $coor) {
                         array_push($coordinateTranslated, [
@@ -659,7 +659,7 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         if (!empty($penggunaan)) {
                             $konstruksiPenggunaan = $penggunaan->nama;
                         }
-                        
+
                     }
                 }
 
@@ -677,20 +677,20 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                     'sengketa_tipe' => empty($statusTanah) ? "" : $statusTanah->nama,
                     'koordinat_latitude' => $value['konstruksi_koordinatlokasi'] != '' ? explode(',', $value['konstruksi_koordinatlokasi'])[1] : '',
                     'koordinat_longitude' => $value['konstruksi_koordinatlokasi'] != '' ? explode(',', $value['konstruksi_koordinatlokasi'])[0] : '',
-                    'koordinat' => $coordinateTranslated,       
+                    'koordinat' => $coordinateTranslated,
                     'aset_tanah_id' => $value['konstruksi_kodetanah'],
                     'penggunaan_nama_mitra' => $konstruksiPenggunaan
                 ];
             }
-            
-        }
-        
-        
 
-        $data[$key] = $value;        
+        }
+
+
+
+        $data[$key] = $value;
     }
 
-    
+
 
     return response([
         'data' => $data,
@@ -698,24 +698,24 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
     ] , 200);
 });
 
-Route::middleware('auth:api')->post('inventaris_penghapusan/approvements', function( 
-    \App\Repositories\inventaris_penghapusanRepository $inventaris_penghapusanRepository, 
+Route::middleware('auth:api')->post('inventaris_penghapusan/approvements', function(
+    \App\Repositories\inventaris_penghapusanRepository $inventaris_penghapusanRepository,
     inventaris_historyRepository $inventaris_historyRepository,
-    Request $request) {    
+    Request $request) {
     return $inventaris_penghapusanRepository->approvements($request, $inventaris_historyRepository);
 });
 
 Route::get('/file/get/{encrypted}', 'system_uploadAPIController@get');
 
-Route::middleware('auth:api')->get('inventaris_mutasi/count', function( \App\Repositories\inventaris_mutasiRepository $inventaris_mutasiRepository, Request $request) {        
+Route::middleware('auth:api')->get('inventaris_mutasi/count', function( \App\Repositories\inventaris_mutasiRepository $inventaris_mutasiRepository, Request $request) {
     return $inventaris_mutasiRepository->count($request);
 });
 
-Route::middleware('auth:api')->get('inventaris_penghapusan/count', function( \App\Repositories\inventaris_penghapusanRepository $inventaris_penghapusanRepository, Request $request) {        
+Route::middleware('auth:api')->get('inventaris_penghapusan/count', function( \App\Repositories\inventaris_penghapusanRepository $inventaris_penghapusanRepository, Request $request) {
     return $inventaris_penghapusanRepository->count($request);
 });
 
-Route::middleware('auth:api')->get('inventaris_reklas/count', function( \App\Repositories\inventaris_reklasRepository $inventaris_reklasRepository, Request $request) {        
+Route::middleware('auth:api')->get('inventaris_reklas/count', function( \App\Repositories\inventaris_reklasRepository $inventaris_reklasRepository, Request $request) {
     return $inventaris_reklasRepository->count($request);
 });
 
@@ -794,6 +794,8 @@ Route::resource('mutasi_detils', 'mutasi_detilAPIController');
 Route::resource('rkas', 'rkaAPIController');
 
 Route::resource('rka_detils', 'rka_detilAPIController');
+
+Route::resource('rka_barangs', 'rka_barangAPIController');
 
 Route::resource('modules', 'modulesAPIController');
 
