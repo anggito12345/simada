@@ -14,7 +14,7 @@ class CreateRkaBarangTable extends Migration
     public function up()
     {
         Schema::create('rka_barang', function (Blueprint $table) {
-            $table->serial('id');
+            $table->increments('id');
             $table->string('kode_organisasi')->nullable();
             $table->string('nama_organisasi')->nullable();
             $table->string('tahun_rka')->nullable();

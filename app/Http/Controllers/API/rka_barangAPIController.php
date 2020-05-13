@@ -32,8 +32,8 @@ class rka_barangAPIController extends AppBaseController
 
         $queryFiltered = \App\Helpers\LookupHelper::build($rka_barang, $request)
             ->join('m_organisasi', 'organisai.kode', 'rka_barang.kode_organisasi')
-            ->where('m_organisasi.id', '=', Auth::user()->pid_organisasi)
-            ->where('rka_barang', '=', data('Y'));
+            ->where('m_organisasi.id', Auth::user()->pid_organisasi)
+            ->where('rka_barang.tahun_rka', date('Y'));
 
         $recordsFiltered = $queryFiltered->count();
 
@@ -68,34 +68,11 @@ class rka_barangAPIController extends AppBaseController
 
         $queryrka_barangFinal = $queryrka_barang;
 
-        if ($request->input("kode_objek") != null && $request->input("kode_jenis") != null && $request->input("kode_rincian_objek") == null) {
-            $queryrka_barangFinal = $queryrka_barang
-                 ->whereRaw("kode_objek = '".sprintf("%02d",$request->input("kode_objek"))."'")
-                 ->whereRaw("kode_sub_rincian_objek IS NULL")
-                 ->whereRaw("kode_rincian_objek IS NOT NULL")
-                 ->whereRaw("kode_jenis = '".$request->input("kode_jenis")."'");
-        } else if ($request->input("kode_objek") != null && $request->input("kode_jenis") != null && $request->input("kode_rincian_objek") != null) {
-            $queryrka_barangFinal = $queryrka_barang
-                ->whereRaw("kode_objek = '".sprintf("%02d",$request->input("kode_objek"))."'")
-                ->whereRaw("kode_rincian_objek = '".sprintf("%02d",$request->input("kode_rincian_objek"))."'")
-                ->whereRaw("kode_jenis = '".$request->input("kode_jenis")."'")
-                ->whereRaw("kode_sub_rincian_objek IS NOT NULL")            ;
-        } else if ($request->input("kode_jenis") != null) {
-           $queryrka_barangFinal = $queryrka_barang
-                ->whereRaw("kode_rincian_objek IS NULL")
-                ->whereRaw("kode_objek IS NOT NULL")
-                ->whereRaw("kode_jenis = '".$request->input("kode_jenis")."'");
-        }
-
-        if ($request->input('term') != null) {
-            $queryrka_barangFinal = $queryrka_barangFinal->whereRaw("nama_rek_aset ~* '.*".$request->input("term").".*'");
-        }
-
-
-
-        $rka_barangs = $queryrka_barangFinal
-        ->limit(10)
-        ->get();
+      $rka_barangs = $queryrka_barangFinal
+            ->join('m_organisasi', 'organisai.kode', 'rka_barang.kode_organisasi')
+            ->where('m_organisasi.id', Auth::user()->pid_organisasi)
+            ->limit(10)
+            ->get();
 
         return $this->sendResponse($rka_barangs->toArray(), 'rka_barangs retrieved successfully');
     }
@@ -131,7 +108,7 @@ class rka_barangAPIController extends AppBaseController
         $rka_barang = $this->rka_barangRepository->find($id);
 
         if (empty($rka_barang)) {
-            return $this->sendError('rka_barang not found');
+            return $this->sendError('RKA Barang not found');
         }
 
         $rka_barang->kode_rka_barang = rka_barang::buildKoderka_barang($rka_barang);

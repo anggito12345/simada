@@ -30,6 +30,29 @@ class rka_barangDataTable extends DataTable
     public function query(rka_barang $model)
     {
         return $model->newQuery();
+        if (isset($_GET['draft']) && $_GET['draft'] == 1) {
+            $query = rka_barang::onlyDrafts();
+        }
+
+        $query = $query->select([
+            'rka_barang.id',
+            'rka_barang.kode_barang',
+            'rka_barang.nama_barang',
+            'rka_barang.jumlah',
+            'rka_barang.harga_satuan',
+            'rka_barang.nilai',
+            'rka_barang.tahun_rka'
+        ])  ->join('m_organisasi', 'm_organisasi.kode', 'rka_barang.kode_organisasi');
+
+        if (isset($_GET['isFromMainGrid'])) {
+            if (c::is([], [], [0])) {
+                $query = $query->where('m_organisasi.id', Auth::user()->pid_organisasi);
+            } else if (c::is([], [], [-1]) && isset($_GET['opd']) && !empty($_GET['opd'])) {
+                $query = $query->where('m_organisasi.id', $_GET['opd']);
+            }
+        }
+        // echo($query);exit;
+        return $query;
     }
 
     /**
