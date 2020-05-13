@@ -88,7 +88,7 @@ class BaseModel extends Model {
         '0' => 'Provinsi',
         '1' => 'Kota',
         '2' => 'Kecamatan',
-        '3' => 'Kelurahan/Desa',
+        '3' => 'Kelurahan',
     ];
 
     public static $konstruksiDs = [
@@ -126,5 +126,14 @@ class BaseModel extends Model {
         '0' => 'OPD',
         '1' => 'Cabang OPD',
         '2' => 'UPT'
+    ];
+
+    public static $mappedKibTable = [
+        'A' => 'detil_tanah',
+        'B' => 'detil_mesin',
+        'C' => 'detil_bangunan',
+        'D' => 'detil_jalan',
+        'E' => 'detil_aset_lainnya',
+        'F' => 'detil_konstruksi',
     ];
 }

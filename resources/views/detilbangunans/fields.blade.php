@@ -48,23 +48,6 @@
     {!! Form::number('luasbangunan', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB C"]().luasbangunan']) !!}
 </div>
 
-<!-- Idkota Field -->
-<div class="form-group col-sm-6 row">
-    {!! Form::label('idkota', __('field.idkota')) !!}
-    {!! Form::select('idkota', [], null, ['class' => 'form-control', 'id' => 'idkota-detilbangunan', 'data-bind' => 'value: viewModel.data["KIB C"]().idkota']) !!}
-</div>
-
-<!-- Idkecamatan Field -->
-<div class="form-group col-sm-6 row">
-    {!! Form::label('idkecamatan', __('field.idkecamatan')) !!}
-    {!! Form::select('idkecamatan', [], null, ['class' => 'form-control', 'id' => 'idkecamatan-detilbangunan', 'data-bind' => 'value: viewModel.data["KIB C"]().idkecamatan']) !!}
-</div>
-
-<!-- Idkelurahan Field -->
-<div class="form-group col-sm-6 row">
-    {!! Form::label('idkelurahan', __('field.idkelurahan')) !!}
-    {!! Form::select('idkelurahan', [], null, ['class' => 'form-control', 'id' => 'idkelurahan-detilbangunan', 'data-bind' => 'value: viewModel.data["KIB C"]().idkelurahan']) !!}
-</div>
 
 <!-- Koordinatlokasi Field -->
 <div class="form-group col-sm-6 row">
@@ -90,89 +73,7 @@
                 'Polygon'
             ]
         })
-        $('#idkota-detilbangunan').select2({
-            ajax: {
-                url: "<?= url('api/alamats') ?>",
-                dataType: 'json',
-                data: function (params) {
-                    var query = {
-                        q: params.term,                                           
-                        addWhere: [
-                            "jenis = '1'"
-                        ]
-                    } 
-                    return query;
-                },
-                processResults: function (data) {
-                    // Transforms the top-level key of the response object from 'items' to 'results'
-                    return {
-                        results: data.data
-                    };
-                }
-            },
-            theme: 'bootstrap' ,
-        })
-
-
-        $('#idkota-detilbangunan').on('change', function (e) {
-            $("#idkecamatan-detilbangunan").val("").trigger("change")
-        });
-
-
-        $('#idkecamatan-detilbangunan').select2({
-            ajax: {
-                url: "<?= url('api/alamats') ?>",
-                dataType: 'json',
-                data: function (params) {
-                    var query = {
-                        q: params.term,                                           
-                        addWhere: [
-                            "jenis = '2'",
-                            "pid = " + $("#idkota-detilbangunan").val()
-                        ]
-                    }                    
-
-                    return query;
-                },
-                processResults: function (data) {
-                    // Transforms the top-level key of the response object from 'items' to 'results'
-                    return {
-                        results: data.data
-                    };
-                }
-            },
-            theme: 'bootstrap' ,
-        })
-
-        $('#idkecamatan-detilbangunan').on('change', function (e) {
-            $("#idkelurahan-detilbangunan").val("").trigger("change")
-        });
-
-        $('#idkelurahan-detilbangunan').select2({
-            ajax: {
-                url: "<?= url('api/alamats') ?>",
-                dataType: 'json',
-                data: function (params) {
-                    var query = {
-                        q: params.term,                                           
-                        addWhere: [
-                            "jenis = '3'",
-                            "pid = " + $("#idkecamatan-detilbangunan").val()
-                        ]
-                    }                    
-
-                    return query;
-                },
-                processResults: function (data) {
-                    // Transforms the top-level key of the response object from 'items' to 'results'
-                    return {
-                        results: data.data
-                    };
-                }
-            },
-            theme: 'bootstrap' ,
-        })
-       
+               
         $('#statustanah').select2({
             ajax: {
                 url: "<?= url('api/statustanahs') ?>",

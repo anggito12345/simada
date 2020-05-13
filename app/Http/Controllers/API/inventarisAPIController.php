@@ -43,6 +43,27 @@ class inventarisAPIController extends AppBaseController
     }
 
     /**
+     * displaying sum of value based on current filter parameters
+     */
+    public function getSumHargaSatuan(Request $request) {
+        $buildingModel = inventarisRepository::getData(null);
+
+        $buildingModel = inventarisRepository::appendInventarisGridFilter($buildingModel, $_GET);
+
+        $hargaSatuanPerpage = 0;
+        
+        $dataPerPage = $buildingModel->skip((int)$request->get('start'))->take((int)$request->get('length'))->get()->toArray();
+        foreach ($dataPerPage as $key => $value) {
+            $hargaSatuanPerpage += (float)$value['harga_satuan'];
+        }
+        
+        return $this->sendResponse([
+            'per_page' => number_format($hargaSatuanPerpage, 2),
+            'all_page' => number_format(inventarisRepository::appendInventarisGridFilter(inventarisRepository::getData(null), $_GET)->sum('inventaris.harga_satuan'), 2),
+        ], 'Inventaris retrieved successfully');
+    }
+
+    /**
      * Display a listing of the inventaris.
      * GET|HEAD /inventaris
      *
@@ -112,8 +133,8 @@ class inventarisAPIController extends AppBaseController
 
         $input['idpegawai'] = $request->user()->id;
         $input['pid_organisasi'] = $request->user()->pid_organisasi;
-
-
+        $input['harga_satuan'] = str_replace(".", "", $input['harga_satuan']);
+        
         // generate no register
         $modelInventaris = new \App\Models\inventaris();
 
@@ -125,8 +146,8 @@ class inventarisAPIController extends AppBaseController
             ])
             ->join('m_barang', 'm_barang.id', 'inventaris.pidbarang')
             ->where('m_barang.kode_jenis', '=', $barangMaster->kode_jenis)
+            ->where('inventaris.pid_organisasi', '=', $request->user()->pid_organisasi)
             ->where('inventaris.tahun_perolehan', '=', $input['tahun_perolehan'])
-            ->where('inventaris.harga_satuan', '=', str_replace(".", "", $input['harga_satuan']))
             ->orderBy('inventaris.noreg', 'desc')
             ->lockForUpdate()->first();
 
@@ -144,8 +165,11 @@ class inventarisAPIController extends AppBaseController
                 throw new Exception('Barang not found');
                 return;
             }
-
+            
             $input['umur_ekonomis'] = $barang->umur_ekonomis;
+            $input['kode_lokasi'] = inventarisRepository::generateKodeLokasi($input);
+
+            
 
             $inventaris = $this->inventarisRepository->create($input);
 
@@ -220,7 +244,7 @@ class inventarisAPIController extends AppBaseController
     public function intraorekstra(Request $request)
     {
         try {
-            $calculated = \App\Models\inventaris::CalculateIsIntraOrEkstra($request->tahun_perolehan, (int) str_replace(".", "", $request->harga_satuan));
+            $calculated = \App\Models\inventaris::CalculateIsIntraOrEkstra($request->tahun_perolehan, (int) str_replace(",",".",str_replace(".", "", $request->harga_satuan)));
             return $this->sendResponse($calculated, 'success');
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
@@ -293,6 +317,16 @@ class inventarisAPIController extends AppBaseController
             ->with('Organisasi')
             ->find($id);
 
+        $organisasi = \App\Models\organisasi::find(Auth::user()->pid_organisasi);
+
+        if ($organisasi->id != $inventaris->pid_organisasi && !c::is(['inventaris'],['update'],[Constant::$GROUP_BPKAD_ORG])) {
+            return $this->sendError('Tidak bisa mengubah data inventaris');
+        }
+
+        if (empty($inventaris->draft)) {
+            return $this->sendError('Tidak bisa mengubah data inventaris yang bukan draft');
+        }
+
         if (empty($inventaris)) {
             return $this->sendError('Inventaris not found');
         }
@@ -334,6 +368,8 @@ class inventarisAPIController extends AppBaseController
 
                 return $systemUpload;
             });
+
+            $input['kode_lokasi'] = inventarisRepository::generateKodeLokasi($input);
 
             $inventaris = $this->inventarisRepository->update($input, $id);
 
@@ -390,6 +426,7 @@ class inventarisAPIController extends AppBaseController
                     'foreign_id' => $id,
                 ]);
 
+                // delete all history
 
                 $dataSystemUploads = $querySystemUpload->get();
 
@@ -403,7 +440,11 @@ class inventarisAPIController extends AppBaseController
 
                 DB::commit();
             } catch (\Exception $e) {
+                
+
                 DB::rollBack();
+
+                return $this->sendError($e->getMessage() . $e->getTraceAsString());
             }
         }
 

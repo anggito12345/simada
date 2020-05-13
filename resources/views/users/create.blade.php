@@ -14,7 +14,7 @@
 
             <div class="box-body">
                 <div class="">
-                    {!! Form::open(['route' => 'users.store']) !!}
+                    {!! Form::open(['route' => 'users.store', 'autocomplete' => 'new-password']) !!}
 
                         @include('users.fields')
 

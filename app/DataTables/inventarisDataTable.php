@@ -7,6 +7,8 @@ use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 use Auth;
 use Illuminate\Support\Facades\DB;
+use Constant;
+use App\Repositories\inventarisRepository;
 
 class inventarisDataTable extends DataTable
 {
@@ -43,6 +45,9 @@ class inventarisDataTable extends DataTable
             })
             ->addColumn('detail', function($data) {
                 return "<i class='fa fa-plus-circle text-success'></i>";
+            })
+            ->addColumn('organisasi', function($data) {
+                return \App\Models\organisasi::find($data->pid_organisasi)->nama;
             })
             ->addColumn('kode_barang', function($data) {
                 $barang = \App\Models\barang::find($data->pidbarang);
@@ -89,70 +94,11 @@ class inventarisDataTable extends DataTable
      */
     public function query(inventaris $model)
     {
-        $mineJabatan = \App\Models\jabatan::find(Auth::user()->jabatan);
+        $mineJabatan = \App\Models\jabatan::find(Auth::user()->jabatan);        
 
-        $buildingModel = $model->newQuery();
-
-        if (isset($_GET['draft']) && $_GET['draft'] == '1') {
-            $buildingModel = inventaris::onlyDrafts();
-        }
-            
-        $buildingModel = $buildingModel->select([
-                "inventaris.*",
-                "m_barang.nama_rek_aset",
-                "m_merk_barang.nama as merk",
-                "m_jenis_barang.kelompok_kib",
-                "detil_mesin.bahan as bahan",
-                "m_organisasi.setting as setauth",
-                "inventaris_penghapusan.id as ip",
-                "inventaris_reklas.id as ir"                
-            ])
-            ->selectRaw('CONCAT(detil_tanah.nomor_sertifikat,\'/\',detil_mesin.nopabrik,\'/\', detil_mesin.norangka,\'/\', detil_mesin.nomesin) as nomor')            
-            ->selectRaw('CONCAT(\'1 \',m_satuan_barang.nama) as barang')             
-            ->join("m_barang", "m_barang.id", "inventaris.pidbarang")
-            ->join("m_jenis_barang", "m_jenis_barang.kode", "m_barang.kode_jenis")
-            // role =================
-            ->leftJoin("users","users.id", "inventaris.idpegawai")
-            ->leftJoin("m_jabatan", "m_jabatan.id", 'users.jabatan')
-            ->leftJoin("inventaris_reklas", "inventaris.id", "inventaris_reklas.id")
-            // role end
-            ->leftJoin("detil_tanah", "detil_tanah.pidinventaris", "inventaris.id")
-            ->leftJoin("m_satuan_barang", "m_satuan_barang.id", "inventaris.satuan")
-            ->leftJoin("detil_mesin", "detil_mesin.pidinventaris", "inventaris.id")
-            ->leftJoin("m_merk_barang", "m_merk_barang.id", "detil_mesin.merk")
-            ->leftJoin('inventaris_penghapusan', 'inventaris_penghapusan.id', 'inventaris.id')
-            ->leftJoin('m_organisasi', 'm_organisasi.id', 'inventaris.pid_organisasi')
-            // role =================
-            // ->where('m_jabatan.level', '<=', $mineJabatan->level)
-            ->where('inventaris.pid_organisasi', '=', Auth::user()->pid_organisasi);
+        $buildingModel = inventarisRepository::getData(isset($_GET['draft']) && $_GET['draft'] != 0 ? $_GET['draft'] : null);
         
-        if (isset($_GET['jenisbarangs']) && $_GET['jenisbarangs'] != "" && $_GET['jenisbarangs'] != null) {
-            $buildingModel = $buildingModel->where('m_jenis_barang.id', $_GET['jenisbarangs']);
-        }
-
-        if (isset($_GET['kodeobjek']) && $_GET['kodeobjek'] != "" && $_GET['kodeobjek'] != null) {
-            $buildingModel = $buildingModel->where('m_barang.kode_objek', $_GET['kodeobjek']);
-        }
-
-        if (isset($_GET['koderincianobjek']) && $_GET['koderincianobjek'] != "" && $_GET['koderincianobjek'] != null) {
-            $buildingModel = $buildingModel->where('m_barang.kode_rincian_objek', $_GET['koderincianobjek']);
-        }
-
-        if (isset($_GET['kodesubrincianobjek']) && $_GET['kodesubrincianobjek'] != "" && $_GET['kodesubrincianobjek'] != null) {
-            $buildingModel = $buildingModel->where('m_barang.kode_sub_rincian_objek', $_GET['kodesubrincianobjek']);
-        }
-
-        // take data which is doesn't has any duplicate data in inventaris_penghapusan
-        if(isset($_GET['is_exist_inventaris_penghapusan'])) {
-
-            // false it mean must not be in there
-            if ($_GET['is_exist_inventaris_penghapusan'] == 'false') {
-                $buildingModel = $buildingModel
-                                        ->whereRaw('inventaris_penghapusan.id IS NULL');    
-            } 
-            
-
-        }
+        $buildingModel = inventarisRepository::appendInventarisGridFilter($buildingModel, $_GET);
         
         return  $buildingModel->orderByRaw('inventaris.updated_at DESC NULLS LAST')
             ->orderBy('inventaris.id', 'desc');
@@ -174,7 +120,11 @@ class inventarisDataTable extends DataTable
                 'url' => route('inventaris.index'),
                 'type' => 'GET',
                 'dataType' => 'json',
-                'data' => 'function(d) { 
+                'dataSrc' => 'function(d) {
+                    onLoadComplete() 
+                    return d.data
+                }',
+                'data' => 'function(d) {                     
                     d.draft = $("[name=draft]").val()           
                     if ($("[name=jenisbarangs_filter]").data("select2"))             
                         d.jenisbarangs = $("[name=jenisbarangs_filter]").select2("val")
@@ -187,7 +137,11 @@ class inventarisDataTable extends DataTable
 
                     if ($("[name=kodesubrincianobjek_filter]").data("select2") && $("[name=kodesubrincianobjek_filter]").select2("data").length > 0)             
                         d.kodesubrincianobjek = $("[name=kodesubrincianobjek_filter]").select2("data")[0].kode_sub_rincian_objek
+
+                    if ($("[name=organisasi_filter]").data("select2") && $("[name=organisasi_filter]").select2("data").length > 0)             
+                        d.organisasi_filter = $("[name=organisasi_filter]").select2("val")
                         
+                    recFilter = d
                 }',
             ])
             
@@ -195,7 +149,7 @@ class inventarisDataTable extends DataTable
             ->parameters([
                 'lengthMenu' => [
                     [ 10, 25, 50, -1 ],
-                    [ '10 rows', '25 rows', '50 rows', 'Show all' ]
+                    [ '10 rows', '25 rows', '50 rows', 'Show all' ],                    
                 ],    
                 'select' => [
                     'style'=> 'single'
@@ -211,11 +165,11 @@ class inventarisDataTable extends DataTable
                     // ['extend' => 'create', 'className' => 'btn btn-default btn-sm no-corner'],
                     ['extend' => 'collection', 'text' => 'Aksi', 'className' => 'btn btn-default btn-sm no-corner',  'buttons' => [                        
                         ['extend' => 'create'],  
-                        ['text' => '<i class="fa fa-edit"></i> Ubah', 'action' => 'function(){onEdit()}', ],                        
-                        // ['text' => '<i class="fa fa-trash"></i> Hapus', 'action' => 'function(){onDelete()}', ],                       
+                       ['text' => '<i class="fa fa-edit"></i> Ubah', 'action' => 'function(){onEdit()}', ],                        
+                       // ['text' => '<i class="fa fa-trash"></i> Hapus', 'action' => 'function(){onDelete()}', ],                       
                       /*  ['text' => '<i class="fa fa-eraser"></i> Penghapusan', 'action' => 'function(){onPenghapusan()}', ],*/
                     ]],           
-                    ['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner', 'buttons' => [ 'csv', 'excel']],
+                    //['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner', 'buttons' => [ 'csv', 'excel']],
                     ['extend' => 'print', 'className' => 'btn btn-default btn-sm no-corner'],                                        
                 ],
             ]);
@@ -239,6 +193,7 @@ class inventarisDataTable extends DataTable
             'kode_barang',
             'noreg',        
             'nama_rek_aset' => [
+                'footer' => 'm_barang.nama_rek_aset',
                 'title' => 'Nama/Jenis Barang',
                 'name' => 'm_barang.nama_rek_aset',
                 
@@ -259,6 +214,7 @@ class inventarisDataTable extends DataTable
             'kondisi' => [
                 'title' => 'Keadaan Barang'
             ], 
+            'organisasi',
             // 'barang',
             'harga_satuan',
             // 'keterangan'

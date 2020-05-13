@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html>
-
+@if(env('APPLICATION_STATE', 'UNLOCK') == 'LOCK')
+<style type="text/css">
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+</style>
+<img src="<?= url('images/maintanance_1.png') ?>" class="center" />
+@else
 <head>
     <meta charset="utf-8">
     <meta http-equiv="X-UA-Compatible" content="IE=edge">
@@ -183,5 +193,7 @@
         }
     </script>
 </body>
+@endif
+
 
 </html>

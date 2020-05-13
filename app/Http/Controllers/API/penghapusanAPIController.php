@@ -117,7 +117,7 @@ class penghapusanAPIController extends AppBaseController
             \App\Helpers\FileHelpers::deleteAll($fileDokumens);
             \App\Helpers\FileHelpers::deleteAll($fileFotos);   
             \App\Models\penghapusan::withDrafts()->find($penghapusan->id)->delete();             
-            return $this->sendError($e->getMessage() . $e->getTraceAsString() . $e->getFile() . $e->getLine());
+            return $this->sendError($e->getMessage());
         }
 
         

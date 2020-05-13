@@ -5,8 +5,8 @@ let inlineDatepicker = function(element, config) {
     this.isReady = false
 
     defaultConfig = {
-        format: 'YYYY-MM-DD',
-        minYear: 2010,
+        format: 'YYYY/MM/DD',
+        minYear: 1970,
         maxYear: new Date().getFullYear(),
         formatDefault: 'DD/MM/YYYY',
         buttonClear: false,
@@ -101,7 +101,7 @@ let inlineDatepicker = function(element, config) {
     }
 
     const creatingResult = (poke) => {
-        let stringValue = moment(yearPicker.value + "-" + monthPicker.value + "-" + dayPicker.value, "YYYY-MM-DD").format(defaultConfig.format)        
+        let stringValue = moment(yearPicker.value + "/" + monthPicker.value + "/" + dayPicker.value, "YYYY/MM/DD").format(defaultConfig.format)        
         
         element.value = stringValue
 

@@ -3,7 +3,7 @@ var App = {
         MimeOffice: "application/pdf|application/msword|application/msword|application/vnd.ms-excel"
     },
     Helpers: {
-        defaultSelect2: (select2Ele, url, valueField, textField, callbackDone) => {
+        defaultSelect2: (select2Ele, url, valueField = 'id', textField = 'text', callbackDone) => {
         
             $.ajax({
                 type: 'GET',

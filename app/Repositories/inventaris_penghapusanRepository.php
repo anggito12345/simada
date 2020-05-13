@@ -78,6 +78,18 @@ class inventaris_penghapusanRepository extends BaseRepository
         return inventaris_penghapusan::class;
     }
 
+    // requested data removal cannot be duplicate
+    public function isExist($inventaris = []) {
+        $isExist = \App\Models\inventaris_penghapusan::where([
+            'noreg' => $inventaris['noreg'],
+            'pidbarang' => $inventaris['pidbarang'],
+            'tahun_perolehan' => $inventaris['tahun_perolehan'],
+            'harga_satuan' => $inventaris['harga_satuan'],
+        ])->count();
+
+        return $isExist > 0;
+    }
+
     /**
      * copy invetaris to inventaris mutasi temporary
      */
@@ -86,7 +98,14 @@ class inventaris_penghapusanRepository extends BaseRepository
     {
         foreach ($dataDetils as $dataDetil) {
             // move
+
             $inventariPrepareToCopy = \App\Models\inventaris::where('id', $dataDetil['inventaris'])->first()->toArray();
+
+            if ($this->isExist($inventariPrepareToCopy)) {
+                throw new Exception("Inventaris telah diajukan");
+                return;
+            }
+
             $inventariPrepareToCopy['pid_penghapusan'] = $id;
             $inventariPrepareToCopy['status'] = 'STEP-1';
             $inventariPrepareToCopy['harga_apprisal'] = $dataDetil['harga_apprisal'];

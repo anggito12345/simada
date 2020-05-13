@@ -79,22 +79,20 @@
 </div>
 
 <!-- Kode Ruang Field -->
-<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
+<!-- <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
     {!! Form::label('kode_ruang',  __('field.kode_ruang').':') !!}
     {!! Form::text('kode_ruang', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Kode Gedung Field -->
 <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
     {!! Form::label('kode_gedung',  __('field.kode_gedung').':') !!}
     {!! Form::text('kode_gedung', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Penangguna Jawab Field -->
 <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
     {!! Form::label('penanggung_jawab',  __('field.penanggung_jawab').':') !!}
     {!! Form::text('penanggung_jawab', null, ['class' => 'form-control']) !!}
-</div>
+</div>-->
 
 <!-- Tgl Sensus Field -->
 <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
@@ -105,7 +103,7 @@
 <!-- Provinsi Field -->
 <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
     {!! Form::label('alamat_propinsi', 'Provinsi:') !!} <span class="text-danger">*</span>
-    {!! Form::select('alamat_propinsi', [] , "", ['class' => 'form-control']) !!}
+    {!! Form::select('alamat_propinsi', [] , 32, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Kota Kabupaten Field -->
@@ -144,16 +142,16 @@
 </div>
 
 <!-- Kode Lokasi Field -->
-<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
+<!--<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
     {!! Form::label('kode_lokasi', 'Kode Lokasi:') !!}
     {!! Form::text('kode_lokasi', null, ['class' => 'form-control', 'disabled' => 'disabled']) !!}
-</div>
+</div>-->
 
-<div data-bind='visible:viewModel.data.tipeKib() == "KIB A"' class="form-group col-sm-12 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-12' : 'col-md-12' ?> row">
+<div class="form-group col-sm-12 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-12' : 'col-md-12' ?> row">
     {!! Form::file('dokumen', ['class' => 'form-control','id'=>'dokumen', 'name' => 'dummy', 'multiple' => true]) !!}
 </div>
 
-<div data-bind='visible:viewModel.data.tipeKib() == "KIB A"' class="form-group col-sm-12 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-12' : 'col-md-12' ?> row">
+<div class="form-group col-sm-12 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-12' : 'col-md-12' ?> row">
     {!! Form::file('foto', ['class' => 'form-control','id'=>'foto', 'name' => 'dummy', 'multiple' => true]) !!}
 </div>
 
@@ -412,6 +410,10 @@
             theme: 'bootstrap' ,
         })
 
+        App.Helpers.defaultSelect2($('#alamat_propinsi'), "<?= url('api/alamats/32') ?>", 'id', 'nama', () => {
+            $('#alamat_propinsi').val("32").trigger('change');
+        });
+
 
         $('#alamat_propinsi').on('change', function (e) {
             $("#alamat_kota").val("").trigger("change")
@@ -503,7 +505,7 @@
             theme: 'bootstrap' ,
         })
 
-        $('#harga_satuan').mask("#.##0", {reverse: true});
+        $('#harga_satuan').mask("#.##0,00", {reverse: true});
 
         $('#tahun_perolehan').mask("0000");
 
@@ -745,7 +747,7 @@
                         })
                         
                         formData.append(`kib`, JSON.stringify(viewModel.data[viewModel.data.tipeKib()]()))
-                        formData.append(`kode_lokasi`, $('#kode_lokasi').val())
+                        //formData.append(`kode_lokasi`, $('#kode_lokasi').val())
                         formData.append('tipe_kib', viewModel.data.tipeKib().replace(/KIB /g,""))
 
                         if (!isNaN(parseInt($('#pidopd').select2('val'))))
@@ -784,7 +786,7 @@
             onSave(false)            
         })
 
-        $("#pidbarang, #tahun_perolehan, #harga_satuan, #pidopd, #pidopd_cabang, #pidupt, #alamat_propinsi, #alamat_kota, #alamat_kecamatan, #alamat_kelurahan").change(() => {
+        /*$("#pidbarang, #tahun_perolehan, #harga_satuan, #pidopd, #pidopd_cabang, #pidupt, #alamat_propinsi, #alamat_kota, #alamat_kecamatan, #alamat_kelurahan").change(() => {
 
             let propinsiId = 0
             if ($("#alamat_propinsi").select2('val') != null) {
@@ -866,7 +868,7 @@
                 $("#kode_lokasi").val("Isi tahun perolehan dan harga satuan terlebih dahulu!")
             }
                 
-        })
+        })*/
     </script>
 
     @if (isset($inventaris))

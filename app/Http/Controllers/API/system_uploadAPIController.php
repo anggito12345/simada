@@ -9,6 +9,7 @@ use App\Repositories\system_uploadRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use Illuminate\Support\Facades\Storage;
 
 /**
  * Class system_uploadController
@@ -155,5 +156,23 @@ class system_uploadAPIController extends AppBaseController
         }
 
         return $this->sendResponse($id, 'System Upload deleted successfully');
+    }
+
+
+    public function get(Request $request, $encrypted) 
+    {
+        $data = \App\Models\system_upload::whereRaw('path LIKE \'%'.$encrypted.'%\'')->first();
+
+        if (!file_exists(storage_path('app/'.$data->path))) {
+            return response([
+                'Data' => 'File does not exists'
+            ]);
+        } else {
+            return response()->download(storage_path('app/'.$data->path), $data->name, [
+                'Content-Type' => mime_content_type(storage_path('app/'.$data->path))
+            ]);
+        }
+
+        
     }
 }

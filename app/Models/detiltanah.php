@@ -64,7 +64,7 @@ class detiltanah extends Model
     protected $casts = [
         'id' => 'integer',
         'pidinventaris' => 'integer',
-        'luas' => 'integer',
+        'luas' => 'float',
         'alamat' => 'string',
         'idkota' => 'integer',
         'idkecamatan' => 'integer',
@@ -93,11 +93,11 @@ class detiltanah extends Model
     public function setTglSertifikatAttribute($value)
     {
         if ($value == null) {
-            $value = date("d-m-Y");
+            $value = date("Y-m-d");
         }
         
-        $value = date("d-m-Y", strtotime($value));
-        $this->attributes['tgl_sertifikat'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
+        $value = date("Y-m-d", strtotime($value));
+        $this->attributes['tgl_sertifikat'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
     }
 
     public function getTglSertifikatAttribute($value)

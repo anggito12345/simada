@@ -15,11 +15,12 @@
         <li class="{{ Request::is('inventaris*') ? 'active' : '' }}">
             <a href="{!! route('inventaris.index') !!}"><i class="fa fa-edit"></i><span>Penata Usahaan</span></a>
         </li>
-        <li class="{{ Request::is('penghapusans*') ? 'active' : '' }}">
-            <a href="{!! route('penghapusans.index') !!}"><i class="fa fa-edit"></i><span>Penghapusan</span></a>
-        </li>
         <li class="{{ Request::is('pemeliharaans*') ? 'active' : '' }}">
             <a href="{!! route('pemeliharaans.index') !!}"><i class="fa fa-edit"></i><span>Pemeliharaan</span></a>
+        </li>
+        @if(c::is([],[],[Constant::$GROUP_OPD_ORG, Constant::$GROUP_BPKAD_ORG]))
+        <li class="{{ Request::is('penghapusans*') ? 'active' : '' }}">
+            <a href="{!! route('penghapusans.index') !!}"><i class="fa fa-edit"></i><span>Penghapusan</span></a>
         </li>
         <li class="{{ Request::is('pemanfaatans*') ? 'active' : '' }}">
             <a href="{!! route('pemanfaatans.index') !!}"><i class="fa fa-edit"></i><span>Pemanfaatan</span></a>
@@ -33,16 +34,20 @@
         <li class="{{ Request::is('reklas*') ? 'active' : '' }}">
             <a href="{!! route('reklas.index') !!}"><i class="fa fa-edit"></i><span>Reklas</span></a>
         </li>
-        @if (c::is([],[],[-1]))
+        @endif
+        @if (c::is([],[],[Constant::$GROUP_BPKAD_ORG]))
             <li class="{{ Request::is('koreksis*') ? 'active' : '' }}">
                 <a href="{!! route('koreksis.index') !!}"><i class="fa fa-edit"></i><span>Koreksi</span></a>
             </li>
         @endif
     </ul>
 </li>
-@if(c::is([],[],[-1]))
+@if(c::is([],[],[Constant::$GROUP_BPKAD_ORG]))
 <li class="{{ Request::is('barangs*') ? 'active' : '' }}">
     <a href="{!! route('barangs.index') !!}"><i class="fa fa-car"></i><span>Master Barang</span></a>
+</li>
+<li class="{{ Request::is('rkaBarangs*') ? 'active' : '' }}">
+    <a href="{{ route('rkaBarangs.index') }}"><i class="fa fa-cubes"></i><span>Master Barang RKA</span></a>
 </li>
 
 <li class="treeview {{ Request::is('alamats*', 'jenisbarangs*', 'kondisis*', 'merkbarangs*', 'organisasis*', 'perolehans*', 'satuanbarangs*', 'pengunaans*', 'mitras*', 'statustanahs*') && !Request::is('organisasis/settings') ? 'active' : '' }}">
@@ -106,7 +111,7 @@ $countUserNeedOtor = \App\Models\users::where('aktif', '0')->count();
         </span>
     </a>
     <ul class="treeview-menu">
-        <li class="{{ Request::is('users*') 
+        <li class="{{ Request::is('users*')
         || Request::is('jabatans*')
         || Request::is('settings*')
         ? 'active' : '' }}">
@@ -131,3 +136,4 @@ $countUserNeedOtor = \App\Models\users::where('aktif', '0')->count();
     </ul>
 </li>
 @endif
+

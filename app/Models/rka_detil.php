@@ -20,7 +20,7 @@ class rka_detil extends Model
     // use SoftDeletes;
 
     public $table = 'rka_detil';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
@@ -29,10 +29,12 @@ class rka_detil extends Model
 
 
     public $fillable = [
-        'kode_barang',
         'pid',
-        'nilai_rka',
+        'kode_barang',
+        'jumlah_real',
+        'harga_satuan_real',
         'nilai_kontrak',
+        'kib',
         'keterangan'
     ];
 
@@ -44,8 +46,11 @@ class rka_detil extends Model
     protected $casts = [
         'id' => 'integer',
         'pid' => 'integer',
-        'no_rka' => 'string',
-        'nilai_kontrak' => 'integer',
+        'kode_barang' => 'integer',
+        'jumlah_real' => 'integer',
+        'harga_satuan_real' => 'float',
+        'nilai_kontrak' => 'float',
+        'kib' => 'string',
         'keterangan' => 'string'
     ];
 
@@ -55,8 +60,8 @@ class rka_detil extends Model
      * @var array
      */
     public static $rules = [
-        
+
     ];
 
-    
+
 }

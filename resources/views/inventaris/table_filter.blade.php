@@ -15,10 +15,10 @@
         </div>        
     </div>    
     <div class="row">
-        <!-- <div class="col-md-4">
-            {{ Form::label('kodesubrincianobjek_filter', 'Sub Sub Kelompok Barang:') }}
-            {{ Form::select('kodesubrincianobjek_filter', [], 0, ['class' => 'form-control', 'onchange' => 'viewModel.changeEvent.changeRefreshGrid()']) }}
-        </div> -->
+        <div class="col-md-4">
+            {{ Form::label('organisasi_filter', 'Organisasi:') }}
+            {{ Form::select('organisasi_filter', [], 0, ['class' => 'form-control', 'onchange' => 'viewModel.changeEvent.changeRefreshGrid()']) }}
+        </div>
         <div class="col-md-4">
             {{ Form::label('draft', 'Draft:') }}
             {{ Form::select('draft', \App\Models\BaseModel::$YesNoDs, 0, ['class' => 'form-control', 'onchange' => 'viewModel.changeEvent.changeRefreshGrid()']) }}
@@ -102,6 +102,31 @@
                     return {
                         results: data.data.map((d) => {
                             d.text = d.nama_rek_aset
+                            d.id = d.id
+                            return d
+                        })
+                    };
+                },
+                
+            },
+            theme: 'bootstrap' ,
+        })
+
+
+
+        $("#organisasi_filter").select2({
+            ajax: {                                
+                url: "<?= url('api/organisasis') ?>?pid=<?= Auth::user()->pid_organisasi ?>",
+                dataType: 'json',
+                data: function (params) {
+
+                    return params;
+                },
+                processResults: function (data) {
+                    // Transforms the top-level key of the response object from 'items' to 'results'
+                    return {
+                        results: data.data.map((d) => {
+                            d.text = d.text
                             d.id = d.id
                             return d
                         })

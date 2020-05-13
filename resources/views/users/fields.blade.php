@@ -65,12 +65,12 @@
 <!-- Password Field -->
 <div class="form-group <?=  isset($isFromRegister) ? 'col-md-12' : 'col-md-6' ?>">
     {!! Form::label('password', 'Password:') !!} <span class='text text-danger'>*</span>
-    {!! Form::password('password', ['class' => 'form-control']) !!}
+    {!! Form::password('password', ['class' => 'form-control', 'readonly' => 'true', 'onfocus' => 'this.removeAttribute("readonly");this.blur();    this.focus();']) !!}
 </div>
 
 <div class="form-group <?=  isset($isFromRegister) ? 'col-md-12' : 'col-md-6' ?>">
     {!! Form::label('password_confirmation', 'Konfirmasi Password:') !!} <span class='text text-danger'>*</span>
-    {!! Form::password('password_confirmation', ['class' => 'form-control']) !!}
+    {!! Form::password('password_confirmation', ['class' => 'form-control', 'readonly' => 'true', 'onfocus' => 'this.removeAttribute("readonly");this.blur();    this.focus();']) !!}
 </div>
 <!-- Remember Token Field
 <div class="form-group <?=  isset($isFromRegister) ? 'col-md-12' : 'col-md-6' ?>">

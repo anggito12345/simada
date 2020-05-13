@@ -29,23 +29,6 @@
     {!! Form::textarea('alamat', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB D"]().alamat']) !!}
 </div>
 
-<!-- Idkota Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('idkota', 'Kota:') !!}
-    {!! Form::select('idkota',[] , null, ['class' => 'form-control', 'id' => 'idkota-detiljalan', 'data-bind' => 'value: viewModel.data["KIB D"]().idkota']) !!}
-</div>
-
-<!-- Idkecamatan Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('idkecamatan', 'Kecamatan:') !!}
-    {!! Form::select('idkecamatan', [], null, ['class' => 'form-control', 'id' => 'idkecamatan-detiljalan', 'data-bind' => 'value: viewModel.data["KIB D"]().idkecamatan']) !!}
-</div>
-
-<!-- Idkelurahan Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('idkelurahan', 'Kelurahan:') !!}
-    {!! Form::select('idkelurahan', [], null, ['class' => 'form-control', 'id' => 'idkelurahan-detiljalan', 'data-bind' => 'value: viewModel.data["KIB D"]().idkelurahan']) !!}
-</div>
 
 <!-- Koordinatlokasi Field -->
 <div class="form-group col-sm-6">
@@ -155,87 +138,6 @@
         })
 
 
-        $('#idkota-detiljalan').select2({
-            ajax: {
-                url: "<?= url('api/alamats') ?>",
-                dataType: 'json',
-                data: function (params) {
-                    var query = {
-                        q: params.term,                                           
-                        addWhere: [
-                            "jenis = '1'"
-                        ]
-                    } 
-                    return query;
-                },
-                processResults: function (data) {
-                    // Transforms the top-level key of the response object from 'items' to 'results'
-                    return {
-                        results: data.data
-                    };
-                }
-            },
-            theme: 'bootstrap' ,
-        })
-
-
-        $('#idkota-detiljalan').on('change', function (e) {
-            $("#idkecamatan-detiljalan").val("").trigger("change")
-        });
-
-
-        $('#idkecamatan-detiljalan').select2({
-            ajax: {
-                url: "<?= url('api/alamats') ?>",
-                dataType: 'json',
-                data: function (params) {
-                    var query = {
-                        q: params.term,                                           
-                        addWhere: [
-                            "jenis = '2'",
-                            "pid = " + $("#idkota-detiljalan").val()
-                        ]
-                    }                    
-
-                    return query;
-                },
-                processResults: function (data) {
-                    // Transforms the top-level key of the response object from 'items' to 'results'
-                    return {
-                        results: data.data
-                    };
-                }
-            },
-            theme: 'bootstrap' ,
-        })
-
-        $('#idkecamatan-detiljalan').on('change', function (e) {
-            $("#idkelurahan-detiljalan").val("").trigger("change")
-        });
-
-        $('#idkelurahan-detiljalan').select2({
-            ajax: {
-                url: "<?= url('api/alamats') ?>",
-                dataType: 'json',
-                data: function (params) {
-                    var query = {
-                        q: params.term,                                           
-                        addWhere: [
-                            "jenis = '3'",
-                            "pid = " + $("#idkecamatan-detiljalan").val()
-                        ]
-                    }                    
-
-                    return query;
-                },
-                processResults: function (data) {
-                    // Transforms the top-level key of the response object from 'items' to 'results'
-                    return {
-                        results: data.data
-                    };
-                }
-            },
-            theme: 'bootstrap' ,
-        })
+      
     })
 </script>

@@ -15,13 +15,15 @@ class CreateRkaDetilTable extends Migration {
 		Schema::create('rka_detil', function(Blueprint $table)
 		{
 			$table->bigInteger('id', true);
-			$table->bigInteger('pid')->nullable();
-			$table->integer('nilai_kontrak')->nullable();
+            $table->bigInteger('pid')->nullable();
+            $table->integer('kode_barang')->nullable();
+			$table->integer('jumlah_real')->nullable();
+			$table->float('harga_satuan_real')->nullable();
+			$table->float('nilai_real')->nullable();
+			$table->string('kib')->nullable();
 			$table->string('keterangan')->nullable();
 			$table->date('updated_at')->nullable();
 			$table->date('created_at')->nullable();
-			$table->integer('kode_barang')->nullable();
-			$table->integer('nilai_rka')->nullable();
 		});
 	}
 

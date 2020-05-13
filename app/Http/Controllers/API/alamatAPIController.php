@@ -35,15 +35,22 @@ class alamatAPIController extends AppBaseController
     public function index(Request $request)
     {   
         $fieldText = "nama";
+        $term = "";
 
         if ($request->__isset("fieldText")) {
             $fieldText = $request->input("fieldText");
         }
 
+        if ($request->__isset("term")) {
+            $term = $request->input("term");
+        } else if ($request->__isset("q")) {
+            $term = $request->input("q");
+        }
+
         $query = \App\Models\alamat::selectRaw(
             $fieldText." as text, id, kode
         ")
-        ->whereRaw("nama ~* '".$request->input("term")."'");
+        ->whereRaw("nama ~* '".$term."'");
         
 
         if ($request->__isset("addWhere")) {

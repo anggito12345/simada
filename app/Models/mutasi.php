@@ -75,8 +75,8 @@ class mutasi extends Model
 
     public function setTglBastAttribute($value)
     {        
-        $value = date("d-m-Y", strtotime($value));
-        $this->attributes['tgl_bast'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
+        $value = date("Y-m-d", strtotime($value));
+        $this->attributes['tgl_bast'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
     }    
 
     public function getTglBastAttribute($value)

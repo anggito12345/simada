@@ -1,4 +1,4 @@
-<?php 
+<?php
     $uniqID = uniqid(time());
 ?>
 
@@ -30,15 +30,17 @@
 if ( ! $.fn.DataTable.isDataTable( '#table-detil-rka-<?= $uniqID  ?>' ) ) {
     let dataDetils = JSON.parse('<?= json_encode(\App\Models\rka_detil::where('pid', $rka->id)
             ->select([
-                'm_barang.nama_rek_aset as kode_barangNama',
                 'rka_detil.id as id',
-                'rka_detil.keterangan',
                 'rka_detil.id as DT_RowId',
-                'rka_detil.nilai_rka',
-                'rka_detil.kode_barang',
+                'rka_barang.kode_barang',
+                'rka_barang.nama_barang',
+                'rka_detil.jumlah_real',
+                'rka_detil.harga_satuan_real',
                 'rka_detil.nilai_kontrak',
+                'rka_detil.kib',
+                'rka_detil.keterangan',
             ])
-            ->join('m_barang','m_barang.id', 'rka_detil.kode_barang')
+            ->join('rka_barang','rka_barang.id', 'rka_detil.kode_barang')
             ->get()) ?>')
     $('#table-detil-rka-<?= $uniqID  ?>').DataTable({
         data: dataDetils,
@@ -53,19 +55,39 @@ if ( ! $.fn.DataTable.isDataTable( '#table-detil-rka-<?= $uniqID  ?>' ) ) {
         },
         columns: [
             {
-                data: 'kode_barangNama',
+                data: 'kode_barang',
                 title: 'Kode Barang',
                 orderable: false,
             },
             {
-                data: 'nilai_rka',
-                title: 'Nilai RKA',
+                data: 'nama_barang',
+                title: 'Nama Barang',
+                orderable: false,
+            },
+            {
+                data: 'jumlah_real',
+                title: 'Jumlah',
+                orderable: false,
+            },
+            {
+                data: 'harga_satuan_real',
+                title: 'Harga Satuan',
+                orderable: false,
+            },
+            {
+                data: 'nilai_kontrak',
+                title: 'Nilai',
+                orderable: false,
+            },
+            {
+                data: 'kib',
+                title: 'KIB',
                 orderable: false,
             },
             {
                 data: 'keterangan',
                 title: 'Keterangan',
-                className: 'keterangan',    
+                className: 'keterangan',
                 orderable: false,
             },
         ],

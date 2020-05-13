@@ -85,8 +85,8 @@ class penghapusan extends Model
 
     public function setTglskAttribute($value)
     {
-        $value = date("d-m-Y", strtotime($value));
-        $this->attributes['tglsk'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
+        $value = date("Y-m-d", strtotime($value));
+        $this->attributes['tglsk'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
     }
 
     public function getTglskAttribute($value)
@@ -100,8 +100,8 @@ class penghapusan extends Model
 
     public function setTglhapusAttribute($value)
     {
-        $value = date("d-m-Y", strtotime($value));
-        $this->attributes['tglhapus'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
+        $value = date("Y-m-d", strtotime($value));
+        $this->attributes['tglhapus'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
     }
 
     public function getTglhapusAttribute($value)

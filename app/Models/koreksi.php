@@ -55,8 +55,8 @@ class koreksi extends Model
      */
     public function setTglkoreksiAttribute($value)
     {
-        $value = date("d-m-Y", strtotime($value));
-        $this->attributes['tglkoreksi'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
+        $value = date("Y-m-d", strtotime($value));
+        $this->attributes['tglkoreksi'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
     }
 
     /**

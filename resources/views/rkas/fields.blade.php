@@ -41,20 +41,12 @@
 @section('scripts')
 <script src="<?= url('js/thirdparty/dataTables.editor.min.js') ?>"></script>
 
-<?php 
+<?php
     $dataDetils = json_encode([]);
     if(isset($rka)) {
         $dataDetils = json_encode(\App\Models\rka_detil::where('pid', $rka->id)
-            ->select([
-                'm_barang.nama_rek_aset as kode_barangNama',
-                'rka_detil.id as id',
-                'rka_detil.keterangan',
-                'rka_detil.id as DT_RowId',
-                'rka_detil.nilai_rka',
-                'rka_detil.kode_barang',
-                'rka_detil.nilai_kontrak',
-            ])
-            ->join('m_barang','m_barang.id', 'rka_detil.kode_barang')
+            ->select('*')
+            ->join('rka_barang','rka_barang.id', 'rka_detil.kode_barang')
             ->get());
     }
 
@@ -71,18 +63,18 @@ const funcGetDokumenFileList = () => {
             jenis: 'dokumen',
             foreign_field: 'id',
             foreign_id: <?= isset($rka) ? $rka->id : 'null' ?>,
-            foreign_table: 'rka',                    
+            foreign_table: 'rka',
         },
-    }).then((files) => {                
+    }).then((files) => {
         fileGallery.fileList(files)
-    }) 
+    })
 }
 
 var fileGallery = new FileGallery(document.getElementById('dokumen'), {
     title: 'File Dokumen',
     maxSize: 5000000,
     accept: App.Constant.MimeOffice,
-    onDelete: () => {                
+    onDelete: () => {
         return new Promise((resolve, reject) => {
             let checkIfIdExist = fileGallery.checkedRow().filter((d) => {
                 return d.id != undefined
@@ -133,8 +125,8 @@ const doSave = (isDraft) => {
                         return
                     }
                     formData.append(`dokumen_metadata_${key}[${index}]`, d[key])
-                })                
-                
+                })
+
                 formData.append(`dokumen_metadata_id_rka[${index}]`, <?= isset($rka) ? $rka->id: 'null' ?>)
             }
 
@@ -155,7 +147,7 @@ const doSave = (isDraft) => {
                         window.location = `${$('[base-path]').val()}/rkas`
                     }
                 })
-                
+
             })
         }
     })
@@ -166,20 +158,54 @@ const form = document.querySelector('#form-rka')
 form.addEventListener('submit', (ev) => {
     ev.preventDefault()
 
-    doSave(false)            
+    doSave(false)
 })
 
 funcGetDokumenFileList()
 
-editor = new $.fn.dataTable.Editor( {         
+editor = new $.fn.dataTable.Editor( {
     table: "#table-detil-rka",
     fields: [ {
-            label: "Kode Barang:",
+            label: "Barang RKA:",
             name: "kode_barang",
             type: "select"
+        }, /* {
+            label: "Nama Barang:",
+            name: "nama_barang",
+            attr: {
+                readonly: "readonly",
+                type: "text"
+            }
+        }, {
+            label: "Jumlah RKA:",
+            name: "jumlah_rencana",
+            attr: {
+                readonly: "readonly",
+                type: "number"
+            }
+        }, {
+            label: "Harga Satuan RKA:",
+            name: "harga_satuan_rencana",
+            attr: {
+                readonly: "readonly",
+                type: "number"
+            }
         }, {
             label: "Nilai RKA:",
-            name: "nilai_rka",
+            name: "total_rencana",
+            attr: {
+                readonly: "readonly",
+                type: "number"
+            }
+        },  */{
+            label: "Jumlah Real:",
+            name: "jumlah_real",
+            attr: {
+                type: "number"
+            }
+        }, {
+            label: "Harga Satuan Real:",
+            name: "harga_satuan_real",
             attr: {
                 type: "number"
             }
@@ -190,11 +216,23 @@ editor = new $.fn.dataTable.Editor( {
                 type: "number"
             }
         }, {
+            label: "KIB:",
+            name: "kib",
+            type: "select",
+            options: [
+                'KIB A',
+                'KIB B',
+                'KIB C',
+                'KIB D',
+                'KIB E',
+                'KIB F',
+            ]
+        }, {
             label: "Keterangan:",
             name: "keterangan",
             type: "textarea"
         },
-        
+
     ]
 });
 
@@ -206,7 +244,7 @@ let buttonsOpt = [
 
 </script>
 
-@if(isset($rka)) 
+@if(isset($rka))
 <script>
 buttonsOpt = [
     { extend: "create", editor: editor },
@@ -225,33 +263,47 @@ editor.on( 'open', function ( e, type ) {
     if (!editorInit) {
         $('#DTE_Field_kode_barang').select2({
             ajax: {
-                url: "<?= url('api/barangs') ?>",
+                url: "<?= url('api/rka_barangs') ?>",
                 dataType: 'json',
                 headers: {
                     'Authorization':'Bearer ' + sessionStorage.getItem('api token'),
                 },
                 data: function (params) {
                     var query = {
-                        q: params.term,       
-                    } 
+                        q: params.term,
+                    }
                     return query;
                 },
                 processResults: function (data) {
                     // Transforms the top-level key of the response object from 'items' to 'results'
                     return {
                         results: data.data.map((d) => {
-                            d.text = d.nama_rek_aset
+                            d.text = d.kode_barang + ' - ' + d.nama_barang
+
                             return d
                         })
                     };
+
                 }
+
             },
             theme: 'bootstrap' ,
+
         })
         editorInit = true
+
     }
-    
-} );
+
+/*     $('#DTE_Field_nama_barang').val(nama_barang);
+    $('#DTE_Field_jumlah_rencana').val(jumlah_rencana);
+    $('#DTE_Field_harga_satuan_rencana').val(harga_satuan_rencana);
+    $('#DTE_Field_total_rencana').val(nilai_rencana);
+    $('#DTE_Field_kode_barang').val('').trigger('onSelect'){
+        alert(nama_barang);
+    } */
+});
+
+
 
 
 editor.on( 'preSubmit', function ( e, data, action ) {
@@ -259,12 +311,20 @@ editor.on( 'preSubmit', function ( e, data, action ) {
         this.field('kode_barang').error( 'Mohon pilih Kode Barang terlebih dahulu!' );
     }
 
+    if(this.field( 'jumlah_real' ).val() == '') {
+        this.field('jumlah_real').error( 'Jumlah Realisasi tidak boleh kosong' );
+    }
+
+    if(this.field( 'harga_satuan_real' ).val() == '') {
+        this.field('harga_satuan_real').error( 'Harga Satuan Realisasi tidak boleh kosong' );
+    }
+
     if(this.field( 'nilai_kontrak' ).val() == '') {
         this.field('nilai_kontrak').error( 'Nilai Kontrak tidak boleh kosong' );
     }
 
-    if(this.field( 'nilai_rka' ).val() == '') {
-        this.field('nilai_rka').error( 'Nilai RKA tidak boleh kosong' );
+    if(this.field( 'kib' ).val() == '') {
+        this.field('kib').error( 'KIB tidak boleh kosong' );
     }
 
     if ( this.inError() ) {
@@ -279,21 +339,21 @@ editor.on( 'preSubmit', function ( e, data, action ) {
     } else {
         $.each( data.data, function ( key, values ) {
             data.data[ key ][ 'kode_barang' ] = parseInt( dataSelect.id );
-            data.data[ key ][ 'kode_barangNama' ] = dataSelect.text;
+            data.data[ key ][ 'nama_barang' ] = dataSelect.text;
         } );
     }
-        
-    
+
+
 } );
 
 editor.on( 'initEdit', function ( e, node, data) {
     // Type is 'main', 'bubble' or 'inline'
 
     setTimeout(() => {
-        App.Helpers.defaultSelect2($('#DTE_Field_kode_barang'), "<?= url('api/barangs') ?>/" + data.kode_barang,"id","nama_rek_aset")
+        App.Helpers.defaultSelect2($('#DTE_Field_kode_barang'), "<?= url('api/rka_barangs') ?>/" + data.kode_barang,"id","nama_rek_aset")
     }, 1);
-        
-    
+
+
 } );
 
 
@@ -316,21 +376,56 @@ $('#table-detil-rka').DataTable({
             className: 'select-checkbox',
             orderable: false,
             width: 20,
-        },
+        },/*
         {
-            data: 'kode_barangNama',
+            data: 'kode_barang',
             title: 'Kode Barang',
+            orderable: false,
+        }, */
+        {
+            data: 'nama_barang',
+            title: 'Nama Barang',
             orderable: false,
         },
         {
-            data: 'nilai_rka',
+            data: 'jumlah',
+            title: 'Jumlah RKA',
+            orderable: false,
+        },
+        {
+            data: 'harga_satuan',
+            title: 'Harga Satuan RKA',
+            orderable: false,
+        },
+        {
+            data: 'nilai',
             title: 'Nilai RKA',
+            orderable: false,
+        },
+        {
+            data: 'jumlah_real',
+            title: 'Jumlah',
+            orderable: false,
+        },
+        {
+            data: 'harga_satuan_real',
+            title: 'Harga Satuan',
+            orderable: false,
+        },
+        {
+            data: 'nilai_kontrak',
+            title: 'Nilai Kontrak',
+            orderable: false,
+        },
+        {
+            data: 'kib',
+            title: 'KIB',
             orderable: false,
         },
         {
             data: 'keterangan',
             title: 'Keterangan',
-            className: 'keterangan',    
+            className: 'keterangan',
             orderable: false,
         },
     ],

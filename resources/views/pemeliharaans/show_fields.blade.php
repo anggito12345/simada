@@ -1,6 +1,7 @@
 <!-- Pidinventaris Field -->
 <?php 
-    $inventaris = \App\Models\inventaris::join('m_barang','m_barang.id', 'inventaris.pidbarang')->find($pemeliharaan->pidinventaris)
+    $inventaris = \App\Models\inventaris::withTrashed()->join('m_barang','m_barang.id', 'inventaris.pidbarang')->find($pemeliharaan->pidinventaris)
+
 ?>
 <div class="row">
     {!! Form::label('pidinventaris', 'Inventaris No Registrasi:', ["class" => 'col-md-4 item-view']) !!}

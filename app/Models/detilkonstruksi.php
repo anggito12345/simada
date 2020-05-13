@@ -104,11 +104,11 @@ class detilkonstruksi extends Model
     public function setTgldokumenAttribute($value)
     {
         if ($value == null) {
-            $value = date("d-m-Y");
+            $value = date("Y-m-d");
         }
 
-        $value = date("d-m-Y", strtotime($value));
-        $this->attributes['tgldokumen'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
+        $value = date("Y-m-d", strtotime($value));
+        $this->attributes['tgldokumen'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
     }
 
     public function getTgldokumenAttribute($value)
@@ -123,11 +123,11 @@ class detilkonstruksi extends Model
     public function setTglmulaiAttribute($value)
     {
         if ($value == null) {
-            $value = date("d-m-Y");
+            $value = date("Y-m-d");
         }
 
-        $value = date("d-m-Y", strtotime($value));
-        $this->attributes['tglmulai'] = \Carbon\Carbon::createFromFormat('d-m-Y', $value);
+        $value = date("Y-m-d", strtotime($value));
+        $this->attributes['tglmulai'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
     }
 
     public function getTglmulaiAttribute($value)

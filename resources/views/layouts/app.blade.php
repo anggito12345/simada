@@ -1,6 +1,16 @@
 <!DOCTYPE html>
 <html>
-
+@if(env('APPLICATION_STATE', 'UNLOCK') == 'LOCK')
+<style type="text/css">
+.center {
+    display: block;
+    margin-left: auto;
+    margin-right: auto;
+    width: 50%;
+}
+</style>
+<img src="<?= url('images/maintanance_1.png') ?>" class="center" />
+@else
 <head>
     <meta charset="UTF-8">
     <title>SIMADA</title>
@@ -14,6 +24,7 @@
         }
     </style>
     <style type="text/css">
+
         .loading {
             font-size: 0;
             width: 30px;
@@ -66,6 +77,11 @@
             transform: rotate(0deg) !important;
             -webkit-transform: scale(0) !important;
             transform: scale(0) !important;
+        }
+
+        .summarize{
+            float:right;
+            font-weight: 600;
         }
     </style>
 
@@ -129,6 +145,11 @@
     <script src="<?= url('js/thirdparty/ko_mapping.min.js') ?>"></script>
 
     <script src="<?= url('js/app.ko.js?key=' . sha1(time())) ?>"></script>
+
+    <!-- jQuery 3.1.1 -->
+
+    <script src="<?= url('js/thirdparty/jquery.min.js') ?>"></script>
+    <script src="<?= url('js/thirdparty/jquery.mask.min.js') ?>"></script>
 
     @include('layouts.datatables_css')
 
@@ -309,10 +330,7 @@
 
     <script src="<?= url('js/thirdparty/handlebars-v4.3.1.js') ?>"></script>
 
-    <!-- jQuery 3.1.1 -->
-
-    <script src="<?= url('js/thirdparty/jquery.min.js') ?>"></script>
-    <script src="<?= url('js/thirdparty/jquery.mask.min.js') ?>"></script>
+    
 
     @include('layouts.datatables_js')
 
@@ -372,8 +390,10 @@
 
         $(function() {
             $('input').attr('autocomplete', 'off');
-            $('input').attr('autocorrect', 'off');
             $('form').attr('autocomplete', 'off');
+            $('form#new-password').attr('autocomplete', 'new-password');
+            $('input[name=username]').attr('autocomplete', 'off');
+            $('input[name=password]').attr('autocomplete', 'off');
 
             $('input[type=number]').keyup((obj) => {
                 let valueNumber = parseInt(obj.target.value)
@@ -444,5 +464,7 @@
         ko.applyBindings(viewModel)
     </script>
 </body>
+@endif
+
 
 </html>

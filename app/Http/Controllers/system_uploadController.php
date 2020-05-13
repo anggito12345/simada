@@ -148,4 +148,7 @@ class system_uploadController extends AppBaseController
 
         return redirect(route('systemUploads.index'));
     }
+
+
+  
 }

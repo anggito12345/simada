@@ -13,6 +13,11 @@ use App\Models\inventaris;
 use Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Excel;
+use Auth;
+use App\Exports\AsetExportPhpSpread;
+use c;
+use Constant;
 
 class inventarisController extends AppBaseController
 {
@@ -134,6 +139,20 @@ class inventarisController extends AppBaseController
     {
         $inventaris = inventaris::withDrafts()->find($id);
 
+        $organisasi = \App\Models\organisasi::find(Auth::user()->pid_organisasi);
+
+        if ($organisasi->id != $inventaris->pid_organisasi && !c::is(['inventaris'],['update'],[Constant::$GROUP_BPKAD_ORG])) {
+            Flash::error('Tidak bisa mengubah data inventaris');
+
+            return redirect(route('inventaris.index'));
+        }
+
+        if (empty($inventaris->draft)) {
+            Flash::error('Tidak bisa mengubah data inventaris yang bukan draft');
+
+            return redirect(route('inventaris.index'));
+        }
+
         if (empty($inventaris)) {
             Flash::error('Inventaris not found');
 
@@ -167,5 +186,15 @@ class inventarisController extends AppBaseController
         Flash::success('Inventaris deleted successfully.');
 
         return redirect(route('inventaris.index'));
+    }
+
+    /*
+    Export Excel
+    */
+
+    public function export() 
+    {
+        $asetExp = new AsetExportPhpSpread();
+        $asetExp->export();
     }
 }

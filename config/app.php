@@ -183,6 +183,10 @@ return [
 
         Yajra\DataTables\DataTablesServiceProvider::class,
 
+        // Excel
+        Maatwebsite\Excel\ExcelServiceProvider::class,
+
+
     ],
 
     /*
@@ -242,6 +246,8 @@ return [
         'Constant'     => \App\Helpers\Constant::class,
 
         'DataTables' => Yajra\DataTables\Facades\DataTables::class,
+
+        'Excel' => Maatwebsite\Excel\Facades\Excel::class,
     ],
 
 ];
