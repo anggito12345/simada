@@ -68,11 +68,34 @@ class rka_barangAPIController extends AppBaseController
 
         $queryrka_barangFinal = $queryrka_barang;
 
-      $rka_barangs = $queryrka_barangFinal
-            ->join('m_organisasi', 'organisai.kode', 'rka_barang.kode_organisasi')
-            ->where('m_organisasi.id', Auth::user()->pid_organisasi)
-            ->limit(10)
-            ->get();
+        if ($request->input("kode_objek") != null && $request->input("kode_jenis") != null && $request->input("kode_rincian_objek") == null) {
+            $queryrka_barangFinal = $queryrka_barang
+                 ->whereRaw("kode_objek = '".sprintf("%02d",$request->input("kode_objek"))."'")
+                 ->whereRaw("kode_sub_rincian_objek IS NULL")
+                 ->whereRaw("kode_rincian_objek IS NOT NULL")
+                 ->whereRaw("kode_jenis = '".$request->input("kode_jenis")."'");
+        } else if ($request->input("kode_objek") != null && $request->input("kode_jenis") != null && $request->input("kode_rincian_objek") != null) {
+            $queryrka_barangFinal = $queryrka_barang
+                ->whereRaw("kode_objek = '".sprintf("%02d",$request->input("kode_objek"))."'")
+                ->whereRaw("kode_rincian_objek = '".sprintf("%02d",$request->input("kode_rincian_objek"))."'")
+                ->whereRaw("kode_jenis = '".$request->input("kode_jenis")."'")
+                ->whereRaw("kode_sub_rincian_objek IS NOT NULL")            ;
+        } else if ($request->input("kode_jenis") != null) {
+           $queryrka_barangFinal = $queryrka_barang
+                ->whereRaw("kode_rincian_objek IS NULL")
+                ->whereRaw("kode_objek IS NOT NULL")
+                ->whereRaw("kode_jenis = '".$request->input("kode_jenis")."'");
+        }
+
+        if ($request->input('term') != null) {
+            $queryrka_barangFinal = $queryrka_barangFinal->whereRaw("nama_rek_aset ~* '.*".$request->input("term").".*'");
+        }
+
+
+
+        $rka_barangs = $queryrka_barangFinal
+        ->limit(10)
+        ->get();
 
         return $this->sendResponse($rka_barangs->toArray(), 'rka_barangs retrieved successfully');
     }
