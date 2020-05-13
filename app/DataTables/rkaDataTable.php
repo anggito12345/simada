@@ -43,11 +43,18 @@ class rkaDataTable extends DataTable
         }
 
         $query = $query->select([
+<<<<<<< HEAD
             'rka.id as id',
             'rka.no_spk as no_spk',
             'rka.no_bast as no_bast',
         ])
             ->join('users', 'users.id', 'rka.created_by')
+=======
+            'rka.id',
+            'rka.no_spk',
+            'rka.no_bast'
+        ])->join('users', 'users.id', 'rka.created_by')
+>>>>>>> 8c11db9fa33b45d1f6baaba751e3040bc34ec09d
             ->join('m_organisasi', 'm_organisasi.id', 'users.pid_organisasi');
 
         if (isset($_GET['isFromMainGrid'])) {
