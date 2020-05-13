@@ -24,7 +24,6 @@ class CreateRkaBarangTable extends Migration
             $table->float('harga_satuan')->nullable();
             $table->float('nilai')->nullable();
             $table->date('deleted_at')->nullable();
-            $table->primary('id');
         });
     }
 
