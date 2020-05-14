@@ -9,7 +9,9 @@ use App\Repositories\rka_barangRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
+use Auth;
 
 /**
  * Class rka_barangController
@@ -23,6 +25,7 @@ class rka_barangAPIController extends AppBaseController
 
     public function __construct(rka_barangRepository $rka_barangRepo)
     {
+        $this->middleware('auth:api');
         $this->rka_barangRepository = $rka_barangRepo;
     }
 
@@ -31,7 +34,7 @@ class rka_barangAPIController extends AppBaseController
         $rka_barang = new rka_barang();
 
         $queryFiltered = \App\Helpers\LookupHelper::build($rka_barang, $request)
-            ->join('m_organisasi', 'organisai.kode', 'rka_barang.kode_organisasi')
+            ->join('m_organisasi', 'm_organisasi.kode', 'rka_barang.kode_organisasi')
             ->where('m_organisasi.id', Auth::user()->pid_organisasi)
             ->where('rka_barang.tahun_rka', date('Y'));
 
@@ -68,7 +71,7 @@ class rka_barangAPIController extends AppBaseController
 
         $queryrka_barangFinal = $queryrka_barang;
 
-        if ($request->input("kode_objek") != null && $request->input("kode_jenis") != null && $request->input("kode_rincian_objek") == null) {
+       /*  if ($request->input("kode_objek") != null && $request->input("kode_jenis") != null && $request->input("kode_rincian_objek") == null) {
             $queryrka_barangFinal = $queryrka_barang
                  ->whereRaw("kode_objek = '".sprintf("%02d",$request->input("kode_objek"))."'")
                  ->whereRaw("kode_sub_rincian_objek IS NULL")
@@ -91,11 +94,15 @@ class rka_barangAPIController extends AppBaseController
             $queryrka_barangFinal = $queryrka_barangFinal->whereRaw("nama_rek_aset ~* '.*".$request->input("term").".*'");
         }
 
-
+ */
 
         $rka_barangs = $queryrka_barangFinal
-        ->limit(10)
-        ->get();
+            ->join('m_organisasi', 'm_organisasi.kode', 'rka_barang.kode_organisasi')
+            ->whereRaw("m_organisasi.id = '".Auth::user()->pid_organisasi."'")
+           // ->whereRaw("rka_barang.kode_organisasi = '2.16.0.00.0.00.01.00'")
+            ->whereRaw("rka_barang.tahun_rka = '".date('Y')."'")
+            ->limit(10)
+            ->get();
 
         return $this->sendResponse($rka_barangs->toArray(), 'rka_barangs retrieved successfully');
     }

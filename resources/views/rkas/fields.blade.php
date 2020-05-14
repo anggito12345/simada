@@ -45,7 +45,17 @@
     $dataDetils = json_encode([]);
     if(isset($rka)) {
         $dataDetils = json_encode(\App\Models\rka_detil::where('pid', $rka->id)
-            ->select('*')
+            ->select([
+                'rka_barang.nama_barang as nama_barang',
+                'rka_barang.jumlah as jumlah_rencana',
+                'rka_barang.harga_satuan as harga_satuan_rencana',
+                'rka_barang.nilai as nilai_rencana',
+                'rka_detil.jumlah_real as jumlah_real',
+                'rka_detil.harga_satuan_real as harga_satuan_real',
+                'rka_detil.nilai_kontrak as nilai_kontrak',
+                'rka_detil.kib as kib',
+                'rka_detil.keterangan as keterangan',
+            ])
             ->join('rka_barang','rka_barang.id', 'rka_detil.kode_barang')
             ->get());
     }
@@ -388,17 +398,17 @@ $('#table-detil-rka').DataTable({
             orderable: false,
         },
         {
-            data: 'jumlah',
+            data: 'jumlah_rencana',
             title: 'Jumlah RKA',
             orderable: false,
         },
         {
-            data: 'harga_satuan',
+            data: 'harga_satuan_rencana',
             title: 'Harga Satuan RKA',
             orderable: false,
         },
         {
-            data: 'nilai',
+            data: 'nilai_rencana',
             title: 'Nilai RKA',
             orderable: false,
         },
