@@ -18,8 +18,6 @@
         @include('layouts.default_transaction_table_filter')
     </div>
 
-    <div class="clearfix" />
-
     <div class="clearfix"></div>
 
     @include('flash::message')

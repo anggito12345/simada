@@ -121,3 +121,5 @@ Route::resource('inventarisReklas', 'inventaris_reklasController');
 Route::resource('reklas', 'reklasController');
 
 Route::resource('koreksis', 'koreksiController');
+
+Route::resource('rkaBarangs', 'rka_barangController');

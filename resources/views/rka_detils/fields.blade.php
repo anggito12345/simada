@@ -6,7 +6,7 @@
 
 <!-- No Rka Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('no_rka', 'No Rka:') !!}
+    {!! Form::label('no_rka', 'No RKA:') !!}
     {!! Form::text('no_rka', null, ['class' => 'form-control']) !!}
 </div>
 

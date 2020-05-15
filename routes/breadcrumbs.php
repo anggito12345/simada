@@ -487,3 +487,26 @@ Breadcrumbs::for('pemanfaatans.show', function ($trail,$data) {
     $trail->push('Lihat', route('pemanfaatans.show',$data));
 });
 
+// Master Barang RKA
+Breadcrumbs::for('rkaBarangs.index', function ($trail) {
+    $trail->push('Barang RKA', route('rkaBarangs.index'));
+});
+
+// Master Barang > Buat
+Breadcrumbs::for('rkaBarangs.create', function ($trail) {
+    $trail->parent('rkaBarangs.index');
+    $trail->push('Buat', route('rkaBarangs.create'));
+});
+
+// Master Barang > Ubah
+Breadcrumbs::for('rkaBarangs.edit', function ($trail, $data) {
+    $trail->parent('rkaBarangs.index', $data);
+    $trail->push('Ubah', route('rkaBarangs.edit', $data));
+});
+
+// Master Barang > Lihat
+Breadcrumbs::for('rkaBarangs.show', function ($trail, $data) {
+    $trail->parent('rkaBarangs.index', $data);
+    $trail->push('Lihat', route('rkaBarangs.show', $data));
+});
+

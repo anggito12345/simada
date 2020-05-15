@@ -22,7 +22,7 @@
         "inIndex": true
     },
     {
-        "name": "no_rka",
+        "name": "kode_barang",
         "dbType": "string",
         "htmlType": "text",
         "validations": null,
@@ -33,9 +33,86 @@
         "inIndex": true
     },
     {
-        "name": "nilai_kontrak",
+        "name": "nama_barang",
+        "dbType": "string",
+        "htmlType": "text",
+        "validations": null,
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true
+    },
+    {
+        "name": "jumlah_rencana",
         "dbType": "integer,false",
+        "htmlType": "text",
+        "validations": null,
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true
+    },
+    {
+        "name": "harga_satuan_rencana",
+        "dbType": "float,false",
+        "htmlType": "text",
+        "validations": null,
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true
+    },
+    {
+        "name": "nilai_rencana",
+        "dbType": "float,false",
+        "htmlType": "text",
+        "validations": null,
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true
+    },
+    {
+        "name": "jumlah_real",
+        "dbType": "integer,false",
+        "htmlType": "text",
+        "validations": null,
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true
+    },
+    {
+        "name": "harga_satuan_real",
+        "dbType": "float,false",
+        "htmlType": "text",
+        "validations": null,
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true
+    },
+    {
+        "name": "nilai_kontrak",
+        "dbType": "float,false",
         "htmlType": null,
+        "validations": null,
+        "searchable": true,
+        "fillable": true,
+        "primary": false,
+        "inForm": true,
+        "inIndex": true
+    },
+    {
+        "name": "kib",
+        "dbType": "string",
+        "htmlType": "text",
         "validations": null,
         "searchable": true,
         "fillable": true,

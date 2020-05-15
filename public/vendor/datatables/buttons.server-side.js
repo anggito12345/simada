@@ -11,10 +11,10 @@
         } else {
             params.visible_columns = null;
         }
-        
+
         return params;
     };
-    
+
     var _getVisibleColumns = function () {
 
         var visible_columns = [];
@@ -85,7 +85,7 @@
         if (url.indexOf('?') > -1) {
             return url + '&' + $.param(params);
         }
-        
+
         return url + '?' + $.param(params);
     };
 
@@ -116,7 +116,7 @@
             _downloadFromUrl(url, params);
         }
     };
-    
+
     DataTable.ext.buttons.postExcelVisibleColumns = {
         className: 'buttons-excel',
 
@@ -138,7 +138,7 @@
         className: 'buttons-export',
 
         text: function (dt) {
-            return '<i class="fa fa-download"></i> ' + dt.i18n('buttons.export', 'Ekspor') + '&nbsp;<span class="caret"/>';
+            return '<i class="fa fa-upload"></i> ' + dt.i18n('buttons.export', 'Ekspor') + '&nbsp;<span class="caret"/>';
         },
 
         buttons: ['csv', 'excel', 'pdf']
@@ -171,7 +171,7 @@
             _downloadFromUrl(url, params);
         }
     };
-    
+
     DataTable.ext.buttons.postCsv = {
         className: 'buttons-csv',
 

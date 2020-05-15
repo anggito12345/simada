@@ -795,6 +795,8 @@ Route::resource('rkas', 'rkaAPIController');
 
 Route::resource('rka_detils', 'rka_detilAPIController');
 
+Route::resource('rka_barangs', 'rka_barangAPIController');
+
 Route::resource('modules', 'modulesAPIController');
 
 Route::resource('module_accesses', 'module_accessAPIController');
