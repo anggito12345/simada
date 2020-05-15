@@ -32,14 +32,16 @@ class inventarisAPIController extends AppBaseController
     private $inventaris_reklasRepository;
 
     public function __construct(
-        inventarisRepository $inventarisRepo, 
+        inventarisRepository $inventarisRepo,
         inventaris_historyRepository $inventaris_historyRepository,
         inventaris_reklasRepository $inventaris_reklasRepository)
-    {        
+    {
         $this->middleware('auth:api');
         $this->inventarisRepository = $inventarisRepo;
         $this->inventaris_historyRepository = $inventaris_historyRepository;
         $this->inventaris_reklasRepository = $inventaris_reklasRepository;
+
+
     }
 
     /**
@@ -51,16 +53,20 @@ class inventarisAPIController extends AppBaseController
         $buildingModel = inventarisRepository::appendInventarisGridFilter($buildingModel, $_GET);
 
         $hargaSatuanPerpage = 0;
-        
+
         $dataPerPage = $buildingModel->skip((int)$request->get('start'))->take((int)$request->get('length'))->get()->toArray();
         foreach ($dataPerPage as $key => $value) {
             $hargaSatuanPerpage += (float)$value['harga_satuan'];
         }
-        
+
         return $this->sendResponse([
             'per_page' => number_format($hargaSatuanPerpage, 2),
             'all_page' => number_format(inventarisRepository::appendInventarisGridFilter(inventarisRepository::getData(null), $_GET)->sum('inventaris.harga_satuan'), 2),
         ], 'Inventaris retrieved successfully');
+    }
+
+    public function getInventarisFromPenghapusan(Request $request) {
+        inventarisRepository::getDataInventarisFromPenghapusan();
     }
 
     /**
@@ -134,7 +140,7 @@ class inventarisAPIController extends AppBaseController
         $input['idpegawai'] = $request->user()->id;
         $input['pid_organisasi'] = $request->user()->pid_organisasi;
         $input['harga_satuan'] = str_replace(".", "", $input['harga_satuan']);
-        
+
         // generate no register
         $modelInventaris = new \App\Models\inventaris();
 
@@ -165,11 +171,11 @@ class inventarisAPIController extends AppBaseController
                 throw new Exception('Barang not found');
                 return;
             }
-            
+
             $input['umur_ekonomis'] = $barang->umur_ekonomis;
             $input['kode_lokasi'] = inventarisRepository::generateKodeLokasi($input);
 
-            
+
 
             $inventaris = $this->inventarisRepository->create($input);
 
@@ -237,8 +243,8 @@ class inventarisAPIController extends AppBaseController
     }
 
     /** bridge to calculating the value is intra or ekstra
-     * 
-     * 
+     *
+     *
      */
 
     public function intraorekstra(Request $request)
@@ -295,7 +301,7 @@ class inventarisAPIController extends AppBaseController
      * @return Response
      */
     public function mutasi($id, Request $request)
-    {                   
+    {
         return $this->inventaris_reklasRepository->doMutationStageFirst($request, $id);
     }
 
@@ -440,7 +446,7 @@ class inventarisAPIController extends AppBaseController
 
                 DB::commit();
             } catch (\Exception $e) {
-                
+
 
                 DB::rollBack();
 

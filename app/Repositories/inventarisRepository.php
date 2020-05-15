@@ -55,6 +55,14 @@ class inventarisRepository extends BaseRepository
     }
 
     /**
+     * its called when penghapusan needed to get data inventaris
+     * 
+     */
+    public static function getDataInventarisFromPenghapusan() {
+        return [];
+    }
+
+    /**
      * its need to be trigger when there are more than 1 filter is filled.
      * @jenisbarangs
      * @kodeobjek
