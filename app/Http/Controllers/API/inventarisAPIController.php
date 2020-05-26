@@ -317,10 +317,7 @@ class inventarisAPIController extends AppBaseController
     public function update($id, UpdateinventarisAPIRequest $request)
     {
         $update_inventaris_setting = \App\Models\setting::where('nama', \Constant::$SETTING_UBAH_PENATA_USAHAAN)->first()->nilai;
-        if (strtolower($update_inventaris_setting) != 'true') {
-            return $this->sendError('Tidak bisa mengubah data inventaris');
-        }
-
+        
         $input = $request->all();
 
         /** @var inventaris $inventaris */

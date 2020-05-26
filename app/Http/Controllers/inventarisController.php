@@ -138,12 +138,7 @@ class inventarisController extends AppBaseController
     public function edit($id)
     {
         $update_inventaris_setting = \App\Models\setting::where('nama', \Constant::$SETTING_UBAH_PENATA_USAHAAN)->first()->nilai;
-        if (strtolower($update_inventaris_setting) != 'true') {
-            Flash::error('Tidak bisa mengubah data inventaris');
-
-            return redirect(route('inventaris.index'));
-        }
-
+        
         $inventaris = inventaris::withDrafts()->find($id);
 
         $organisasi = \App\Models\organisasi::find(Auth::user()->pid_organisasi);
