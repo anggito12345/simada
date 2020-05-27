@@ -52,6 +52,8 @@ Route::get('/intraorekstra', 'inventarisAPIController@intraorekstra');
 Route::post('penghapusans/edit/{id}', 'penghapusanAPIController@editCustom');
 Route::post('pemanfaatans/edit/{id}', 'pemanfaatanAPIController@editCustom');
 
+Route::post('/inventaris/dokumenkronologis', 'inventarisAPIController@saveDokumenKronologis');
+
 Route::middleware('auth:api')->patch('inventaris_mutasi/approvements', function(
     \App\Repositories\inventaris_mutasiRepository $inventaris_mutasiRepository,
     inventaris_historyRepository $inventaris_historyRepository,

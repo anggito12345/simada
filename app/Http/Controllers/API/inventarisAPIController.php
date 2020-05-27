@@ -476,4 +476,55 @@ class inventarisAPIController extends AppBaseController
             return $this->sendError($e->getMessage());
         }
     }
+
+    /**
+     * Handle save dokumen kronologis.
+     * POST /inventaris/dokumenkronologis
+     *
+     * @param Request $request
+     * @return Response
+     */
+    public function saveDokumenKronologis(Request $request)
+    {
+        $input = $request->all();
+
+        $inventaris = inventaris::withDrafts()
+            ->with('Organisasi')
+            ->find($input['id']);
+
+        $organisasi = \App\Models\organisasi::find(Auth::user()->pid_organisasi);
+
+        if ($organisasi->id != $inventaris->pid_organisasi && !c::is(['inventaris'],['update'],[Constant::$GROUP_BPKAD_ORG])) {
+            return $this->sendError('Tidak bisa menyimpan dokumen kronologis inventaris');
+        }
+
+        $fileDokumens = [];
+
+        DB::beginTransaction();
+        try {
+
+            $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen_kronologis', $request, "inventaris", function ($metadatas, $index, $systemUpload) {
+                if (isset($metadatas['dokumen_kronologis_metadata_keterangan'][$index]) && $metadatas['dokumen_kronologis_metadata_keterangan'][$index] != null) {
+                    $systemUpload->keterangan = $metadatas['dokumen_kronologis_metadata_keterangan'][$index];
+                }
+                $systemUpload->uid = $metadatas['dokumen_kronologis_metadata_uid'][$index];
+                $systemUpload->foreign_field = 'id';
+                $systemUpload->jenis = 'dokumen_kronologis';
+                $systemUpload->foreign_table = 'inventaris';
+                $systemUpload->foreign_id = $metadatas['dokumen_kronologis_metadata_id_inventaris'][$index];
+
+                return $systemUpload;
+            });
+
+            DB::commit();
+
+            return $this->sendResponse($inventaris->toArray(), 'dokumen kronologis saved successfully');
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \App\Helpers\FileHelpers::deleteAll($fileDokumens);
+            return $this->sendError($e->getMessage() . $e->getTraceAsString());
+        }
+
+        return $this->sendResponse($inventaris->toArray(), 'dokumen kronologis saved successfully');
+    }
 }
