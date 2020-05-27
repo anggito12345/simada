@@ -186,10 +186,10 @@ class inventarisRepository extends BaseRepository
     }
 
     public static function generateKodeLokasi($req) {
-        $kodeStatus = \App\Models\setting::where('nama', 'KODE_LOKASI_STATUS')->first()->nilai;
-        $kodePropinsi = \App\Models\setting::where('nama', 'KODE_PROPINSI')->first()->nilai;
+        $kodeStatus = \App\Models\setting::where('nama', Constant::$SETTING_KODE_LOKASI_STATUS)->first()->nilai;
+        $kodePropinsi = \App\Models\setting::where('nama', Constant::$SETTING_KODE_PROPINSI)->first()->nilai;
         $intraEkstra = \App\Models\inventaris::CalculateIsIntraOrEkstra($req['tahun_perolehan'], $req['harga_satuan']);
-        $kodeKota = \App\Models\setting::where('nama', 'KODE_KOTA')->first()->nilai;    
+        $kodeKota = \App\Models\setting::where('nama', Constant::$SETTING_KODE_KOTA)->first()->nilai;    
 
         $propinsi = \App\Models\alamat::find(!array_key_exists('alamat_propinsi', $req) ? -1 : $req['alamat_propinsi']);
         if (empty($propinsi)) {
