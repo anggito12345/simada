@@ -179,7 +179,7 @@ editor = new $.fn.dataTable.Editor( {
             label: "Barang RKA:",
             name: "kode_barang",
             type: "select"
-        }, /* {
+        }, {
             label: "Nama Barang:",
             name: "nama_barang",
             attr: {
@@ -207,7 +207,7 @@ editor = new $.fn.dataTable.Editor( {
                 readonly: "readonly",
                 type: "number"
             }
-        },  */{
+        }, {
             label: "Jumlah Real:",
             name: "jumlah_real",
             attr: {
@@ -246,6 +246,7 @@ editor = new $.fn.dataTable.Editor( {
     ]
 });
 
+
 let buttonsOpt = [
     { extend: "create", editor: editor },
     { extend: "edit", editor: editor },
@@ -264,6 +265,10 @@ buttonsOpt = [
 
 <script>
 
+    var nama_barang;
+    var jumlah_rencana;
+    var harga_satuan_rencana;
+    var nilai_rencana;
 
 let editorInit = false
 
@@ -288,7 +293,7 @@ editor.on( 'open', function ( e, type ) {
                     // Transforms the top-level key of the response object from 'items' to 'results'
                     return {
                         results: data.data.map((d) => {
-                            d.text = d.kode_barang + ' - ' + d.nama_barang
+                            d.text = d.kode_barang /* + ' - ' + d.nama_barang */
 
                             return d
                         })
@@ -312,8 +317,6 @@ editor.on( 'open', function ( e, type ) {
         alert(nama_barang);
     } */
 });
-
-
 
 
 editor.on( 'preSubmit', function ( e, data, action ) {
