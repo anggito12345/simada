@@ -4,6 +4,13 @@ namespace App\Helpers;
 
 class Constant {
 
+    public static $SETTING_UBAH_PENATA_USAHAAN = 'UBAH_PENATA_USAHAAN';
+    public static $SETTING_NAMA_KOTA = 'NAMA_KOTA';
+    public static $SETTING_KODE_KOTA = 'KODE_KOTA';
+    public static $SETTING_NAMA_PROPINSI = 'NAMA_PROPINSI';
+    public static $SETTING_KODE_PROPINSI = 'KODE_PROPINSI';
+    public static $SETTING_KODE_LOKASI_STATUS = 'KODE_LOKASI_STATUS';
+    public static $SETTING_SKIN = 'SKIN';
 
     public static $ACTION_HISTORY = [
         "PEM1" => [

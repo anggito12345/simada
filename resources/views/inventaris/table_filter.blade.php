@@ -2,15 +2,15 @@
 <div class="box-body">
     <div class="row">
         <div class="col-md-4">
-            {{ Form::label('jenisbarangs_filter', 'Jenis Barang:') }}
+            {{ Form::label('jenisbarangs_filter', 'Kelompok:') }}
             {{ Form::select('jenisbarangs_filter', [], 0, ['class' => 'form-control', 'onchange' => 'viewModel.changeEvent.changeRefreshGrid()']) }}
         </div>
         <div class="col-md-4">
-            {{ Form::label('kodeobjek_filter', 'Kelompok Barang:') }}
+            {{ Form::label('kodeobjek_filter', 'Objek:') }}
             {{ Form::select('kodeobjek_filter', [], 0, ['class' => 'form-control', 'onchange' => 'viewModel.changeEvent.changeRefreshGrid()']) }}
         </div>
         <div class="col-md-4">
-            {{ Form::label('koderincianobjek_filter', 'Sub Kelompok Barang:') }}
+            {{ Form::label('koderincianobjek_filter', 'Rincian Objek:') }}
             {{ Form::select('koderincianobjek_filter', [], 0, ['class' => 'form-control', 'onchange' => 'viewModel.changeEvent.changeRefreshGrid()']) }}
         </div>        
     </div>    
