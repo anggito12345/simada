@@ -87,9 +87,9 @@
 
     viewModel.jsLoaded.subscribe((newVal) => {    
         // document is ready. Do your stuff here
-        const googleMapKoordinatLokasi = new MapInput(document.getElementById('koordinatlokasi'), {})
+        const googleMapKoordinatLokasi = new GoogleMapInput(document.getElementById('koordinatlokasi'), {})
 
-        const mapTanah = new MapInput(document.getElementById('koordinattanah'), {
+        const mapTanah = new GoogleMapInput(document.getElementById('koordinattanah'), {
             draw: true,
             drawOptions: [
                 'Polygon'

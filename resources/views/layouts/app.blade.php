@@ -113,8 +113,7 @@
 
     <link rel="stylesheet" href="<?= url('css/thirdparty/responsive.dataTables.min.css') ?>">
 
-    <link rel="stylesheet" href="<?= url('css/thirdparty/ol.css') ?>">
-
+    <link rel="stylesheet" href="<?= url('css/thirdparty/olgm.css') ?>">
     <link rel="stylesheet" href="<?= url('css/thirdparty/select.dataTables.min.css') ?>">
 
     <script src="<?= url('js/thirdparty/knockout-3.5.0.js') ?>"></script>
@@ -326,7 +325,8 @@
     </div>
     @endif
 
-    <script src="<?= url('js/thirdparty/ol.js') ?>"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCVMYWyxLU2CaMjwLSn0IbuF3SW-QAHTuE" type="text/javascript"></script>
+    <script src="<?= url('js/thirdparty/olgm.js') ?>"></script>
 
     <script src="<?= url('js/thirdparty/handlebars-v4.3.1.js') ?>"></script>
 
@@ -357,7 +357,7 @@
 
     <script src="<?= url('js/plugins/lookuptable.plugin.js?key=' . sha1(time())) ?>"></script>
 
-    <script src="<?= url('js/plugins/mapinput.plugin.js?key=' . sha1(time())) ?>"></script>
+    <script src="<?= url('js/plugins/googlemapinput.plugin.js?key=' . sha1(time())) ?>"></script>
 
 
     <script>

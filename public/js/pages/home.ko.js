@@ -215,7 +215,7 @@ function makeHomeMap() {
     const element = document.getElementById('home-map-container');
     $(element).html(`<i class="fa fa-refresh fa-spin fa-lg fa-fw"></i> Mohon tunggu...`);
 
-    new MapInput(element, {
+    new GoogleMapInput(element, {
         autoClose: false,
         isNotInput: true,
     });

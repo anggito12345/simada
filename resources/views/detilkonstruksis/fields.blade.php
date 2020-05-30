@@ -110,9 +110,9 @@ viewModel.jsLoaded.subscribe(() => {
 
     $('#luas-detilkonstruksi').mask("#.##0", {reverse: true});
 
-    const googleMapKoordinatLokasiBangunan = new MapInput(document.getElementById('koordinatlokasi-detilkonstruksi'), {})
+    const googleMapKoordinatLokasiBangunan = new GoogleMapInput(document.getElementById('koordinatlokasi-detilkonstruksi'), {})
 
-    const mapTanahBangunan = new MapInput(document.getElementById('koordinattanah-detilkonstruksi'), {
+    const mapTanahBangunan = new GoogleMapInput(document.getElementById('koordinattanah-detilkonstruksi'), {
         draw: true,
         drawOptions: [
             'Polygon'
