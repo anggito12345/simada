@@ -307,42 +307,43 @@ let MapInput = function(element, config) {
                 //     source.removeFeature(self.marker)
                 // }
 
-                let values = JSON.parse(value);
+                let values = JSON.stringify(value);
                 if (typeof values != 'object') 
                     values = JSON.parse(values)
 
-                    
-                let coordinatesDraws = []
-                let currentCoord = values.features[0].geometry.coordinates
-                for (let n = 0; n < currentCoord.length; n ++) {
-                    coordinatesDraws.push(ol.proj.transform(currentCoord[n], 'EPSG:4326', 'EPSG:3857'))
+                
+                if (typeof values.features !== 'undefined') {
+                    let coordinatesDraws = []
+                    let currentCoord = values.features[0].geometry.coordinates
+                    for (let n = 0; n < currentCoord.length; n ++) {
+                        coordinatesDraws.push(ol.proj.transform(currentCoord[n], 'EPSG:4326', 'EPSG:3857'))
+                    }
+    
+                    if (values.features[0].geometry.type == "Polygon") {
+                        let things = new ol.geom[values.features[0].geometry.type](
+                            [ values.features[0].geometry.coordinates[0].concat([values.features[0].geometry.coordinates[0][0]]) ]
+                        )
+                        self.lastFeature = new ol.Feature({
+                            geometry: things
+                        })
+                    } else if (values.features[0].geometry.type == "LineString") {
+    
+                        let things = new ol.geom[values.features[0].geometry.type](values.features[0].geometry.coordinates)
+    
+                        self.lastFeature = new ol.Feature({
+                            geometry: things
+                        })
+                    }
+                   
+    
+                    source.addFeature(self.lastFeature)
+    
+                    let ext    = self.lastFeature.getGeometry().getExtent();
+    
+                    self.map.getView().fit(ext, self.map.getSize());
+    
+                    $(`#${`select-${mapId}`}`).val(values.features[0].geometry.type)
                 }
-
-                if (values.features[0].geometry.type == "Polygon") {
-                    let things = new ol.geom[values.features[0].geometry.type](
-                        [ values.features[0].geometry.coordinates[0].concat([values.features[0].geometry.coordinates[0][0]]) ]
-                    )
-                    self.lastFeature = new ol.Feature({
-                        geometry: things
-                    })
-                } else if (values.features[0].geometry.type == "LineString") {
-
-                    let things = new ol.geom[values.features[0].geometry.type](values.features[0].geometry.coordinates)
-
-                    self.lastFeature = new ol.Feature({
-                        geometry: things
-                    })
-                }
-               
-
-                source.addFeature(self.lastFeature)
-
-                let ext    = self.lastFeature.getGeometry().getExtent();
-
-                self.map.getView().fit(ext, self.map.getSize());
-
-                $(`#${`select-${mapId}`}`).val(values.features[0].geometry.type)
-
                 
             }
         }
@@ -362,8 +363,4 @@ let MapInput = function(element, config) {
 
         
     })
-}
-
-let GoogleMap = (element, config) => {
-
 }
