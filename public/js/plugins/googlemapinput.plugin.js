@@ -1,5 +1,5 @@
 let MapInputIncrement = 1;
-let MapInput = function(element, config) {
+let GoogleMapInput = function(element, config) {
     const MapInputCurrentInc = MapInputIncrement
     const self = this
 
@@ -220,7 +220,9 @@ let MapInput = function(element, config) {
                 }
             }
         } else {
-            const mapElement = `<div id='${mapId}' style='width:100%; height:auto;'></div>`;
+
+            const parentElementHeight = $(element).height();
+            const mapElement = `<div id="${mapId}" style="width:100%; height: ${parentElementHeight}px;"></div>`;
             $(element).html(mapElement);
             
             setTimeout(() => {
@@ -234,11 +236,14 @@ let MapInput = function(element, config) {
             }, 1000);
         }
         
+        let googleLayer = new olgm.layer.Google();
+
         let raster =  new ol.layer.Tile({
-            source: new ol.source.OSM()
+            source: new ol.source.OSM(),
+            visible: false
         })
     
-        let source = new ol.source.Vector({wrapX: false});
+        let source = new ol.source.Vector();
     
         let vector = new ol.layer.Vector({
             source: source
@@ -248,9 +253,10 @@ let MapInput = function(element, config) {
             $(`#${mapId}`).html('')
 
             let mapConfig = {
+                interactions: olgm.interaction.defaults(),
                 target: mapId,
                 layers: [
-                  raster, vector
+                    googleLayer, raster, vector
                 ],
                 view: new ol.View({
                   center: ol.proj.fromLonLat([position.coords.longitude, position.coords.latitude]),
@@ -259,7 +265,7 @@ let MapInput = function(element, config) {
             }
         
             self.map =  new ol.Map(mapConfig);
-    
+            
             if (!self.defaultConfig.isNotInput) {                
                 if (!self.defaultConfig.draw) {
                     self.map.on('click', (ev) => {
@@ -277,13 +283,16 @@ let MapInput = function(element, config) {
             } else {
                 initValue(self.defaultConfig.value)
             }
+
+            var olGM = new olgm.OLGoogleMaps({map: self.map}); // map is the ol.Map instance
+            olGM.activate();
             
         }
 
         
 
         const initValue = (value) => {
-
+            
             if (value != "" && value != null && !self.defaultConfig.draw) {
                 let splittedValue = value.split(",")
                 if (splittedValue.length < 2) {
@@ -311,14 +320,13 @@ let MapInput = function(element, config) {
                 if (typeof values != 'object') 
                     values = JSON.parse(values)
 
-                
                 if (typeof values.features !== 'undefined') {
                     let coordinatesDraws = []
                     let currentCoord = values.features[0].geometry.coordinates
                     for (let n = 0; n < currentCoord.length; n ++) {
                         coordinatesDraws.push(ol.proj.transform(currentCoord[n], 'EPSG:4326', 'EPSG:3857'))
                     }
-    
+
                     if (values.features[0].geometry.type == "Polygon") {
                         let things = new ol.geom[values.features[0].geometry.type](
                             [ values.features[0].geometry.coordinates[0].concat([values.features[0].geometry.coordinates[0][0]]) ]
@@ -327,25 +335,26 @@ let MapInput = function(element, config) {
                             geometry: things
                         })
                     } else if (values.features[0].geometry.type == "LineString") {
-    
+
                         let things = new ol.geom[values.features[0].geometry.type](values.features[0].geometry.coordinates)
-    
+
                         self.lastFeature = new ol.Feature({
                             geometry: things
                         })
                     }
-                   
-    
+                
+
                     source.addFeature(self.lastFeature)
-    
+
                     let ext    = self.lastFeature.getGeometry().getExtent();
-    
+
                     self.map.getView().fit(ext, self.map.getSize());
-    
+
                     $(`#${`select-${mapId}`}`).val(values.features[0].geometry.type)
                 }
                 
             }
+
         }
 
         const createLayer = (LonLat) => {
