@@ -67,12 +67,11 @@ class penghapusanAPIController extends AppBaseController
 
         $input['created_by'] = Auth::id();
 
+        DB::beginTransaction();
         $penghapusan = $this->penghapusanRepository->create($input);
 
         $request->merge(['idpenghapusan' => $penghapusan->id]); 
 
-
-        DB::beginTransaction();
         try {
             
             $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen', $request, "penghapusan", function($metadatas, $index, $systemUpload) {

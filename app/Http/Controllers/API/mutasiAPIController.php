@@ -67,11 +67,11 @@ class mutasiAPIController extends AppBaseController
             $input['status'] = "CODE1";
         }
 
+        DB::beginTransaction();
         $mutasi = $this->mutasiRepository->create($input);
 
         $request->merge(['idmutasi' => $mutasi->id]); 
 
-        DB::beginTransaction();
         try {
             
             $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen', $request, "mutasi", function($metadatas, $index, $systemUpload) {
