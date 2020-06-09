@@ -71,7 +71,7 @@
 <div class="container-fluid p-3">
     <div class="row" data-bind="if: viewModel.data.currentTab() === 'home-map'">
         <div class="col-md-12">
-            <div id="home-map-container"></div>
+            <div id="home-map-container" style="height: 100vh;"></div>
         </div>
     </div>
 
