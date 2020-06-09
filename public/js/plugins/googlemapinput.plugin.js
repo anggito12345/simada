@@ -100,6 +100,7 @@ let GoogleMapInput = function(element, config) {
                 inputMaskingElement.style.display = 'block'
             } else {
                 inputMaskingElement = document.createElement('textarea')
+                inputMaskingElement.value = Object.keys(self.defaultConfig.value).length == 0 ? '' : self.defaultConfig.value;
                 inputMaskingElement.style.display = 'block'
             }
             
@@ -184,39 +185,35 @@ let GoogleMapInput = function(element, config) {
             addInteraction = function() {
                 var value = $(`#${`select-${mapId}`}`).val();
                 if (value !== 'None') {
-                  self.draw = new ol.interaction.Draw({
-                    source: source,
-                    type: value
-                  });
+                    self.draw = new ol.interaction.Draw({
+                        source: source,
+                        type: value
+                    });
     
+                    self.draw.on('drawstart', function(ev) {
+                        if (self.lastFeature) {
+                            source.clear();
+                            // source.removeFeature(self.lastFeature);
+                        }
 
-                  self.draw.on('drawstart', function(ev) {
-    
-                    if (self.lastFeature)
-                         source.removeFeature(self.lastFeature);
-    
-                  })
-    
-                  self.draw.on('drawend', function(ev) {
+                    })
 
-                    
-    
-                    ev.feature.setId(new IDGenerator().generate());
-                    
-                    self.lastFeature = ev.feature
-    
-                    let format = new ol.format['GeoJSON']()
-    
-                    setTimeout(() => {
-                        let data = format.writeFeatures(vector.getSource().getFeatures())
-    
-                        inputMaskingElement.value = JSON.stringify(data, null, 4)
-                        inputMaskingElement.dispatchEvent(new Event('change'))
-                    },1000)
-                    
-    
-                  })
-                  self.map.addInteraction(self.draw);
+                    self.draw.on('drawend', function(ev) {
+                        ev.feature.setId(new IDGenerator().generate());
+                        
+                        self.lastFeature = ev.feature
+
+                        let format = new ol.format['GeoJSON']()
+
+                        setTimeout(() => {
+                            let data = format.writeFeatures(vector.getSource().getFeatures())
+
+                            inputMaskingElement.value = JSON.stringify(data, null, 4)
+                            inputMaskingElement.dispatchEvent(new Event('change'))
+                        },1000)
+                    })
+
+                    self.map.addInteraction(self.draw);
                 }
             }
         } else {
@@ -275,6 +272,7 @@ let GoogleMapInput = function(element, config) {
             
                         if (self.defaultConfig.autoClose) {
                             $(`#${modalIdGoogleMap}`).modal('hide')
+                            self.map = null;
                         }
                     })
                 } else {
@@ -291,8 +289,7 @@ let GoogleMapInput = function(element, config) {
 
         
 
-        const initValue = (value) => {
-            
+        const initValue = (value) => {            
             if (value != "" && value != null && !self.defaultConfig.draw) {
                 let splittedValue = value.split(",")
                 if (splittedValue.length < 2) {
@@ -303,12 +300,13 @@ let GoogleMapInput = function(element, config) {
                 self.map.setView(
                     new ol.View({
                         center: ol.proj.fromLonLat([parseFloat(splittedValue[0]), parseFloat(splittedValue[1])]),                         
-                        zoom: 12
+                        zoom: 8
                     })
                 );
 
                 if (self.marker != null) {
-                    source.removeFeature(self.marker)
+                    source.clear();
+                    // source.removeFeature(self.marker)
                 }
                 createLayer(splittedValue)
             } else if (value != "" && value != null) {
@@ -316,7 +314,8 @@ let GoogleMapInput = function(element, config) {
                 //     source.removeFeature(self.marker)
                 // }
 
-                let values = JSON.stringify(value);
+                // let values = JSON.stringify(value);
+                let values = JSON.parse(value);
                 if (typeof values != 'object') 
                     values = JSON.parse(values)
 
