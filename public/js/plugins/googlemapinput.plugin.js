@@ -331,50 +331,45 @@ let GoogleMapInput = function(element, config) {
 
                 if (typeof values.features !== 'undefined') {
                     let coordsTemp = [];
-                    let coordTemp = [];
+                    let convertedCoord = [];
                     let validCoord = true;
                     for (let idx = 0; idx < values.features[0].geometry.coordinates[0].length; idx++) {
-                        coordTemp = ol.proj.transform(values.features[0].geometry.coordinates[0][idx], 'EPSG:4326', 'EPSG:3857');
+                        convertedCoord = ol.proj.transform(values.features[0].geometry.coordinates[0][idx], 'EPSG:4326', 'EPSG:3857');
 
-                        if (coordTemp.findIndex(el => isNaN(el)) != -1) {
+                        if (convertedCoord.findIndex(el => isNaN(el)) != -1) {
                             validCoord = false;
                             break;
                         }
 
-                        coordsTemp.push(coordTemp);
+                        coordsTemp.push(convertedCoord);
                     }
 
                     if (validCoord) {
                         values.features[0].geometry.coordinates[0] = coordsTemp;
+                    }
     
-                        if (values.features[0].geometry.type == "Polygon") {
-                            let things = new ol.geom[values.features[0].geometry.type](
-                                [ values.features[0].geometry.coordinates[0].concat([values.features[0].geometry.coordinates[0][0]]) ]
-                            )
-    
-                            self.lastFeature = new ol.Feature({
-                                geometry: things
-                            })
-                        } else if (values.features[0].geometry.type == "LineString") {
-    
-                            let things = new ol.geom[values.features[0].geometry.type](values.features[0].geometry.coordinates)
-    
-                            self.lastFeature = new ol.Feature({
-                                geometry: things
-                            })
-                        }
-    
-                        source.addFeature(self.lastFeature)
-    
-                        let ext    = self.lastFeature.getGeometry().getExtent();
-    
-                        self.map.getView().fit(ext, self.map.getSize());
-                    } else {
-                        swal.fire({
-                            type: 'warning',
-                            text: 'Format map tidak valid',
+                    if (values.features[0].geometry.type == "Polygon") {
+                        let things = new ol.geom[values.features[0].geometry.type](
+                            [ values.features[0].geometry.coordinates[0].concat([values.features[0].geometry.coordinates[0][0]]) ]
+                        )
+
+                        self.lastFeature = new ol.Feature({
+                            geometry: things
+                        })
+                    } else if (values.features[0].geometry.type == "LineString") {
+
+                        let things = new ol.geom[values.features[0].geometry.type](values.features[0].geometry.coordinates)
+
+                        self.lastFeature = new ol.Feature({
+                            geometry: things
                         })
                     }
+
+                    source.addFeature(self.lastFeature)
+
+                    let ext    = self.lastFeature.getGeometry().getExtent();
+
+                    self.map.getView().fit(ext, self.map.getSize());
 
                     $(`#${`select-${mapId}`}`).val(values.features[0].geometry.type)
                 }
