@@ -280,7 +280,7 @@
             <div class="panel-body" data-bind="visible: viewModel.data.currentHighlight() == 'penghapusan-validasi'">
                 <table class="table table-striped" id="table-penghapusan-validasi">
                 </table>
-                @if(c::is([],[],[Constant::$GROUP_OPD_ORG]))
+                @if(c::is([],[],[Constant::$GROUP_BPKAD_ORG]))
                     <button type="button" class="btn btn-primary" onclick="beforeApproveValidasiPenghapusan()">Setujui</button>
                 @endif
             </div>

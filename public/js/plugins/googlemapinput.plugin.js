@@ -100,6 +100,7 @@ let GoogleMapInput = function(element, config) {
                 inputMaskingElement.style.display = 'block'
             } else {
                 inputMaskingElement = document.createElement('textarea')
+                inputMaskingElement.value = Object.keys(self.defaultConfig.value).length == 0 ? '' : self.defaultConfig.value;
                 inputMaskingElement.style.display = 'block'
             }
             
@@ -184,39 +185,45 @@ let GoogleMapInput = function(element, config) {
             addInteraction = function() {
                 var value = $(`#${`select-${mapId}`}`).val();
                 if (value !== 'None') {
-                  self.draw = new ol.interaction.Draw({
-                    source: source,
-                    type: value
-                  });
+                    self.draw = new ol.interaction.Draw({
+                        source: source,
+                        type: value
+                    });
     
+                    self.draw.on('drawstart', function(ev) {
+                        if (self.lastFeature) {
+                            source.clear();
+                            // source.removeFeature(self.lastFeature);
+                        }
 
-                  self.draw.on('drawstart', function(ev) {
-    
-                    if (self.lastFeature)
-                         source.removeFeature(self.lastFeature);
-    
-                  })
-    
-                  self.draw.on('drawend', function(ev) {
+                    })
 
-                    
-    
-                    ev.feature.setId(new IDGenerator().generate());
-                    
-                    self.lastFeature = ev.feature
-    
-                    let format = new ol.format['GeoJSON']()
-    
-                    setTimeout(() => {
-                        let data = format.writeFeatures(vector.getSource().getFeatures())
-    
-                        inputMaskingElement.value = JSON.stringify(data, null, 4)
-                        inputMaskingElement.dispatchEvent(new Event('change'))
-                    },1000)
-                    
-    
-                  })
-                  self.map.addInteraction(self.draw);
+                    self.draw.on('drawend', function(ev) {
+                        ev.feature.setId(new IDGenerator().generate());
+                        
+                        self.lastFeature = ev.feature
+
+                        let format = new ol.format['GeoJSON']()
+
+                        setTimeout(() => {
+                            let data = format.writeFeatures(vector.getSource().getFeatures())
+
+                            data = JSON.parse(data);
+                            let coordsTemp = [];
+
+                            for (let idx = 0; idx < data.features[0].geometry.coordinates[0].length; idx++) {
+                                coordsTemp.push(ol.proj.transform(data.features[0].geometry.coordinates[0][idx], 'EPSG:3857', 'EPSG:4326'));
+                            }
+
+                            data.features[0].geometry.coordinates[0] = coordsTemp;
+                            data = JSON.stringify(data);
+
+                            inputMaskingElement.value = JSON.stringify(data, null, 4)
+                            inputMaskingElement.dispatchEvent(new Event('change'))
+                        },1000)
+                    })
+
+                    self.map.addInteraction(self.draw);
                 }
             }
         } else {
@@ -275,6 +282,7 @@ let GoogleMapInput = function(element, config) {
             
                         if (self.defaultConfig.autoClose) {
                             $(`#${modalIdGoogleMap}`).modal('hide')
+                            self.map = null;
                         }
                     })
                 } else {
@@ -291,8 +299,7 @@ let GoogleMapInput = function(element, config) {
 
         
 
-        const initValue = (value) => {
-            
+        const initValue = (value) => {            
             if (value != "" && value != null && !self.defaultConfig.draw) {
                 let splittedValue = value.split(",")
                 if (splittedValue.length < 2) {
@@ -303,12 +310,13 @@ let GoogleMapInput = function(element, config) {
                 self.map.setView(
                     new ol.View({
                         center: ol.proj.fromLonLat([parseFloat(splittedValue[0]), parseFloat(splittedValue[1])]),                         
-                        zoom: 12
+                        zoom: 8
                     })
                 );
 
                 if (self.marker != null) {
-                    source.removeFeature(self.marker)
+                    source.clear();
+                    // source.removeFeature(self.marker)
                 }
                 createLayer(splittedValue)
             } else if (value != "" && value != null) {
@@ -316,21 +324,23 @@ let GoogleMapInput = function(element, config) {
                 //     source.removeFeature(self.marker)
                 // }
 
-                let values = JSON.stringify(value);
+                // let values = JSON.stringify(value);
+                let values = JSON.parse(value);
                 if (typeof values != 'object') 
                     values = JSON.parse(values)
 
                 if (typeof values.features !== 'undefined') {
-                    let coordinatesDraws = []
-                    let currentCoord = values.features[0].geometry.coordinates
-                    for (let n = 0; n < currentCoord.length; n ++) {
-                        coordinatesDraws.push(ol.proj.transform(currentCoord[n], 'EPSG:4326', 'EPSG:3857'))
+                    let coordsTemp = [];
+                    for (let idx = 0; idx < values.features[0].geometry.coordinates[0].length; idx++) {
+                        coordsTemp.push(ol.proj.transform(values.features[0].geometry.coordinates[0][idx], 'EPSG:4326', 'EPSG:3857'));
                     }
+                    values.features[0].geometry.coordinates[0] = coordsTemp;
 
                     if (values.features[0].geometry.type == "Polygon") {
                         let things = new ol.geom[values.features[0].geometry.type](
                             [ values.features[0].geometry.coordinates[0].concat([values.features[0].geometry.coordinates[0][0]]) ]
                         )
+
                         self.lastFeature = new ol.Feature({
                             geometry: things
                         })
