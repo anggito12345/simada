@@ -380,8 +380,12 @@ if (isset($penghapusan)) {
 
     editor.on('preSubmit', function(e, data, action) {
         const hargaApprisalEl = $('#DTE_Field_harga_apprisal');
+        dataSelect = DTE_Field_inventaris.selectedValues;
 
-        if (DTE_Field_inventaris.selectedValues.length <= 0) {
+        let inventarisSelecteds = $("#table-detil-penghapusan").DataTable().rows().data().toArray();
+        let isInventarisSelectedExists = false;
+
+        if (dataSelect.length <= 0) {
             this.field('inventaris').error('Mohon pilih inventaris terlebih dahulu!');
         }
 
@@ -389,12 +393,26 @@ if (isset($penghapusan)) {
             this.field('harga_apprisal').error('Mohon isi Harga Appraisal terlebih dahulu!');
         }
 
+        dataSelect.forEach((dataVal, index) => {
+            isInventarisSelectedExists = inventarisSelecteds.find((dt, idx) => {
+                if (dt.inventaris == dataVal.id) {
+                    return true;
+                }
+            });
+
+            if (isInventarisSelectedExists) {
+                return false;
+            }
+        });
+
+        if (isInventarisSelectedExists) {
+            this.field('inventaris').error('Inventaris sudah ada pada daftar penghapusan!');
+        }
+
         if (this.inError()) {
             return false;
         }
 
-
-        dataSelect = DTE_Field_inventaris.selectedValues
         if (action == 'create') {
             dataSelect.forEach((dataVal, index) => {
 
@@ -443,7 +461,6 @@ if (isset($penghapusan)) {
     });
 
     editor.on('postSubmit', function(e, node, data) {
-
         DTE_Field_inventaris.setDefault(null)
     });
 </script>

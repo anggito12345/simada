@@ -75,6 +75,22 @@ class inventaris_mutasiRepository extends BaseRepository
     }
 
     /**
+     * Check inventaris already on mutasi
+     * @param array $inventaris
+     * @return boolean
+     */
+    public function isExist($inventaris = []) {
+        $isExist = \App\Models\inventaris_mutasi::where([
+            'noreg' => $inventaris['noreg'],
+            'pidbarang' => $inventaris['pidbarang'],
+            'tahun_perolehan' => $inventaris['tahun_perolehan'],
+            'harga_satuan' => $inventaris['harga_satuan'],
+        ])->count();
+        
+        return $isExist > 0;
+    }
+
+    /**
      * copy invetaris to inventaris mutasi temporary 
      */
 
@@ -83,6 +99,13 @@ class inventaris_mutasiRepository extends BaseRepository
         foreach ($dataDetils as $dataDetil) {
             // move 
             $inventariPrepareToCopy = \App\Models\inventaris::where('id', $dataDetil['inventaris'])->first()->toArray();
+
+            // check is already on mutasi
+            if ($this->isExist($inventariPrepareToCopy)) {
+                throw new Exception("Inventaris telah diajukan");                
+                return;
+            }
+
             $inventariPrepareToCopy['mutasi_id'] = $idMutasi;
             $inventariPrepareToCopy['mutasi_at'] = date('Y-m-d H:i:s');
             $inventariPrepareToCopy['status'] = 'STEP-1';
