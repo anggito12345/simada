@@ -201,7 +201,7 @@ class inventarisDataTable extends DataTable
                 'data' => 'detail',                
                 "defaultContent" =>''
             ],
-            'kodebarang',
+            'kode_barang',
             'noreg',        
             'nama_rek_aset' => [
                 'footer' => 'm_barang.nama_rek_aset',

@@ -69,7 +69,7 @@ class inventarisRepository extends BaseRepository
 
 
         if (isset($theFilter['jenisbarangs']) && $theFilter['jenisbarangs'] != "" && $theFilter['jenisbarangs'] != null) {
-            $buildingModel = $buildingModel->where('m_jenis_barang.id', $_GET['jenisbarangs']);
+            $buildingModel = $buildingModel->where('m_barang.kode_jenis', $_GET['jenisbarangs']);
         }
 
         if (isset($theFilter['kodeobjek']) && $theFilter['kodeobjek'] != "" && $theFilter['kodeobjek'] != null) {
@@ -99,11 +99,7 @@ class inventarisRepository extends BaseRepository
             }             
         }
 
-        if (isset($theFilter['search']['value'])){
-            $buildingModel = $buildingModel
-                    ->orWhereRaw('inventaris.kode_barang LIKE \'%'.$theFilter['search']['value'].'%\'');    
-        }
-
+       
         return $buildingModel;
         
     }
@@ -145,7 +141,7 @@ class inventarisRepository extends BaseRepository
         }
                      
         $buildingModel = $buildingModel->join("m_barang", "m_barang.id", "inventaris.pidbarang")
-            ->join("m_jenis_barang", "m_jenis_barang.kode", "m_barang.kode_jenis")
+            ->leftJoin("m_jenis_barang", "m_jenis_barang.kode", "m_barang.kode_jenis")
             // role =================
             ->leftJoin("users","users.id", "inventaris.idpegawai")
             ->leftJoin("m_jabatan", "m_jabatan.id", 'users.jabatan')
