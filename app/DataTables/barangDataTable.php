@@ -66,6 +66,7 @@ class barangDataTable extends DataTable
     {
         return [
             // 'pid',
+            'id',
             'kode_akun',
             'kode_kelompok',
             'kode_objek',
