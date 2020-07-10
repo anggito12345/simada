@@ -19,21 +19,8 @@ class inventarisRepository extends BaseRepository
      * @var array
      */
     protected $fieldSearchable = [
-        'noreg',
-        'pidbarang',
-        'pidopd',
-        'pidlokasi',
-        'tgl_perolehan',
-        'tgl_sensus',
-        'volume',
-        'pembagi',
-        'satuan',
-        'harga_satuan',
-        'perolehan',
-        'kondisi',
-        'lokasi_detil',
-        'umur_ekonomis',
-        'keterangan'
+       
+        'kode_barang'
     ];
 
     /**
@@ -63,7 +50,7 @@ class inventarisRepository extends BaseRepository
     }
 
     /**
-     * its need to be trigger when there are more than 1 filter is filled.
+     * its need to be triggered when there are more than 1 filter that filled.
      * @jenisbarangs
      * @kodeobjek
      * @koderincianobjek
@@ -112,7 +99,13 @@ class inventarisRepository extends BaseRepository
             }             
         }
 
+        if (isset($theFilter['search']['value'])){
+            $buildingModel = $buildingModel
+                    ->orWhereRaw('inventaris.kode_barang LIKE \'%'.$theFilter['search']['value'].'%\'');    
+        }
+
         return $buildingModel;
+        
     }
 
     public static function getData($isDraft = null, $rawSelect = "") {
@@ -143,7 +136,7 @@ class inventarisRepository extends BaseRepository
                 "inventaris_reklas.id as ir",
                 "detil_mesin.norangka",                
                 "detil_mesin.nomesin",
-                "detil_mesin.nopol",
+                "detil_mesin.nopol"
             ])
             ->selectRaw('CONCAT(detil_tanah.nomor_sertifikat,\'/\',detil_mesin.nopabrik,\'/\', detil_mesin.norangka,\'/\', detil_mesin.nomesin) as nomor')            
             ->selectRaw('CONCAT(\'1 \',m_satuan_barang.nama) as barang');

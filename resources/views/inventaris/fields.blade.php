@@ -747,6 +747,7 @@
                         })
                         
                         formData.append(`kib`, JSON.stringify(viewModel.data[viewModel.data.tipeKib()]()))
+                        formData.append(`kode_barang`, $("[name=kodebarang]").val())
                         //formData.append(`kode_lokasi`, $('#kode_lokasi').val())
                         formData.append('tipe_kib', viewModel.data.tipeKib().replace(/KIB /g,""))
 
@@ -786,89 +787,7 @@
             onSave(false)            
         })
 
-        /*$("#pidbarang, #tahun_perolehan, #harga_satuan, #pidopd, #pidopd_cabang, #pidupt, #alamat_propinsi, #alamat_kota, #alamat_kecamatan, #alamat_kelurahan").change(() => {
-
-            let propinsiId = 0
-            if ($("#alamat_propinsi").select2('val') != null) {
-                propinsiId = $("#alamat_propinsi").select2('data')[0].id
-            }
-
-            if (propinsiId == undefined && $("#alamat_propinsi").select2('val') != null &&  $("#alamat_propinsi").select2('val') != "") {                
-                propinsiId = $("#alamat_propinsi").select2('data')[0].element.dataset.id                
-            }
-
-            if (propinsiId == undefined)
-                propinsiId = 0
-
-            let kotaId = 0
-            if ($("#alamat_kota").select2('val') != null) {
-                kotaId = $("#alamat_kota").select2('data')[0].id            
-            }
-
-            if (kotaId == undefined && $("#alamat_kota").select2('val') != null &&  $("#alamat_kota").select2('val') != "") {                
-                kotaId = $("#alamat_kota").select2('data')[0].element.dataset.id                
-            }
-
-            if (kotaId == undefined)
-                kotaId = 0
-
-            let pidOpd = 0
-            if ($("#pidopd").select2('val') != null) {
-                pidOpd = $("#pidopd").select2('data')[0].id
-            }
-
-            if (pidOpd == undefined && $("#pidopd").select2('val') != null &&  $("#pidopd").select2('val') != "") {                
-                pidOpd = $("#pidopd").select2('data')[0].element.dataset.id                
-            }
-
-            if (pidOpd == undefined)
-                pidOpd = 0
-
-            let pidOpdCabang = 0
-            if ($("#pidopd_cabang").select2('val') != null) {
-                pidOpdCabang = $("#pidopd_cabang").select2('data')[0].id             
-            }
-
-            if (pidOpdCabang == undefined && $("#pidopd_cabang").select2('val') != null && $("#pidopd_cabang").select2('val') != "") {                
-                pidOpdCabang = $("#pidopd_cabang").select2('data')[0].element.dataset.id                
-            } 
-
-            if (pidOpdCabang == undefined)
-                pidOpdCabang = 0
-
-            let pidUpt = 0
-            if ($("#pidupt").select2('val') != null) {
-                pidUpt = $("#pidupt").select2('data')[0].id                
-            }
-
-            if (pidUpt == undefined && $("#pidupt").select2('val') != null && $("#pidupt").select2('val') != "") {                
-                pidUpt = $("#pidupt").select2('data')[0].element.dataset.id                                   
-            }
-
-            if (pidUpt == undefined)
-                pidUpt = 0
-
-            
-            if ($("#tahun_perolehan").val() != "" && $("#harga_satuan").val() != "") {
-                __ajax({
-                    method: 'POST',
-                    url: "<?= url('api/generateKodeLokasi') ?>",
-                    data: {
-                        'alamat_propinsi': propinsiId,
-                        'alamat_kota': kotaId,
-                        'pidopd': pidOpd,
-                        'pidopd_cabang': pidOpdCabang,
-                        'pidupt': pidUpt,
-                        'tahun_perolehan': $('#tahun_perolehan').val(),
-                    }
-                }).then((data) => {
-                    $('#kode_lokasi').val(data);
-                });
-            } else {
-                $("#kode_lokasi").val("Isi tahun perolehan dan harga satuan terlebih dahulu!")
-            }
-                
-        })*/
+        
     </script>
 
     @if (isset($inventaris))
