@@ -635,7 +635,6 @@
         var fileGallery = new FileGallery(document.getElementById('dokumen'), {
             title: 'File Dokumen',
             maxSize: 5000000,
-            accept: App.Constant.MimeOffice,
             onDelete: () => {                
                 return new Promise((resolve, reject) => {
                     let checkIfIdExist = fileGallery.checkedRow().filter((d) => {
@@ -661,7 +660,6 @@
         var foto = new FileGallery(document.getElementById('foto'), {
             title: 'Media',
             maxSize: 50000000,
-            accept: "image/*|video/*",
             onDelete: () => {                
                 return new Promise((resolve, reject) => {
                     let checkIfIdExist = foto.checkedRow().filter((d) => {
