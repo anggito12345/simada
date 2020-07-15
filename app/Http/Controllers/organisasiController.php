@@ -10,6 +10,7 @@ use App\Http\Requests\UpdateorganisasiRequest;
 use App\Repositories\organisasiRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
+use App\Models\organisasi;
 use Response;
 
 class organisasiController extends AppBaseController
@@ -82,6 +83,8 @@ class organisasiController extends AppBaseController
     public function store(CreateorganisasiRequest $request)
     {
         $input = $request->all();
+
+        $input["id"] = organisasi::max("id") +1;
 
         $organisasi = $this->organisasiRepository->create($input);
 

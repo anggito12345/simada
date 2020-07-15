@@ -129,6 +129,9 @@ $countUserNeedOtor = \App\Models\users::where('aktif', '0')->count();
         <li class="{{ Request::is('jabatans*') ? 'active' : '' }}">
             <a href="{!! route('jabatans.index') !!}"><i class="fa fa-edit"></i><span>Jabatan/Roles</span></a>
         </li>
+        <li class="{{ Request::is('import*') ? 'active' : '' }}">
+            <a href="{!! route('import.index') !!}"><i class="fa fa-import"></i><span>Import Data</span></a>
+        </li>
         <li class="{{ Request::is('settings*') ? 'active' : '' }}">
             <a href="{!! route('settings.index') !!}"><i class="fa fa-edit"></i><span>Setting</span></a>
         </li>

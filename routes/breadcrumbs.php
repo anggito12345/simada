@@ -510,3 +510,9 @@ Breadcrumbs::for('rkaBarangs.show', function ($trail, $data) {
     $trail->push('Lihat', route('rkaBarangs.show', $data));
 });
 
+// import > index
+Breadcrumbs::for('import.index', function ($trail) {
+    $trail->push('Import data', route('import.index'));
+});
+
+
