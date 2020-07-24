@@ -24,6 +24,27 @@
         }
     </style>
     <style type="text/css">
+        .loading-asset {
+            background-image: url(http://localhost/simada/public/images/loading.gif);
+            width: 100px;
+            height: 100px;
+            z-index: 10001;
+            position: absolute;
+            top: 42%;
+            background-size: 100%;
+            background-repeat: no-repeat;
+            left: 48%;
+        }
+
+        .loading-page {
+            background: rgba(0, 0, 0, .5);
+            width: 100%;
+            height: 100vh;
+            position: fixed;
+            display: none;
+            z-index: 10000;
+        }
+
 
         .loading {
             font-size: 0;
@@ -162,6 +183,9 @@
 <input type="text" value="<?= public_path('') ?>" base-http style="display:none" />
 
 <body class="skin-green-light sidebar-mini">
+    <div class="loading-page">
+        <div class="loading-asset"></div>
+    </div>
     @if (!Auth::guest())
     <div class="wrapper">
         <!-- Main Header -->
@@ -330,7 +354,7 @@
 
     <script src="<?= url('js/thirdparty/handlebars-v4.3.1.js') ?>"></script>
 
-    
+
 
     @include('layouts.datatables_js')
 
@@ -421,12 +445,22 @@
                 };
             }
         })
-        
-        $( document ).ajaxError(function( event, jqxhr, settings, thrownError ) {
+
+        $( document ).ajaxStart(function() {
+            $(".loading-page").attr('style', 'display: block');
+        }).ajaxError(function( event, jqxhr, settings, thrownError ) {
             if (jqxhr.status == 401) {
                 $('.btn-logout').click();
             }
+
+            $(".loading-page").attr('style', 'display: none');
+        }).ajaxComplete(() => {
+            $(".loading-page").attr('style', 'display: none');
         });
+
+        $("form").on("submit", function(){
+            $(".loading-page").attr('style', 'display: block');
+        });//submit
     </script>
     @yield('before_pages')
     @include('layouts.pages')

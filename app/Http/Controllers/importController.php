@@ -7,6 +7,7 @@ use Maatwebsite\Excel\Facades\Excel;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use Flash;
 use App\Imports\InventarisImport;
 use Illuminate\Support\Facades\Storage;
 
@@ -24,6 +25,22 @@ class importController extends AppBaseController
         return view("import.index");
     }
 
+
+    public function inventaris(Request $request) {
+
+        try {
+            $file = $request->file("file");
+            $fullpathFile = $request->file("file")->storeAs("tmp", $file->getClientOriginalName());
+
+            Excel::import(new InventarisImport, $fullpathFile);
+        } catch (\Exception $e) {
+            dd($e->getMessage());
+            return back()->withErrors($e->getMessage());
+        }
+
+        Flash::success("Successfully import data");
+        //return redirect(route("import.index"));
+    }
 
 }
 ?>

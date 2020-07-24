@@ -62,7 +62,9 @@
             </button>
         </div>
         <div class="modal-body">
-            <form method="POST" action="<?= route('import.inventaris') ?>" id="form-import">
+            <form method="POST" action="<?= route('import.inventaris') ?>" id="form-import" enctype="multipart/form-data">
+                {{ csrf_field() }}
+
                 <div class="form-group">
                     <label>Browse:</label>
 

@@ -7,6 +7,7 @@ use App\Repositories\BaseRepository;
 use Constant;
 use Auth;
 use Illuminate\Support\Facades\DB;
+use Illuminate\Container\Container as Application;
 
 /**
  * Class inventarisRepository
@@ -50,7 +51,7 @@ class inventarisRepository extends BaseRepository
         return [];
     }
 
-    public function InsertLogic($input) {
+    public static function InsertLogic($input) {
         DB::beginTransaction();
         try {
 
@@ -78,15 +79,70 @@ class inventarisRepository extends BaseRepository
 
                 $input['noreg'] = sprintf('%03d',$lastNoReg + 1);
 
-                $inventaris = self::create($input);
+                $inventarisRepository = new inventarisRepository(new Application());
+
+                $inventaris = $inventarisRepository->create($input);
 
                 $lastNoReg++;
             }
 
-            Flash::success('Inventaris saved successfully.');
+
+            if (isset($request)) {
+                $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen', $request, "inventaris", function ($metadatas, $index, $systemUpload) {
+                    if (isset($metadatas['dokumen_metadata_keterangan'][$index]) && $metadatas['dokumen_metadata_keterangan'][$index] != null) {
+                        $systemUpload->keterangan = $metadatas['dokumen_metadata_keterangan'][$index];
+                    }
+
+                    $systemUpload->uid = $metadatas['dokumen_metadata_uid'][$index];
+                    $systemUpload->foreign_field = 'id';
+                    $systemUpload->jenis = 'dokumen';
+                    $systemUpload->foreign_table = 'inventaris';
+                    $systemUpload->foreign_id = $metadatas['idinventaris'];
+
+                    return $systemUpload;
+                });
+
+
+                $fileFotos = \App\Helpers\FileHelpers::uploadMultiple('foto', $request, "inventaris", function ($metadatas, $index, $systemUpload) {
+                    if (isset($metadatas['foto_metadata_keterangan'][$index]) && $metadatas['foto_metadata_keterangan'][$index] != null) {
+                        $systemUpload->keterangan = $metadatas['foto_metadata_keterangan'][$index];
+                    }
+                    $systemUpload->uid = $metadatas['foto_metadata_uid'][$index];
+                    $systemUpload->foreign_field = 'id';
+                    $systemUpload->jenis = 'foto';
+                    $systemUpload->foreign_table = 'inventaris';
+                    $systemUpload->foreign_id = $metadatas['idinventaris'];
+
+
+                    return $systemUpload;
+                });
+
+            }
+
+            if (isset($input["kib"])) {
+                $kibData = json_decode($input['kib'], true);
+            } else {
+                $kibData = [];
+            }
+
+
+            $kibData['pidinventaris'] = $inventaris->id;
+
+            \App\Models\inventaris::saveKib($kibData, $input['tipe_kib']);
+
+            $inventarisHistoryData = $inventaris->toArray();
+
+
+
+            $inventarisHistory = new inventaris_historyRepository(new Application());
+            $inventarisHistory->postHistory($inventarisHistoryData, Constant::$ACTION_HISTORY['NEW']);
+
 
             DB::commit();
         } catch (\Exception $e) {
+
+            throw new \Exception($e->getMessage());
+
             DB::rollBack();
 
             return redirect()->back()->withInput()->withErrors($e->getMessage());
