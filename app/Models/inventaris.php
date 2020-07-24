@@ -37,7 +37,7 @@ class inventaris extends Model
     use Draftable;
 
     public $table = 'inventaris';
-    
+
     const INTRACODE = "01";
     const EXTRACODE = "02";
     const CREATED_AT = 'created_at';
@@ -78,7 +78,8 @@ class inventaris extends Model
         'kode_gedung',
         'kode_ruang',
         'penanggung_jawab',
-        'umur_ekonomis'
+        'umur_ekonomis',
+        'kode_barang'
     ];
 
     /**
@@ -136,7 +137,7 @@ class inventaris extends Model
 
                 if(array_key_exists('koordinattanah', $dataKib) && is_array($dataKib['koordinattanah'])) {
                     $dataKib['koordinattanah'] = json_encode($dataKib['koordinattanah']);
-                }               
+                }
 
 
                 if (array_key_exists('tgl_sertifikat', $dataKib)) {
@@ -144,16 +145,16 @@ class inventaris extends Model
                 } else {
                     $dataKib['tgl_sertifikat'] = date('Y-m-d');
                 }
-                
 
-                if (isset($dataKib['pidinventaris']) && $dataKib['pidinventaris'] != null && $dataKib['pidinventaris'] != "") {                    
+
+                if (isset($dataKib['pidinventaris']) && $dataKib['pidinventaris'] != null && $dataKib['pidinventaris'] != "") {
                     $exist = DB::table('detil_tanah')->where('pidinventaris', $dataKib['pidinventaris'])->count();
-                    
+
                     if ($exist > 0 ) {
                         DB::table('detil_tanah')->where('pidinventaris', $dataKib['pidinventaris'])->update($dataKib);
                         break;
                     }
-                } 
+                }
 
                 DB::table('detil_tanah')->insert($dataKib);
                 break;
@@ -166,14 +167,14 @@ class inventaris extends Model
                     return;
                 }
 
-                if (isset($dataKib['pidinventaris']) && $dataKib['pidinventaris'] != null && $dataKib['pidinventaris'] != "") {                    
+                if (isset($dataKib['pidinventaris']) && $dataKib['pidinventaris'] != null && $dataKib['pidinventaris'] != "") {
                     $exist = DB::table('detil_mesin')->where('pidinventaris', $dataKib['pidinventaris'])->count();
-                    
+
                     if ($exist > 0 ) {
                         DB::table('detil_mesin')->where('pidinventaris', $dataKib['pidinventaris'])->update($dataKib);
                         break;
                     }
-                } 
+                }
 
                 DB::table('detil_mesin')->insert($dataKib);
 
@@ -197,14 +198,14 @@ class inventaris extends Model
                     $dataKib['tgldokumen'] = date('Y-m-d');
                 }
 
-                if (isset($dataKib['pidinventaris']) && $dataKib['pidinventaris'] != null && $dataKib['pidinventaris'] != "") {                    
+                if (isset($dataKib['pidinventaris']) && $dataKib['pidinventaris'] != null && $dataKib['pidinventaris'] != "") {
                     $exist = DB::table('detil_bangunan')->where('pidinventaris', $dataKib['pidinventaris'])->count();
-                    
+
                     if ($exist > 0 ) {
                         DB::table('detil_bangunan')->where('pidinventaris', $dataKib['pidinventaris'])->update($dataKib);
                         break;
                     }
-                } 
+                }
 
                 DB::table('detil_bangunan')->insert($dataKib);
                 break;
@@ -225,7 +226,7 @@ class inventaris extends Model
                 if (isset($dataKib['luas']))
                     $dataKib['luas'] = str_replace('.', '', $dataKib['luas']);
 
-                if(is_array($dataKib['koordinattanah'])) {
+                if(isset($dataKib['koordinattanah']) && is_array($dataKib['koordinattanah'])) {
                     $dataKib['koordinattanah'] = json_encode($dataKib['koordinattanah']);
                 }
 
@@ -235,14 +236,14 @@ class inventaris extends Model
                     $dataKib['tgldokumen'] = date('Y-m-d');
                 }
 
-                if (isset($dataKib['pidinventaris']) && $dataKib['pidinventaris'] != null && $dataKib['pidinventaris'] != "") {                    
+                if (isset($dataKib['pidinventaris']) && $dataKib['pidinventaris'] != null && $dataKib['pidinventaris'] != "") {
                     $exist = DB::table('detil_jalan')->where('pidinventaris', $dataKib['pidinventaris'])->count();
-                    
+
                     if ($exist > 0 ) {
                         DB::table('detil_jalan')->where('pidinventaris', $dataKib['pidinventaris'])->update($dataKib);
                         break;
                     }
-                } 
+                }
                 DB::table('detil_jalan')->insert($dataKib);
                 break;
             case 'E':
@@ -254,14 +255,14 @@ class inventaris extends Model
                     return;
                 }
 
-                if (isset($dataKib['pidinventaris']) && $dataKib['pidinventaris'] != null && $dataKib['pidinventaris'] != "") {                    
+                if (isset($dataKib['pidinventaris']) && $dataKib['pidinventaris'] != null && $dataKib['pidinventaris'] != "") {
                     $exist = DB::table('detil_aset_lainnya')->where('pidinventaris', $dataKib['pidinventaris'])->count();
-                    
+
                     if ($exist > 0 ) {
                         DB::table('detil_aset_lainnya')->where('pidinventaris', $dataKib['pidinventaris'])->update($dataKib);
                         break;
                     }
-                } 
+                }
 
                 DB::table('detil_aset_lainnya')->insert($dataKib);
                 break;
@@ -293,15 +294,15 @@ class inventaris extends Model
                 }
 
 
-                if (isset($dataKib['pidinventaris']) && $dataKib['pidinventaris'] != null && $dataKib['pidinventaris'] != "") {                    
+                if (isset($dataKib['pidinventaris']) && $dataKib['pidinventaris'] != null && $dataKib['pidinventaris'] != "") {
                     $exist = DB::table('detil_konstruksi')->where('pidinventaris', $dataKib['pidinventaris'])->count();
-                    
-                    
+
+
                     if ($exist > 0 ) {
                         DB::table('detil_konstruksi')->where('pidinventaris', $dataKib['pidinventaris'])->update($dataKib);
                         break;
                     }
-                } 
+                }
 
                 DB::table('detil_konstruksi')->insert($dataKib);
             default:
@@ -310,7 +311,7 @@ class inventaris extends Model
     }
 
     public static function CalculateIsIntraOrEkstra($tahun = 2000, $harga = 0) {
-        
+
         if ($tahun >= 2015) {
             if ($harga > 1000000) {
                 return self::INTRACODE;
@@ -329,7 +330,7 @@ class inventaris extends Model
     public function setHargaSatuanAttribute($value)
     {
         $secondValue = str_replace('.', '', $value);
-        $this->attributes['harga_satuan'] = (float)str_replace(',', '.', $secondValue);        
+        $this->attributes['harga_satuan'] = (float)str_replace(',', '.', $secondValue);
     }
 
     public function setTglSensusAttribute($value)
@@ -349,10 +350,10 @@ class inventaris extends Model
 
 
     public function setTglDibukukanAttribute($value)
-    {        
+    {
         $value = date("Y-m-d", strtotime($value));
         $this->attributes['tgl_dibukukan'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
-    }    
+    }
 
     public function getTglDibukukanAttribute($value)
     {
@@ -409,5 +410,5 @@ class inventaris extends Model
         return $this->hasOne('App\Models\alamat', 'id', 'alamat_kelurahan');
     }
 
-    
+
 }

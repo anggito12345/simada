@@ -49,7 +49,7 @@ class inventarisDataTable extends DataTable
             ->addColumn('organisasi', function($data) {
                 return \App\Models\organisasi::find($data->pid_organisasi)->nama;
             })
-            ->addColumn('kode_barang', function($data) {
+            ->addColumn('kodebarang', function($data) {
                 $barang = \App\Models\barang::find($data->pidbarang);
                 $kode = "";
                 if ($barang->kode_akun != null) {
@@ -100,9 +100,17 @@ class inventarisDataTable extends DataTable
         
         $buildingModel = inventarisRepository::appendInventarisGridFilter($buildingModel, $_GET);
         
+        
         return  $buildingModel->orderByRaw('inventaris.updated_at DESC NULLS LAST')
             ->orderBy('inventaris.id', 'desc');
     }
+
+    protected function getAjaxResponseData()
+    {
+        $data     = $response->getData(true);
+        dd($data);
+    }
+
 
     /**
      * Optional method if you want to use html builder.
@@ -121,6 +129,7 @@ class inventarisDataTable extends DataTable
                 'type' => 'GET',
                 'dataType' => 'json',
                 'dataSrc' => 'function(d) {
+                    console.log(d)
                     onLoadComplete() 
                     return d.data
                 }',
@@ -140,7 +149,9 @@ class inventarisDataTable extends DataTable
 
                     if ($("[name=organisasi_filter]").data("select2") && $("[name=organisasi_filter]").select2("data").length > 0)             
                         d.organisasi_filter = $("[name=organisasi_filter]").select2("val")
-                        
+                    
+                    delete d.search.regex;
+
                     recFilter = d
                 }',
             ])

@@ -6,6 +6,8 @@ use App\Models\inventaris;
 use App\Repositories\BaseRepository;
 use Constant;
 use Auth;
+use Illuminate\Support\Facades\DB;
+use Illuminate\Container\Container as Application;
 
 /**
  * Class inventarisRepository
@@ -19,21 +21,8 @@ class inventarisRepository extends BaseRepository
      * @var array
      */
     protected $fieldSearchable = [
-        'noreg',
-        'pidbarang',
-        'pidopd',
-        'pidlokasi',
-        'tgl_perolehan',
-        'tgl_sensus',
-        'volume',
-        'pembagi',
-        'satuan',
-        'harga_satuan',
-        'perolehan',
-        'kondisi',
-        'lokasi_detil',
-        'umur_ekonomis',
-        'keterangan'
+
+        'kode_barang'
     ];
 
     /**
@@ -50,26 +39,124 @@ class inventarisRepository extends BaseRepository
      * Configure the Model
      **/
     public function model()
-    {        
+    {
         return inventaris::class;
     }
 
     /**
      * its called when penghapusan needed to get data inventaris
-     * 
+     *
      */
     public static function getDataInventarisFromPenghapusan() {
         return [];
     }
 
+    public static function InsertLogic($input) {
+        DB::beginTransaction();
+        try {
+
+            // generate no register
+            $modelInventaris = new \App\Models\inventaris();
+
+            $barangMaster = \App\Models\barang::find($input['pidbarang']);
+
+            $currentNoReg = DB::table($modelInventaris->table)
+                ->select([
+                    'inventaris.*',
+                ])
+                ->join('m_barang', 'm_barang.id', 'inventaris.pidbarang')
+                ->where('m_barang.kode_jenis', '=', $barangMaster->kode_jenis)
+                ->where('inventaris.tahun_perolehan', '=', $input['tahun_perolehan'])
+                ->where('inventaris.harga_satuan', '=', str_replace(".","", $input['harga_satuan']))
+                ->orderBy('inventaris.noreg', 'desc')
+                ->lockForUpdate()->first();
+
+            $lastNoReg = 0;
+            if ($currentNoReg != null) {
+                $lastNoReg = (int)$currentNoReg->noreg;
+            }
+            for ($i = 0; $i < $input['jumlah'] ; $i ++) {
+
+                $input['noreg'] = sprintf('%03d',$lastNoReg + 1);
+
+                $inventarisRepository = new inventarisRepository(new Application());
+
+                $inventaris = $inventarisRepository->create($input);
+
+                $lastNoReg++;
+            }
+
+
+            if (isset($request)) {
+                $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen', $request, "inventaris", function ($metadatas, $index, $systemUpload) {
+                    if (isset($metadatas['dokumen_metadata_keterangan'][$index]) && $metadatas['dokumen_metadata_keterangan'][$index] != null) {
+                        $systemUpload->keterangan = $metadatas['dokumen_metadata_keterangan'][$index];
+                    }
+
+                    $systemUpload->uid = $metadatas['dokumen_metadata_uid'][$index];
+                    $systemUpload->foreign_field = 'id';
+                    $systemUpload->jenis = 'dokumen';
+                    $systemUpload->foreign_table = 'inventaris';
+                    $systemUpload->foreign_id = $metadatas['idinventaris'];
+
+                    return $systemUpload;
+                });
+
+
+                $fileFotos = \App\Helpers\FileHelpers::uploadMultiple('foto', $request, "inventaris", function ($metadatas, $index, $systemUpload) {
+                    if (isset($metadatas['foto_metadata_keterangan'][$index]) && $metadatas['foto_metadata_keterangan'][$index] != null) {
+                        $systemUpload->keterangan = $metadatas['foto_metadata_keterangan'][$index];
+                    }
+                    $systemUpload->uid = $metadatas['foto_metadata_uid'][$index];
+                    $systemUpload->foreign_field = 'id';
+                    $systemUpload->jenis = 'foto';
+                    $systemUpload->foreign_table = 'inventaris';
+                    $systemUpload->foreign_id = $metadatas['idinventaris'];
+
+
+                    return $systemUpload;
+                });
+
+            }
+
+            if (isset($input["kib"])) {
+                $kibData = json_decode($input['kib'], true);
+            } else {
+                $kibData = [];
+            }
+
+
+            $kibData['pidinventaris'] = $inventaris->id;
+
+            \App\Models\inventaris::saveKib($kibData, $input['tipe_kib']);
+
+            $inventarisHistoryData = $inventaris->toArray();
+
+
+
+            $inventarisHistory = new inventaris_historyRepository(new Application());
+            $inventarisHistory->postHistory($inventarisHistoryData, Constant::$ACTION_HISTORY['NEW']);
+
+
+            DB::commit();
+        } catch (\Exception $e) {
+
+            throw new \Exception($e->getMessage());
+
+            DB::rollBack();
+
+            return redirect()->back()->withInput()->withErrors($e->getMessage());
+        }
+    }
+
     /**
-     * its need to be trigger when there are more than 1 filter is filled.
+     * its need to be triggered when there are more than 1 filter that filled.
      * @jenisbarangs
      * @kodeobjek
      * @koderincianobjek
      * @kodesubrincianobjek
      * @organisasi_filter
-     * 
+     *
      * @is_exist_inventaris_penghapusan
      */
     public static function appendInventarisGridFilter($buildingModel = null, $theFilter = [])
@@ -82,7 +169,7 @@ class inventarisRepository extends BaseRepository
 
 
         if (isset($theFilter['jenisbarangs']) && $theFilter['jenisbarangs'] != "" && $theFilter['jenisbarangs'] != null) {
-            $buildingModel = $buildingModel->where('m_jenis_barang.id', $_GET['jenisbarangs']);
+            $buildingModel = $buildingModel->where('m_barang.kode_jenis', $_GET['jenisbarangs']);
         }
 
         if (isset($theFilter['kodeobjek']) && $theFilter['kodeobjek'] != "" && $theFilter['kodeobjek'] != null) {
@@ -95,12 +182,12 @@ class inventarisRepository extends BaseRepository
 
         if (isset($theFilter['kodesubrincianobjek']) && $theFilter['kodesubrincianobjek'] != "" && $theFilter['kodesubrincianobjek'] != null) {
             $buildingModel = $buildingModel->where('m_barang.kode_sub_rincian_objek', $theFilter['kodesubrincianobjek']);
-        }     
-        
+        }
+
         if (isset($theFilter['organisasi_filter']) && $theFilter['organisasi_filter'] != "" && $theFilter['organisasi_filter'] != null) {
             $buildingModel = $buildingModel->where('m_organisasi.id', $theFilter['organisasi_filter']);
-        }   
-        
+        }
+
 
         // take data which is doesn't has any duplicate data in inventaris_penghapusan
         if(isset($theFilter['is_exist_inventaris_penghapusan'])) {
@@ -108,11 +195,13 @@ class inventarisRepository extends BaseRepository
             // false it mean must not be in there
             if ($theFilter['is_exist_inventaris_penghapusan'] == 'false') {
                 $buildingModel = $buildingModel
-                                        ->whereRaw('inventaris_penghapusan.id IS NULL');    
-            }             
+                                        ->whereRaw('inventaris_penghapusan.id IS NULL');
+            }
         }
 
+
         return $buildingModel;
+
     }
 
     public static function getData($isDraft = null, $rawSelect = "") {
@@ -129,7 +218,7 @@ class inventarisRepository extends BaseRepository
         if ($organisasiUser == null) {
             $organisasiUser = new \App\Models\organisasi();
         }
-            
+
         if ($rawSelect == "") {
             $buildingModel = $buildingModel->select([
                 "inventaris.*",
@@ -141,18 +230,18 @@ class inventarisRepository extends BaseRepository
                 "m_organisasi.setting as setauth",
                 "inventaris_penghapusan.id as ip",
                 "inventaris_reklas.id as ir",
-                "detil_mesin.norangka",                
+                "detil_mesin.norangka",
                 "detil_mesin.nomesin",
-                "detil_mesin.nopol",
+                "detil_mesin.nopol"
             ])
-            ->selectRaw('CONCAT(detil_tanah.nomor_sertifikat,\'/\',detil_mesin.nopabrik,\'/\', detil_mesin.norangka,\'/\', detil_mesin.nomesin) as nomor')            
+            ->selectRaw('CONCAT(detil_tanah.nomor_sertifikat,\'/\',detil_mesin.nopabrik,\'/\', detil_mesin.norangka,\'/\', detil_mesin.nomesin) as nomor')
             ->selectRaw('CONCAT(\'1 \',m_satuan_barang.nama) as barang');
         } else {
             $buildingModel = $buildingModel->selectRaw($rawSelect);
         }
-                     
+
         $buildingModel = $buildingModel->join("m_barang", "m_barang.id", "inventaris.pidbarang")
-            ->join("m_jenis_barang", "m_jenis_barang.kode", "m_barang.kode_jenis")
+            ->leftJoin("m_jenis_barang", "m_jenis_barang.kode", "m_barang.kode_jenis")
             // role =================
             ->leftJoin("users","users.id", "inventaris.idpegawai")
             ->leftJoin("m_jabatan", "m_jabatan.id", 'users.jabatan')
@@ -170,13 +259,13 @@ class inventarisRepository extends BaseRepository
             ->leftJoin('m_organisasi', 'm_organisasi.id', 'inventaris.pid_organisasi');
             // role =================
             // ->where('m_jabatan.level', '<=', $mineJabatan->level)
-            
+
         // role conditional please check this whenever u want customizing role
-        if ($organisasiUser->jabatans == Constant::$GROUP_OPD_ORG) {            
+        if ($organisasiUser->jabatans == Constant::$GROUP_OPD_ORG) {
             $buildingModel = $buildingModel
                 ->whereRaw('( inventaris.pid_organisasi = '.$organisasiUser->id.' OR m_organisasi.pid = '.$organisasiUser->id . ')')
                 ->where('m_organisasi.jabatans', '>=', $organisasiUser->jabatans);
-        } else if ($organisasiUser->jabatans == Constant::$GROUP_CABANGOPD_ORG) {            
+        } else if ($organisasiUser->jabatans == Constant::$GROUP_CABANGOPD_ORG) {
             $buildingModel = $buildingModel
                 ->whereRaw(' ( inventaris.pid_organisasi = '.$organisasiUser->id . ' OR m_organisasi.id = ' . $organisasiUser->pid . ' ) ')
                 ->where('m_organisasi.jabatans', '>=', Constant::$GROUP_OPD_ORG);
@@ -189,7 +278,7 @@ class inventarisRepository extends BaseRepository
         $kodeStatus = \App\Models\setting::where('nama', Constant::$SETTING_KODE_LOKASI_STATUS)->first()->nilai;
         $kodePropinsi = \App\Models\setting::where('nama', Constant::$SETTING_KODE_PROPINSI)->first()->nilai;
         $intraEkstra = \App\Models\inventaris::CalculateIsIntraOrEkstra($req['tahun_perolehan'], $req['harga_satuan']);
-        $kodeKota = \App\Models\setting::where('nama', Constant::$SETTING_KODE_KOTA)->first()->nilai;    
+        $kodeKota = \App\Models\setting::where('nama', Constant::$SETTING_KODE_KOTA)->first()->nilai;
 
         $propinsi = \App\Models\alamat::find(!array_key_exists('alamat_propinsi', $req) ? -1 : $req['alamat_propinsi']);
         if (empty($propinsi)) {
@@ -222,7 +311,7 @@ class inventarisRepository extends BaseRepository
             } else {
                 $organisasiOpdCabang = $organisasiOpdCabang->kode;
             }
-            
+
         }
 
         $organisasiUpt = \App\Models\organisasi::find(!array_key_exists('pidupt', $req) ? -1 : $req['pidupt']);
@@ -233,7 +322,7 @@ class inventarisRepository extends BaseRepository
         }
 
 
-        return $kodeStatus . '.' . 
+        return $kodeStatus . '.' .
         $intraEkstra . '.' .
         $propinsi . '.' .
         $kota . '.' .

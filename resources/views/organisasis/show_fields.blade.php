@@ -8,14 +8,15 @@
 
 <!-- Nama Field -->
 <div class="row">
-    {!! Form::label('nama', 'Nama:', ["class" => 'col-md-4 item-view']) !!}
-    <p class="col-md-8 item-view">{!! $organisasi->nama !!}</p>
+    {!! Form::label('kode', 'Kode:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $organisasi->kode !!}</p>
 </div>
 
-<!-- Jenis Field -->
+
+<!-- Nama Field -->
 <div class="row">
-    {!! Form::label('jenis', 'Level:', ["class" => 'col-md-4 item-view']) !!}
-    <p class="col-md-8 item-view">{!! \App\Models\BaseModel::$levelOrganisasiDs[$organisasi->level] !!}</p>
+    {!! Form::label('nama', 'Nama:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $organisasi->nama !!}</p>
 </div>
 
 <!-- Alamat Field -->
@@ -24,9 +25,4 @@
     <p class="col-md-8 item-view">{!! $organisasi->alamat !!}</p>
 </div>
 
-<!-- Aktif Field -->
-<div class="row">
-    {!! Form::label('aktif', 'Aktif:', ["class" => 'col-md-4 item-view']) !!}
-    <p class="col-md-8 item-view">{!! \App\Models\BaseModel::$YesNoDs[$organisasi->aktif] !!}</p>
-</div>
 

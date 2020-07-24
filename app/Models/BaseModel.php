@@ -16,9 +16,9 @@ class BaseModel extends Model {
         'minlength' => 6
     ];
 
-    public static function generateValidation($key, $rules, $defaultAttributes) {        
+    public static function generateValidation($key, $rules, $defaultAttributes) {
 
-        $defaultValues = self::$default;        
+        $defaultValues = self::$default;
 
         if (!array_key_exists($key, $rules)) {
             $defaultValues = array_merge($defaultAttributes, $defaultValues);
@@ -27,7 +27,7 @@ class BaseModel extends Model {
 
         $rulesAray = explode("|", $rules[$key]);
 
-        for ($i=0; $i < count($rulesAray); $i++) { 
+        for ($i=0; $i < count($rulesAray); $i++) {
 
             if (strpos($rulesAray[$i], "min") > -1) {
                 $minExploded = explode(":", $rulesAray[$i]);
@@ -35,7 +35,7 @@ class BaseModel extends Model {
             } else if (strpos($rulesAray[$i], "max") > -1) {
                 $maxExploded = explode(":", $rulesAray[$i]);
                 $defaultValues["maxlength"] = $maxExploded[1];
-            } else if (strpos($rulesAray[$i], "required") > -1) {                
+            } else if (strpos($rulesAray[$i], "required") > -1) {
                 $defaultValues["required"] = true;
             }
 
@@ -136,4 +136,5 @@ class BaseModel extends Model {
         'E' => 'detil_aset_lainnya',
         'F' => 'detil_konstruksi',
     ];
+
 }

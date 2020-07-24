@@ -617,12 +617,14 @@ let FileGallery = function(element, config) {
     const IMAGE = 'image/.*';
     const VIDEO = 'video/.*';
     const OTHER = '.*';
+    const AUDIO = 'audio/*';
 
     const iconFontAwesome = {
         [PDF]: "fa fa-pdf",
         [MSWORD]: "fa fa-word",
         [IMAGE]: "fa fa-picture-o",
         [VIDEO]: "fa fa-video-camera",
+        [AUDIO]: "fa fa-music",
         [OTHER]: "fa fa-file"
     }
 
@@ -658,7 +660,7 @@ let FileGallery = function(element, config) {
 
     let defaultConfig = {
         title: '',
-        accept: "image/*|application/*|video/*",
+        accept: "image/*|application/*|video/*|audio/*",
         maxSize: 5000000
     }
 
@@ -701,6 +703,8 @@ let FileGallery = function(element, config) {
             <div class="modal-body text-center">
                 <img src=""  id="${containerPreviewImage}" width="500" height="420"/>
                 <video autoplay controls src="" width="500" height="420"  id="${containerPreviewImage}"/>
+                <audio controls id="${containerPreviewImage}">
+                </audio>
             </div>
             <div class="modal-footer">            
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
@@ -971,7 +975,9 @@ let FileGallery = function(element, config) {
                         selectorSuffix = 'video';
                         $(`video#${containerPreviewImage}`).show();
                         break;
-                
+                    case AUDIO: 
+                        selectorSuffix = 'audio';
+                        $(`audio#${containerPreviewImage}`).show();
                     default:
                         break;
                 }
@@ -980,6 +986,7 @@ let FileGallery = function(element, config) {
                     $(`${selectorSuffix}#${containerPreviewImage}`)[0].src = $("[base-path]").val().replace("public", "storage/") + "app/" + selectedFile.path
                     $(`#${modalIdPreview}`).modal('show')
                 } else {
+                    console.log(fileType,fileTypes)
                     readURL(selectedFile.rawFile, $(`${selectorSuffix}#${containerPreviewImage}`))
                     $(`#${modalIdPreview}`).modal('show')
                 }
