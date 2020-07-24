@@ -73,6 +73,7 @@ class InventarisImport implements  OnEachRow
                 "satuan" => empty($stBarang) ? null : $stBarang->id,
                 "harga_satuan" => $row[3],
                 "tahun_perolehan" => $row[6],
+                "kode_barang" => inventarisRepository::kodeBarang($row[0]),
                 "pid_organisasi" => empty($org) ? null : $org->id
             ]);
         } catch(\Exception $e) {
