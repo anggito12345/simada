@@ -129,3 +129,6 @@ Route::resource('import', 'importController');
 Route::resource('sensus', 'sensusController');
 
 Route::post('/import/inventaris', 'importController@inventaris')->name("import.inventaris");
+
+
+Route::resource('inventarisSensuses', 'inventaris_sensusController');

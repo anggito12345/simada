@@ -143,3 +143,7 @@ $countUserNeedOtor = \App\Models\users::where('aktif', '0')->count();
 </li>
 @endif
 
+<li class="{{ Request::is('inventarisSensuses*') ? 'active' : '' }}">
+    <a href="{{ route('inventarisSensuses.index') }}"><i class="fa fa-edit"></i><span>Inventaris Sensuses</span></a>
+</li>
+

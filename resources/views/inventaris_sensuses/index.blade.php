@@ -2,10 +2,10 @@
 
 @section('content')
     <section class="content-header">
-        <h3 class="pull-left">{{ Breadcrumbs::render() }}</h3>
-        <!-- <h1 class="pull-right">
-           <a class="btn btn-primary pull-right" style="margin-top: -10px;margin-bottom: 5px" href="{!! route('inventaris.create') !!}">Add New</a>
-        </h1> -->
+        <h1 class="pull-left">Inventaris Sensuses</h1>
+        <h1 class="pull-right">
+           <a class="btn btn-primary pull-right" style="margin-top: -10px;margin-bottom: 5px" href="{{ route('inventarisSensuses.create') }}">Add New</a>
+        </h1>
     </section>
     <div class="content">
         <div class="clearfix"></div>
@@ -15,17 +15,12 @@
         <div class="clearfix"></div>
         <div class="box box-primary">
             <div class="box-body">
-                @include('inventaris.table')
+                    @include('inventaris_sensuses.table')
             </div>
         </div>
         <div class="text-center">
-
+        
         </div>
     </div>
 @endsection
-@section('scripts')
-<script>
 
-
-</script>
-@endsection
