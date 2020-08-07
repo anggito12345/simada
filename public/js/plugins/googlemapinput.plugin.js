@@ -12,7 +12,7 @@ let GoogleMapInput = function(element, config) {
     }
 
     if (element.length > 0) {
-        element = element[0]        
+        element = element[0]
     }
 
     let position = {
@@ -24,7 +24,7 @@ let GoogleMapInput = function(element, config) {
 
     if (!navigator.geolocation) {
         console.error('Geolocation not supported on this browser!')
-        
+
     } else {
         navigator.geolocation.getCurrentPosition((pos) => {
             position = pos
@@ -40,7 +40,7 @@ let GoogleMapInput = function(element, config) {
         ],
         isNotInput: false,
         value: null,
-    }    
+    }
 
     if  (config != null) {
         self.defaultConfig = Object.assign(self.defaultConfig, config)
@@ -52,7 +52,7 @@ let GoogleMapInput = function(element, config) {
             if (TIMEOUT < 0) {
                 console.error('Oopss please include google map apis javascript')
                 reject(false)
-                clearInterval(intervalTicking)                
+                clearInterval(intervalTicking)
             }
             if (ol != undefined) {
                 resolve(true)
@@ -60,9 +60,9 @@ let GoogleMapInput = function(element, config) {
             }
             TIMEOUT--
         },1000)
-        
+
     }).then(() => {
-        
+
 
         this.marker
         this.markerVectorLayer
@@ -74,7 +74,7 @@ let GoogleMapInput = function(element, config) {
 
         let mapId = `ol-map-${MapInputCurrentInc}`
         const modalIdGoogleMap = `ol-map-id-${MapInputCurrentInc}`
-        
+
         if (element.tagName != "INPUT" && !self.defaultConfig.isNotInput) {
             element.setAttribute('id', mapId)
 
@@ -85,15 +85,15 @@ let GoogleMapInput = function(element, config) {
                 return
             }
         }
-        
+
         if (!self.defaultConfig.isNotInput) {
 
             element.style.display = "none"
 
             const containerInputGroup = document.createElement('div')
             containerInputGroup.className = 'input-group'
-        
-            
+
+
 
             if (!self.defaultConfig.draw) {
                 inputMaskingElement = element.cloneNode(true)
@@ -103,72 +103,139 @@ let GoogleMapInput = function(element, config) {
                 inputMaskingElement.value = Object.keys(self.defaultConfig.value).length == 0 ? '' : self.defaultConfig.value;
                 inputMaskingElement.style.display = 'block'
             }
-            
-        
+
+
             const inputGroupAppend = document.createElement('div')
             inputGroupAppend.className = 'input-group-append'
-        
+
             const inputGroupText = document.createElement('div')
             inputGroupText.className = 'input-group-text'
-            
+
             const inputGroupTextButton = document.createElement('i')
             inputGroupTextButton.className = 'fa fa-globe'
 
-            let selectOption = document.createElement('select')    
-            selectOption.setAttribute('id', `select-${mapId}`)    
+            let selectOption = document.createElement('select')
+
+            let buttonSearchLatLon = document.createElement('div')
+
+            buttonSearchLatLon.setAttribute('class', 'btn btn-success')
+            buttonSearchLatLon.textContent = 'Search'
+
+
+
+            let inputLatContainer = document.createElement('div')
+            let labelInputLat = document.createElement('label')
+            let inputLat = document.createElement('input')
+
+            labelInputLat.textContent = 'Latitude'
+
+            inputLatContainer.setAttribute('class', 'form-group')
+
+            inputLat.setAttribute('id', `input-lat-${mapId}`)
+            inputLat.setAttribute('class', `form-control`)
+
+            inputLatContainer.appendChild(labelInputLat)
+            inputLatContainer.appendChild(inputLat)
+
+
+            let inputLonContainer = document.createElement('div')
+            let labelInputLon = document.createElement('label')
+            let inputLon = document.createElement('input')
+
+            labelInputLon.textContent = 'Longitude'
+
+            inputLonContainer.setAttribute('class', 'form-group')
+
+            inputLon.setAttribute('id', `input-lon-${mapId}`)
+            inputLon.setAttribute('class', `form-control`)
+
+            inputLonContainer.appendChild(labelInputLon)
+            inputLonContainer.appendChild(inputLon)
+
+            selectOption.setAttribute('id', `select-${mapId}`)
             for (let i = 0 ; i < self.defaultConfig.drawOptions.length; i ++ ) {
                 var drawOption = document.createElement('option')
                 drawOption.appendChild(document.createTextNode(self.defaultConfig.drawOptions[i]))
                 drawOption.value = self.defaultConfig.drawOptions[i]
                 selectOption.appendChild(drawOption)
             }
-            
 
-            if (!self.defaultConfig.draw) {                        
-                selectOption = null           
+
+            if (!self.defaultConfig.draw) {
+                selectOption = null
             }
-        
+
             inputMaskingElement.disabled = true
-        
+
             containerInputGroup.appendChild(inputMaskingElement)
             inputGroupText.appendChild(inputGroupTextButton)
             inputGroupAppend.appendChild(inputGroupText)
             containerInputGroup.appendChild(inputGroupAppend)
-            
-        
-            inputGroupText.addEventListener('click', (ev) => {            
+
+
+            inputGroupText.addEventListener('click', (ev) => {
                 $(`#${modalIdGoogleMap}`).modal('show')
-            })        
+            })
 
             inputMaskingElement.addEventListener('change', (ev) => {
                 element.value = ev.target.value
                 element.dispatchEvent(new Event('change'))
             })
-                
+
             const modalMapPicker = `<div class="modal fade" id="${modalIdGoogleMap}" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <div class="modal-body">     
+                    <div class="modal-body">
+
+                        ${inputLatContainer != null && !self.defaultConfig.draw ? inputLatContainer.outerHTML : ''}
+                        ${inputLonContainer != null && !self.defaultConfig.draw  ? inputLonContainer.outerHTML : ''}
                         <div id='${mapId}' style='width:100%; height:300px'>
-                        </div>           
+                        </div>
                         ${selectOption != null ? selectOption.outerHTML : ''}
                     </div>
-                    <div class="modal-footer">            
+                    <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Selesai</button>
                     </div>
                 </div>
                 </div>
             </div>`
-            
+
             $('body').append(modalMapPicker)
 
+            if (!self.defaultConfig.draw) {
+                document.getElementById(`${mapId}`).parentNode.insertBefore(buttonSearchLatLon,document.getElementById(`${mapId}`))
+            }
+
+
+            buttonSearchLatLon.addEventListener('click', () => {
+                console.log(self.map.getView())
+                if ( !isNaN(parseFloat(document.getElementById(`input-lon-${mapId}`).value)) && !isNaN(parseFloat(document.getElementById(`input-lat-${mapId}`).value)) ) {
+                    let coordinate = ol.proj.fromLonLat([parseFloat(document.getElementById(`input-lon-${mapId}`).value), parseFloat(document.getElementById(`input-lat-${mapId}`).value)])
+                    self.map.getView().animate(
+                        {
+                            center: coordinate,
+                            zoom: 8
+                        }
+                    );
+
+                    self.setMarker(coordinate, true)
+                    source.clear()
+                    createLayer([parseFloat(document.getElementById(`input-lon-${mapId}`).value), parseFloat(document.getElementById(`input-lat-${mapId}`).value)])
+                } else {
+                    swal.fire({
+                        type: 'error',
+                        text: `Latitude dan Longitude salah!`
+                    })
+                }
+
+            })
 
             $(`#${modalIdGoogleMap}`).on('shown.bs.modal', function () {
                 if (self.map == null) {
                     self.loadMap();
                 }
 
-                self.map.updateSize();                               
+                self.map.updateSize();
 
                 initValue(element.value)
             })
@@ -179,8 +246,10 @@ let GoogleMapInput = function(element, config) {
             })
 
 
+
+
             element.parentNode.insertBefore(containerInputGroup, element.nextSibling)
-    
+
 
             addInteraction = function() {
                 var value = $(`#${`select-${mapId}`}`).val();
@@ -189,7 +258,7 @@ let GoogleMapInput = function(element, config) {
                         source: source,
                         type: value
                     });
-    
+
                     self.draw.on('drawstart', function(ev) {
                         if (self.lastFeature) {
                             source.clear();
@@ -200,7 +269,7 @@ let GoogleMapInput = function(element, config) {
 
                     self.draw.on('drawend', function(ev) {
                         ev.feature.setId(new IDGenerator().generate());
-                        
+
                         self.lastFeature = ev.feature
 
                         let format = new ol.format['GeoJSON']()
@@ -231,27 +300,27 @@ let GoogleMapInput = function(element, config) {
             const parentElementHeight = $(element).height();
             const mapElement = `<div id="${mapId}" style="width:100%; height: ${parentElementHeight}px;"></div>`;
             $(element).html(mapElement);
-            
+
             setTimeout(() => {
                 if (self.map == null) {
                     this.loadMap();
                 }
-    
-                self.map.updateSize();                               
-    
+
+                self.map.updateSize();
+
                 initValue(element.value)
             }, 1000);
         }
-        
+
         let googleLayer = new olgm.layer.Google();
 
         let raster =  new ol.layer.Tile({
             source: new ol.source.OSM(),
             visible: false
         })
-    
+
         let source = new ol.source.Vector();
-    
+
         let vector = new ol.layer.Vector({
             source: source
         });
@@ -270,20 +339,13 @@ let GoogleMapInput = function(element, config) {
                   zoom: 8
                 })
             }
-        
+
             self.map =  new ol.Map(mapConfig);
-            
-            if (!self.defaultConfig.isNotInput) {                
+
+            if (!self.defaultConfig.isNotInput) {
                 if (!self.defaultConfig.draw) {
                     self.map.on('click', (ev) => {
-                        const coord = ol.proj.transform(ev.coordinate, 'EPSG:3857', 'EPSG:4326');
-                        inputMaskingElement.value = `${coord[0]},${coord[1]}`
-                        inputMaskingElement.dispatchEvent(new Event('change'))
-            
-                        if (self.defaultConfig.autoClose) {
-                            $(`#${modalIdGoogleMap}`).modal('hide')
-                            self.map = null;
-                        }
+                        self.setMarker(ev.coordinate)
                     })
                 } else {
                     addInteraction()
@@ -294,22 +356,34 @@ let GoogleMapInput = function(element, config) {
 
             var olGM = new olgm.OLGoogleMaps({map: self.map}); // map is the ol.Map instance
             olGM.activate();
-            
+
         }
 
-        
 
-        const initValue = (value) => {            
+        this.setMarker = (coordinate, keepOpen) => {
+            const coord = ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326');
+            inputMaskingElement.value = `${coord[0]},${coord[1]}`
+            inputMaskingElement.dispatchEvent(new Event('change'))
+
+            if (self.defaultConfig.autoClose && !keepOpen) {
+                $(`#${modalIdGoogleMap}`).modal('hide')
+                self.map = null;
+            }
+        }
+
+
+
+        const initValue = (value) => {
             if (value != "" && value != null && !self.defaultConfig.draw) {
                 let splittedValue = value.split(",")
                 if (splittedValue.length < 2) {
                     console.error("doesn't support fomat value!")
                     return;
                 }
-                
+
                 self.map.setView(
                     new ol.View({
-                        center: ol.proj.fromLonLat([parseFloat(splittedValue[0]), parseFloat(splittedValue[1])]),                         
+                        center: ol.proj.fromLonLat([parseFloat(splittedValue[0]), parseFloat(splittedValue[1])]),
                         zoom: 8
                     })
                 );
@@ -326,7 +400,7 @@ let GoogleMapInput = function(element, config) {
 
                 // let values = JSON.stringify(value);
                 let values = JSON.parse(value);
-                if (typeof values != 'object') 
+                if (typeof values != 'object')
                     values = JSON.parse(values)
 
                 if (typeof values.features !== 'undefined') {
@@ -352,7 +426,7 @@ let GoogleMapInput = function(element, config) {
                             geometry: things
                         })
                     }
-                
+
 
                     source.addFeature(self.lastFeature)
 
@@ -362,7 +436,7 @@ let GoogleMapInput = function(element, config) {
 
                     $(`#${`select-${mapId}`}`).val(values.features[0].geometry.type)
                 }
-                
+
             }
 
         }
@@ -378,8 +452,8 @@ let GoogleMapInput = function(element, config) {
             source.addFeature(self.marker)
         }
 
-        
 
-        
+
+
     })
 }

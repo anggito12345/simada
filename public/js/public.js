@@ -4,7 +4,7 @@ var App = {
     },
     Helpers: {
         defaultSelect2: (select2Ele, url, valueField = 'id', textField = 'text', callbackDone) => {
-        
+
             $.ajax({
                 type: 'GET',
                 url: url,
@@ -12,7 +12,6 @@ var App = {
                     'Authorization':'Bearer ' + sessionStorage.getItem('api token'),
                 }
             }).then(function (data) {
-                
                 const generateText = (data, textFieldParam) => {
                     if (Array.isArray(textFieldParam)) {
                         let concatText = ""
@@ -30,38 +29,38 @@ var App = {
                     }
                 }
 
-                
+
                 // create the option and append to Select2
-                var option = new Option(generateText(data.data, textField), 
-                        data.data[valueField], 
-                    true, 
-                    true);  
+                var option = new Option(generateText(data.data, textField),
+                        data.data[valueField],
+                    true,
+                    true);
 
                 for (let d in data.data) {
                     option.dataset[d] = data.data[d]
-                }        
+                }
 
                 select2Ele.append(option).trigger('change');
 
-                // manually trigger the `select2:select` event                
+                // manually trigger the `select2:select` event
 
                 select2Ele.trigger({
                     type: 'select2:select',
                     params: {
                         data: data.data
                     }
-                });         
+                });
 
 
 
                 if (callbackDone != null) {
-                    callbackDone();
-                }                
+                    callbackDone('success');
+                }
 
             }, () => {
                 if (callbackDone != null) {
-                    callbackDone();
-                }     
+                    callbackDone('error');
+                }
             });
         },
         downloadFile : (path) => {
@@ -70,25 +69,25 @@ var App = {
         getFormData: ($form) => {
             var unindexed_array = $form.serializeArray();
             var indexed_array = {};
-                        
+
             $.map(unindexed_array, function(n, i){
                 indexed_array[n['name']] = n['value'];
             });
 
             return indexed_array;
         },
-        
+
     }
 }
 
 
 
-jQuery.fn.extend({    
+jQuery.fn.extend({
     generatedLookup: 1,
     lookupGeneratedValue: {},
     customLookup: {},
     datasourceLookup: {},
-    selectedIdLookup: {},    
+    selectedIdLookup: {},
     cacheLookupConfig: {},
     saveLookup: (idlookupParam) => {
         $("[name="+$.fn.customLookup[idlookupParam].maskid+"]").val($.fn.datasourceLookup[$.fn.selectedIdLookup[idlookupParam]][$.fn.customLookup[idlookupParam].textField]);
@@ -101,7 +100,7 @@ jQuery.fn.extend({
     isExistChecked: (idlookupParam,id) => {
         return $.fn.selectedIdLookup[idlookupParam] == id
     },
-    onCheckLookup: (idlookupParam, id, type) => { 
+    onCheckLookup: (idlookupParam, id, type) => {
 
         if (type == "checkbox") {
             let index = $.fn.lookupGeneratedValue[idlookupParam].map((e) => {
@@ -109,9 +108,9 @@ jQuery.fn.extend({
             }).indexOf(id);
             if (index > -1) {
                 $.fn.lookupGeneratedValue[idlookupParam].splice(index, 1);
-            } else {            
+            } else {
                 $.fn.lookupGeneratedValue[idlookupParam].push($.fn.datasourceLookup[id])
-            }       
+            }
         } else {
             $.fn.lookupGeneratedValue[idlookupParam] = [$.fn.datasourceLookup[id]]
 
@@ -120,13 +119,13 @@ jQuery.fn.extend({
             if ($.fn.customLookup[idlookupParam].autoClose) {
                 $.fn.saveLookup(idlookupParam)
                 $("#" + idlookupParam).modal("hide")
-            }            
+            }
         }
-            
+
     },
     CreateModalLookup: function(config) {
         let idlookup = "modal-lookup"
-        let title = ""        
+        let title = ""
         let typeInput = "checkbox"
         let name = "name-lookup"
         let filters = []
@@ -162,11 +161,11 @@ jQuery.fn.extend({
                 } else {
                     return '<input type="'+typeInput+'" name="'+name+'" onclick="$.fn.onCheckLookup(\''+idlookup+'\', \''+full.id+'\', \''+typeInput+'\')" />';
                 }
-                
-            } 
+
+            }
         })
 
-        
+
 
         config.customLookup.idlookup = idlookup
 
@@ -181,7 +180,7 @@ jQuery.fn.extend({
         }
 
         let filtersHTML = ""
-        
+
 
         const modalTemplate = `
         <div class="modal fade" id="`+idlookup+`" role="dialog">
@@ -209,7 +208,7 @@ jQuery.fn.extend({
                             <tbody>
                             </tbody>
                         </table>
-                    </div>                    
+                    </div>
                 </div>
                 <div class="modal-footer">
                     `+buttonSaveAndClose+`
@@ -258,7 +257,7 @@ jQuery.fn.extend({
 
             switch (typeFilter) {
                 case 'text':
-                    input = document.createElement("input")                    
+                    input = document.createElement("input")
                     break;
                 case 'select2':
                     // it like select but configured with select2
@@ -267,32 +266,32 @@ jQuery.fn.extend({
                         return
                     }
 
-                    input = document.createElement("select")                   
+                    input = document.createElement("select")
                     break;
-            
+
                 default:
                     input = document.createElement("input")
                     break;
-            }            
+            }
 
             input.name = name
             input.id = 'input-' + name
-            input.className = className    
-                  
+            input.className = className
+
 
             labelInput.innerText = title
-            
+
             wrapInput.className = "form-group"
             wrapInput.appendChild(labelInput)
             wrapInput.appendChild(input)
 
-            filterPlace.append(wrapInput.outerHTML)   
-            
+            filterPlace.append(wrapInput.outerHTML)
+
             $("[name="+idlookup+"-"+filters[i].name+"]")[0].addEventListener('keyup', () => {
                 $("#table-" + idlookup).DataTable().ajax.reload()
-            })  
+            })
 
-            if (filters[i].type == 'select2') {               
+            if (filters[i].type == 'select2') {
                 $("#" + input.id).select2(filters[i].select2config)
                 $("#" + input.id).find('option').remove()
 
@@ -303,11 +302,11 @@ jQuery.fn.extend({
                 if(filters[i].select2config.custom != undefined) {
                     if(filters[i].select2config.custom.select != undefined && typeof filters[i].select2config.custom.select == 'function') {
                         $("#" + input.id).on('select2:select', filters[i].select2config.custom.select)
-                    }  
-                    
+                    }
+
                     if(filters[i].select2config.custom.change != undefined && typeof filters[i].select2config.custom.change == 'function') {
                         $("#" + input.id).on('change', filters[i].select2config.custom.change)
-                    }  
+                    }
                 }
             }
         }
@@ -324,13 +323,13 @@ jQuery.fn.extend({
                         let defaultValueField = "id"
 
                         if(filters[i].select2config == undefined) {
-                            console.error('select2Configuration is required when using select2 type input')                            
+                            console.error('select2Configuration is required when using select2 type input')
                         }
 
                         if(filters[i].select2config.custom != undefined) {
                             if(filters[i].select2config.custom.valueField != undefined) {
-                                defaultValueField = filters[i].select2config.custom.valueField                           
-                            }            
+                                defaultValueField = filters[i].select2config.custom.valueField
+                            }
                         }
 
                         d['search-lookup'][filters[i].name] = {
@@ -342,8 +341,8 @@ jQuery.fn.extend({
                             value: $("[name="+idlookup+"-"+filters[i].name+"]").val(),
                             operator: '~*'
                         }
-                    }                    
-                    
+                    }
+
                 }
 
                 if (typeof funcData == 'function') {
@@ -362,10 +361,10 @@ jQuery.fn.extend({
                 this.each(() => {
                     for( let i = 0 ; i < this.length; i ++ ) {
                         const recentConfig = $.fn.cacheLookupConfig[this[i]]
-                        let data = {}                            
-                        
+                        let data = {}
+
                         data[recentConfig.DataTable.custom.valueField] = $("[name="+data[recentConfig.DataTable.custom.maskid]+"]").val()
-                        
+
                         $.ajax({
                             method: "GET",
                             dataType: "json",
@@ -376,23 +375,23 @@ jQuery.fn.extend({
                             url: url
                         }).then((d) => {
                             resolve(d.data)
-                            if (d.data != null) {                   
+                            if (d.data != null) {
                                 $("[name="+recentConfig.DataTable.customLookup.realid+"]").val(d.data[recentConfig.DataTable.custom.valueField])
                                 $("[name="+recentConfig.DataTable.customLookup.maskid+"]").val(d.data[recentConfig.DataTable.custom.textField])
-    
+
                                 $.fn.selectedIdLookup[recentConfig.DataTable.id] = d.data[recentConfig.DataTable.custom.valueField]
-    
-                                $("#table-" + recentConfig.DataTable.id).DataTable().draw()                                
-                                
+
+                                $("#table-" + recentConfig.DataTable.id).DataTable().draw()
+
                             } else {
                             }
-                            
-                            
+
+
                         })
                     }
                 })
             })
-            
+
 
             return promise
         }
@@ -402,7 +401,7 @@ jQuery.fn.extend({
                 this.each(() => {
                     for( let i = 0 ; i < this.length; i ++ ) {
                         const recentConfig = $.fn.cacheLookupConfig[this[i]]
-                        let data = {}                            
+                        let data = {}
                     }
                 })
             }
@@ -410,11 +409,11 @@ jQuery.fn.extend({
 
         return this.each(() => {
             for( let i = 0 ; i < this.length; i ++ ) {
-                const currEle = this[i]        
-                if (config == undefined) {                
-                    return                     
+                const currEle = this[i]
+                if (config == undefined) {
+                    return
                 }
-                                                       
+
                 const idElement = currEle.id + i +"-wrap-lookup"
                 const inputNameElement = currEle.name
                 const currSource = $.fn.generatedLookup + "-lookup-input"
@@ -422,7 +421,7 @@ jQuery.fn.extend({
                 currEle.setAttribute('data-source', currSource)
                 currEle.style.display = "none"
                 currEle.outerHTML = "<span id='"+idElement+"'>" + currEle.outerHTML + "</span>"
-                                                
+
                 const maskEle = currEle
                 const inputNameElementMask = currEle.name + "-mask"
                 maskEle.name = inputNameElementMask
@@ -436,10 +435,10 @@ jQuery.fn.extend({
                 let customLookup = {
                     maskid: inputNameElementMask,
                     realid: inputNameElement,
-                    autoClose: false,   
+                    autoClose: false,
                     typeInput: 'radio',
                     textField: 'text',
-                    valueField: 'value'               
+                    valueField: 'value'
                 }
 
                 if (configDataTable.custom != undefined){
@@ -450,9 +449,9 @@ jQuery.fn.extend({
 
                 if (configDataTable.id == undefined) {
                     configDataTable.id = "modal-" + currSource
-                } 
+                }
 
-                
+
 
                 $.fn.CreateModalLookup(configDataTable)
 
@@ -478,16 +477,16 @@ jQuery.fn.extend({
                 wrapElement.appendChild(wrapInsideMask)
 
                 config.DataTable = configDataTable
-                $.fn.cacheLookupConfig[currEle] = config 
+                $.fn.cacheLookupConfig[currEle] = config
                 $.fn.generatedLookup++;
-                
+
 
                 if (configDataTable.customLookup.change != null && typeof configDataTable.customLookup.change == "function") {
                     $("[name="+configDataTable.customLookup.maskid+"]").change(() => {
                         configDataTable.customLookup.change($.fn.customLookup[idlookupParam].select($.fn.datasourceLookup[$.fn.selectedIdLookup[idlookupParam]]))
                     })
                 }
-            }            
+            }
         })
     }
 })
@@ -500,38 +499,38 @@ function uuidv4() {
 }
 
 function IDGenerator() {
-	 
+
     this.length = 50;
     this.timestamp = +new Date;
-    
+
     var _getRandomInt = function( min, max ) {
        return Math.floor( Math.random() * ( max - min + 1 ) ) + min;
     }
-    
+
     this.generate = function() {
         var ts = this.timestamp.toString();
         var parts = ts.split( "" ).reverse();
         var id = "";
-        
+
         for( var i = 0; i < this.length; ++i ) {
            var index = _getRandomInt( 0, parts.length - 1 );
-           id += parts[index];	 
+           id += parts[index];
         }
-        
+
         return id;
     }
 
-    
+
 }
 
 function readURL(file, containerToShow) {
     if (file) {
       var reader = new FileReader();
-      
+
       reader.onload = function(e) {
         containerToShow.attr('src', e.target.result);
       }
-      
+
       reader.readAsDataURL(file);
     }
 }
@@ -561,7 +560,7 @@ let quantumArray = function(defaultValue) {
         valueLocal = defaultValue
     }
 
-    this.changeListener = function(newValue) {        
+    this.changeListener = function(newValue) {
     }
 
     const self = this
@@ -572,16 +571,16 @@ let quantumArray = function(defaultValue) {
         }
         return valueLocal
     },{
-        apply: function(target, thisArgs, argumentsList) {      
+        apply: function(target, thisArgs, argumentsList) {
 
             if(argumentsList[0] != undefined && target() != argumentsList[0]) {
-                target.apply(null, argumentsList)       
-                self.changeListener(target())                          
-            }                                  
+                target.apply(null, argumentsList)
+                self.changeListener(target())
+            }
 
             return target()
         },
-        set: function(target, property, value) {                  
+        set: function(target, property, value) {
             if (property == 'subscriber' && typeof value == 'function') {
                 self.changeListener = value
             }
@@ -601,8 +600,8 @@ let FileGallery = function(element, config) {
     }
 
     if (element.length > 0) {
-        element = element[0]        
-    }  
+        element = element[0]
+    }
 
     const tableId = `file-gallery-table-${FileGalleryGenerated}`
     const modalId = `modal-file-gallery-${FileGalleryGenerated}`
@@ -619,56 +618,92 @@ let FileGallery = function(element, config) {
     const OTHER = '.*';
     const AUDIO = 'audio/*';
 
-    const iconFontAwesome = {
-        [PDF]: "fa fa-pdf",
-        [MSWORD]: "fa fa-word",
-        [IMAGE]: "fa fa-picture-o",
-        [VIDEO]: "fa fa-video-camera",
-        [AUDIO]: "fa fa-music",
-        [OTHER]: "fa fa-file"
-    }
+    const iconFontAwesome = [
+        {
+            'class': "fa fa-file",
+            'match-ext': [
+                'pdf'
+            ]
+        },
+        {
+            'class': "fa fa-word",
+            'match-ext': [
+                'doc',
+                'docx'
+            ]
+        },
+        {
+            'class': "fa fa-excel",
+            'match-ext': [
+                'xls',
+                'xlsx'
+            ]
+        },
+        {
+            'class': "fa fa-picture-o",
+            'match-ext': [
+                'png',
+                'jpeg',
+                'jpg'
+            ]
+        },
+        {
+            'class': "fa fa-video-camera",
+            'match-ext': [
+                'mp4',
+                'avi'
+            ]
+        },
+        {
+            'class': "fa fa-music",
+            'match-ext': [
+                'wav',
+                'mp3'
+            ]
+        },
+    ]
 
     const classEnablePreview = "data-on-preview"
 
     const refreshDataTable = (items) => {
         $(`#${tableId}`).DataTable().clear();
         $(`#${tableId}`).DataTable().rows.add(items);
-        $(`#${tableId}`).DataTable().draw();        
+        $(`#${tableId}`).DataTable().draw();
     }
-    
-    const previewFile = (full) => {
-        const fontKeys = Object.keys(iconFontAwesome)
-        let previewImage = '';
-        for (let i = 0; i < fontKeys.length ; i++) {
-            if (full.type.match(new RegExp(fontKeys[i]))) {
-                previewImage = fontKeys.indexOf(fontKeys[i]) !== -1 ? classEnablePreview : "";
 
-                return `class="${iconFontAwesome[fontKeys[i]]}" ${previewImage} data-uid="${full.uid}"`
+    const previewFile = (full) => {
+        let previewImage = '';
+        for (let i = 0; i < iconFontAwesome.length ; i++) {
+
+            if (iconFontAwesome[i]['match-ext'].indexOf(full.name.split('.')[full.name.split('.').length-1].toLowerCase()) > -1) {
+                previewImage = classEnablePreview;
+
+                return `class="${iconFontAwesome[i]['class']}" ${previewImage} data-uid="${full.uid}"`
             }
         }
-        
+
     }
 
-    this.rawFiles = []     
+    this.rawFiles = []
     this.fileList = new quantumArray([])
-    this.fileList.subscriber = function(newValue) {        
-        refreshDataTable(newValue)        
+    this.fileList.subscriber = function(newValue) {
+        refreshDataTable(newValue)
     }
     this.checkedRow = new quantumArray()
     this.isEdit = false
-    const self = this        
+    const self = this
 
     let defaultConfig = {
         title: '',
         accept: "image/*|application/*|video/*|audio/*",
-        maxSize: 5000000
+        maxSize: 25000000
     }
 
     if (config != null) {
         defaultConfig = Object.assign(defaultConfig, config)
     }
-    
-    
+
+
     const modalContent = `<div class="modal fade" id="${modalId}" tabindex="-1" role="dialog">
     <div class="modal-dialog" role="document">
         <div class="modal-content">
@@ -706,7 +741,7 @@ let FileGallery = function(element, config) {
                 <audio controls id="${containerPreviewImage}">
                 </audio>
             </div>
-            <div class="modal-footer">            
+            <div class="modal-footer">
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
             </div>
         </div>
@@ -716,7 +751,7 @@ let FileGallery = function(element, config) {
     $('body').append(modalContent)
     $('body').append(modalPreview)
 
-    $(`#${fileTempId}`).change((e) => {       
+    $(`#${fileTempId}`).change((e) => {
         element.dispatchEvent(new Event("change"));
     })
 
@@ -748,7 +783,7 @@ let FileGallery = function(element, config) {
             })
         }
 
-        if (!self.isEdit && $(`#${fileTempId}`)[0].files.length > 0) {            
+        if (!self.isEdit && $(`#${fileTempId}`)[0].files.length > 0) {
             temp = {
                 rawFile: file,
                 lastModified: file.lastModified,
@@ -760,8 +795,8 @@ let FileGallery = function(element, config) {
                 uid: new IDGenerator().generate()
             }
 
-            self.fileList().push(temp)               
-        } else {            
+            self.fileList().push(temp)
+        } else {
             let changeValue = {}
             const index = self.fileList().map((d) => {
                 return d.uid
@@ -792,7 +827,7 @@ let FileGallery = function(element, config) {
         $(`#${modalId}`).modal('hide')
     })
 
-    
+
 
     element.style.display = 'none';
 
@@ -805,10 +840,10 @@ let FileGallery = function(element, config) {
     toolbars.className = 'pull-right'
 
     const toolAdd = document.createElement('span')
-    toolAdd.style.cursor = 'pointer'    
+    toolAdd.style.cursor = 'pointer'
     const toolRemove = toolAdd.cloneNode(true)
     const toolEdit = toolAdd.cloneNode(true)
-    
+
     toolAdd.addEventListener('click', () => {
         self.isEdit = false
         $(`#${ketTempId}`).val(null)
@@ -829,7 +864,7 @@ let FileGallery = function(element, config) {
 
         $(`#${ketTempId}`).val(self.checkedRow()[0].keterangan)
         $(`#${modalId}`).modal('show')
-        refreshDataTable(self.fileList())     
+        refreshDataTable(self.fileList())
     })
 
     toolRemove.addEventListener('click', () => {
@@ -838,7 +873,7 @@ let FileGallery = function(element, config) {
             cloneFileList = clone(self.fileList())
             for (let i = 0 ; i < self.checkedRow().length ; i ++) {
                 let checked = self.checkedRow()[i]
-    
+
                 cloneFileList.splice(cloneFileList.map((d) => {
                     return d.uid
                 }).indexOf(checked.uid), 1)
@@ -849,7 +884,7 @@ let FileGallery = function(element, config) {
                 'File telah berhasil dihapus!',
                 'success'
             )
-    
+
             self.fileList(cloneFileList)
             self.checkedRow([])
         }
@@ -866,18 +901,18 @@ let FileGallery = function(element, config) {
             if (result.value) {
                 if (defaultConfig.onDelete != undefined) {
                     const returnOnDelete = defaultConfig.onDelete(self.checkedRow())
-        
+
                     if (isPromise(returnOnDelete)) {
                         returnOnDelete.then((resp) => {
                             if (resp) // true then delete on grid
                                 deleteFunc()
-                        }) 
+                        })
                     } else if (returnOnDelete) {
                         deleteFunc()
                     }
                 } else {
                     deleteFunc()
-                }              
+                }
             }
           })
     })
@@ -927,7 +962,7 @@ let FileGallery = function(element, config) {
                 })
                 return `<input type='${typeInput}' ${checked != undefined ? 'checked' : ''} value='1' data-uid='${full.uid}' class='${checkBoxClass}' />`;
             }},
-            
+
         ],
         info:     false,
         bLengthChange: false,
@@ -935,7 +970,7 @@ let FileGallery = function(element, config) {
         ordering: false,
         drawCallback: () => {
             $(`.${checkBoxClass}`).change((ev) => {
-                
+
                 if (ev.currentTarget.checked) {
                     self.checkedRow().push(self.fileList().find((file) => {
                         return file.uid == ev.currentTarget.getAttribute('data-uid')
@@ -943,8 +978,8 @@ let FileGallery = function(element, config) {
                 } else {
                     self.checkedRow().splice(self.checkedRow().map((d) => {
                         return d.uid
-                    }).indexOf(ev.currentTarget.getAttribute('data-uid')), 1)            
-                }        
+                    }).indexOf(ev.currentTarget.getAttribute('data-uid')), 1)
+                }
             })
 
             $(`[${classEnablePreview}]`).click((ev) => {
@@ -956,7 +991,8 @@ let FileGallery = function(element, config) {
                 const fileTypes = Object.keys(iconFontAwesome);
                 $(`img#${containerPreviewImage}`).hide();
                 $(`video#${containerPreviewImage}`).hide();
-
+                $(`audio#${containerPreviewImage}`).hide();
+                let dontOpenModal = false;
                 let fileType = null;
                 for (let i = 0; i < fileTypes.length ; i++) {
                     if (selectedFile.type.match(new RegExp(fileTypes[i])) && fileType === null) {
@@ -970,24 +1006,28 @@ let FileGallery = function(element, config) {
                         selectorSuffix = 'img';
                         $(`img#${containerPreviewImage}`).show();
                         break;
-                    
+
                     case VIDEO:
                         selectorSuffix = 'video';
                         $(`video#${containerPreviewImage}`).show();
                         break;
-                    case AUDIO: 
+                    case AUDIO:
                         selectorSuffix = 'audio';
                         $(`audio#${containerPreviewImage}`).show();
                     default:
+                        window.open(window.URL.createObjectURL(selectedFile.rawFile), '_blank')
+                        dontOpenModal = true
                         break;
                 }
 
                 if (selectedFile.path != undefined) {
                     $(`${selectorSuffix}#${containerPreviewImage}`)[0].src = $("[base-path]").val().replace("public", "storage/") + "app/" + selectedFile.path
-                    $(`#${modalIdPreview}`).modal('show')
+
                 } else {
-                    console.log(fileType,fileTypes)
                     readURL(selectedFile.rawFile, $(`${selectorSuffix}#${containerPreviewImage}`))
+                }
+
+                if(!dontOpenModal) {
                     $(`#${modalIdPreview}`).modal('show')
                 }
 
@@ -1001,7 +1041,7 @@ let FileGallery = function(element, config) {
     })
 
     FileGalleryGenerated++
-    
+
 }
 
 
@@ -1012,18 +1052,18 @@ const __ajax = (config) => {
         'Authorization':'Bearer ' + sessionStorage.getItem('api token'),
     }
 
-   
+
     const promise = new Promise((resolve,reject) => {
         let anoErrorFunc = () => {}
-        
+
         if (config.error != undefined) {
-            anoErrorFunc = config.error            
+            anoErrorFunc = config.error
         }
 
         config.error = (xmlHttpError, textStatus, errorThrown) => {
-            anoErrorFunc(textStatus)  
-            reject(textStatus)       
-            
+            anoErrorFunc(textStatus)
+            reject(textStatus)
+
             swal.fire({
                 type: 'error',
                 title: textStatus,

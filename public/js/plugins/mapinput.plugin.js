@@ -1,5 +1,6 @@
 let MapInputIncrement = 1;
 let MapInput = function(element, config) {
+    alert('hola')
     const MapInputCurrentInc = MapInputIncrement
     const self = this
 
@@ -12,7 +13,7 @@ let MapInput = function(element, config) {
     }
 
     if (element.length > 0) {
-        element = element[0]        
+        element = element[0]
     }
 
     let position = {
@@ -24,7 +25,7 @@ let MapInput = function(element, config) {
 
     if (!navigator.geolocation) {
         console.error('Geolocation not supported on this browser!')
-        
+
     } else {
         navigator.geolocation.getCurrentPosition((pos) => {
             position = pos
@@ -40,7 +41,7 @@ let MapInput = function(element, config) {
         ],
         isNotInput: false,
         value: null,
-    }    
+    }
 
     if  (config != null) {
         self.defaultConfig = Object.assign(self.defaultConfig, config)
@@ -52,7 +53,7 @@ let MapInput = function(element, config) {
             if (TIMEOUT < 0) {
                 console.error('Oopss please include google map apis javascript')
                 reject(false)
-                clearInterval(intervalTicking)                
+                clearInterval(intervalTicking)
             }
             if (ol != undefined) {
                 resolve(true)
@@ -60,9 +61,9 @@ let MapInput = function(element, config) {
             }
             TIMEOUT--
         },1000)
-        
+
     }).then(() => {
-        
+
 
         this.marker
         this.markerVectorLayer
@@ -74,7 +75,7 @@ let MapInput = function(element, config) {
 
         let mapId = `ol-map-${MapInputCurrentInc}`
         const modalIdGoogleMap = `ol-map-id-${MapInputCurrentInc}`
-        
+
         if (element.tagName != "INPUT" && !self.defaultConfig.isNotInput) {
             element.setAttribute('id', mapId)
 
@@ -85,15 +86,15 @@ let MapInput = function(element, config) {
                 return
             }
         }
-        
+
         if (!self.defaultConfig.isNotInput) {
 
             element.style.display = "none"
 
             const containerInputGroup = document.createElement('div')
             containerInputGroup.className = 'input-group'
-        
-            
+
+
 
             if (!self.defaultConfig.draw) {
                 inputMaskingElement = element.cloneNode(true)
@@ -102,63 +103,63 @@ let MapInput = function(element, config) {
                 inputMaskingElement = document.createElement('textarea')
                 inputMaskingElement.style.display = 'block'
             }
-            
-        
+
+
             const inputGroupAppend = document.createElement('div')
             inputGroupAppend.className = 'input-group-append'
-        
+
             const inputGroupText = document.createElement('div')
             inputGroupText.className = 'input-group-text'
-            
+
             const inputGroupTextButton = document.createElement('i')
             inputGroupTextButton.className = 'fa fa-globe'
 
-            let selectOption = document.createElement('select')    
-            selectOption.setAttribute('id', `select-${mapId}`)    
+            let selectOption = document.createElement('select')
+            selectOption.setAttribute('id', `select-${mapId}`)
             for (let i = 0 ; i < self.defaultConfig.drawOptions.length; i ++ ) {
                 var drawOption = document.createElement('option')
                 drawOption.appendChild(document.createTextNode(self.defaultConfig.drawOptions[i]))
                 drawOption.value = self.defaultConfig.drawOptions[i]
                 selectOption.appendChild(drawOption)
             }
-            
 
-            if (!self.defaultConfig.draw) {                        
-                selectOption = null           
+
+            if (!self.defaultConfig.draw) {
+                selectOption = null
             }
-        
+
             inputMaskingElement.disabled = true
-        
+
             containerInputGroup.appendChild(inputMaskingElement)
             inputGroupText.appendChild(inputGroupTextButton)
             inputGroupAppend.appendChild(inputGroupText)
             containerInputGroup.appendChild(inputGroupAppend)
-            
-        
-            inputGroupText.addEventListener('click', (ev) => {            
+
+
+            inputGroupText.addEventListener('click', (ev) => {
                 $(`#${modalIdGoogleMap}`).modal('show')
-            })        
+            })
 
             inputMaskingElement.addEventListener('change', (ev) => {
                 element.value = ev.target.value
                 element.dispatchEvent(new Event('change'))
             })
-                
+
             const modalMapPicker = `<div class="modal fade" id="${modalIdGoogleMap}" tabindex="-1" role="dialog">
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
-                    <div class="modal-body">     
+                    <div class="modal-body">
                         <div id='${mapId}' style='width:100%; height:300px'>
-                        </div>           
+                        </div>
                         ${selectOption != null ? selectOption.outerHTML : ''}
                     </div>
-                    <div class="modal-footer">            
+                    <div class="modal-footer">
                         <button type="button" class="btn btn-secondary" data-dismiss="modal">Selesai</button>
                     </div>
                 </div>
                 </div>
             </div>`
-            
+
             $('body').append(modalMapPicker)
 
 
@@ -167,7 +168,7 @@ let MapInput = function(element, config) {
                     self.loadMap();
                 }
 
-                self.map.updateSize();                               
+                self.map.updateSize();
 
                 initValue(element.value)
             })
@@ -179,7 +180,7 @@ let MapInput = function(element, config) {
 
 
             element.parentNode.insertBefore(containerInputGroup, element.nextSibling)
-    
+
 
             addInteraction = function() {
                 var value = $(`#${`select-${mapId}`}`).val();
@@ -188,33 +189,33 @@ let MapInput = function(element, config) {
                     source: source,
                     type: value
                   });
-    
+
 
                   self.draw.on('drawstart', function(ev) {
-    
+
                     if (self.lastFeature)
                          source.removeFeature(self.lastFeature);
-    
+
                   })
-    
+
                   self.draw.on('drawend', function(ev) {
 
-                    
-    
+
+
                     ev.feature.setId(new IDGenerator().generate());
-                    
+
                     self.lastFeature = ev.feature
-    
+
                     let format = new ol.format['GeoJSON']()
-    
+
                     setTimeout(() => {
                         let data = format.writeFeatures(vector.getSource().getFeatures())
-    
+
                         inputMaskingElement.value = JSON.stringify(data, null, 4)
                         inputMaskingElement.dispatchEvent(new Event('change'))
                     },1000)
-                    
-    
+
+
                   })
                   self.map.addInteraction(self.draw);
                 }
@@ -222,24 +223,24 @@ let MapInput = function(element, config) {
         } else {
             const mapElement = `<div id='${mapId}' style='width:100%; height:auto;'></div>`;
             $(element).html(mapElement);
-            
+
             setTimeout(() => {
                 if (self.map == null) {
                     this.loadMap();
                 }
-    
-                self.map.updateSize();                               
-    
+
+                self.map.updateSize();
+
                 initValue(element.value)
             }, 1000);
         }
-        
+
         let raster =  new ol.layer.Tile({
             source: new ol.source.OSM()
         })
-    
+
         let source = new ol.source.Vector({wrapX: false});
-    
+
         let vector = new ol.layer.Vector({
             source: source
         });
@@ -257,16 +258,16 @@ let MapInput = function(element, config) {
                   zoom: 8
                 })
             }
-        
+
             self.map =  new ol.Map(mapConfig);
-    
-            if (!self.defaultConfig.isNotInput) {                
+
+            if (!self.defaultConfig.isNotInput) {
                 if (!self.defaultConfig.draw) {
                     self.map.on('click', (ev) => {
                         const coord = ol.proj.transform(ev.coordinate, 'EPSG:3857', 'EPSG:4326');
                         inputMaskingElement.value = `${coord[0]},${coord[1]}`
                         inputMaskingElement.dispatchEvent(new Event('change'))
-            
+
                         if (self.defaultConfig.autoClose) {
                             $(`#${modalIdGoogleMap}`).modal('hide')
                         }
@@ -277,10 +278,10 @@ let MapInput = function(element, config) {
             } else {
                 initValue(self.defaultConfig.value)
             }
-            
+
         }
 
-        
+
 
         const initValue = (value) => {
 
@@ -290,10 +291,10 @@ let MapInput = function(element, config) {
                     console.error("doesn't support fomat value!")
                     return;
                 }
-                
+
                 self.map.setView(
                     new ol.View({
-                        center: ol.proj.fromLonLat([parseFloat(splittedValue[0]), parseFloat(splittedValue[1])]),                         
+                        center: ol.proj.fromLonLat([parseFloat(splittedValue[0]), parseFloat(splittedValue[1])]),
                         zoom: 12
                     })
                 );
@@ -308,17 +309,17 @@ let MapInput = function(element, config) {
                 // }
 
                 let values = JSON.stringify(value);
-                if (typeof values != 'object') 
+                if (typeof values != 'object')
                     values = JSON.parse(values)
 
-                
+
                 if (typeof values.features !== 'undefined') {
                     let coordinatesDraws = []
                     let currentCoord = values.features[0].geometry.coordinates
                     for (let n = 0; n < currentCoord.length; n ++) {
                         coordinatesDraws.push(ol.proj.transform(currentCoord[n], 'EPSG:4326', 'EPSG:3857'))
                     }
-    
+
                     if (values.features[0].geometry.type == "Polygon") {
                         let things = new ol.geom[values.features[0].geometry.type](
                             [ values.features[0].geometry.coordinates[0].concat([values.features[0].geometry.coordinates[0][0]]) ]
@@ -327,24 +328,24 @@ let MapInput = function(element, config) {
                             geometry: things
                         })
                     } else if (values.features[0].geometry.type == "LineString") {
-    
+
                         let things = new ol.geom[values.features[0].geometry.type](values.features[0].geometry.coordinates)
-    
+
                         self.lastFeature = new ol.Feature({
                             geometry: things
                         })
                     }
-                   
-    
+
+
                     source.addFeature(self.lastFeature)
-    
+
                     let ext    = self.lastFeature.getGeometry().getExtent();
-    
+
                     self.map.getView().fit(ext, self.map.getSize());
-    
+
                     $(`#${`select-${mapId}`}`).val(values.features[0].geometry.type)
                 }
-                
+
             }
         }
 
@@ -359,8 +360,8 @@ let MapInput = function(element, config) {
             source.addFeature(self.marker)
         }
 
-        
 
-        
+
+
     })
 }

@@ -5,22 +5,22 @@
 </div> -->
 
 <div class="form-group col-sm-6 no-padding <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?>">
-    {!! Form::label('pidbarang', 'Barang') !!} 
+    {!! Form::label('pidbarang', 'Barang') !!}
     <div class="row">
         <div class="col-md-4">
-            {!! Form::text('kodebarang', null, ['class' => 'form-control','style' => 'margin:1px -15px 0 0px; float:left', 'readonly' => true]) !!} 
+            {!! Form::text('kodebarang', null, ['class' => 'form-control','style' => 'margin:1px -15px 0 0px; float:left', 'readonly' => true]) !!}
         </div>
         <div class="col-md-8">
             {!! Form::text('pidbarang', null, ['class' => 'form-control baranglookup', 'id' => 'baranglookup']) !!}
         </div>
-    </div>    
+    </div>
 </div>
 
 <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
     <!-- Tahun Perolehan -->
     {!! Form::label('tahun_perolehan', 'Tahun Perolehan') !!} <span class="text-danger">*</span>
     <div class="input-group">
-        
+
         {!! Form::text('tahun_perolehan', null, ['class' => 'form-control', 'maxlength' => 4, 'required' => true]) !!}
         <div class="input-group-append">
             <span class="input-group-text text-danger" id="basic-addon2">4 digit(mis: 2018)</span>
@@ -35,8 +35,8 @@
         <div class="input-group-prepend">
             <span class="input-group-text" id="basic-addon1">Rp.</span>
         </div>
-        {!! Form::text('harga_satuan', null, ['class' => 'form-control', 'required' => true]) !!}        
-    </div>   
+        {!! Form::text('harga_satuan', null, ['class' => 'form-control', 'required' => true]) !!}
+    </div>
 </div>
 
 
@@ -44,17 +44,17 @@
     <div class="row">
         <div class="col-md-6">
             {!! Form::label('jumlah', 'Jumlah') !!} <span class="text-danger">*</span>
-            <div class="input-group col-md-12 no-padding mr-2">            
-                {!! Form::number('jumlah',  (isset($inventaris) ? $inventaris->jumlah : 1 ), ['class' => 'form-control', 'max' => 99, 'required' => true]) !!}       
+            <div class="input-group col-md-12 no-padding mr-2">
+                {!! Form::number('jumlah',  (isset($inventaris) ? $inventaris->jumlah : 1 ), ['class' => 'form-control', 'max' => 99, 'required' => true]) !!}
                 <div class="input-group-append">
                     <span class="input-group-text text-danger" id="basic-addon2">(max: 99)</span>
-                </div> 
+                </div>
             </div>
         </div>
         <div class="col-md-6">
             {!! Form::label('satuan', 'Satuan') !!} <span class="text-danger">*</span>
-            <div class="input-group col-md-12 no-padding">        
-                {!! Form::select('satuan', [], null, ['class' => 'form-control', 'required' => true]) !!}                
+            <div class="input-group col-md-12 no-padding">
+                {!! Form::select('satuan', [], null, ['class' => 'form-control', 'required' => true]) !!}
             </div>
         </div>
     </div>
@@ -162,8 +162,8 @@
 </div> -->
 
 @section(!isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'scripts' : 'scripts_2')
-    <script type="text/javascript">   
-        const funcBarangSelect = function(d) {            
+    <script type="text/javascript">
+        const funcBarangSelect = function(d) {
             let appendKode = ""
             if (d.kode_akun != "" && d.kode_akun != null) {
                 appendKode += d.kode_akun
@@ -212,13 +212,14 @@
                     jenis: 'dokumen',
                     foreign_field: 'id',
                     foreign_id: <?= isset($inventaris) ? $inventaris->id : 'null' ?>,
-                    foreign_table: 'inventaris',                    
+                    foreign_table: 'inventaris',
                 },
-            }).then((files) => {                
+            }).then((files) => {
                 fileGallery.fileList(files)
-            }) 
+            })
         }
-                  
+
+
         const funcGetFotoFileList = () => {
             __ajax({
                 method: 'GET',
@@ -231,9 +232,9 @@
                 },
             }).then((files) => {
                 foto.fileList(files)
-            }) 
+            })
         }
-    
+
         $(".baranglookup").LookupTable({
             DataTable: {
                 ajax: {
@@ -245,22 +246,22 @@
                 },
                 columns: [
                     { data: 'nama_rek_aset', title: 'Nama Barang' },
-                    
+
                 ],
                 "dom": `<'row'<'col-sm-6'l><'col-sm-6'f>><'row'<'col-sm-12'tr>><'row'<'table-responsive'<'col-sm-5'i><'col-sm-7'p>>>`,
                 "pageLength": 10,
                 "processing": true,
                 "serverSide": true,
-                "searching": false,      
-                responsive: true,    
+                "searching": false,
+                responsive: true,
                 custom: {
                     typeInput: 'radio',
                     textField: 'nama_rek_aset',
                     valueField: 'id',
                     autoClose: false,
                     filters: [
-                        { name: "kode_jenis", type: "select2", title: "Bidang" , select2config: {                            
-                            ajax: {                                
+                        { name: "kode_jenis", type: "select2", title: "Bidang" , select2config: {
+                            ajax: {
                                 url: "<?= url('api/jenisbarangs') ?>",
                                 dataType: 'json',
                                 data: function (params) {
@@ -282,20 +283,20 @@
                             theme: 'bootstrap' ,
                             custom: {
                                 valueField: "kode",
-                                change: (obj) => {                                    
+                                change: (obj) => {
                                     let idInput = obj.currentTarget.id
                                     $("#" + idInput.replace('kode_jenis', 'kode_objek')).val("").trigger('change')
                                 }
                             }
                         }},
-                        { name: "kode_objek", type: "select2", title: "Kelompok" , select2config: {                            
-                            ajax: {                                
+                        { name: "kode_objek", type: "select2", title: "Kelompok" , select2config: {
+                            ajax: {
                                 url: "<?= url('api/barangs') ?>",
                                 dataType: 'json',
                                 data: function (params) {
                                     idInput = $(this)[0].id
 
-                                    params.kode_jenis = $("#" + idInput.replace('kode_objek', 'kode_jenis')).val() 
+                                    params.kode_jenis = $("#" + idInput.replace('kode_objek', 'kode_jenis')).val()
 
                                     return params;
                                 },
@@ -308,27 +309,27 @@
                                             return d
                                         })
                                     };
-                                },                                
+                                },
                             },
                             theme: 'bootstrap' ,
                             custom: {
                                 valueField: "kode_objek",
-                                change: (obj) => {                                    
+                                change: (obj) => {
                                     let idInput = obj.currentTarget.id
                                     $("#" + idInput.replace('kode_objek', 'kode_rincian_objek')).val("").trigger('change')
                                 }
                             }
                         }},
-                        { name: "kode_rincian_objek", type: "select2", title: "Sub Kelompok" , select2config: {                            
-                            ajax: {                                
+                        { name: "kode_rincian_objek", type: "select2", title: "Sub Kelompok" , select2config: {
+                            ajax: {
                                 url: "<?= url('api/barangs') ?>",
                                 dataType: 'json',
                                 data: function (params) {
                                     idInput = $(this)[0].id
-                                    
 
-                                    params.kode_objek = $("#" + idInput.replace('kode_rincian_objek', 'kode_objek')).select2('data')[0].kode_objek 
-                                    params.kode_jenis = $("#" + idInput.replace('kode_rincian_objek', 'kode_jenis')).val() 
+
+                                    params.kode_objek = $("#" + idInput.replace('kode_rincian_objek', 'kode_objek')).select2('data')[0].kode_objek
+                                    params.kode_jenis = $("#" + idInput.replace('kode_rincian_objek', 'kode_jenis')).val()
 
                                     return params;
                                 },
@@ -342,26 +343,26 @@
                                         })
                                     };
                                 },
-                                
+
                             },
                             theme: 'bootstrap' ,
                             custom: {
                                 valueField: "kode_rincian_objek",
-                                change: (obj) => {                                    
+                                change: (obj) => {
                                     let idInput = obj.currentTarget.id
                                     $("#" + idInput.replace('kode_rincian_objek', 'kode_sub_rincian_objek')).val("").trigger('change')
                                 }
                             }
                         }},
-                        { name: "kode_sub_rincian_objek", type: "select2", title: "Sub Sub Kelompok" , select2config: {                            
-                            ajax: {                                
+                        { name: "kode_sub_rincian_objek", type: "select2", title: "Sub Sub Kelompok" , select2config: {
+                            ajax: {
                                 url: "<?= url('api/barangs') ?>",
                                 dataType: 'json',
                                 data: function (params) {
                                     idInput = $(this)[0].id
-                                    params.kode_objek = $("#" + idInput.replace('kode_sub_rincian_objek', 'kode_objek')).select2('data')[0].kode_objek 
-                                    params.kode_jenis = $("#" + idInput.replace('kode_sub_rincian_objek', 'kode_jenis')).val() 
-                                    params.kode_rincian_objek = $("#" + idInput.replace('kode_sub_rincian_objek', 'kode_rincian_objek')).select2('data')[0].kode_rincian_objek 
+                                    params.kode_objek = $("#" + idInput.replace('kode_sub_rincian_objek', 'kode_objek')).select2('data')[0].kode_objek
+                                    params.kode_jenis = $("#" + idInput.replace('kode_sub_rincian_objek', 'kode_jenis')).val()
+                                    params.kode_rincian_objek = $("#" + idInput.replace('kode_sub_rincian_objek', 'kode_rincian_objek')).select2('data')[0].kode_rincian_objek
 
                                     return params;
                                 },
@@ -381,7 +382,7 @@
                             }
                         }},
                         { name: "nama_rek_aset", type:"text", title: "Ketik nama barang/jenis barang yang akan dicari"},
-                    ],                 
+                    ],
                     select: funcBarangSelect
                 }
             }
@@ -393,11 +394,11 @@
                 dataType: 'json',
                 data: function (params) {
                     var query = {
-                        q: params.term,                                           
+                        q: params.term,
                         addWhere: [
                             "jenis = '0'"
                         ]
-                    } 
+                    }
                     return query;
                 },
                 processResults: function (data) {
@@ -426,12 +427,12 @@
                 dataType: 'json',
                 data: function (params) {
                     var query = {
-                        q: params.term,                                           
+                        q: params.term,
                         addWhere: [
                             "jenis = '1'",
                             "pid = " + $("#alamat_propinsi").val()
                         ]
-                    }                    
+                    }
 
                     return query;
                 },
@@ -456,12 +457,12 @@
                 dataType: 'json',
                 data: function (params) {
                     var query = {
-                        q: params.term,                                           
+                        q: params.term,
                         addWhere: [
                             "jenis = '2'",
                             "pid = " + $("#alamat_kota").val()
                         ]
-                    }                    
+                    }
 
                     return query;
                 },
@@ -486,12 +487,12 @@
                 dataType: 'json',
                 data: function (params) {
                     var query = {
-                        q: params.term,                                           
+                        q: params.term,
                         addWhere: [
                             "jenis = '3'",
                             "pid = " + $("#alamat_kecamatan").val()
                         ]
-                    }                    
+                    }
 
                     return query;
                 },
@@ -512,7 +513,24 @@
         $('#tahun_perolehan').change((d) => {
             if (parseInt($("#tahun_perolehan").val()) > parseInt(new Date().getFullYear())) {
                 $("#tahun_perolehan").val(new Date().getFullYear())
+                return;
             }
+
+            if (isNaN(parseInt(new Date().getFullYear()))) {
+                swal.fire({
+                    type: 'error',
+                    text: 'Tahun perolehan salah!'
+                })
+
+                $("#tahun_perolehan").val('')
+                return;
+            }
+
+            let tglDibukukan = $('#tgl_dibukukan').val()
+
+            $($("#tgl_dibukukan").parent().find('select')[0]).val(parseInt($("#tahun_perolehan").val())).trigger('change')
+
+            tglDibukukanInline.creatingResult()
         })
 
         $('#pidbarang').select2({
@@ -537,7 +555,7 @@
                     d.level = 0
                     return d
                 },
-                processResults: function (data) {            
+                processResults: function (data) {
                 // Transforms the top-level key of the response object from 'items' to 'results'
                 return {
                     results: data.data
@@ -604,7 +622,7 @@
                 };
                 }
             },
-            theme: 'bootstrap' , 
+            theme: 'bootstrap' ,
         })
 
 
@@ -619,10 +637,10 @@
                 };
                 }
             },
-            theme: 'bootstrap' , 
+            theme: 'bootstrap' ,
         })
 
-        new inlineDatepicker(document.getElementsByClassName('tgl_dibukukan'), {
+        const tglDibukukanInline = new inlineDatepicker(document.getElementsByClassName('tgl_dibukukan'), {
             format: 'DD-MM-YYYY',
             buttonClear: true,
         });
@@ -634,8 +652,8 @@
 
         var fileGallery = new FileGallery(document.getElementById('dokumen'), {
             title: 'File Dokumen',
-            maxSize: 5000000,
-            onDelete: () => {                
+            maxSize: 25000000,
+            onDelete: () => {
                 return new Promise((resolve, reject) => {
                     let checkIfIdExist = fileGallery.checkedRow().filter((d) => {
                         return d.id != undefined
@@ -659,8 +677,8 @@
 
         var foto = new FileGallery(document.getElementById('foto'), {
             title: 'Media',
-            maxSize: 50000000,
-            onDelete: () => {                
+            maxSize: 1000000000,
+            onDelete: () => {
                 return new Promise((resolve, reject) => {
                     let checkIfIdExist = foto.checkedRow().filter((d) => {
                         return d.id != undefined
@@ -685,7 +703,7 @@
         // ... please put any starter code here
         funcGetFotoFileList()
         funcGetDokumenFileList()
-        
+
         const onSave = (isDraft) => {
             Swal.fire({
                     title: 'Anda yakin?',
@@ -698,7 +716,7 @@
                 }).then((result) => {
                     if (result.value) {
                         let formData = new FormData($('#form-inventaris')[0])
-            
+
                         formData.append(`draft`, isDraft ? '1' : '')
 
                         for (let index =0 ; index < fileGallery.fileList().length; index ++) {
@@ -716,8 +734,8 @@
                                     return
                                 }
                                 formData.append(`dokumen_metadata_${key}[${index}]`, d[key])
-                            })                
-                            
+                            })
+
                             formData.append(`dokumen_metadata_id_inventaris[${index}]`, <?= isset($inventaris) ? $inventaris->id: 'null' ?>)
                         }
 
@@ -735,15 +753,15 @@
                                     return
                                 }
                                 formData.append(`foto_metadata_${key}[${index}]`, d[key])
-                            })                
+                            })
 
-                            
-                            
+
+
                             formData.append(`foto_metadata_id_inventaris[${index}]`, <?= isset($inventaris) ? $inventaris->id: 'null' ?>)
-                            
+
                             return d.rawFile
                         })
-                        
+
                         formData.append(`kib`, JSON.stringify(viewModel.data[viewModel.data.tipeKib()]()))
                         formData.append(`kode_barang`, $("[name=kodebarang]").val())
                         //formData.append(`kode_lokasi`, $('#kode_lokasi').val())
@@ -754,7 +772,7 @@
                         if (!isNaN(parseInt($('#pidopd_cabang').select2('val'))))
                             formData.append('pidopd_cabang',parseInt($('#pidopd_cabang').select2('val')))
                         if (!isNaN(parseInt($('#pidupt').select2('val'))))
-                            formData.append('pidupt',parseInt($('#pidupt').select2('val')))                        
+                            formData.append('pidupt',parseInt($('#pidupt').select2('val')))
 
                         __ajax({
                             method: 'POST',
@@ -762,7 +780,7 @@
                             data: formData,
                             processData: false,
                             contentType: false,
-                            
+
                         }).then((d, resp) => {
                             swal.fire({
                                 type: "success",
@@ -771,37 +789,37 @@
                                     window.location = `${$('[base-path]').val()}/inventaris`
                                 }
                             })
-                            
-                        })          
+
+                        })
                     }
             })
-            
+
         }
 
         const form = document.querySelector('#form-inventaris')
         form.addEventListener('submit', (ev) => {
             ev.preventDefault()
 
-            onSave(false)            
+            onSave(false)
         })
 
-        
+
     </script>
 
     @if (isset($inventaris))
-    <script>        
-        <?php 
-            $organisasi = \App\Models\organisasi::find(Auth::user()->pid_organisasi); 
-            $jabatan = \App\Models\jabatan::find(Auth::user()->jabatan);                      
+    <script>
+        <?php
+            $organisasi = \App\Models\organisasi::find(Auth::user()->pid_organisasi);
+            $jabatan = \App\Models\jabatan::find(Auth::user()->jabatan);
         ?>
         App.Helpers.defaultSelect2($('#satuan'), "<?= url('api/satuanbarangs', [$inventaris->satuan]) ?>","id","nama")
         $(".baranglookup").LookupTable().setValAjax("<?= url('api/barangs', [$inventaris->pidbarang]) ?>").then((d) => {
             viewModel.data.pidinventaris = <?= $inventaris->id ?>;
             funcBarangSelect(d)
-        })        
-        
+        })
+
         let kelompok = parseInt("<?= $jabatan->kelompok ?>")
-         
+
         if (kelompok >= 2)
             $('#pidupt').select2('enable', false)
         if (kelompok >= 1)
@@ -809,26 +827,26 @@
         if (kelompok >= 0)
             $('#pidopd').select2('enable', false)
 
-        App.Helpers.defaultSelect2($('#alamat_propinsi'), "<?= url('api/alamats', [$inventaris->alamat_propinsi]) ?>","id","nama", () => {           
-            
-            App.Helpers.defaultSelect2($('#alamat_kota'), "<?= url('api/alamats', [$inventaris->alamat_kota]) ?>","id","nama", () => {              
-                App.Helpers.defaultSelect2($('#alamat_kecamatan'), "<?= url('api/alamats', [$inventaris->alamat_kecamatan]) ?>","id","nama", () => {              
-                    App.Helpers.defaultSelect2($('#alamat_kelurahan'), "<?= url('api/alamats', [$inventaris->alamat_kelurahan]) ?>","id","nama", () => {              
-                    }) 
-                }) 
-            }) 
+        App.Helpers.defaultSelect2($('#alamat_propinsi'), "<?= url('api/alamats', [$inventaris->alamat_propinsi]) ?>","id","nama", () => {
+
+            App.Helpers.defaultSelect2($('#alamat_kota'), "<?= url('api/alamats', [$inventaris->alamat_kota]) ?>","id","nama", () => {
+                App.Helpers.defaultSelect2($('#alamat_kecamatan'), "<?= url('api/alamats', [$inventaris->alamat_kecamatan]) ?>","id","nama", () => {
+                    App.Helpers.defaultSelect2($('#alamat_kelurahan'), "<?= url('api/alamats', [$inventaris->alamat_kelurahan]) ?>","id","nama", () => {
+                    })
+                })
+            })
         })
 
-        App.Helpers.defaultSelect2($('#pidopd'), "<?= url('api/organisasis', [$inventaris->pidopd]) ?>","id","nama", () => {           
-            App.Helpers.defaultSelect2($('#pidopd_cabang'), "<?= url('api/organisasis', [$inventaris->pidopd_cabang]) ?>","id","nama", () => {              
+        App.Helpers.defaultSelect2($('#pidopd'), "<?= url('api/organisasis', [$inventaris->pidopd]) ?>","id","nama", () => {
+            App.Helpers.defaultSelect2($('#pidopd_cabang'), "<?= url('api/organisasis', [$inventaris->pidopd_cabang]) ?>","id","nama", () => {
                 App.Helpers.defaultSelect2($('#pidupt'), "<?= url('api/organisasis', [$inventaris->pidupt]) ?>","id","nama")
-            }) 
+            })
         })
     </script>
     @else
         @if(Auth::user()->pid_organisasi)
-            <?php 
-                $jabatan = \App\Models\jabatan::find(Auth::user()->jabatan);       
+            <?php
+                $jabatan = \App\Models\jabatan::find(Auth::user()->jabatan);
                 $organisasi = \App\Models\organisasi::find(Auth::user()->pid_organisasi);
             ?>
             @if($jabatan->kelompok == 0)
@@ -846,11 +864,11 @@
                             return
                         }
                         App.Helpers.defaultSelect2($('#pidopd_cabang'), "<?= url('api/organisasis', [$organisasi->id]) ?>","id","nama")
-                    })                    
+                    })
                 </script>
             @endif
             @if($jabatan->kelompok == 2)
-                <?php 
+                <?php
                     $pidOrganisasiInduk = "";
                     $organisasiInduk = \App\Models\organisasi::find($organisasi->pid);
                     if ($organisasiInduk) {
@@ -858,7 +876,7 @@
                     }
                 ?>
                 <script>
-                    
+
                     $('#pidupt').select2('enable', false)
                     $('#pidopd_cabang').select2('enable', false)
                     $('#pidopd').select2('enable', false)
@@ -866,17 +884,17 @@
                         if ("<?= $organisasi->pid ?>" == "") {
                             return
                         }
-                        App.Helpers.defaultSelect2($('#pidopd_cabang'), "<?= url('api/organisasis', [$organisasi->pid]) ?>","id","nama", () => {                        
+                        App.Helpers.defaultSelect2($('#pidopd_cabang'), "<?= url('api/organisasis', [$organisasi->pid]) ?>","id","nama", () => {
                             App.Helpers.defaultSelect2($('#pidupt'), "<?= url('api/organisasis', [$organisasi->id]) ?>","id","nama")
-                        }) 
-                    })                    
+                        })
+                    })
                 </script>
             @endif
         @endif
     @endif
 
-    
-    
+
+
 @endsection
 
 @include('inventaris.formkib')

@@ -448,6 +448,7 @@
 
         $( document ).ajaxStart(function() {
             $(".loading-page").attr('style', 'display: block');
+            //alert('test')
         }).ajaxError(function( event, jqxhr, settings, thrownError ) {
             if (jqxhr.status == 401) {
                 $('.btn-logout').click();
@@ -459,7 +460,7 @@
         });
 
         $("form").on("submit", function(){
-            $(".loading-page").attr('style', 'display: block');
+            //$(".loading-page").attr('style', 'display: block');
         });//submit
     </script>
     @yield('before_pages')
