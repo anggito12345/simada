@@ -1,6 +1,5 @@
 let MapInputIncrement = 1;
-let MapInput = function(element, config) {
-    alert('hola')
+let GoogleMapInput = function(element, config) {
     const MapInputCurrentInc = MapInputIncrement
     const self = this
 
@@ -101,6 +100,7 @@ let MapInput = function(element, config) {
                 inputMaskingElement.style.display = 'block'
             } else {
                 inputMaskingElement = document.createElement('textarea')
+                inputMaskingElement.value = Object.keys(self.defaultConfig.value).length == 0 ? '' : self.defaultConfig.value;
                 inputMaskingElement.style.display = 'block'
             }
 
@@ -115,6 +115,43 @@ let MapInput = function(element, config) {
             inputGroupTextButton.className = 'fa fa-globe'
 
             let selectOption = document.createElement('select')
+
+            let buttonSearchLatLon = document.createElement('div')
+
+            buttonSearchLatLon.setAttribute('class', 'btn btn-success')
+            buttonSearchLatLon.textContent = 'Search'
+
+
+
+            let inputLatContainer = document.createElement('div')
+            let labelInputLat = document.createElement('label')
+            let inputLat = document.createElement('input')
+
+            labelInputLat.textContent = 'Latitude'
+
+            inputLatContainer.setAttribute('class', 'form-group')
+
+            inputLat.setAttribute('id', `input-lat-${mapId}`)
+            inputLat.setAttribute('class', `form-control`)
+
+            inputLatContainer.appendChild(labelInputLat)
+            inputLatContainer.appendChild(inputLat)
+
+
+            let inputLonContainer = document.createElement('div')
+            let labelInputLon = document.createElement('label')
+            let inputLon = document.createElement('input')
+
+            labelInputLon.textContent = 'Longitude'
+
+            inputLonContainer.setAttribute('class', 'form-group')
+
+            inputLon.setAttribute('id', `input-lon-${mapId}`)
+            inputLon.setAttribute('class', `form-control`)
+
+            inputLonContainer.appendChild(labelInputLon)
+            inputLonContainer.appendChild(inputLon)
+
             selectOption.setAttribute('id', `select-${mapId}`)
             for (let i = 0 ; i < self.defaultConfig.drawOptions.length; i ++ ) {
                 var drawOption = document.createElement('option')
@@ -149,6 +186,9 @@ let MapInput = function(element, config) {
             <div class="modal-dialog" role="document">
                 <div class="modal-content">
                     <div class="modal-body">
+
+                        ${inputLatContainer != null && !self.defaultConfig.draw ? inputLatContainer.outerHTML : ''}
+                        ${inputLonContainer != null && !self.defaultConfig.draw  ? inputLonContainer.outerHTML : ''}
                         <div id='${mapId}' style='width:100%; height:300px'>
                         </div>
                         ${selectOption != null ? selectOption.outerHTML : ''}
@@ -162,6 +202,33 @@ let MapInput = function(element, config) {
 
             $('body').append(modalMapPicker)
 
+            if (!self.defaultConfig.draw) {
+                document.getElementById(`${mapId}`).parentNode.insertBefore(buttonSearchLatLon,document.getElementById(`${mapId}`))
+            }
+
+
+            buttonSearchLatLon.addEventListener('click', () => {
+                console.log(self.map.getView())
+                if ( !isNaN(parseFloat(document.getElementById(`input-lon-${mapId}`).value)) && !isNaN(parseFloat(document.getElementById(`input-lat-${mapId}`).value)) ) {
+                    let coordinate = ol.proj.fromLonLat([parseFloat(document.getElementById(`input-lon-${mapId}`).value), parseFloat(document.getElementById(`input-lat-${mapId}`).value)])
+                    self.map.getView().animate(
+                        {
+                            center: coordinate,
+                            zoom: 8
+                        }
+                    );
+
+                    self.setMarker(coordinate, true)
+                    source.clear()
+                    createLayer([parseFloat(document.getElementById(`input-lon-${mapId}`).value), parseFloat(document.getElementById(`input-lat-${mapId}`).value)])
+                } else {
+                    swal.fire({
+                        type: 'error',
+                        text: `Latitude dan Longitude salah!`
+                    })
+                }
+
+            })
 
             $(`#${modalIdGoogleMap}`).on('shown.bs.modal', function () {
                 if (self.map == null) {
@@ -179,49 +246,59 @@ let MapInput = function(element, config) {
             })
 
 
+
+
             element.parentNode.insertBefore(containerInputGroup, element.nextSibling)
 
 
             addInteraction = function() {
                 var value = $(`#${`select-${mapId}`}`).val();
                 if (value !== 'None') {
-                  self.draw = new ol.interaction.Draw({
-                    source: source,
-                    type: value
-                  });
+                    self.draw = new ol.interaction.Draw({
+                        source: source,
+                        type: value
+                    });
 
+                    self.draw.on('drawstart', function(ev) {
+                        if (self.lastFeature) {
+                            source.clear();
+                            // source.removeFeature(self.lastFeature);
+                        }
 
-                  self.draw.on('drawstart', function(ev) {
+                    })
 
-                    if (self.lastFeature)
-                         source.removeFeature(self.lastFeature);
+                    self.draw.on('drawend', function(ev) {
+                        ev.feature.setId(new IDGenerator().generate());
 
-                  })
+                        self.lastFeature = ev.feature
 
-                  self.draw.on('drawend', function(ev) {
+                        let format = new ol.format['GeoJSON']()
 
+                        setTimeout(() => {
+                            let data = format.writeFeatures(vector.getSource().getFeatures())
 
+                            data = JSON.parse(data);
+                            let coordsTemp = [];
 
-                    ev.feature.setId(new IDGenerator().generate());
+                            for (let idx = 0; idx < data.features[0].geometry.coordinates[0].length; idx++) {
+                                coordsTemp.push(ol.proj.transform(data.features[0].geometry.coordinates[0][idx], 'EPSG:3857', 'EPSG:4326'));
+                            }
 
-                    self.lastFeature = ev.feature
+                            data.features[0].geometry.coordinates[0] = coordsTemp;
+                            data = JSON.stringify(data);
 
-                    let format = new ol.format['GeoJSON']()
+                            inputMaskingElement.value = JSON.stringify(data, null, 4)
+                            inputMaskingElement.dispatchEvent(new Event('change'))
+                        },1000)
+                    })
 
-                    setTimeout(() => {
-                        let data = format.writeFeatures(vector.getSource().getFeatures())
-
-                        inputMaskingElement.value = JSON.stringify(data, null, 4)
-                        inputMaskingElement.dispatchEvent(new Event('change'))
-                    },1000)
-
-
-                  })
-                  self.map.addInteraction(self.draw);
+                    self.map.addInteraction(self.draw);
                 }
             }
         } else {
-            const mapElement = `<div id='${mapId}' style='width:100%; height:auto;'></div>`;
+
+            const parentElementHeight = $(element).height();
+            const mapElement = `<div id="${mapId}" style="width:100%; height: ${parentElementHeight}px;"></div>`;
             $(element).html(mapElement);
 
             setTimeout(() => {
@@ -235,11 +312,14 @@ let MapInput = function(element, config) {
             }, 1000);
         }
 
+        let googleLayer = new olgm.layer.Google();
+
         let raster =  new ol.layer.Tile({
-            source: new ol.source.OSM()
+            source: new ol.source.OSM(),
+            visible: false
         })
 
-        let source = new ol.source.Vector({wrapX: false});
+        let source = new ol.source.Vector();
 
         let vector = new ol.layer.Vector({
             source: source
@@ -249,9 +329,10 @@ let MapInput = function(element, config) {
             $(`#${mapId}`).html('')
 
             let mapConfig = {
+                interactions: olgm.interaction.defaults(),
                 target: mapId,
                 layers: [
-                  raster, vector
+                    googleLayer, raster, vector
                 ],
                 view: new ol.View({
                   center: ol.proj.fromLonLat([position.coords.longitude, position.coords.latitude]),
@@ -264,13 +345,7 @@ let MapInput = function(element, config) {
             if (!self.defaultConfig.isNotInput) {
                 if (!self.defaultConfig.draw) {
                     self.map.on('click', (ev) => {
-                        const coord = ol.proj.transform(ev.coordinate, 'EPSG:3857', 'EPSG:4326');
-                        inputMaskingElement.value = `${coord[0]},${coord[1]}`
-                        inputMaskingElement.dispatchEvent(new Event('change'))
-
-                        if (self.defaultConfig.autoClose) {
-                            $(`#${modalIdGoogleMap}`).modal('hide')
-                        }
+                        self.setMarker(ev.coordinate)
                     })
                 } else {
                     addInteraction()
@@ -279,12 +354,26 @@ let MapInput = function(element, config) {
                 initValue(self.defaultConfig.value)
             }
 
+            var olGM = new olgm.OLGoogleMaps({map: self.map}); // map is the ol.Map instance
+            olGM.activate();
+
+        }
+
+
+        this.setMarker = (coordinate, keepOpen) => {
+            const coord = ol.proj.transform(coordinate, 'EPSG:3857', 'EPSG:4326');
+            inputMaskingElement.value = `${coord[0]},${coord[1]}`
+            inputMaskingElement.dispatchEvent(new Event('change'))
+
+            if (self.defaultConfig.autoClose && !keepOpen) {
+                $(`#${modalIdGoogleMap}`).modal('hide')
+                self.map = null;
+            }
         }
 
 
 
         const initValue = (value) => {
-
             if (value != "" && value != null && !self.defaultConfig.draw) {
                 let splittedValue = value.split(",")
                 if (splittedValue.length < 2) {
@@ -295,12 +384,13 @@ let MapInput = function(element, config) {
                 self.map.setView(
                     new ol.View({
                         center: ol.proj.fromLonLat([parseFloat(splittedValue[0]), parseFloat(splittedValue[1])]),
-                        zoom: 12
+                        zoom: 8
                     })
                 );
 
                 if (self.marker != null) {
-                    source.removeFeature(self.marker)
+                    source.clear();
+                    // source.removeFeature(self.marker)
                 }
                 createLayer(splittedValue)
             } else if (value != "" && value != null) {
@@ -308,22 +398,23 @@ let MapInput = function(element, config) {
                 //     source.removeFeature(self.marker)
                 // }
 
-                let values = JSON.stringify(value);
+                // let values = JSON.stringify(value);
+                let values = JSON.parse(value);
                 if (typeof values != 'object')
                     values = JSON.parse(values)
 
-
                 if (typeof values.features !== 'undefined') {
-                    let coordinatesDraws = []
-                    let currentCoord = values.features[0].geometry.coordinates
-                    for (let n = 0; n < currentCoord.length; n ++) {
-                        coordinatesDraws.push(ol.proj.transform(currentCoord[n], 'EPSG:4326', 'EPSG:3857'))
+                    let coordsTemp = [];
+                    for (let idx = 0; idx < values.features[0].geometry.coordinates[0].length; idx++) {
+                        coordsTemp.push(ol.proj.transform(values.features[0].geometry.coordinates[0][idx], 'EPSG:4326', 'EPSG:3857'));
                     }
+                    values.features[0].geometry.coordinates[0] = coordsTemp;
 
                     if (values.features[0].geometry.type == "Polygon") {
                         let things = new ol.geom[values.features[0].geometry.type](
                             [ values.features[0].geometry.coordinates[0].concat([values.features[0].geometry.coordinates[0][0]]) ]
                         )
+
                         self.lastFeature = new ol.Feature({
                             geometry: things
                         })
@@ -347,6 +438,7 @@ let MapInput = function(element, config) {
                 }
 
             }
+
         }
 
         const createLayer = (LonLat) => {

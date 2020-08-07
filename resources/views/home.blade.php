@@ -71,7 +71,7 @@
 <div class="container-fluid p-3">
     <div class="row" data-bind="if: viewModel.data.currentTab() === 'home-map'">
         <div class="col-md-12">
-            <div id="home-map-container"></div>
+            <div id="home-map-container" style="height: 100vh;"></div>
         </div>
     </div>
 
@@ -279,7 +279,7 @@
             <div class="panel-body" data-bind="visible: viewModel.data.currentHighlight() == 'penghapusan-validasi'">
                 <table class="table table-striped" id="table-penghapusan-validasi">
                 </table>
-                @if(c::is([],[],[Constant::$GROUP_OPD_ORG]))
+                @if(c::is([],[],[Constant::$GROUP_BPKAD_ORG]))
                     <button type="button" class="btn btn-primary" onclick="beforeApproveValidasiPenghapusan()">Setujui</button>
                 @endif
             </div>

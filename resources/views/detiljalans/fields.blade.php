@@ -90,15 +90,23 @@
 <script>
     viewModel.jsLoaded.subscribe(() => {
 
-        const googleMapKoordinatLokasiJalan = new MapInput(document.getElementById('koordinatlokasi-detiljalan'), {})
+        let googleMapKoordinatLokasiJalan = null;
+        let mapTanahJalan = null;
+        
+        setTimeout(() => {
+            googleMapKoordinatLokasiJalan = new GoogleMapInput(document.getElementById('koordinatlokasi-detiljalan'), {
+                value: viewModel.data["KIB D"]().koordinatlokasi
+            });
 
-        const mapTanahJalan = new MapInput(document.getElementById('koordinattanah-detiljalan'), {
-            draw: true,
-            drawOptions: [
-                'Polygon',
-                'LineString'
-            ]
-        })
+            mapTanahJalan = new GoogleMapInput(document.getElementById('koordinattanah-detiljalan'), {
+                draw: true,
+                drawOptions: [
+                    'Polygon',
+                    'LineString'
+                ],
+                value: viewModel.data["KIB D"]().koordinattanah,
+            })
+        }, 2500)
 
         $('#panjang-detiljalan').mask("#.##0", {reverse: true});
         $('#lebar-detiljalan').mask("#.##0", {reverse: true});

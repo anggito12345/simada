@@ -123,3 +123,9 @@ Route::resource('reklas', 'reklasController');
 Route::resource('koreksis', 'koreksiController');
 
 Route::resource('rkaBarangs', 'rka_barangController');
+
+Route::resource('import', 'importController');
+
+Route::resource('sensus', 'sensusController');
+
+Route::post('/import/inventaris', 'importController@inventaris')->name("import.inventaris");

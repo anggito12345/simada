@@ -92,12 +92,12 @@
 <script>
 
     window["map-<?= $uniqId ?>"] = () => {
-        new MapInput(document.getElementsByClassName("map-<?= $uniqId ?>")[0], {
+        new GoogleMapInput(document.getElementsByClassName("map-<?= $uniqId ?>")[0], {
             value : <?= $detiltanah->koordinattanah ?>,
             draw: true,
         })
 
-        new MapInput(document.getElementsByClassName("map-non-draw-<?= $uniqId ?>")[0], {
+        new GoogleMapInput(document.getElementsByClassName("map-non-draw-<?= $uniqId ?>")[0], {
             value : "<?= $detiltanah->koordinatlokasi ?>",
             draw: false,
         })

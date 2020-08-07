@@ -52,6 +52,8 @@ Route::get('/intraorekstra', 'inventarisAPIController@intraorekstra');
 Route::post('penghapusans/edit/{id}', 'penghapusanAPIController@editCustom');
 Route::post('pemanfaatans/edit/{id}', 'pemanfaatanAPIController@editCustom');
 
+Route::post('/inventaris/dokumenkronologis', 'inventarisAPIController@saveDokumenKronologis');
+
 Route::middleware('auth:api')->patch('inventaris_mutasi/approvements', function(
     \App\Repositories\inventaris_mutasiRepository $inventaris_mutasiRepository,
     inventaris_historyRepository $inventaris_historyRepository,
@@ -409,11 +411,11 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'foto_aset' => FileHelpers::getOnlyFilenameInArray(\App\Models\system_upload::where('foreign_id', $value['id'])->pluck('path')->toArray()),
                     ];
                 } else {
+                    $coordinateTranslated = [];
                     $coordinate = '';
                     if ($value['tanah_koordinattanah'] != '' && $value['tanah_koordinattanah'] != null) {
                         $coordinate = json_decode(json_decode($value['tanah_koordinattanah']), true);
                         $coordinate = $coordinate['features'][0]['geometry']['coordinates'][0];
-                        $coordinateTranslated = [];
                         foreach ($coordinate as $keycoor => $coor) {
                             array_push($coordinateTranslated, [
                                 'latitude' => $coor[1],
@@ -471,6 +473,7 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'foto_aset' => FileHelpers::getOnlyFilenameInArray(\App\Models\system_upload::where('foreign_id', $value['id'])->pluck('path')->toArray()),
                     ];
                 } else {
+                    $coordinateTranslated = [];
                     $coordinate = '';
                     if ($value['bangunan_koordinattanah'] != '' && $value['bangunan_koordinattanah'] != null) {
 
@@ -483,7 +486,6 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                             $coordinate = $coordinate['features'][0]['geometry']['coordinates'][0];
                         }
 
-                        $coordinateTranslated = [];
                         foreach ($coordinate as $keycoor => $coor) {
                             array_push($coordinateTranslated, [
                                 'latitude' => $coor[1],
@@ -576,6 +578,7 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                     'alamat_kecamatan_id' => $value['alamat_kecamatan'],
                 ];
             } else if (strpos(strtolower($value['nama_jenis']), 'irigasi')) {
+                $coordinateTranslated = [];
                 $coordinate = '';
                 if ($value['jalan_koordinattanah'] != '' && $value['jalan_koordinattanah'] != null) {
 
@@ -588,7 +591,6 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         $coordinate = $coordinate['features'][0]['geometry']['coordinates'][0];
                     }
 
-                    $coordinateTranslated = [];
                     foreach ($coordinate as $keycoor => $coor) {
                         array_push($coordinateTranslated, [
                             'latitude' => $coor[1],
@@ -629,6 +631,7 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                     'penggunaan_nama_mitra' => $jalanPenggunaan
                 ];
             } else if (strpos(strtolower($value['nama_jenis']), 'konstruksi')) {
+                $coordinateTranslated = [];
                 $coordinate = '';
                 if ($value['konstruksi_koordinattanah'] != '' && $value['konstruksi_koordinattanah'] != null) {
 
@@ -641,7 +644,6 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         $coordinate = $coordinate['features'][0]['geometry']['coordinates'][0];
                     }
 
-                    $coordinateTranslated = [];
                     foreach ($coordinate as $keycoor => $coor) {
                         array_push($coordinateTranslated, [
                             'latitude' => $coor[1],

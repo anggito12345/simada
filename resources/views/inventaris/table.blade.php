@@ -27,6 +27,8 @@
             
         }
 
+        let dokumenKronologisGalery = [];
+
         function onCallbackPemeliharaanTab(tableId) {
             $(tableId).DataTable().ajax.reload();
         }
@@ -315,6 +317,76 @@
                 }   
             }
         }
+                
+        function onDokumenKronologisGetFiles(foreignId) {
+            return __ajax({
+                method: 'GET',
+                url: "<?= url('api/system_uploads') ?>",
+                data: {
+                    jenis: 'dokumen_kronologis',
+                    foreign_field: 'id',
+                    foreign_id: foreignId,
+                    foreign_table: 'inventaris',                    
+                },  
+            }).then((files) => {                
+                dokumenKronologisGalery[foreignId].fileList(files);
+            });
+        }
+
+        function onSaveDokumenKronologis(inventarisid) {
+            Swal.fire({
+                title: 'Anda yakin?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya!'
+            }).then((result) => {
+                if (result.value) {
+                    let formData = new FormData($(`#dokumen-kronologis-form-${inventarisid}`)[0]);
+                    formData.append('id', inventarisid);
+
+                    let keys = null;
+                    dokumenKronologisGalery[inventarisid].fileList().forEach((d, index) => {
+                        if (d.rawFile) {
+                            formData.append(`dokumen_kronologis[${index}]`, d.rawFile)
+                        } else {
+                            formData.append(`dokumen_kronologis[${index}]`, false)
+                        }
+
+                        keys = Object.keys(d)
+                        keys.forEach((key) => {
+                            if (key == 'rawFile') {
+                                return
+                            }
+
+                            formData.append(`dokumen_kronologis_metadata_${key}[${index}]`, d[key])
+                        })
+
+                        formData.append(`dokumen_kronologis_metadata_id_inventaris[${index}]`, inventarisid);
+                        return d.rawFile
+                    });
+
+                    __ajax({
+                        method: 'POST',
+                        url: "<?= url('api/inventaris/dokumenkronologis') ?>",
+                        data: formData,
+                        processData: false,
+                        contentType: false,
+                        
+                    }).then((d, resp) => {
+                        swal.fire({
+                            type: "success",
+                            text: "Berhasil menyimpan data!",
+                            onClose: () => {
+                                onDokumenKronologisGetFiles(inventarisid);
+                            }
+                        })
+                        
+                    })
+                }
+            });
+        }
 
         function onEdit() {            
                 
@@ -405,7 +477,8 @@
                 "Detail",
                 "Pemeliharaan",
                 // "Penghapusan"
-                "Pemanfaatan"
+                "Pemanfaatan",
+                "Dokumen-Kronologis",
             ]
 
             let selectEvent = 0
@@ -450,7 +523,7 @@
                     aNavItemReadyForInit.setAttribute("href", `#${tabItem}-${selectEvent}`)
                     aNavItemReadyForInit.setAttribute("aria-controls", `${tabItem}-${selectEvent}`)
 
-                    aNavItemReadyForInit.textContent = tabItem
+                    aNavItemReadyForInit.textContent = tabItem.split('-').join(' ');
 
                     if (index == 0) {
                         aNavItemReadyForInit.className += " active"
@@ -605,7 +678,47 @@
                             "processing": true,
                             "serverSide": true,
                         })
-                        
+
+                        // dokumen kronologis
+                        document.querySelector(`#Dokumen-Kronologis-${selectEvent}`).innerHTML = `
+                        <form id="dokumen-kronologis-form-${row.data().id}">
+                            <div class="form-group col-sm-12 col-md-12 row">
+                                <input class="form-control" id="dokumen-kronologis-${row.data().id}" name="dummy" multiple="" type="file" autocomplete="off">
+                            </div>
+                            <div class="form-group col-sm-12 col-md-12 justify-content-center row">
+                                <div class="btn-group">
+                                    <button type="button" class="btn btn-primary" onclick="onSaveDokumenKronologis('${row.data().id}')">Simpan</button>
+                                </div>
+                            </div>
+                        </form>`;
+
+                        dokumenKronologisGalery[row.data().id] = new FileGallery(document.getElementById(`dokumen-kronologis-${row.data().id}`), {
+                            title: 'Dokumen Kronologis',
+                            maxSize: 5000000,
+                            accept: `${App.Constant.MimeOffice}|image/*|video/*`,
+                            onDelete: () => {                
+                                return new Promise((resolve, reject) => {
+                                    let checkIfIdExist = dokumenKronologisGalery[row.data().id].checkedRow().filter((d) => {
+                                        return d.id != undefined
+                                    })
+                                    if (checkIfIdExist.length < 1) {
+                                        resolve(true)
+                                        return
+                                    }
+                                    __ajax({
+                                        method: 'DELETE',
+                                        url: "<?= url('api/system_uploads') ?>/" + checkIfIdExist.map((d) => {
+                                                return d.id
+                                            }),
+                                    }).then((d) => {
+                                        resolve(true)
+                                        onDokumenKronologisGetFiles(row.data().id);
+                                    })
+                                })
+                            }
+                        })
+
+                        onDokumenKronologisGetFiles(row.data().id);
                     })
                     
                 }

@@ -24,6 +24,27 @@
         }
     </style>
     <style type="text/css">
+        .loading-asset {
+            background-image: url(http://localhost/simada/public/images/loading.gif);
+            width: 100px;
+            height: 100px;
+            z-index: 10001;
+            position: absolute;
+            top: 42%;
+            background-size: 100%;
+            background-repeat: no-repeat;
+            left: 48%;
+        }
+
+        .loading-page {
+            background: rgba(0, 0, 0, .5);
+            width: 100%;
+            height: 100vh;
+            position: fixed;
+            display: none;
+            z-index: 10000;
+        }
+
 
         .loading {
             font-size: 0;
@@ -113,8 +134,7 @@
 
     <link rel="stylesheet" href="<?= url('css/thirdparty/responsive.dataTables.min.css') ?>">
 
-    <link rel="stylesheet" href="<?= url('css/thirdparty/ol.css') ?>">
-
+    <link rel="stylesheet" href="<?= url('css/thirdparty/olgm.css') ?>">
     <link rel="stylesheet" href="<?= url('css/thirdparty/select.dataTables.min.css') ?>">
 
     <script src="<?= url('js/thirdparty/knockout-3.5.0.js') ?>"></script>
@@ -163,6 +183,9 @@
 <input type="text" value="<?= public_path('') ?>" base-http style="display:none" />
 
 <body class="skin-green-light sidebar-mini">
+    <div class="loading-page">
+        <div class="loading-asset"></div>
+    </div>
     @if (!Auth::guest())
     <div class="wrapper">
         <!-- Main Header -->
@@ -326,11 +349,12 @@
     </div>
     @endif
 
-    <script src="<?= url('js/thirdparty/ol.js') ?>"></script>
+    <script src="https://maps.googleapis.com/maps/api/js?key=AIzaSyCVMYWyxLU2CaMjwLSn0IbuF3SW-QAHTuE" type="text/javascript"></script>
+    <script src="<?= url('js/thirdparty/olgm.js') ?>"></script>
 
     <script src="<?= url('js/thirdparty/handlebars-v4.3.1.js') ?>"></script>
 
-    
+
 
     @include('layouts.datatables_js')
 
@@ -357,7 +381,7 @@
 
     <script src="<?= url('js/plugins/lookuptable.plugin.js?key=' . sha1(time())) ?>"></script>
 
-    <script src="<?= url('js/plugins/mapinput.plugin.js?key=' . sha1(time())) ?>"></script>
+    <script src="<?= url('js/plugins/googlemapinput.plugin.js?key=' . sha1(time())) ?>"></script>
 
 
     <script>
@@ -421,12 +445,23 @@
                 };
             }
         })
-        
-        $( document ).ajaxError(function( event, jqxhr, settings, thrownError ) {
+
+        $( document ).ajaxStart(function() {
+            $(".loading-page").attr('style', 'display: block');
+            //alert('test')
+        }).ajaxError(function( event, jqxhr, settings, thrownError ) {
             if (jqxhr.status == 401) {
                 $('.btn-logout').click();
             }
+
+            $(".loading-page").attr('style', 'display: none');
+        }).ajaxComplete(() => {
+            $(".loading-page").attr('style', 'display: none');
         });
+
+        $("form").on("submit", function(){
+            //$(".loading-page").attr('style', 'display: block');
+        });//submit
     </script>
     @yield('before_pages')
     @include('layouts.pages')

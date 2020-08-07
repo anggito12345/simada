@@ -65,14 +65,22 @@
 <script type="text/javascript">
     viewModel.jsLoaded.subscribe(() => {
 
-        const googleMapKoordinatLokasiBangunan = new MapInput(document.getElementById('koordinatlokasi-detilbangunan'), {})
+        let googleMapKoordinatLokasiBangunan = null;
+        let mapTanahBangunan = null;
 
-        const mapTanahBangunan = new MapInput(document.getElementById('koordinattanah-detilbangunan'), {
-            draw: true,
-            drawOptions: [
-                'Polygon'
-            ]
-        })
+        setTimeout(() => {
+            googleMapKoordinatLokasiBangunan = new GoogleMapInput(document.getElementById('koordinatlokasi-detilbangunan'), {
+                value: viewModel.data["KIB C"]().koordinatlokasi
+            });
+
+            mapTanahBangunan = new GoogleMapInput(document.getElementById('koordinattanah-detilbangunan'), {
+                draw: true,
+                drawOptions: [
+                    'Polygon',
+                ],
+                value: viewModel.data["KIB C"]().koordinattanah,
+            })
+        }, 2500)
                
         $('#statustanah').select2({
             ajax: {

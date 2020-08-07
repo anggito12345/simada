@@ -110,14 +110,22 @@ viewModel.jsLoaded.subscribe(() => {
 
     $('#luas-detilkonstruksi').mask("#.##0", {reverse: true});
 
-    const googleMapKoordinatLokasiBangunan = new MapInput(document.getElementById('koordinatlokasi-detilkonstruksi'), {})
+    let googleMapKoordinatLokasiBangunan = null;
+    let mapTanahBangunan = null;
 
-    const mapTanahBangunan = new MapInput(document.getElementById('koordinattanah-detilkonstruksi'), {
-        draw: true,
-        drawOptions: [
-            'Polygon'
-        ]
-    })
+    setTimeout(() => {
+        googleMapKoordinatLokasiBangunan = new GoogleMapInput(document.getElementById('koordinatlokasi-detilkonstruksi'), {
+            value: viewModel.data["KIB F"]().koordinatlokasi
+        });
+
+        mapTanahBangunan = new GoogleMapInput(document.getElementById('koordinattanah-detilkonstruksi'), {
+            draw: true,
+            drawOptions: [
+                'Polygon',
+            ],
+            value: viewModel.data["KIB F"]().koordinattanah,
+        })
+    }, 2500)
    
 
     $('#statustanah-detilkonstruksi').select2({

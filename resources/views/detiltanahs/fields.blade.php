@@ -87,14 +87,22 @@
 
     viewModel.jsLoaded.subscribe((newVal) => {    
         // document is ready. Do your stuff here
-        const googleMapKoordinatLokasi = new MapInput(document.getElementById('koordinatlokasi'), {})
+        let googleMapKoordinatLokasi = null;
+        let mapTanah = null;
 
-        const mapTanah = new MapInput(document.getElementById('koordinattanah'), {
-            draw: true,
-            drawOptions: [
-                'Polygon'
-            ]
-        })
+        setTimeout(() => {
+            googleMapKoordinatLokasi = new GoogleMapInput(document.getElementById('koordinatlokasi'), {
+                value: viewModel.data["KIB A"]().koordinatlokasi
+            });
+
+            mapTanah = new GoogleMapInput(document.getElementById('koordinattanah'), {
+                draw: true,
+                drawOptions: [
+                    'Polygon'
+                ],
+                value: viewModel.data["KIB A"]().koordinattanah,
+            })
+        }, 2500)
 
         new inlineDatepicker(document.getElementById('tgl_sertifikat'), {
             format: 'DD-MM-YYYY',

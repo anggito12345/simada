@@ -34,7 +34,7 @@ class organisasiAPIController extends AppBaseController
      */
 
      public function get(Request $request) {
-         
+
      }
 
     /**
@@ -48,18 +48,22 @@ class organisasiAPIController extends AppBaseController
     {
         $querys = \App\Models\organisasi::select([
             'm_organisasi.nama as text',
-            'm_organisasi.id',      
-            'm_organisasi.jabatans',      
+            'm_organisasi.id',
+            'm_organisasi.jabatans',
             'm_organisasi.kode',
         ]);
         // ->join('m_jenis_opd', 'm_jenis_opd.id', 'm_organisasi.jenis')
-        
+
         if ($request->has('pid')) {
+
             if ($request->input('pid') == "") {
                 return $this->sendResponse([], 'Organisasis retrieved successfully');
-            }            
+            } else{
+                $querys = $querys->whereRaw('pid = '.$request->get('pid'));
+            }
 
             if (!c::is([],[],[Constant::$GROUP_BPKAD_ORG])) {
+
                 $organisasiUser = \App\Models\organisasi::find(Auth::user()->pid_organisasi);
                 if ($organisasiUser == null) {
                     $organisasiUser = new \App\Models\organisasi();
@@ -72,15 +76,15 @@ class organisasiAPIController extends AppBaseController
                 if (c::is([],[],[Constant::$GROUP_OPD_ORG])) {
                     $querys = $querys
                         ->whereRaw('m_organisasi.id = '.$organisasiUser->id.' OR m_organisasi.pid = '.$organisasiUser->id)
-                        ->where('jabatans','>=',$organisasiUser->jabatans);
+                        ->whereRaw('(m_organisasi.level = \''. $request->input('level') . '\' OR m_organisasi.jabatans = \''. $request->input('level').'\')');
                 }
-                
+
             }
-            
+
         }
 
         if ($request->has('level')) {
-            $querys = $querys->where('m_organisasi.jabatans', $request->input('level'));
+            $querys = $querys->whereRaw('(m_organisasi.level = \''. $request->input('level') . '\' OR m_organisasi.jabatans = \''. $request->input('level').'\')');
         }
 
         if ($request->has('q')) {
@@ -92,13 +96,13 @@ class organisasiAPIController extends AppBaseController
             $querys = $querys->whereRaw("m_organisasi.nama ~* '".$request->input('term')."'");
         }
 
-        $organisasis = $querys 
+        $organisasis = $querys
             ->get();
 
 
         return $this->sendResponse($organisasis->toArray(), 'Organisasis retrieved successfully');
     }
-    
+
     /**
      * Display a listing of the organisasi.
      * GET|HEAD /organisasis
@@ -110,12 +114,12 @@ class organisasiAPIController extends AppBaseController
     {
         $querys = \App\Models\organisasi::select([
             'm_organisasi.nama as text',
-            'm_organisasi.id',      
-            'm_organisasi.jabatans',      
+            'm_organisasi.id',
+            'm_organisasi.jabatans',
             'm_organisasi.kode',
         ]);
         // ->join('m_jenis_opd', 'm_jenis_opd.id', 'm_organisasi.jenis')
-        
+
         if ($request->has('pid')) {
             if ($request->input('pid') == "") {
                 return $this->sendResponse([], 'Organisasis retrieved successfully');
@@ -131,7 +135,7 @@ class organisasiAPIController extends AppBaseController
             $querys = $querys->whereRaw("m_organisasi.nama ~* '".$request->input('q')."'");
         }
 
-        $organisasis = $querys 
+        $organisasis = $querys
         ->get();
 
 
@@ -149,6 +153,8 @@ class organisasiAPIController extends AppBaseController
     public function store(CreateorganisasiAPIRequest $request)
     {
         $input = $request->all();
+
+
 
         $organisasi = $this->organisasiRepository->create($input);
 

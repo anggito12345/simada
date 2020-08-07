@@ -335,16 +335,35 @@
 
 
     editor.on( 'preSubmit', function ( e, data, action ) {
+        dataSelect = DTE_Field_inventaris.selectedValues
+
+        let inventarisSelecteds = $("#table-detil-mutasi").DataTable().rows().data().toArray();
+        let isInventarisSelectedExists = false;
+
         if(DTE_Field_inventaris.selectedValues.length <= 0) {
             this.field('inventaris').error( 'Mohon pilih inventaris terlebih dahulu!' );
+        }
+
+        dataSelect.forEach((dataVal, index) => {
+            isInventarisSelectedExists = inventarisSelecteds.find((dt, idx) => {
+                if (dt.inventaris == dataVal.id) {
+                    return true;
+                }
+            });
+
+            if (isInventarisSelectedExists) {
+                return false;
+            }
+        });
+
+        if (isInventarisSelectedExists) {
+            this.field('inventaris').error('Inventaris sudah ada pada daftar mutasi!');
         }
 
         if ( this.inError() ) {
             return false;
         }
-
         
-        dataSelect = DTE_Field_inventaris.selectedValues
         if (action == 'create') {
             dataSelect.forEach((dataVal, index) => {
 

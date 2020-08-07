@@ -9,6 +9,7 @@ viewModel.data = Object.assign(viewModel.data, {
     mutasiFFields: ko.observableArray([]),
     mutasiToFields: ko.observableArray([]),
     valuesMutasi: ko.observableArray([]),
+    tipeKontribusi: ko.observable(),
     valueTemplate: {
         To: "",
         Type: "",

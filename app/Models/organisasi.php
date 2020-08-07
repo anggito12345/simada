@@ -19,7 +19,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
 class organisasi extends Model
 {
     public $table = 'm_organisasi';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
@@ -28,6 +28,7 @@ class organisasi extends Model
 
 
     public $fillable = [
+        'id',
         'pid',
         'nama',
         'kode',
@@ -52,7 +53,7 @@ class organisasi extends Model
         'aktif' => 'integer',
         'setting' => 'string',
         'jabatans' => 'string'
-        
+
     ];
 
     /**

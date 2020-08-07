@@ -31,6 +31,9 @@
         <li class="{{ Request::is('rkas*') ? 'active' : '' }}">
             <a href="{!! route('rkas.index') !!}"><i class="fa fa-edit"></i><span>RKA</span></a>
         </li>
+        <li class="{{ Request::is('sensus*') ? 'active' : '' }}">
+            <a href="{!! route('sensus.index') !!}"><i class="fa fa-edit"></i><span>Sensus</span></a>
+        </li>
         <li class="{{ Request::is('reklas*') ? 'active' : '' }}">
             <a href="{!! route('reklas.index') !!}"><i class="fa fa-edit"></i><span>Reklas</span></a>
         </li>
@@ -128,6 +131,9 @@ $countUserNeedOtor = \App\Models\users::where('aktif', '0')->count();
         </li>
         <li class="{{ Request::is('jabatans*') ? 'active' : '' }}">
             <a href="{!! route('jabatans.index') !!}"><i class="fa fa-edit"></i><span>Jabatan/Roles</span></a>
+        </li>
+        <li class="{{ Request::is('import*') ? 'active' : '' }}">
+            <a href="{!! route('import.index') !!}"><i class="fa fa-import"></i><span>Import Data</span></a>
         </li>
         <li class="{{ Request::is('settings*') ? 'active' : '' }}">
             <a href="{!! route('settings.index') !!}"><i class="fa fa-edit"></i><span>Setting</span></a>
