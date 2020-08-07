@@ -516,3 +516,10 @@ Breadcrumbs::for('import.index', function ($trail) {
 });
 
 
+// import > index
+Breadcrumbs::for('sensus.index', function ($trail) {
+    $trail->push('Sensus', route('sensus.index'));
+});
+
+
+

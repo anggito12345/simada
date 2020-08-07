@@ -31,6 +31,9 @@
         <li class="{{ Request::is('rkas*') ? 'active' : '' }}">
             <a href="{!! route('rkas.index') !!}"><i class="fa fa-edit"></i><span>RKA</span></a>
         </li>
+        <li class="{{ Request::is('sensus*') ? 'active' : '' }}">
+            <a href="{!! route('sensus.index') !!}"><i class="fa fa-edit"></i><span>Sensus</span></a>
+        </li>
         <li class="{{ Request::is('reklas*') ? 'active' : '' }}">
             <a href="{!! route('reklas.index') !!}"><i class="fa fa-edit"></i><span>Reklas</span></a>
         </li>
