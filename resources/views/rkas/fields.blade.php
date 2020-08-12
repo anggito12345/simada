@@ -45,8 +45,18 @@
     $dataDetils = json_encode([]);
     if(isset($rka)) {
         $dataDetils = json_encode(\App\Models\rka_detil::where('pid', $rka->id)
-            ->select('*')
-            //->join('m_barang','m_barang.id', 'rka_detil.kode_barang')
+            ->select([
+                'rka_barang.nama_barang as nama_barang',
+                'rka_barang.jumlah as jumlah_rencana',
+                'rka_barang.harga_satuan as harga_satuan_rencana',
+                'rka_barang.nilai as nilai_rencana',
+                'rka_detil.jumlah_real as jumlah_real',
+                'rka_detil.harga_satuan_real as harga_satuan_real',
+                'rka_detil.nilai_kontrak as nilai_kontrak',
+                'rka_detil.kib as kib',
+                'rka_detil.keterangan as keterangan',
+            ])
+            ->join('rka_barang','rka_barang.id', 'rka_detil.kode_barang')
             ->get());
     }
 
@@ -166,7 +176,7 @@ funcGetDokumenFileList()
 editor = new $.fn.dataTable.Editor( {
     table: "#table-detil-rka",
     fields: [ {
-            label: "Kode Barang:",
+            label: "Barang RKA:",
             name: "kode_barang",
             type: "select"
         }, {
@@ -218,7 +228,15 @@ editor = new $.fn.dataTable.Editor( {
         }, {
             label: "KIB:",
             name: "kib",
-            type: "select"
+            type: "select",
+            options: [
+                'KIB A',
+                'KIB B',
+                'KIB C',
+                'KIB D',
+                'KIB E',
+                'KIB F',
+            ]
         }, {
             label: "Keterangan:",
             name: "keterangan",
@@ -227,6 +245,7 @@ editor = new $.fn.dataTable.Editor( {
 
     ]
 });
+
 
 let buttonsOpt = [
     { extend: "create", editor: editor },
@@ -246,6 +265,10 @@ buttonsOpt = [
 
 <script>
 
+    var nama_barang;
+    var jumlah_rencana;
+    var harga_satuan_rencana;
+    var nilai_rencana;
 
 let editorInit = false
 
@@ -270,22 +293,30 @@ editor.on( 'open', function ( e, type ) {
                     // Transforms the top-level key of the response object from 'items' to 'results'
                     return {
                         results: data.data.map((d) => {
-                            d.text = d.kode_barang,
-                            $('#DTE_Field_nama_barang').val(d.nama_barang),
-                            $('#DTE_Field_jumlah_rencana').val(d.jumlah),
-                            $('#DTE_Field_harga_satuan_rencana').val(d.harga_satuan),
-                            $('#DTE_Field_total_rencana').val(d.nilai)
+                            d.text = d.kode_barang /* + ' - ' + d.nama_barang */
+
                             return d
                         })
                     };
+
                 }
+
             },
             theme: 'bootstrap' ,
+
         })
         editorInit = true
+
     }
 
-} );
+/*     $('#DTE_Field_nama_barang').val(nama_barang);
+    $('#DTE_Field_jumlah_rencana').val(jumlah_rencana);
+    $('#DTE_Field_harga_satuan_rencana').val(harga_satuan_rencana);
+    $('#DTE_Field_total_rencana').val(nilai_rencana);
+    $('#DTE_Field_kode_barang').val('').trigger('onSelect'){
+        alert(nama_barang);
+    } */
+});
 
 
 editor.on( 'preSubmit', function ( e, data, action ) {
@@ -368,7 +399,7 @@ $('#table-detil-rka').DataTable({
             data: 'nama_barang',
             title: 'Nama Barang',
             orderable: false,
-        },/*
+        },
         {
             data: 'jumlah_rencana',
             title: 'Jumlah RKA',
@@ -383,7 +414,7 @@ $('#table-detil-rka').DataTable({
             data: 'nilai_rencana',
             title: 'Nilai RKA',
             orderable: false,
-        }, */
+        },
         {
             data: 'jumlah_real',
             title: 'Jumlah',

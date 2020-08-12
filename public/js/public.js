@@ -947,21 +947,33 @@ let FileGallery = function(element, config) {
 
     element.parentNode.insertBefore(wrapperBox, element.nextSibling)
 
+    // render 'file dokumen' section using datatable
     $(`#${tableEle.id}`).DataTable({
         data: [],
         columns: [
-            {data: 'name', title: 'Dokumen'},
-            {data: 'keterangan', title: 'Keterangan'},
-            {title: `Preview`, "render": function ( data, type, full, meta ) {
-                return `<i ${previewFile(full)}></i>`
-            }},
-            {title: `<input type='checkbox' class='${checkBoxClassAll}' />`, "render": function ( data, type, full, meta ) {
-                const typeInput = 'checkbox'
-                const checked = self.checkedRow().find((d) => {
-                    return d.uid == full.uid
-                })
-                return `<input type='${typeInput}' ${checked != undefined ? 'checked' : ''} value='1' data-uid='${full.uid}' class='${checkBoxClass}' />`;
-            }},
+            {
+                data: 'name', 
+                title: 'Dokumen'
+            },
+            {
+                data: 'keterangan', 
+                title: 'Keterangan'
+            },
+            {   title: 'Preview', 
+                "render": function ( data, type, full, meta ) {
+                    return `<i ${previewFile(full)}></i>`
+                }
+            },
+            {
+                title: `<input type='checkbox' class='${checkBoxClassAll}' />`, 
+                "render": function ( data, type, full, meta ) {
+                    const typeInput = 'checkbox'
+                    const checked = self.checkedRow().find((d) => {
+                        return d.uid == full.uid
+                    })
+                    return `<input type='${typeInput}' ${checked != undefined ? 'checked' : ''} value='1' data-uid='${full.uid}' class='${checkBoxClass}' />`;
+                }
+            },
 
         ],
         info:     false,
@@ -995,36 +1007,39 @@ let FileGallery = function(element, config) {
                 let dontOpenModal = false;
                 let fileType = null;
                 for (let i = 0; i < fileTypes.length ; i++) {
-                    if (selectedFile.type.match(new RegExp(fileTypes[i])) && fileType === null) {
-                        fileType = fileTypes[i];
+                    if (selectedFile.type.split('/')[0] == "image") {
+                        fileType = "image";
+                    } else if (selectedFile.type.split('/')[0] == "audio") {
+                        fileType = "audio";
+                    } else if (selectedFile.type.split('/')[0] == "video") {
+                        fileType = "video";
                     }
                 }
 
                 let selectorSuffix = '';
                 switch (fileType) {
-                    case IMAGE:
+                    case "image":
                         selectorSuffix = 'img';
                         $(`img#${containerPreviewImage}`).show();
                         break;
-
-                    case VIDEO:
+                    case "video":
                         selectorSuffix = 'video';
                         $(`video#${containerPreviewImage}`).show();
                         break;
-                    case AUDIO:
+                    case "audio":
                         selectorSuffix = 'audio';
                         $(`audio#${containerPreviewImage}`).show();
+                        break;
                     default:
-                        window.open(window.URL.createObjectURL(selectedFile.rawFile), '_blank')
-                        dontOpenModal = true
+                        window.open(window.URL.createObjectURL(selectedFile.rawFile), '_blank');
+                        dontOpenModal = true;
                         break;
                 }
 
                 if (selectedFile.path != undefined) {
-                    $(`${selectorSuffix}#${containerPreviewImage}`)[0].src = $("[base-path]").val().replace("public", "storage/") + "app/" + selectedFile.path
-
+                    $(`${selectorSuffix}#${containerPreviewImage}`)[0].src = $("[base-path]").val().replace("public", "storage/") + "app/" + selectedFile.path;
                 } else {
-                    readURL(selectedFile.rawFile, $(`${selectorSuffix}#${containerPreviewImage}`))
+                    readURL(selectedFile.rawFile, $(`${selectorSuffix}#${containerPreviewImage}`));
                 }
 
                 if(!dontOpenModal) {

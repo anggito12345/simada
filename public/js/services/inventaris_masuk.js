@@ -35,7 +35,7 @@ viewModel.services = Object.assign(viewModel.services, {
 
             formData.append('items', JSON.stringify(tableListSelected))
             formData.append('step', step)
-            
+
             return __ajax({
                 url: `${$("[base-path]").val()}/api/inventaris_mutasi/approvements`,
                 method: 'POST',
@@ -45,10 +45,10 @@ viewModel.services = Object.assign(viewModel.services, {
                 contentType: false,
             })
         }
-        
+
     },
     approveReklas: (tableListSelected, step) => {
-        
+
         return __ajax({
             url: `${$("[base-path]").val()}/api/reklas/approvements`,
             method: 'POST',
@@ -85,7 +85,7 @@ viewModel.services = Object.assign(viewModel.services, {
         formData.append('items', JSON.stringify(tableListSelected))
         formData.append('step', step)
         formData.append('cancel_note', document.getElementById('cancel_note').value)
-        
+
         return __ajax({
             url: `${$("[base-path]").val()}/api/inventaris_mutasi/cancel`,
             method: 'POST',
@@ -120,8 +120,8 @@ viewModel.services = Object.assign(viewModel.services, {
                 });
 
                 formData.append('nomor_surat', document.getElementById('nomor-persetujuan-step1').value)
-                formData.append('nosk', document.getElementById('nosk').value)
-                formData.append('tglsk', document.getElementById('tglsk').value)
+                /* formData.append('nosk', document.getElementById('nosk').value) */
+                formData.append('tglsp', document.getElementById('tglsk').value)
                 formData.append('keterangan', document.getElementById('keterangan').value)
                 break;
 
@@ -144,6 +144,9 @@ viewModel.services = Object.assign(viewModel.services, {
 
                     return d.rawFile
                 });
+                formData.append('nomor_berita_acara', document.getElementById('nomor-berita-acara-step2').value)
+                /* formData.append('nosk', document.getElementById('nosk').value) */
+                formData.append('tglba', document.getElementById('tglsk').value)
                 break;
 
             case 'STEP-3':
@@ -165,16 +168,18 @@ viewModel.services = Object.assign(viewModel.services, {
 
                     return d.rawFile
                 });
+                formData.append('nosk', document.getElementById('nosk').value)
+                formData.append('tglsk', document.getElementById('tglsk').value)
                 break;
-        
+
             default:
                 // no action
                 break;
         }
-        
-        formData.append('items', JSON.stringify(tableListSelected))        
+
+        formData.append('items', JSON.stringify(tableListSelected))
         formData.append('step', step)
-        
+
         return __ajax({
             url: `${$("[base-path]").val()}/api/inventaris_penghapusan/approvements`,
             method: 'POST',
