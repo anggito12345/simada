@@ -13,7 +13,7 @@ class Access {
             array_push($kel, Constant::$GROUP_UPT_ORG);
         }
 
-        $combination = 'NAMES:' . json_encode($names) . 'ACCESS:' . json_encode($access) . 'KEL:' . json_encode($kel);        
+        $combination = 'NAMES:' . json_encode($names) . 'ACCESS:' . json_encode($access) . 'KEL:' . json_encode($kel);
 
         if (!empty(session('cache-user', null))) {
             $cacheString = session('cache-user');
@@ -21,13 +21,13 @@ class Access {
                 $cacheArray = explode('&DELIMITER:', $cacheString);
                 foreach ($cacheArray as $key => $value) {
                     # code...
-                    if(strpos($value, $combination)) {                                                  
+                    if(strpos($value, $combination)) {
                         return explode('RESULT:',$value)[1] == 'true' ? true : false;
                     }
                 }
                 return false;
             } else if (strpos($cacheString, $combination)) {
-                
+
                 return explode('RESULT:', $cacheString)[1] == 'true' ? true : false;
             }
         }
@@ -52,7 +52,7 @@ class Access {
         if (count($kel) > 0) {
             array_walk($kel, function(&$x) {$x = "'$x'";});
             $query = $query
-                ->whereRaw('m_organisasi.jabatans IN ('.implode(',', $kel).')');
+                ->whereRaw('m_organisasi.level IN ('.implode(',', $kel).')');
         }
 
         if (count($names) > 0) {
@@ -63,13 +63,14 @@ class Access {
 
         if (empty(session('cache-user', null))) {
             Session::put('cache-user', 'START:' . $combination .  'RESULT:' . ($query->count() > 0 ? 'true' : 'false'));
-            
+
         } else {
             if (!strpos($cacheString, $combination)) {
-                Session::put('cache-user', Session::get('cache-user') . '&DELIMITER:START:' . $combination .  'RESULT:' . ($query->count() > 0 ? 'true' : 'false'));       
+                Session::put('cache-user', Session::get('cache-user') . '&DELIMITER:START:' . $combination .  'RESULT:' . ($query->count() > 0 ? 'true' : 'false'));
             }
-            
+
         }
+
 
         Session::save();
 

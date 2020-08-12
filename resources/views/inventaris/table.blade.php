@@ -18,13 +18,13 @@
 
         let colspan = {
             "Kode Barang": {
-                value: 2, 
+                value: 2,
                 title: "Nomor"
             },
         }
 
         let isReady = {
-            
+
         }
 
         let dokumenKronologisGalery = [];
@@ -37,7 +37,7 @@
         function onCallbackPemanfaatanTab(tableId) {
             $(tableId).DataTable().ajax.reload();
         }
-   
+
         function onPemeliharaan(currentData, param) {
             if (currentData == null && $("#table-inventaris").DataTable().rows('.selected').count()!= 1 ) {
                 swal.fire({
@@ -61,9 +61,9 @@
                     tglkontrak.dispatchEvent(new Event('change'))
 
                     $("#modal-pemeliharaan").attr('is_mode_insert', false)
-                    $("#modal-pemeliharaan").attr('callback', 'onCallbackPemeliharaanTab|'+param)            
-                }                
-                
+                    $("#modal-pemeliharaan").attr('callback', 'onCallbackPemeliharaanTab|'+param)
+                }
+
                 $("#modal-pemeliharaan").modal('show')
             }
         }
@@ -71,7 +71,7 @@
         function onDeletePenghapusan() {
             let table = $('#table-penghapusan').DataTable()
             var count = table.rows('.selected').count();
-                            
+
             if (count < 1) {
                 swal.fire({
                     type: 'error',
@@ -112,9 +112,9 @@
                     jenis: 'dokumen',
                     foreign_field: 'id',
                     foreign_id: foreignId,
-                    foreign_table: 'pemanfaatan',                    
-                },  
-            }).then((files) => {                
+                    foreign_table: 'pemanfaatan',
+                },
+            }).then((files) => {
                 fileGalleryPemanfaatan.fileList(files)
                 __ajax({
                     method: 'GET',
@@ -134,7 +134,7 @@
         }
 
         function onPemanfaatan(currentData, param) {
-            
+
             if (currentData == null && $("#table-inventaris").DataTable().rows('.selected').count()!= 1 ) {
                 swal.fire({
                     type: 'error',
@@ -147,8 +147,8 @@
                 if(currentData != null) {
                     viewModel.data.formPemanfaatan(currentData)
                     $("#modal-pemanfaatan").attr('is_mode_insert', false)
-                    $("#modal-pemanfaatan").attr('callback', 'onCallbackPemanfaatanTab|'+param)       
-                    onPemanfaatanGetFiles(currentData.id, () => {                    
+                    $("#modal-pemanfaatan").attr('callback', 'onCallbackPemanfaatanTab|'+param)
+                    onPemanfaatanGetFiles(currentData.id, () => {
 
                         const tgl_mulai = document.getElementById('tgl_mulai')
                         tgl_mulai.value = currentData.tgl_mulai
@@ -159,11 +159,11 @@
                         tgl_akhir.dispatchEvent(new Event('change'))
 
                         App.Helpers.defaultSelect2($("#mitra"), `${$('[base-path]').val()}/api/mitras/${viewModel.data.formPemanfaatan().mitra}`,"id","nama", (response) => {
-                            
+
                         })
 
                         $("#modal-pemanfaatan").modal('show')
-                    })    
+                    })
                 } else {
                     viewModel.data.formPemanfaatan().pidinventaris = $("#table-inventaris").DataTable().rows('.selected').data()[0].id
                    /* viewModel.jsLoaded.subscribe(() => {
@@ -171,7 +171,7 @@
                     title: 'File Dokumen',
                     maxSize: 5000000,
                     accept: App.Constant.MimeOffice,
-                    onDelete: () => {                
+                    onDelete: () => {
                         return new Promise((resolve, reject) => {
                             let checkIfIdExist = fileGalleryPemanfaatan.checkedRow().filter((d) => {
                                 return d.id != undefined
@@ -202,7 +202,7 @@
                     title: 'File Dokumen',
                     maxSize: 5000000,
                     accept: App.Constant.MimeOffice,
-                    onDelete: () => {                
+                    onDelete: () => {
                         return new Promise((resolve, reject) => {
                             let checkIfIdExist = fileGalleryPemanfaatan.checkedRow().filter((d) => {
                                 return d.id != undefined
@@ -228,7 +228,7 @@
                     title: 'Foto',
                     maxSize: 3000000,
                     accept: "image/*",
-                    onDelete: () => {                
+                    onDelete: () => {
                         return new Promise((resolve, reject) => {
                             let checkIfIdExist = fotoPemanfaatan.checkedRow().filter((d) => {
                                 return d.id != undefined
@@ -251,7 +251,7 @@
                 })
             })*/
                     $("#modal-pemanfaatan").modal('show')
-                }   
+                }
             }
         }
 
@@ -263,9 +263,9 @@
                     jenis: 'dokumen',
                     foreign_field: 'id',
                     foreign_id: foreignId,
-                    foreign_table: 'penghapusan',                    
-                },  
-            }).then((files) => {                
+                    foreign_table: 'penghapusan',
+                },
+            }).then((files) => {
                 fileGallery.fileList(files)
                 __ajax({
                     method: 'GET',
@@ -297,7 +297,7 @@
                 if(currentData != null) {
                     viewModel.data.formPenghapusan(currentData)
                     $("#modal-penghapusan").attr('is_mode_insert', false)
-                    $("#modal-penghapusan").attr('callback', 'onCallbackPemeliharaanTab|'+param)       
+                    $("#modal-penghapusan").attr('callback', 'onCallbackPemeliharaanTab|'+param)
                     onPenghapusanGetFiles(currentData.id,function(){
                         const tglhapus = document.getElementById('tglhapus')
                         tglhapus.value = currentData.tglhapus
@@ -310,14 +310,14 @@
                         $("#modal-penghapusan").modal('show')
                     })
                 } else {
-                    viewModel.data.formPenghapusan($("#table-inventaris").DataTable().rows('.selected').data().toArray()[0]) 
+                    viewModel.data.formPenghapusan($("#table-inventaris").DataTable().rows('.selected').data().toArray()[0])
                     fileGallery.fileList([])
                     foto.fileList([])
                     $("#modal-penghapusan").modal('show')
-                }   
+                }
             }
         }
-                
+
         function onDokumenKronologisGetFiles(foreignId) {
             return __ajax({
                 method: 'GET',
@@ -326,9 +326,9 @@
                     jenis: 'dokumen_kronologis',
                     foreign_field: 'id',
                     foreign_id: foreignId,
-                    foreign_table: 'inventaris',                    
-                },  
-            }).then((files) => {                
+                    foreign_table: 'inventaris',
+                },
+            }).then((files) => {
                 dokumenKronologisGalery[foreignId].fileList(files);
             });
         }
@@ -373,7 +373,7 @@
                         data: formData,
                         processData: false,
                         contentType: false,
-                        
+
                     }).then((d, resp) => {
                         swal.fire({
                             type: "success",
@@ -382,14 +382,27 @@
                                 onDokumenKronologisGetFiles(inventarisid);
                             }
                         })
-                        
+
                     })
                 }
             });
         }
 
-        function onEdit() {            
-                
+        function onSensus() {
+
+            if ($("#table-inventaris").DataTable().rows('.selected').count()!= 1 ) {
+                swal.fire({
+                    type: 'error',
+                    text: 'Silahkan pilih 1 yang ingin disensus',
+                    title: 'Ubah'
+                })
+            } else {
+                //window.location = `${$("[base-path]").val()}/inventaris/${$("#table-inventaris").DataTable().rows('.selected').data()[0].id}/edit`
+            }
+        }
+
+        function onEdit() {
+
             if ($("#table-inventaris").DataTable().rows('.selected').count()!= 1 ) {
                 swal.fire({
                     type: 'error',
@@ -434,10 +447,10 @@
                                     $("#table-inventaris").DataTable().ajax.reload();
                                 }
                             })
-                        })          
+                        })
                     }
                 })
-                
+
             }
         }
 
@@ -452,9 +465,9 @@
                 $(e).find("td input[type=checkbox]").prop('checked', false)
             }
         }
-        
+
         function onLoadDataTable(e) {
-            
+
             if (isReady[e.sTableId]) {
                 return
             }
@@ -463,7 +476,7 @@
             let createdMerge = document.createElement("tr")
             createdMerge.setAttribute("row-cloned" ,true)
             let headerByPass = 0
-                  
+
 
             isReady[e.sTableId] = true
 
@@ -482,7 +495,7 @@
             ]
 
             let selectEvent = 0
-            $(`#${e.sTableId} tbody`).on('click', 'td.details-control i', function (i, n) {                                            
+            $(`#${e.sTableId} tbody`).on('click', 'td.details-control i', function (i, n) {
 
                 const self = this
 
@@ -511,7 +524,7 @@
                 tabPane.setAttribute('role', 'tab')
 
 
-                <?php             
+                <?php
                     $uniqId = uniqid() . sha1(time());
                 ?>
 
@@ -529,7 +542,7 @@
                         aNavItemReadyForInit.className += " active"
                     }
 
-                    navItemReadyForInit.appendChild(aNavItemReadyForInit)                                                
+                    navItemReadyForInit.appendChild(aNavItemReadyForInit)
 
                     ulTabs.appendChild(navItemReadyForInit)
 
@@ -559,10 +572,10 @@
                 }
                 else {
                     $(this).attr('class',$(this).attr('class').replace('plus-circle', 'minus-circle'))
-                    
+
                     let kib = "kib"+row.data().kelompok_kib
                     $.get(`${$("[base-path]").val()}${viewModel.data.urlEachKIB("kib"+row.data().kelompok_kib)}/${row.data().pidinventaris == undefined ? row.data().id : row.data().pidinventaris}`).then((data) => {
-                                                
+
                         let url = viewModel.data.informations[kib].url
 
                         row.child($(`<tr style="background:white" class="detail-pemeliharaan"><td colspan="${allHeader.length}">${ulTabs.outerHTML}${tabContent.outerHTML}</td>/tr>`)).show();
@@ -571,12 +584,12 @@
                         if (data.data == null) {
                             document.querySelector(`#Detail-${selectEvent}`).innerHTML = '<div class="text-center">Data not found</div>'
                         } else {
-                            $.get(`${$("[base-path]").val()}/${url}/${data.data.id}?isAjax=true`).then((html) => {                                                        
+                            $.get(`${$("[base-path]").val()}/${url}/${data.data.id}?isAjax=true`).then((html) => {
                                 document.querySelector(`#Detail-${selectEvent}`).innerHTML = $(html).find(".container-view")[0].outerHTML
                             })
                         }
-                        
-                                                                         
+
+
                         document.querySelector(`#Pemeliharaan-${selectEvent}`).innerHTML = `<table class='mt-2 table  table-striped' id='table-pemeliharaan-<?= $uniqId ?>${selectEvent}'>
                             <thead>
                                 <tr>
@@ -602,7 +615,7 @@
                             order : [[ 1, "asc"]],
                             dom: 'Bfrtip',
                             buttons: [
-                  
+
                             ],
                             columns: [
                                 {
@@ -611,13 +624,13 @@
                                 {
                                     data: 'tgl'
                                 },
-                                {                                    
+                                {
                                     data: 'tglkontrak'
                                 },
-                                {                                    
+                                {
                                     data: 'persh'
                                 },
-                                {                                    
+                                {
                                     data: 'biaya'
                                 }
                             ],
@@ -638,7 +651,7 @@
 
 
                         document.querySelector(`#Pemanfaatan-${selectEvent}`).innerHTML = `<table class='mt-2 table  table-striped' id='table-pemanfaatan-<?= $uniqId ?>${selectEvent}'>
-                            <thead>                           
+                            <thead>
                             </thead>
                         </table>`
 
@@ -652,7 +665,7 @@
                             },
                             order : [[ 0, "asc"]],
                             dom: 'Bfrtip',
-                            buttons: [                            
+                            buttons: [
                             ],
                             columns: [
                                 {
@@ -696,7 +709,7 @@
                             title: 'Dokumen Kronologis',
                             maxSize: 5000000,
                             accept: `${App.Constant.MimeOffice}|image/*|video/*`,
-                            onDelete: () => {                
+                            onDelete: () => {
                                 return new Promise((resolve, reject) => {
                                     let checkIfIdExist = dokumenKronologisGalery[row.data().id].checkedRow().filter((d) => {
                                         return d.id != undefined
@@ -720,12 +733,12 @@
 
                         onDokumenKronologisGetFiles(row.data().id);
                     })
-                    
+
                 }
             });
 
 
-            
+
         }
 
 
@@ -735,15 +748,15 @@
                 url: `${$("[base-path]").val()}/api/inventaris-api/sum-harga-satuan`,
                 data: recFilter
             }).then((d) => {
-                $('.total_harga_satuan').html(d.all_page)     
+                $('.total_harga_satuan').html(d.all_page)
                 $('.per_page_harga_satuan').html(d.per_page)
-                
+
             })
         }
-        
+
     </script>
     @include('layouts.datatables_js')
     {!! $dataTable->scripts() !!}
 
-    
+
 @endsection

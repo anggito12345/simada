@@ -30,7 +30,7 @@ let inlineDatepicker = function(element, config) {
     if (config != null) {
         defaultConfig = {...defaultConfig, ...config}
     }
-    
+
     const wrapperElement  = document.createElement('div')
     wrapperElement.className = 'row col-md-12'
 
@@ -48,12 +48,12 @@ let inlineDatepicker = function(element, config) {
 
     const monthPicker = yearPicker.cloneNode(true)
 
-    const dayPicker = yearPicker.cloneNode(true)    
+    const dayPicker = yearPicker.cloneNode(true)
 
     const dayPopulate = (daySelectElement) => {
         const saveRecentDayPicked = daySelectElement.value;
 
-        daySelectElement.innerHTML = ''        
+        daySelectElement.innerHTML = ''
 
         const maxDateInYearAndMonth = new Date(yearPicker.value, monthPicker.value, 0).getDate()
 
@@ -71,7 +71,7 @@ let inlineDatepicker = function(element, config) {
             daySelectElement.value = saveRecentDayPicked
         }
     }
-    
+
     const monthPopulate = (monthSelectElement) => {
         for(let monthStart = 1; monthStart <= 12; monthStart++) {
             const monthOption = document.createElement('option')
@@ -100,9 +100,9 @@ let inlineDatepicker = function(element, config) {
         return (number < 10 ? '0' : '') + number
     }
 
-    const creatingResult = (poke) => {
-        let stringValue = moment(yearPicker.value + "/" + monthPicker.value + "/" + dayPicker.value, "YYYY/MM/DD").format(defaultConfig.format)        
-        
+    this.creatingResult = (poke) => {
+        let stringValue = moment(yearPicker.value + "/" + monthPicker.value + "/" + dayPicker.value, "YYYY/MM/DD").format(defaultConfig.format)
+
         element.value = stringValue
 
         element.setAttribute('value', stringValue)
@@ -111,7 +111,7 @@ let inlineDatepicker = function(element, config) {
             return
         }
 
-        
+
         element.dispatchEvent(new Event('change'))
     }
 
@@ -123,10 +123,10 @@ let inlineDatepicker = function(element, config) {
 
         return jsonOutput
     }
-    
+
     const buildingUi = function(elementUi) {
-        elementUi.style.display = 'none';        
-        
+        elementUi.style.display = 'none';
+
         // create 4 warpperInputElement
         const wrapperInputYear = wrapperInputElementTemplate.cloneNode(true)
         const wrapperInputMonth = wrapperInputElementTemplate.cloneNode(true)
@@ -165,34 +165,34 @@ let inlineDatepicker = function(element, config) {
         if (defaultConfig.buttonClear) {
             wrapperElement.appendChild(wrapperButtonClear)
         }
-        
+
         elementUi.parentNode.insertBefore(wrapperElement,elementUi.nextSibling)
         elementUi.style.display = 'none';
     }
 
     if (element.length > 0) {
-        element = element[0]        
+        element = element[0]
     }
 
     // initialize event
     yearPicker.addEventListener('change', (ev) => {
-        dayPopulate(dayPicker)        
+        dayPopulate(dayPicker)
 
-        creatingResult()
+        self.creatingResult()
     })
 
     monthPicker.addEventListener('change', (ev) => {
-        dayPopulate(dayPicker)        
+        dayPopulate(dayPicker)
 
-        creatingResult()
+        self.creatingResult()
     })
 
     dayPicker.addEventListener('change', (ev) => {
-        creatingResult()
+        self.creatingResult()
     })
 
     element.addEventListener('change', (ev) => {
-        
+
         if(ev.target.value != "")
             showValue(ev.target.value)
     })
@@ -207,10 +207,10 @@ let inlineDatepicker = function(element, config) {
         if (defaultValue != null) {
             value = defaultValue
         }
-        
+
         if (value != null && value != "" ) {
             DateEle = moment(value,defaultConfig.formatDefault).toDate()
-        }             
+        }
 
         yearPicker.value = self.isReady || value != "" ? DateEle.getFullYear() : defaultConfig.maxYear
         monthPicker.value = DateEle.getMonth() + 1
@@ -219,10 +219,10 @@ let inlineDatepicker = function(element, config) {
         if (!self.isReady) {
             self.isReady = true
         }
-        
+
     }
 
     showValue()
 
-    creatingResult()
+    self.creatingResult()
 }

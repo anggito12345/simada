@@ -2,11 +2,11 @@
 
 namespace App\DataTables;
 
-use App\Models\barang;
+use App\Models\inventaris_sensus;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 
-class barangDataTable extends DataTable
+class inventaris_sensusDataTable extends DataTable
 {
     /**
      * Build DataTable class.
@@ -18,16 +18,16 @@ class barangDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'barangs.datatables_actions');
+        return $dataTable->addColumn('action', 'inventaris_sensuses.datatables_actions');
     }
 
     /**
      * Get query source of dataTable.
      *
-     * @param \App\Models\barang $model
+     * @param \App\Models\inventaris_sensus $model
      * @return \Illuminate\Database\Eloquent\Builder
      */
-    public function query(barang $model)
+    public function query(inventaris_sensus $model)
     {
         return $model->newQuery();
     }
@@ -65,19 +65,8 @@ class barangDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            // 'pid',
-            'id',
-            'kode_akun',
-            'kode_kelompok',
-            'kode_objek',
-            'kode_rincian_objek',
-            'kode_sub_rincian_objek',
-            'kode_sub_sub_rincian_objek',
-            'nama_rek_aset',
-            // 'aset',
-            // 'obyek',
-            // 'rincianobyek',
-            // 'subrincianobyek'
+            'idinventaris',
+            'kondisi'
         ];
     }
 
@@ -88,6 +77,6 @@ class barangDataTable extends DataTable
      */
     protected function filename()
     {
-        return 'barangsdatatable_' . time();
+        return 'inventaris_sensusesdatatable_' . time();
     }
 }

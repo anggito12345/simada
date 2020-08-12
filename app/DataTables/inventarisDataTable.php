@@ -29,7 +29,7 @@ class inventarisDataTable extends DataTable
                 $sql = 'CONCAT(detil_tanah.nomor_sertifikat,\'/\',detil_mesin.nopabrik, \'/\', detil_mesin.norangka, \'/\', detil_mesin.nomesin) like ?';
                 $query->whereRaw($sql, ["%{$keyword}%"]);
             })
-            ->filterColumn('barang', function($query, $keyword) {                
+            ->filterColumn('barang', function($query, $keyword) {
             })
             ->editColumn('harga_satuan', function($data) {
                 return number_format($data->harga_satuan, 2);
@@ -49,7 +49,7 @@ class inventarisDataTable extends DataTable
             ->addColumn('organisasi', function($data) {
                 return \App\Models\organisasi::find($data->pid_organisasi)->nama;
             })
-            ->addColumn('kode_barang', function($data) {
+            ->addColumn('kodebarang', function($data) {
                 $barang = \App\Models\barang::find($data->pidbarang);
                 $kode = "";
                 if ($barang->kode_akun != null) {
@@ -94,12 +94,13 @@ class inventarisDataTable extends DataTable
      */
     public function query(inventaris $model)
     {
-        $mineJabatan = \App\Models\jabatan::find(Auth::user()->jabatan);        
+        $mineJabatan = \App\Models\jabatan::find(Auth::user()->jabatan);
 
         $buildingModel = inventarisRepository::getData(isset($_GET['draft']) && $_GET['draft'] != 0 ? $_GET['draft'] : null);
-        
+
         $buildingModel = inventarisRepository::appendInventarisGridFilter($buildingModel, $_GET);
-        
+
+
         return  $buildingModel->orderByRaw('inventaris.updated_at DESC NULLS LAST')
             ->orderBy('inventaris.id', 'desc');
     }
@@ -111,6 +112,32 @@ class inventarisDataTable extends DataTable
      */
     public function html()
     {
+        $addtButtons = [
+            ['pageLength'],
+
+            // ['extend' => 'create', 'className' => 'btn btn-default btn-sm no-corner'],
+            ['extend' => 'collection', 'text' => 'Aksi', 'className' => 'btn btn-default btn-sm no-corner',  'buttons' => [
+                ['extend' => 'create'],
+               ['text' => '<i class="fa fa-edit"></i> Ubah', 'action' => 'function(){onEdit()}', ],
+               // ['text' => '<i class="fa fa-trash"></i> Hapus', 'action' => 'function(){onDelete()}', ],
+              /*  ['text' => '<i class="fa fa-eraser"></i> Penghapusan', 'action' => 'function(){onPenghapusan()}', ],*/
+            ]],
+            //['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner', 'buttons' => [ 'csv', 'excel']],
+            ['extend' => 'print', 'className' => 'btn btn-default btn-sm no-corner'],
+        ];
+
+        if(\Request::route()->getName() == 'sensus.index') {
+            $addtButtons = [
+                ['pageLength'],
+                ['extend' => 'collection', 'text' => 'Aksi', 'className' => 'btn btn-default btn-sm no-corner',  'buttons' => [
+                   ['extend' => 'create'],
+                   ['text' => '<i class="fa fa-edit"></i> Sensus', 'action' => 'function(){onSensus()}', ],
+                   // ['text' => '<i class="fa fa-trash"></i> Hapus', 'action' => 'function(){onDelete()}', ],
+                  /*  ['text' => '<i class="fa fa-eraser"></i> Penghapusan', 'action' => 'function(){onPenghapusan()}', ],*/
+                ]],
+            ];
+        }
+
         return $this->builder()
             ->pageLength(25)
             ->columns($this->getColumns())
@@ -121,36 +148,39 @@ class inventarisDataTable extends DataTable
                 'type' => 'GET',
                 'dataType' => 'json',
                 'dataSrc' => 'function(d) {
-                    onLoadComplete() 
+                    console.log(d)
+                    onLoadComplete()
                     return d.data
                 }',
-                'data' => 'function(d) {                     
-                    d.draft = $("[name=draft]").val()           
-                    if ($("[name=jenisbarangs_filter]").data("select2"))             
+                'data' => 'function(d) {
+                    d.draft = $("[name=draft]").val()
+                    if ($("[name=jenisbarangs_filter]").data("select2"))
                         d.jenisbarangs = $("[name=jenisbarangs_filter]").select2("val")
 
-                    if ($("[name=kodeobjek_filter]").data("select2") && $("[name=kodeobjek_filter]").select2("data").length > 0)             
+                    if ($("[name=kodeobjek_filter]").data("select2") && $("[name=kodeobjek_filter]").select2("data").length > 0)
                         d.kodeobjek = $("[name=kodeobjek_filter]").select2("data")[0].kode_objek
 
-                    if ($("[name=koderincianobjek_filter]").data("select2") && $("[name=koderincianobjek_filter]").select2("data").length > 0)             
+                    if ($("[name=koderincianobjek_filter]").data("select2") && $("[name=koderincianobjek_filter]").select2("data").length > 0)
                         d.koderincianobjek = $("[name=koderincianobjek_filter]").select2("data")[0].kode_rincian_objek
 
-                    if ($("[name=kodesubrincianobjek_filter]").data("select2") && $("[name=kodesubrincianobjek_filter]").select2("data").length > 0)             
+                    if ($("[name=kodesubrincianobjek_filter]").data("select2") && $("[name=kodesubrincianobjek_filter]").select2("data").length > 0)
                         d.kodesubrincianobjek = $("[name=kodesubrincianobjek_filter]").select2("data")[0].kode_sub_rincian_objek
 
-                    if ($("[name=organisasi_filter]").data("select2") && $("[name=organisasi_filter]").select2("data").length > 0)             
+                    if ($("[name=organisasi_filter]").data("select2") && $("[name=organisasi_filter]").select2("data").length > 0)
                         d.organisasi_filter = $("[name=organisasi_filter]").select2("val")
-                        
+
+                    delete d.search.regex;
+
                     recFilter = d
                 }',
             ])
-            
+
             // ->addAction(['width' => '120px', 'printable' => false])
             ->parameters([
                 'lengthMenu' => [
                     [ 10, 25, 50, -1 ],
-                    [ '10 rows', '25 rows', '50 rows', 'Show all' ],                    
-                ],    
+                    [ '10 rows', '25 rows', '50 rows', 'Show all' ],
+                ],
                 'select' => [
                     'style'=> 'single'
                 ],
@@ -159,19 +189,7 @@ class inventarisDataTable extends DataTable
                 'dom'       => 'Bfrtip',
                 'stateSave' => true,
                 'order'     => [[3, 'desc']],
-                'buttons'   => [
-                    ['pageLength'],                
-                    
-                    // ['extend' => 'create', 'className' => 'btn btn-default btn-sm no-corner'],
-                    ['extend' => 'collection', 'text' => 'Aksi', 'className' => 'btn btn-default btn-sm no-corner',  'buttons' => [                        
-                        ['extend' => 'create'],  
-                       ['text' => '<i class="fa fa-edit"></i> Ubah', 'action' => 'function(){onEdit()}', ],                        
-                       // ['text' => '<i class="fa fa-trash"></i> Hapus', 'action' => 'function(){onDelete()}', ],                       
-                      /*  ['text' => '<i class="fa fa-eraser"></i> Penghapusan', 'action' => 'function(){onPenghapusan()}', ],*/
-                    ]],           
-                    //['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner', 'buttons' => [ 'csv', 'excel']],
-                    ['extend' => 'print', 'className' => 'btn btn-default btn-sm no-corner'],                                        
-                ],
+                'buttons'   => $addtButtons,
             ]);
     }
 
@@ -187,16 +205,16 @@ class inventarisDataTable extends DataTable
                 'className' => 'details-control',
                 'orderable' => false,
                 'title' => '',
-                'data' => 'detail',                
+                'data' => 'detail',
                 "defaultContent" =>''
             ],
             'kode_barang',
-            'noreg',        
+            'noreg',
             'nama_rek_aset' => [
                 'footer' => 'm_barang.nama_rek_aset',
                 'title' => 'Nama/Jenis Barang',
                 'name' => 'm_barang.nama_rek_aset',
-                
+
             ],
             // 'merk' => [
             //     'title' => 'Merk/Tipe',
@@ -213,25 +231,25 @@ class inventarisDataTable extends DataTable
             'tahun_perolehan',
             'kondisi' => [
                 'title' => 'Keadaan Barang'
-            ], 
+            ],
             'organisasi',
             // 'barang',
             'harga_satuan',
             // 'keterangan'
             // 'pidbarang',
             // 'pidopd',
-            // 'pidlokasi', 
-            
+            // 'pidlokasi',
+
             // 'tgl_sensus',
             // 'volume',
             // 'pembagi',
             // 'satuan',
-            
-            
-            
+
+
+
             // 'lokasi_detil',
             // 'umur_ekonomis',
-            
+
         ];
     }
 

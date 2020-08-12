@@ -3,17 +3,12 @@
 namespace App\Http\Controllers;
 
 use App\DataTables\inventarisDataTable;
-use App\Http\Requests;
 use App\Http\Requests\CreateinventarisRequest;
-use App\Http\Requests\UpdateinventarisRequest;
 use App\Repositories\inventarisRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
 use App\Models\inventaris;
 use Response;
-use Illuminate\Support\Facades\Storage;
-use Illuminate\Support\Facades\DB;
-use Excel;
 use Auth;
 use App\Exports\AsetExportPhpSpread;
 use c;
@@ -63,48 +58,9 @@ class inventarisController extends AppBaseController
         $input = $request->all();
 
 
-        DB::beginTransaction();
-        try {
+        $this->inventarisRepository->InsertLogic($input);
 
-            // generate no register
-            $modelInventaris = new \App\Models\inventaris();
 
-            $barangMaster = \App\Models\barang::find($input['pidbarang']);
-
-            $currentNoReg = DB::table($modelInventaris->table)
-                ->select([
-                    'inventaris.*',                    
-                ])
-                ->join('m_barang', 'm_barang.id', 'inventaris.pidbarang')
-                ->where('m_barang.kode_jenis', '=', $barangMaster->kode_jenis)
-                ->where('inventaris.tahun_perolehan', '=', $input['tahun_perolehan'])
-                ->where('inventaris.harga_satuan', '=', str_replace(".","", $input['harga_satuan']))
-                ->orderBy('inventaris.noreg', 'desc')
-                ->lockForUpdate()->first();
-            
-            $lastNoReg = 0;
-            if ($currentNoReg != null) {
-                $lastNoReg = (int)$currentNoReg->noreg;
-            }            
-            for ($i = 0; $i < $input['jumlah'] ; $i ++) {
-                
-                $input['noreg'] = sprintf('%03d',$lastNoReg + 1);
-
-                $inventaris = $this->inventarisRepository->create($input);
-
-                $lastNoReg++;
-            }                
-
-            Flash::success('Inventaris saved successfully.');
-
-            DB::commit();
-        } catch (\Exception $e) {
-            DB::rollBack();
-            
-            return redirect()->back()->withInput()->withErrors($e->getMessage());
-        }
-
-        
         return redirect(route('inventaris.index'));
     }
 
@@ -138,7 +94,7 @@ class inventarisController extends AppBaseController
     public function edit($id)
     {
         $update_inventaris_setting = \App\Models\setting::where('nama', \Constant::$SETTING_UBAH_PENATA_USAHAAN)->first()->nilai;
-        
+
         $inventaris = inventaris::withDrafts()->find($id);
 
         $organisasi = \App\Models\organisasi::find(Auth::user()->pid_organisasi);
@@ -163,7 +119,7 @@ class inventarisController extends AppBaseController
 
         return view('inventaris.edit')->with('inventaris', $inventaris);
     }
-    
+
     /**
      * Remove the specified inventaris from storage.
      *
@@ -183,7 +139,7 @@ class inventarisController extends AppBaseController
 
         $this->inventarisRepository->delete($id);
 
-        
+
 
         Flash::success('Inventaris deleted successfully.');
 
@@ -194,7 +150,7 @@ class inventarisController extends AppBaseController
     Export Excel
     */
 
-    public function export() 
+    public function export()
     {
         $asetExp = new AsetExportPhpSpread();
         $asetExp->export();
