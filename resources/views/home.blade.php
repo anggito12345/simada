@@ -1,4 +1,3 @@
-
 @extends('layouts.app')
 
 @section('content')
@@ -41,27 +40,27 @@
     }
 </style>
 <div class="tab-header">
-    <div class="item" data-bind="{ 
-        click: viewModel.clickEvent.setCurrentTab.bind(this, 'home-map'), 
+    <div class="item" data-bind="{
+        click: viewModel.clickEvent.setCurrentTab.bind(this, 'home-map'),
         class: viewModel.data.currentTab() === 'home-map' ? 'active' : ''
     }">
         <i class="fa fa-globe"></i>
     </div>
-    <div class="item" data-bind="{ 
-            click: viewModel.clickEvent.setCurrentTab.bind(this, 'mutasi'), 
+    <div class="item" data-bind="{
+            click: viewModel.clickEvent.setCurrentTab.bind(this, 'mutasi'),
             class: viewModel.data.currentTab() === 'mutasi' ? 'active' : ''
         }">
         Mutasi
     </div>
-    <div class="item" data-bind="{ 
-            click: viewModel.clickEvent.setCurrentTab.bind(this, 'penghapusan'), 
+    <div class="item" data-bind="{
+            click: viewModel.clickEvent.setCurrentTab.bind(this, 'penghapusan'),
             class: viewModel.data.currentTab() === 'penghapusan' ? 'active' : ''
         }">
         Penghapusan
     </div>
     @if(c::is([],[],[Constant::$GROUP_BPKAD_ORG]))
-    <div class="item" data-bind="{ 
-            click: viewModel.clickEvent.setCurrentTab.bind(this, 'reklas'), 
+    <div class="item" data-bind="{
+            click: viewModel.clickEvent.setCurrentTab.bind(this, 'reklas'),
             class: viewModel.data.currentTab() === 'reklas' ? 'active' : ''
         }">
         Reklas
@@ -215,18 +214,18 @@
                         click: viewModel.clickEvent.setCurrentHighlight.bind(this, 'reklas-bpkad'),
                         class: viewModel.data.currentHighlight() === 'reklas-bpkad' ? 'active' : ''
                     }">
-                    <span class="info-box-icon bg-green"><i class="fa fa-check"></i></span>
+                <span class="info-box-icon bg-green"><i class="fa fa-check"></i></span>
 
-                    <div class="info-box-content">
-                        <span class="info-box-text">Persetujuan
-                            <i class="flag-active fa fa-circle text-success"></i>
-                        </span>
-                        <span class="info-box-number" data-bind="text: viewModel.data.countReklas().step1"></span>
-                    </div>
-                    <!-- /.info-box-content -->
+                <div class="info-box-content">
+                    <span class="info-box-text">Persetujuan
+                        <i class="flag-active fa fa-circle text-success"></i>
+                    </span>
+                    <span class="info-box-number" data-bind="text: viewModel.data.countReklas().step1"></span>
                 </div>
+                <!-- /.info-box-content -->
             </div>
         </div>
+    </div>
     @endif
 </div>
 
@@ -368,6 +367,14 @@
                 <div class="container">
                     {!! Form::open(['id' => 'form-konfirmasi-penghapusan' ]) !!}
                     <div class="form-group">
+                        <label>Nomor Berita Acara:</label>
+                        {!! Form::text('nomor-berita-acara-step2', '', ['class' => 'form-control', 'id' => 'nomor-berita-acara-step2']) !!}
+                    </div>
+                    <div class="form-group">
+                        <label>Tanggal:</label>
+                        {!! Form::text('tglba', null, ['class' => 'form-control','id'=>'tglba']) !!}
+                    </div>
+                    <div class="form-group">
                         <label>Berita Acara:</label>
                         {!! Form::file('dokumen', ['class' => 'form-control', 'id' => 'berita-acara']) !!}
                     </div>
@@ -399,18 +406,19 @@
                         {!! Form::text('nomor-persetujuan-step1', '', ['class' => 'form-control', 'id' => 'nomor-persetujuan-step1']) !!}
                     </div>
                     <div class="form-group">
+                        <label>Tanggal:</label>
+                        {!! Form::text('tglsp', null, ['class' => 'form-control','id'=>'tglsp']) !!}
+                    </div>
+                    <div class="form-group">
                         <label>Dokumen Persetujuan:</label>
                         {!! Form::file('dokumen', ['class' => 'form-control', 'id' => 'dokumen-penghapusan']) !!}
                     </div>
+                    <!--
                     <label><strong>Dasar SK Gubernur</strong></label>
                     <div class="form-group">
                         <label>Nomor SK Gubernur:</label>
                         {!! Form::text('nosk', null, ['class' => 'form-control', 'id' => 'nosk']) !!}
-                    </div>
-                    <div class="form-group">
-                        <label>Tanggal:</label>
-                        {!! Form::text('tglsk', null, ['class' => 'form-control','id'=>'tglsk']) !!}
-                    </div>
+                    </div> -->
                     <div class="form-group">
                         <label>Keterangan:</label>
                         {!! Form::textarea('keterangan', null, ['class' => 'form-control', 'id' => 'keterangan']) !!}
@@ -438,6 +446,15 @@
             <div class="modal-body">
                 <div class="container">
                     {!! Form::open(['id' => 'form-validasi-penghapusan' ]) !!}
+                    <label><strong>Dasar SK Gubernur</strong></label>
+                    <div class="form-group">
+                        <label>Nomor SK Gubernur:</label>
+                        {!! Form::text('nosk', null, ['class' => 'form-control', 'id' => 'nosk']) !!}
+                    </div>
+                    <div class="form-group">
+                        <label>Tanggal:</label>
+                        {!! Form::text('tglsk', null, ['class' => 'form-control','id'=>'tglsk']) !!}
+                    </div>
                     <div class="form-group">
                         <label>Dokumen:</label>
                         {!! Form::file('dokumen', ['class' => 'form-control', 'id' => 'dokumen-validasi-penghapusan']) !!}

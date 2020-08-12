@@ -31,10 +31,6 @@ class rka_detil extends Model
     public $fillable = [
         'pid',
         'kode_barang',
-        'nama_barang',
-        'jumlah_rencana',
-        'harga_satuan_rencana',
-        'nilai_rencana',
         'jumlah_real',
         'harga_satuan_real',
         'nilai_kontrak',
@@ -50,11 +46,7 @@ class rka_detil extends Model
     protected $casts = [
         'id' => 'integer',
         'pid' => 'integer',
-        'kode_barang' => 'string',
-        'nama_barang' => 'string',
-        'jumlah_rencana' => 'integer',
-        'harga_satuan_rencana' => 'float',
-        'nilai_rencana' => 'float',
+        'kode_barang' => 'integer',
         'jumlah_real' => 'integer',
         'harga_satuan_real' => 'float',
         'nilai_kontrak' => 'float',

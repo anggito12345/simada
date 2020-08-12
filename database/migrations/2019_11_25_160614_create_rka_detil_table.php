@@ -16,11 +16,7 @@ class CreateRkaDetilTable extends Migration {
 		{
 			$table->bigInteger('id', true);
             $table->bigInteger('pid')->nullable();
-            $table->string('kode_barang')->nullable();
-            $table->string('nama_barang')->nullable();
-			$table->integer('jumlah_rencana')->nullable();
-			$table->float('harga_satuan_rencana')->nullable();
-			$table->float('nilai_rencana')->nullable();
+            $table->integer('kode_barang')->nullable();
 			$table->integer('jumlah_real')->nullable();
 			$table->float('harga_satuan_real')->nullable();
 			$table->float('nilai_real')->nullable();

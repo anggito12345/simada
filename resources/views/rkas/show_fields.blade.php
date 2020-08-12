@@ -32,14 +32,15 @@ if ( ! $.fn.DataTable.isDataTable( '#table-detil-rka-<?= $uniqID  ?>' ) ) {
             ->select([
                 'rka_detil.id as id',
                 'rka_detil.id as DT_RowId',
-                'rka_detil.nama_barang',
+                'rka_barang.kode_barang',
+                'rka_barang.nama_barang',
                 'rka_detil.jumlah_real',
                 'rka_detil.harga_satuan_real',
                 'rka_detil.nilai_kontrak',
                 'rka_detil.kib',
                 'rka_detil.keterangan',
             ])
-           // ->join('m_barang','m_barang.id', 'rka_detil.kode_barang')
+            ->join('rka_barang','rka_barang.id', 'rka_detil.kode_barang')
             ->get()) ?>')
     $('#table-detil-rka-<?= $uniqID  ?>').DataTable({
         data: dataDetils,
@@ -53,6 +54,11 @@ if ( ! $.fn.DataTable.isDataTable( '#table-detil-rka-<?= $uniqID  ?>' ) ) {
             selector: 'td:first-child'
         },
         columns: [
+            {
+                data: 'kode_barang',
+                title: 'Kode Barang',
+                orderable: false,
+            },
             {
                 data: 'nama_barang',
                 title: 'Nama Barang',
