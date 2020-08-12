@@ -405,11 +405,23 @@ let GoogleMapInput = function(element, config) {
 
                 if (typeof values.features !== 'undefined') {
                     let coordsTemp = [];
+                    let convertedCoord = [];
+                    let validCoord = true;
                     for (let idx = 0; idx < values.features[0].geometry.coordinates[0].length; idx++) {
-                        coordsTemp.push(ol.proj.transform(values.features[0].geometry.coordinates[0][idx], 'EPSG:4326', 'EPSG:3857'));
-                    }
-                    values.features[0].geometry.coordinates[0] = coordsTemp;
+                        convertedCoord = ol.proj.transform(values.features[0].geometry.coordinates[0][idx], 'EPSG:4326', 'EPSG:3857');
 
+                        if (convertedCoord.findIndex(el => isNaN(el)) != -1) {
+                            validCoord = false;
+                            break;
+                        }
+
+                        coordsTemp.push(convertedCoord);
+                    }
+
+                    if (validCoord) {
+                        values.features[0].geometry.coordinates[0] = coordsTemp;
+                    }
+    
                     if (values.features[0].geometry.type == "Polygon") {
                         let things = new ol.geom[values.features[0].geometry.type](
                             [ values.features[0].geometry.coordinates[0].concat([values.features[0].geometry.coordinates[0][0]]) ]
