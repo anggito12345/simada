@@ -9,6 +9,8 @@ viewModel.data = Object.assign(viewModel.data, {
         // harga_apprisal: "",
         nosk: "",
         tglsk: moment().format("DD-MM-YYYY"),
+        tglsp: moment().format("DD-MM-YYYY"),
+        tglba: moment().format("DD-MM-YYYY"),
         keterangan: "",
     }),
 })

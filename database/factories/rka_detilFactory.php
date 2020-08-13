@@ -9,11 +9,7 @@ $factory->define(rka_detil::class, function (Faker $faker) {
 
     return [
         'pid' => $faker->word,
-        'kode_barang' => $faker->word,
-        'nama_barang' => $faker->word,
-        'jumlah_rencana' => $faker->word,
-        'harga_satuan_rencana' => $faker->randomDigitNotNull,
-        'nilai_rencana' => $faker->randomDigitNotNull,
+        'kode_barang' => $faker->randomDigitNotNull,
         'jumlah_real' => $faker->word,
         'harga_satuan_real' => $faker->randomDigitNotNull,
         'nilai_kontrak' => $faker->randomDigitNotNull,
