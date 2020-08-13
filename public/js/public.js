@@ -372,8 +372,6 @@ jQuery.fn.extend({
 
                             } else {
                             }
-
-
                         })
                     }
                 })
@@ -666,6 +664,11 @@ let FileGallery = function(element, config) {
 
     $('body').append(modalContent)
     $('body').append(modalPreview)
+
+    $(`#${modalIdPreview}`).on('hidden.bs.modal', function () {
+        $(`audio#${containerPreviewImage}`)[0].pause();
+        $(`video#${containerPreviewImage}`)[0].pause();
+    });
 
     $(`#${fileTempId}`).change((e) => {
         element.dispatchEvent(new Event("change"));
