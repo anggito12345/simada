@@ -388,18 +388,7 @@
             });
         }
 
-        function onSensus() {
 
-            if ($("#table-inventaris").DataTable().rows('.selected').count()!= 1 ) {
-                swal.fire({
-                    type: 'error',
-                    text: 'Silahkan pilih 1 yang ingin disensus',
-                    title: 'Ubah'
-                })
-            } else {
-                //window.location = `${$("[base-path]").val()}/inventaris/${$("#table-inventaris").DataTable().rows('.selected').data()[0].id}/edit`
-            }
-        }
 
         function onEdit() {
 
