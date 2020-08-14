@@ -114,7 +114,7 @@ class inventarisDataTable extends DataTable
     {
         $addtButtons = [
             ['pageLength'],
-
+            ['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner'],
             // ['extend' => 'create', 'className' => 'btn btn-default btn-sm no-corner'],
             ['extend' => 'collection', 'text' => 'Aksi', 'className' => 'btn btn-default btn-sm no-corner',  'buttons' => [
                 ['extend' => 'create'],
