@@ -45,10 +45,7 @@
         <div class="col-md-6">
             {!! Form::label('jumlah', 'Jumlah') !!} <span class="text-danger">*</span>
             <div class="input-group col-md-12 no-padding mr-2">
-                {!! Form::number('jumlah',  (isset($inventaris) ? $inventaris->jumlah : 1 ), ['class' => 'form-control', 'max' => 99, 'required' => true]) !!}
-                <div class="input-group-append">
-                    <span class="input-group-text text-danger" id="basic-addon2">(max: 99)</span>
-                </div>
+                {!! Form::number('jumlah',  (isset($inventaris) ? $inventaris->jumlah : 1 ), ['class' => 'form-control', 'max' => 9999999, 'required' => true]) !!}
             </div>
         </div>
         <div class="col-md-6">
