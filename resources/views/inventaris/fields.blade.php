@@ -411,8 +411,13 @@
             theme: 'bootstrap' ,
         })
 
-        App.Helpers.defaultSelect2($('#alamat_propinsi'), "<?= url('api/alamats/32') ?>", 'id', 'nama', () => {
-            $('#alamat_propinsi').val("32").trigger('change');
+        App.Helpers.defaultSelect2(
+            $('#alamat_propinsi'), 
+            "<?= url('api/alamats/32') ?>", 
+            'id', 
+            'nama', 
+            () => {
+                $('#alamat_propinsi').val("32").trigger('change');
         });
 
 
@@ -802,8 +807,6 @@
 
             onSave(false)
         })
-
-
     </script>
 
     @if (isset($inventaris))
@@ -812,10 +815,17 @@
             $organisasi = \App\Models\organisasi::find(Auth::user()->pid_organisasi);
             $jabatan = \App\Models\jabatan::find(Auth::user()->jabatan);
         ?>
-        App.Helpers.defaultSelect2($('#satuan'), "<?= url('api/satuanbarangs', [$inventaris->satuan]) ?>","id","nama")
+        App.Helpers.defaultSelect2(
+            $('#satuan'), 
+            "<?= url('api/satuanbarangs', [$inventaris->satuan]) ?>",
+            "id",
+            "nama"
+        )
+
+
         $(".baranglookup").LookupTable().setValAjax("<?= url('api/barangs', [$inventaris->pidbarang]) ?>").then((d) => {
-            viewModel.data.pidinventaris = <?= $inventaris->id ?>;
-            funcBarangSelect(d)
+                viewModel.data.pidinventaris = <?= $inventaris->id ?>;
+                funcBarangSelect(d)
         })
 
         let kelompok = parseInt("<?= $jabatan->kelompok ?>")
@@ -827,21 +837,35 @@
         if (kelompok >= 0)
             $('#pidopd').select2('enable', false)
 
-        App.Helpers.defaultSelect2($('#alamat_propinsi'), "<?= url('api/alamats', [$inventaris->alamat_propinsi]) ?>","id","nama", () => {
+        @if ($inventaris->alamat_propinsi)
+            App.Helpers.defaultSelect2($('#alamat_propinsi'), "<?= url('api/alamats', [$inventaris->alamat_propinsi]) ?>", "id", "nama", () => {
+                @if ($inventaris->alamat_kota)
+                    App.Helpers.defaultSelect2($('#alamat_kota'), "<?= url('api/alamats', [$inventaris->alamat_kota]) ?>", "id", "nama", () => {
+                        @if ($inventaris->alamat_kecamatan)
+                            App.Helpers.defaultSelect2($('#alamat_kecamatan'), "<?= url('api/alamats', [$inventaris->alamat_kecamatan]) ?>", "id", "nama", () => {
+                                @if ($inventaris->alamat_kelurahan)
+                                    App.Helpers.defaultSelect2($('#alamat_kelurahan'), "<?= url('api/alamats', [$inventaris->alamat_kelurahan]) ?>", "id", "nama", () => {
 
-            App.Helpers.defaultSelect2($('#alamat_kota'), "<?= url('api/alamats', [$inventaris->alamat_kota]) ?>","id","nama", () => {
-                App.Helpers.defaultSelect2($('#alamat_kecamatan'), "<?= url('api/alamats', [$inventaris->alamat_kecamatan]) ?>","id","nama", () => {
-                    App.Helpers.defaultSelect2($('#alamat_kelurahan'), "<?= url('api/alamats', [$inventaris->alamat_kelurahan]) ?>","id","nama", () => {
+                                    }) // END: #defaultSelect2 #alamat_kelurahan    
+                                @endif
+                            }) // END: #defaultSelect2 #alamat_kecamatan
+                        @endif
+                    }) // END: #defaultSelect2 #alamat_kota
+                @endif
+            }) // END: #defaultSelect2 #alamat_propinsi
+        @endif // if alamat_propinsi
+
+        @if ($inventaris->pidopd)
+            App.Helpers.defaultSelect2($('#pidopd'), "<?= url('api/organisasis', [$inventaris->pidopd]) ?>","id","nama", () => {
+                @if ($inventaris->pidopd_cabang)
+                    App.Helpers.defaultSelect2($('#pidopd_cabang'), "<?= url('api/organisasis', [$inventaris->pidopd_cabang]) ?>","id","nama", () => {
+                        @if ($inventaris->pidupt)
+                            App.Helpers.defaultSelect2($('#pidupt'), "<?= url('api/organisasis', [$inventaris->pidupt]) ?>","id","nama")
+                        @endif
                     })
-                })
+                @endif
             })
-        })
-
-        App.Helpers.defaultSelect2($('#pidopd'), "<?= url('api/organisasis', [$inventaris->pidopd]) ?>","id","nama", () => {
-            App.Helpers.defaultSelect2($('#pidopd_cabang'), "<?= url('api/organisasis', [$inventaris->pidopd_cabang]) ?>","id","nama", () => {
-                App.Helpers.defaultSelect2($('#pidupt'), "<?= url('api/organisasis', [$inventaris->pidupt]) ?>","id","nama")
-            })
-        })
+        @endif
     </script>
     @else
         @if(Auth::user()->pid_organisasi)

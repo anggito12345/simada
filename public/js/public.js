@@ -29,8 +29,9 @@ var App = {
                 }
 
                 // create the option and append to Select2
-                var option = new Option(generateText(data.data, textField),
-                        data.data[valueField],
+                var option = new Option(
+                    generateText(data.data, textField),
+                    data.data[valueField],
                     true,
                     true);
 
@@ -52,7 +53,7 @@ var App = {
                     callbackDone('success');
                 }
 
-            }, () => {
+            }, function () {
                 if (callbackDone != null) {
                     callbackDone('error');
                 }
