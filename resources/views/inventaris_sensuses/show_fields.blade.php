@@ -4,9 +4,15 @@
     <p>{{ $inventarisSensus->idinventaris }}</p>
 </div>
 
-<!-- Kondisi Field -->
+<!-- No Sk Field -->
 <div class="form-group">
-    {!! Form::label('kondisi', 'Kondisi:') !!}
-    <p>{{ $inventarisSensus->kondisi }}</p>
+    {!! Form::label('no_sk', 'No Sk:') !!}
+    <p>{{ $inventarisSensus->no_sk }}</p>
+</div>
+
+<!-- Tanggal Sk Field -->
+<div class="form-group">
+    {!! Form::label('tanggal_sk', 'Tanggal Sk:') !!}
+    <p>{{ $inventarisSensus->tanggal_sk }}</p>
 </div>
 

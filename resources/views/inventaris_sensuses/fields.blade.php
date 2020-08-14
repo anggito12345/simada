@@ -4,10 +4,16 @@
     {!! Form::number('idinventaris', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Kondisi Field -->
+<!-- No Sk Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('kondisi', 'Kondisi:') !!}
-    {!! Form::text('kondisi', null, ['class' => 'form-control']) !!}
+    {!! Form::label('no_sk', 'No Sk:') !!}
+    {!! Form::text('no_sk', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Tanggal Sk Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('tanggal_sk', 'Tanggal Sk:') !!}
+    {!! Form::text('tanggal_sk', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Submit Field -->

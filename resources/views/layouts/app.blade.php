@@ -187,6 +187,9 @@
         <div class="loading-asset"></div>
     </div>
     @if (!Auth::guest())
+    <script>
+        localStorage.setItem('pid_organisasi', '<?= Auth::user()->pid_organisasi ?>');
+    </script>
     <div class="wrapper">
         <!-- Main Header -->
         <header class="main-header">
@@ -385,7 +388,7 @@
 
 
     <script>
-        localStorage.setItem('pid_organisasi', '<?= Auth::user()->pid_organisasi ?>');
+
 
         $.fn.select2.defaults.set("placeholder", "Silahkan Pilih");
         $.fn.select2.defaults.set("allow-clear", true);
