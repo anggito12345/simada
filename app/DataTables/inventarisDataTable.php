@@ -118,7 +118,8 @@ class inventarisDataTable extends DataTable
             // ['extend' => 'create', 'className' => 'btn btn-default btn-sm no-corner'],
             ['extend' => 'collection', 'text' => 'Aksi', 'className' => 'btn btn-default btn-sm no-corner',  'buttons' => [
                 ['extend' => 'create'],
-               ['text' => '<i class="fa fa-edit"></i> Ubah', 'action' => 'function(){onEdit()}', ],
+                ['text' => '<i class="fa fa-edit"></i> Ubah', 'action' => 'function(){onEdit()}', ],
+                ['text' => '<i class="fa fa-check-square-o"></i> Konfirmasi', 'action' => 'function(){onMultiSelect()}', ],
                // ['text' => '<i class="fa fa-trash"></i> Hapus', 'action' => 'function(){onDelete()}', ],
               /*  ['text' => '<i class="fa fa-eraser"></i> Penghapusan', 'action' => 'function(){onPenghapusan()}', ],*/
             ]],
@@ -182,7 +183,7 @@ class inventarisDataTable extends DataTable
                     [ '10 rows', '25 rows', '50 rows', 'Show all' ],
                 ],
                 'select' => [
-                    'style'=> 'single'
+                    'style'=> 'multi'
                 ],
                 'drawCallback' => 'function(e) { onLoadDataTable(e) }',
                 'rowCallback' => 'function(e) { onLoadRowDataTable(e) }',

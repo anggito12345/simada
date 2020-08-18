@@ -21,7 +21,6 @@ class inventarisRepository extends BaseRepository
      * @var array
      */
     protected $fieldSearchable = [
-
         'kode_barang'
     ];
 
