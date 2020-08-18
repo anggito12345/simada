@@ -27,10 +27,29 @@ class inventarisSensusAPIController extends AppBaseController
     }
 
 
-    public function store(CreateinventarisSensusAPIRequest $inventarisSensus)
+    public function store(Request $request)
     {
+        $input = $request->all();
         try {
-            $sensus = $this->inventaris_sensusRepository->create($inventarisSensus);
+
+
+            $sensus = $this->inventaris_sensusRepository->create($input);
+            $request->merge(['idsensus' => $sensus->id]);
+
+
+            $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen', $request, "inventaris", function ($metadatas, $index, $systemUpload) {
+                if (isset($metadatas['dokumen_metadata_keterangan'][$index]) && $metadatas['dokumen_metadata_keterangan'][$index] != null) {
+                    $systemUpload->keterangan = $metadatas['dokumen_metadata_keterangan'][$index];
+                }
+
+                $systemUpload->uid = $metadatas['dokumen_metadata_uid'][$index];
+                $systemUpload->foreign_field = 'id';
+                $systemUpload->jenis = 'dokumen';
+                $systemUpload->foreign_table = 'sensus';
+                $systemUpload->foreign_id = $metadatas['idsensus'];
+
+                return $systemUpload;
+            });
             return $this->sendResponse($sensus->toArray(), 'Sensus saved successfully');
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());

@@ -7,6 +7,7 @@ let sensus = {
             idInputFileSK: 'file-sensus-sk'
         },
         step: ko.observable(1),
+        fileGallery: null,
         form: {
             idinventaris: ko.observable(),
             status_barang: ko.observable(""),
@@ -28,13 +29,44 @@ let sensus = {
 
         },
         storeSensus: () => {
+            let formData = new FormData()
+            let item = ko.mapping.toJS(sensus.data.form)
+            for ( var key in item ) {
+                formData.append(key, item[key]);
+            }
+
+            for (let index = 0; index < sensus.data.fileGallery.fileList().length; index++) {
+                const d = sensus.data.fileGallery.fileList()[index]
+                if (d.rawFile) {
+                    formData.append(`dokumen[${index}]`, d.rawFile)
+                } else {
+                    formData.append(`dokumen[${index}]`, false)
+                }
+
+                let keys = Object.keys(d)
+
+                keys.forEach((key) => {
+                    if (key == 'rawFile') {
+                    return
+                    }
+                    formData.append(`dokumen_metadata_${key}[${index}]`, d[key])
+                })
+
+                //formData.append(`dokumen_metadata_id_inventaris[${index}]`, $("#table-inventaris").DataTable().rows('.selected').data()[0].id)
+            }
             __ajax({
                 url: `api/sensus`,
                 method: 'POST',
-                dataType: 'JSON',
-                data: JSON.stringify(ko.mapping.toJSON(sensus.data.form))
+                processData: false,
+                contentType: false,
+                data:formData
             }).then((d) => {
-                console.log(d)
+                swal.fire({
+                    type: 'success',
+                    text: 'Sensus berhasil dilakukan',
+                    title: 'Ubah'
+                })
+                $(`#${sensus.data.statics.idModalSensus}`).modal('hide')
             })
         },
         onSensus: () => {
@@ -45,6 +77,7 @@ let sensus = {
                     title: 'Ubah'
                 })
             } else {
+                sensus.data.form.idinventaris(parseInt($(`#${sensus.data.statics.idGridInventaris}`).DataTable().rows('.selected').data().toArray()[0].id))
                 $(`#${sensus.data.statics.idModalSensus}`).modal('show')
             }
         }
@@ -65,7 +98,7 @@ $(document).ready(() => {
         buttonClear: true,
     });
 
-    let fileGallery = new FileGallery(document.getElementById(sensus.data.statics.idInputFileSK), {
+    sensus.data.fileGallery = new FileGallery(document.getElementById(sensus.data.statics.idInputFileSK), {
         title: 'File Dokumen',
         maxSize: 25000000,
         onDelete: () => {

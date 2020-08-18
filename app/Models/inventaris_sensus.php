@@ -63,7 +63,7 @@ class inventaris_sensus extends Model
         'idinventaris',
         'no_sk',
         'tanggal_sk',
-        ''
+        'item_miss',
     ];
 
     /**
