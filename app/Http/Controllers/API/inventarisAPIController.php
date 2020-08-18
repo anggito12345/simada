@@ -529,4 +529,18 @@ class inventarisAPIController extends AppBaseController
 
         return $this->sendResponse($inventaris->toArray(), 'dokumen kronologis saved successfully');
     }
+
+    public function konfirmasiDraft(Request $request) {
+        $inventaris = inventaris::withDrafts()
+            ->with('Organisasi')
+            ->find($request->id);
+
+        $inventaris->draft = NULL;
+
+        if ($inventaris->save()) {
+            return $this->sendResponse($request->id, 'success');
+        } else {
+            return $this->sendError($e->getMessage());
+        }
+    }
 }
