@@ -10,6 +10,7 @@ class sensusController extends AppBaseController
 {
     public function __construct(settingRepository $settingRepo)
     {
+        $this->middleware('auth');
         $this->settingRepository = $settingRepo;
     }
 

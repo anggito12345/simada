@@ -8,7 +8,7 @@ use App\Repositories\BaseRepository;
 /**
  * Class inventaris_sensusRepository
  * @package App\Repositories
- * @version August 7, 2020, 10:09 am UTC
+ * @version August 13, 2020, 9:45 am UTC
 */
 
 class inventaris_sensusRepository extends BaseRepository
@@ -18,7 +18,8 @@ class inventaris_sensusRepository extends BaseRepository
      */
     protected $fieldSearchable = [
         'idinventaris',
-        'kondisi'
+        'no_sk',
+        'tanggal_sk'
     ];
 
     /**

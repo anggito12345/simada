@@ -813,3 +813,5 @@ Route::resource('inventaris_reklas', 'inventaris_reklasAPIController');
 Route::resource('reklas', 'reklasAPIController');
 
 Route::resource('koreksis', 'koreksiAPIController');
+
+Route::resource('sensus', 'inventarisSensusAPIController');

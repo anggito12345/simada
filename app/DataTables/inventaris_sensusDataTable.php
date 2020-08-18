@@ -66,7 +66,8 @@ class inventaris_sensusDataTable extends DataTable
     {
         return [
             'idinventaris',
-            'kondisi'
+            'no_sk',
+            'tanggal_sk'
         ];
     }
 

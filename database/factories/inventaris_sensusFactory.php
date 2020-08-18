@@ -9,8 +9,9 @@ $factory->define(inventaris_sensus::class, function (Faker $faker) {
 
     return [
         'idinventaris' => $faker->word,
-        'kondisi' => $faker->word,
+        'no_sk' => $faker->word,
         'created_at' => $faker->word,
-        'updated_at' => $faker->word
+        'updated_at' => $faker->word,
+        'tanggal_sk' => $faker->word
     ];
 });

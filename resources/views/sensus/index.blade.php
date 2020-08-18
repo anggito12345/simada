@@ -1,19 +1,6 @@
 @extends('layouts.app')
 
 @section('content')
-    <script>
-         function onSensus() {
-            if ($("#table-inventaris").DataTable().rows('.selected').count()!= 1 ) {
-                swal.fire({
-                    type: 'error',
-                    text: 'Silahkan pilih 1 yang ingin disensus',
-                    title: 'Ubah'
-                })
-            } else {
-                $('#modal-sensus').modal('show')
-            }
-        }
-    </script>
     <section class="content-header">
         <h3 class="pull-left">{{ Breadcrumbs::render() }}</h3>
         <!-- <h1 class="pull-right">
@@ -36,6 +23,7 @@
         </div>
     </div>
 
+
     <div class="modal" id="modal-sensus" role="dialog">
         <div class="modal-dialog" role="document">
             <div class="modal-content">
@@ -46,19 +34,19 @@
                 </button>
             </div>
             <div class="modal-body">
-                <div class="form-group">
+                <div class="form-group" data-bind="if: sensus.data.step() == 1">
                     <label>
                         Sensus
                     </label>
                     <select type="text" class="form-control" id="sensus-dd"
-                        data-bind="value: sensus.data.status_barang" placeholder="Pilih Status Barang" >
+                        data-bind="value: sensus.data.form.status_barang" placeholder="Pilih Status Barang" >
                         <option>Pilih Status Barang </option>
                         <option value="Ubah Satuan">Ubah Satuan</option>
                         <option value="Tidak Ada">Tidak Ada</option>
                     </select>
                 </div>
 
-                <div class="ubahsatuan-form" data-bind="if: sensus.data.status_barang() == 'Ubah Satuan'">
+                <div class="ubahsatuan-form" data-bind="if: sensus.data.form.status_barang() == 'Ubah Satuan' && sensus.data.step() == 2">
                     <div class="btn btn-primary btn-block">
                         Pisah
                     </div>
@@ -66,22 +54,45 @@
                     <div class="btn btn-primary btn-block">
                         Gabung
                     </div>
+                    <a href="#" onclick="sensus.methods.backToStep(1)"><i class="fa fa-arrow-left"></i>&nbsp; Back</a>
                 </div>
 
-                <div class="ubahsatuan-form" data-bind="if: sensus.data.status_barang() == 'Tidak Ada'">
-                    <div class="btn btn-primary btn-block">
+                <div class="ubahsatuan-form" data-bind="if: sensus.data.form.status_barang() == 'Tidak Ada' && sensus.data.step() == 2">
+                    <div class="btn btn-primary btn-block" onclick="sensus.methods.showSkForm('Sudah dihapuskan')">
                         Sudah dihapuskan
                     </div>
 
-                    <div class="btn btn-primary btn-block">
+                    <div class="btn btn-primary btn-block" onclick="sensus.methods.showSkForm('Hilang')">
                         Hilang
                     </div>
 
-                    <div class="btn btn-primary btn-block">
-                        Tidak diketahui keberadaannya
-                    </div>
-                </div>
+                    <div class="btn btn-primary btn-block" onclick="sensus.methods.showSkForm('Tidak diketahui keberadaannya')">
 
+                        Tidak diketahui keberadaanya
+
+                    </div>
+                    <a href="#" onclick="sensus.methods.backToStep(1)"><i class="fa fa-arrow-left"></i>&nbsp; Back</a>
+                </div>
+                <div class="ubahsatuan-form" data-bind="visible: sensus.data.form.status_barang() == 'Tidak Ada' && sensus.data.step() == 3">
+                    <div class="form-group">
+                        <label>
+                            No SK.
+                        </label>
+                        <input type='text' class="form-control" data-bind="value: sensus.data.form.no_sk" />
+                    </div>
+                    <div class="form-group">
+                        <label>
+                            Tgl SK.
+                        </label>
+                        <input type='text' id="tgl_sk" class="form-control" data-bind="value: sensus.data.form.tgl_sk" />
+                    </div>
+                    <input type="file" id="file-sensus-sk" />
+                    <a href="#" onclick="sensus.methods.backToStep(2)"><i class="fa fa-arrow-left pull-left"></i>&nbsp; Back</a>
+                    <div class="btn btn-success" onclick="sensus.methods.storeSensus()">
+                        Submit
+                    </div>
+
+                </div>
 
             </div>
             <div class="modal-footer">

@@ -22,8 +22,8 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *          format="int32"
  *      ),
  *      @SWG\Property(
- *          property="kondisi",
- *          description="kondisi",
+ *          property="no_sk",
+ *          description="no_sk",
  *          type="string"
  *      ),
  *      @SWG\Property(
@@ -37,6 +37,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  *          description="updated_at",
  *          type="string",
  *          format="date"
+ *      ),
+ *      @SWG\Property(
+ *          property="tanggal_sk",
+ *          description="tanggal_sk",
+ *          type="string"
  *      )
  * )
  */
@@ -45,7 +50,7 @@ class inventaris_sensus extends Model
     use SoftDeletes;
 
     public $table = 'inventaris_sensus';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
@@ -56,7 +61,9 @@ class inventaris_sensus extends Model
 
     public $fillable = [
         'idinventaris',
-        'kondisi'
+        'no_sk',
+        'tanggal_sk',
+        ''
     ];
 
     /**
@@ -67,7 +74,8 @@ class inventaris_sensus extends Model
     protected $casts = [
         'id' => 'integer',
         'idinventaris' => 'integer',
-        'kondisi' => 'string'
+        'no_sk' => 'string',
+        'tanggal_sk' => 'string'
     ];
 
     /**
@@ -76,8 +84,8 @@ class inventaris_sensus extends Model
      * @var array
      */
     public static $rules = [
-        
+
     ];
 
-    
+
 }

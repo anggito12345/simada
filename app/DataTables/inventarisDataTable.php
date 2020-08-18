@@ -132,7 +132,7 @@ class inventarisDataTable extends DataTable
                 ['pageLength'],
                 ['extend' => 'collection', 'text' => 'Aksi', 'className' => 'btn btn-default btn-sm no-corner',  'buttons' => [
                    ['extend' => 'create'],
-                   ['text' => '<i class="fa fa-edit"></i> Sensus', 'action' => 'function(){onSensus()}', ],
+                   ['text' => '<i class="fa fa-edit"></i> Sensus', 'action' => 'function(){ sensus.methods.onSensus()}', ],
                    // ['text' => '<i class="fa fa-trash"></i> Hapus', 'action' => 'function(){onDelete()}', ],
                   /*  ['text' => '<i class="fa fa-eraser"></i> Penghapusan', 'action' => 'function(){onPenghapusan()}', ],*/
                 ]],
