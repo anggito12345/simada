@@ -29,7 +29,17 @@ class inventaris_sensusDataTable extends DataTable
      */
     public function query(inventaris_sensus $model)
     {
-        return $model->newQuery();
+        return $model->newQuery()->select([
+            'm_barang.nama_rek_aset as nama',
+            'inventaris_sensus.id as id',
+            'inventaris.kode_barang as kode_barang',
+            'inventaris.noreg as noreg',
+            'inventaris_sensus.tanggal_sk as tanggal_sk',
+            'inventaris_sensus.status_barang_hilang as status_barang_hilang',
+            'inventaris_sensus.status_barang as status_barang',
+        ])
+        ->join('inventaris','inventaris.id','inventaris_sensus.idinventaris')
+        ->join('m_barang', 'm_barang.id', 'inventaris.pidbarang');
     }
 
     /**

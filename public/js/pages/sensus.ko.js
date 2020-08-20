@@ -1,8 +1,13 @@
+viewModel.data.urlEachKIB = (newVal) => {
+    return `/api/detil${newVal.replace(/ /g,"").toLowerCase()}get`
+}
+
 let sensus = {
     data: {
 
         statics: {
             idGridInventaris: 'table-inventaris',
+            idGridSensus: 'table-sensus',
             idModalSensus: 'modal-sensus',
             idInputFileSK: 'file-sensus-sk'
         },
@@ -13,13 +18,13 @@ let sensus = {
             status_barang: ko.observable(""),
             no_sk: ko.observable(""),
             tgl_sk: ko.observable(""),
-            item_miss: ko.observable("")
+            status_barang_hilang: ko.observable("")
         }
     },
     methods: {
         showSkForm: (choosen) => {
             sensus.data.step(3)
-            sensus.data.form.item_miss(choosen)
+            sensus.data.form.status_barang_hilang(choosen)
         },
         backToStep: (step) => {
             sensus.data.step(step)
@@ -27,6 +32,39 @@ let sensus = {
         nextStep: (step) => {
             sensus.data.step(step)
 
+        },
+        loadGrid: () => {
+            $(`#${sensus.data.statics.idGridSensus}`).DataTable({
+                "ajax": {
+                    "url": "inventarisSensuses",
+                    "dataSrc": 'data',
+                },
+                "processing": true,
+                "serverSide": true,
+                columns:[{
+                    'data': 'nama',
+                    'title': 'Nama Barang'
+                },{
+                    'data': 'noreg',
+                    'title': 'No Registrasi'
+                },
+                {
+                    'data': 'kode_barang',
+                    'title': 'Kode Barang'
+                },
+                {
+                    'data': 'tanggal_sk',
+                    'title': 'Tanggal Sensus'
+                },
+                {
+                    'data': 'status_barang_hilang',
+                    'title': 'Status Barang Menghilang'
+                },
+                {
+                    'data': 'status_barang',
+                    'title': 'Status Barang'
+                }]
+            })
         },
         storeSensus: () => {
             let formData = new FormData()
@@ -67,6 +105,8 @@ let sensus = {
                     title: 'Ubah'
                 })
                 $(`#${sensus.data.statics.idModalSensus}`).modal('hide')
+                $(`#${sensus.data.statics.idGridInventaris}`).DataTable().ajax.reload()
+                $(`#${sensus.data.statics.idGridSensus}`).DataTable().ajax.reload()
             })
         },
         onSensus: () => {
@@ -79,6 +119,7 @@ let sensus = {
             } else {
                 sensus.data.form.idinventaris(parseInt($(`#${sensus.data.statics.idGridInventaris}`).DataTable().rows('.selected').data().toArray()[0].id))
                 $(`#${sensus.data.statics.idModalSensus}`).modal('show')
+
             }
         }
     }
@@ -92,6 +133,17 @@ sensus.data.form.status_barang.subscribe(() => {
 
 
 $(document).ready(() => {
+    $(`#${sensus.data.statics.idModalSensus}`).on('shown.bs.modal', function () {
+        let keys = Object.keys(sensus.data.form)
+        $.each(keys, (i, s) => {
+            if (s != "idinventaris") {
+                sensus.data.form[s]("")
+            }
+
+        })
+
+        sensus.data.step(1)
+    })
 
     const tglDibukukanInline = new inlineDatepicker(document.getElementById('tgl_sk'), {
         format: 'DD-MM-YYYY',
@@ -122,4 +174,6 @@ $(document).ready(() => {
             })
         }
     })
+
+    sensus.methods.loadGrid()
 })

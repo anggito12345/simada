@@ -15,7 +15,29 @@
         <div class="clearfix"></div>
         <div class="box box-primary">
             <div class="box-body">
-                @include('inventaris.table')
+                <ul class="nav nav-tabs">
+                    <li class="nav-item">
+                      <a class="nav-link active" data-toggle="tab" href="#inventaris">Inventaris</a>
+                    </li>
+                    <li class="nav-item">
+                      <a class="nav-link" data-toggle="tab" href="#sensus">Sensus</a>
+                    </li>
+                </ul>
+                <br />
+                <div class="tab-content">
+                    <div class="tab-pane container active" id="inventaris">
+                        @include('inventaris.table')
+                    </div>
+                    <div class="tab-pane container fade" id="sensus">
+                        <table id="table-sensus" class="table table-responsive" style="width:100%">
+                            <thead>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>
+                    </div>
+                </div>
+
             </div>
         </div>
         <div class="text-center">
@@ -41,8 +63,8 @@
                     <select type="text" class="form-control" id="sensus-dd"
                         data-bind="value: sensus.data.form.status_barang" placeholder="Pilih Status Barang" >
                         <option>Pilih Status Barang </option>
-                        <option value="Ubah Satuan">Ubah Satuan</option>
-                        <option value="Tidak Ada">Tidak Ada</option>
+                        <option value="{!! Constant::$SENSUS_STATUS[1] !!}">{!! Constant::$SENSUS_STATUS[1] !!}</option>
+                        <option value="{!! Constant::$SENSUS_STATUS[0] !!}">{!! Constant::$SENSUS_STATUS[0] !!}</option>
                     </select>
                 </div>
 
@@ -88,7 +110,7 @@
                     </div>
                     <input type="file" id="file-sensus-sk" />
                     <a href="#" onclick="sensus.methods.backToStep(2)"><i class="fa fa-arrow-left pull-left"></i>&nbsp; Back</a>
-                    <div class="btn btn-success" onclick="sensus.methods.storeSensus()">
+                    <div class="btn btn-success" style="float:right" onclick="sensus.methods.storeSensus()">
                         Submit
                     </div>
 

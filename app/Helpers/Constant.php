@@ -48,6 +48,11 @@ class Constant {
         ],
     ];
 
+    public static $SENSUS_STATUS = [
+        'Tidak Ada',
+        'Ubah Satuan'
+    ];
+
 
     public static $GROUP_BPKAD_ORG = -1;
     public static $GROUP_OPD_ORG = 0;

@@ -47,7 +47,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  */
 class inventaris_sensus extends Model
 {
-    use SoftDeletes;
+    //use SoftDeletes;
 
     public $table = 'inventaris_sensus';
 
@@ -63,7 +63,8 @@ class inventaris_sensus extends Model
         'idinventaris',
         'no_sk',
         'tanggal_sk',
-        'item_miss',
+        'status_barang_hilang',
+        'status_barang',
     ];
 
     /**

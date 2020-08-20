@@ -2,14 +2,11 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Http\Requests\API\CreateinventarisSensusAPIRequest;
-use App\Http\Requests\API\UpdatealamatAPIRequest;
-use App\Models\alamat;
 use App\Repositories\inventaris_sensusRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
-use Laracasts\Flash\Flash;
-use Response;
+use App\Models\inventaris;
+use Constant;
 
 /**
  * Class alamatController
@@ -32,7 +29,7 @@ class inventarisSensusAPIController extends AppBaseController
         $input = $request->all();
         try {
 
-
+            $input['tanggal_sk'] = date('Y-m-d');
             $sensus = $this->inventaris_sensusRepository->create($input);
             $request->merge(['idsensus' => $sensus->id]);
 
@@ -50,6 +47,11 @@ class inventarisSensusAPIController extends AppBaseController
 
                 return $systemUpload;
             });
+
+            if ($input['status_barang'] == Constant::$SENSUS_STATUS[0]) {
+                inventaris::find($input['idinventaris'])->delete();
+            }
+
             return $this->sendResponse($sensus->toArray(), 'Sensus saved successfully');
         } catch (\Exception $e) {
             return $this->sendError($e->getMessage());
