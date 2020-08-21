@@ -116,7 +116,7 @@ class inventarisDataTable extends DataTable
             ['pageLength'],
             ['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner'],
             // ['extend' => 'create', 'className' => 'btn btn-default btn-sm no-corner'],
-            ['extend' => 'collection', 'text' => 'Aksi', 'className' => 'btn btn-default btn-sm no-corner',  'buttons' => [
+            ['extend' => 'collection', 'text' => 'Aksi', 'className' => 'btn btn-default btn-sm no-corner',  'autoClose' => true, 'buttons' => [
                 ['extend' => 'create'],
                 ['text' => '<i class="fa fa-edit"></i> Ubah', 'action' => 'function(){onEdit()}', ],
                 ['text' => '<i class="fa fa-check-square-o"></i> Konfirmasi', 'action' => 'function(){onMultiSelect()}', ],
