@@ -10,6 +10,9 @@ let inlineDatepicker = function(element, config) {
         maxYear: new Date().getFullYear(),
         formatDefault: 'DD/MM/YYYY',
         buttonClear: false,
+        readonly: {
+
+        }
     }
 
     const monthNames = [
@@ -49,6 +52,18 @@ let inlineDatepicker = function(element, config) {
     const monthPicker = yearPicker.cloneNode(true)
 
     const dayPicker = yearPicker.cloneNode(true)
+
+    if (config.readonly && config.readonly.hasOwnProperty('yearPicker')) {
+        yearPicker.setAttribute('disabled', 'disabled')
+    }
+
+    if (config.readonly && config.readonly.hasOwnProperty('monthPicker')) {
+        monthPicker.setAttribute('disabled', 'disabled')
+    }
+
+    if (config.readonly && config.readonly.hasOwnProperty('dayPicker')) {
+        dayPicker.setAttribute('disabled', 'disabled')
+    }
 
     const dayPopulate = (daySelectElement) => {
         const saveRecentDayPicked = daySelectElement.value;

@@ -123,9 +123,9 @@ class BaseModel extends Model {
         '-3' => 'Gubernur',
         '-2' => 'Sekda',
         '-1' => 'BPKAD',
-        '0' => 'OPD',
-        '1' => 'Cabang OPD',
-        '2' => 'UPT'
+        '0' => 'Pengguna Barang',
+        '1' => 'Kuasa Pengguna Barang',
+        '2' => 'Sub Kuasa Pengguna Barang'
     ];
 
     public static $mappedKibTable = [

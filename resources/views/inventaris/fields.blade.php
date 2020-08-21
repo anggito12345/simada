@@ -409,10 +409,10 @@
         })
 
         App.Helpers.defaultSelect2(
-            $('#alamat_propinsi'), 
-            "<?= url('api/alamats/32') ?>", 
-            'id', 
-            'nama', 
+            $('#alamat_propinsi'),
+            "<?= url('api/alamats/32') ?>",
+            'id',
+            'nama',
             () => {
                 $('#alamat_propinsi').val("32").trigger('change');
         });
@@ -645,6 +645,9 @@
         const tglDibukukanInline = new inlineDatepicker(document.getElementsByClassName('tgl_dibukukan'), {
             format: 'DD-MM-YYYY',
             buttonClear: true,
+            readonly: {
+                yearPicker: true
+            }
         });
 
         new inlineDatepicker(document.getElementsByClassName('tgl_sensus'), {
@@ -813,7 +816,7 @@
             $jabatan = \App\Models\jabatan::find(Auth::user()->jabatan);
         ?>
         App.Helpers.defaultSelect2(
-            $('#satuan'), 
+            $('#satuan'),
             "<?= url('api/satuanbarangs', [$inventaris->satuan]) ?>",
             "id",
             "nama"
@@ -843,7 +846,7 @@
                                 @if ($inventaris->alamat_kelurahan)
                                     App.Helpers.defaultSelect2($('#alamat_kelurahan'), "<?= url('api/alamats', [$inventaris->alamat_kelurahan]) ?>", "id", "nama", () => {
 
-                                    }) // END: #defaultSelect2 #alamat_kelurahan    
+                                    }) // END: #defaultSelect2 #alamat_kelurahan
                                 @endif
                             }) // END: #defaultSelect2 #alamat_kecamatan
                         @endif

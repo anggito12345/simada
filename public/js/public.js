@@ -868,26 +868,26 @@ let FileGallery = function(element, config) {
         data: [],
         columns: [
             {
-                data: 'name', 
+                data: 'name',
                 title: 'Dokumen'
             },
             {
-                data: 'keterangan', 
+                data: 'keterangan',
                 title: 'Keterangan'
             },
-            {   title: 'Preview', 
+            {   title: 'Preview',
                 "render": function ( data, type, full, meta ) {
-                    return `<button type="button" class="btn btn-default" ${classEnablePreview} data-uid="${full.uid}">Preview</button>`
+                    return `<button type="button" class="btn btn-default" ${classEnablePreview} data-name='${full.name ? full.name : ''}' data-path='${full.path ? full.path : ''}' data-type='${full.type ? full.type : 'static'}' data-uid="${full.uid}">Preview</button>`
                 }
             },
             {
-                title: `<input type='checkbox' class='${checkBoxClassAll}' />`, 
+                title: `<input type='checkbox' class='${checkBoxClassAll}' />`,
                 "render": function ( data, type, full, meta ) {
                     const typeInput = 'checkbox'
                     const checked = self.checkedRow().find((d) => {
                         return d.uid == full.uid
                     })
-                    return `<input type='${typeInput}' ${checked != undefined ? 'checked' : ''} value='1' data-uid='${full.uid}' class='${checkBoxClass}' />`;
+                    return `<input type='${typeInput}' ${checked != undefined ? 'checked' : ''} value='1' data-path='${full.path ? full.path : 'static'}' data-uid='${full.uid}' class='${checkBoxClass}' />`;
                 }
             },
 
@@ -910,11 +910,24 @@ let FileGallery = function(element, config) {
                 }
             })
 
-            $(`[${classEnablePreview}]`).click((ev) => {
+            $(`[${classEnablePreview}]`).unbind('click').bind('click',(ev) => {
+
+
                 const uid = ev.target.getAttribute('data-uid')
+                const path = ev.target.getAttribute('data-path')
+                const type = ev.target.getAttribute('data-type')
+                const name = ev.target.getAttribute('data-name')
                 selectedFile = self.fileList().find((file) => {
                     return file.uid == uid
                 })
+
+                if (selectedFile == undefined) {
+                    selectedFile = {
+                        path: path,
+                        type: type,
+                        name: name,
+                    }
+                }
 
                 $(`img#${containerPreviewImage}`).hide();
                 $(`video#${containerPreviewImage}`).hide();
@@ -945,7 +958,15 @@ let FileGallery = function(element, config) {
                         $(`audio#${containerPreviewImage}`).show();
                         break;
                     default:
-                        window.open(window.URL.createObjectURL(selectedFile.rawFile), '_blank');
+                        if (selectedFile.path != undefined) {
+                            aele = document.createElement('a')
+                            aele.setAttribute('href', $("[base-path]").val().replace("public", "storage/") + "app/" + selectedFile.path)
+                            aele.setAttribute('download', selectedFile.name)
+                            aele.click()
+                        } else {
+                            window.open(window.URL.createObjectURL(selectedFile.rawFile), '_blank');
+                        }
+                        //window.open(window.URL.createObjectURL(selectedFile.rawFile), '_blank');
                         dontOpenModal = true;
                         break;
                 }
