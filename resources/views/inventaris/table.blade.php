@@ -390,33 +390,49 @@
 
         // Confirm inventaris draft
         function onMultiSelect() {
-            let count = $("#table-inventaris").DataTable().rows('.selected').count();
+            Swal.fire({
+                title: 'Anda yakin?',
+                type: 'warning',
+                showCancelButton: true,
+                confirmButtonColor: '#3085d6',
+                cancelButtonColor: '#d33',
+                confirmButtonText: 'Ya!'
+            }).then((result) => {
+                if (result.value) {
+                    let count = $("#table-inventaris").DataTable().rows('.selected').count();
+                    let successCount = [];
 
-            if (count > 0) {
-                // update item menjadi non draft
-                let selectedRows = $("#table-inventaris").DataTable().rows('.selected').data();
+                    if (count > 0) {
+                        // update item menjadi non draft
+                        let selectedRows = $("#table-inventaris").DataTable().rows('.selected').data();
 
-                selectedRows.each(function (index) {
-                    console.log(index.id);
+                        selectedRows.each(function (index, key) {
+                            console.log(index.id);
 
-                    __ajax({
-                        url: `<?= url('api/konfirmasidraft') ?>`,
-                        method: 'POST',
-                        dataType: "json",
-                        data: {
-                            id: index.id
-                        }
-                    }).then((d) => {
-                        swal.fire({
-                            type: "success",
-                            text: "Berhasil!",
-                            onClose: () => {
-                                $("#table-inventaris").DataTable().ajax.reload();
-                            }
-                        })
-                    })
-                });
-            }
+                            __ajax({
+                                url: `<?= url('api/konfirmasidraft') ?>`,
+                                method: 'POST',
+                                dataType: "json",
+                                data: {
+                                    id: index.id
+                                }
+                            }).then((d) => {
+                                successCount.push(key);
+                                
+                                if (successCount.length == count) {
+                                    swal.fire({
+                                        type: "success",
+                                        text: "Berhasil!",
+                                        onClose: () => {
+                                            $("#table-inventaris").DataTable().ajax.reload();
+                                        }
+                                    })
+                                }
+                            })
+                        }); 
+                    }
+                }
+            });
         }
 
         function onEdit() {
