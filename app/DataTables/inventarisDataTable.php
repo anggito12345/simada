@@ -130,7 +130,7 @@ class inventarisDataTable extends DataTable
         if(\Request::route()->getName() == 'sensus.index') {
             $addtButtons = [
                 ['pageLength'],
-                ['extend' => 'collection', 'text' => 'Aksi', 'className' => 'btn btn-default btn-sm no-corner',  'buttons' => [
+                ['extend' => 'collection', 'text' => 'Aksi', 'className' => 'btn btn-default btn-sm no-corner',  'autoClose' => true, 'buttons' => [
                    ['extend' => 'create'],
                    ['text' => '<i class="fa fa-edit"></i> Sensus', 'action' => 'function(){ sensus.methods.onSensus()}', ],
                    // ['text' => '<i class="fa fa-trash"></i> Hapus', 'action' => 'function(){onDelete()}', ],
