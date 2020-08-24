@@ -60,42 +60,33 @@
                     <label>
                         Sensus
                     </label>
-                    <select type="text" class="form-control" id="sensus-dd"
-                        data-bind="value: sensus.data.form.status_barang" placeholder="Pilih Status Barang" >
-                        <option>Pilih Status Barang </option>
-                        <option value="{!! Constant::$SENSUS_STATUS[1] !!}">{!! Constant::$SENSUS_STATUS[1] !!}</option>
-                        <option value="{!! Constant::$SENSUS_STATUS[0] !!}">{!! Constant::$SENSUS_STATUS[0] !!}</option>
+                    <select type="text" class="form-control" id="sensus-dd" data-bind="value: sensus.data.form.status_barang" placeholder="Pilih Status Barang" >
+                        <option>Pilih Status Barang</option>
+
+                        @foreach (Constant::$SENSUS_STATUS_01 as $sensus_status)
+                            <option value="{!! $sensus_status !!}">{!! $sensus_status !!}</option>   
+                        @endforeach
                     </select>
                 </div>
 
                 <div class="ubahsatuan-form" data-bind="if: sensus.data.form.status_barang() == 'Ubah Satuan' && sensus.data.step() == 2">
-                    <div class="btn btn-primary btn-block">
-                        Pisah
-                    </div>
+                    @foreach (Constant::$SENSUS_STATUS_02 as $sensus_status)
+                        <div class="btn btn-primary btn-block">
+                            {!! $sensus_status !!}
+                        </div>
+                    @endforeach
 
-                    <div class="btn btn-primary btn-block">
-                        Gabung
-                    </div>
-                    <a href="#" onclick="sensus.methods.backToStep(1)"><i class="fa fa-arrow-left"></i>&nbsp; Back</a>
+                    <a href="#" onclick="sensus.methods.backToStep(1)" class="btn btn-danger btn-block"><i class="fa fa-arrow-left"></i>&nbsp; Kembali</a>
                 </div>
 
                 <div class="ubahsatuan-form" data-bind="if: sensus.data.form.status_barang() == 'Tidak Ada' && sensus.data.step() == 2">
-                    <div class="btn btn-primary btn-block" onclick="sensus.methods.showSkForm('Sudah dihapuskan')">
-                        Sudah dihapuskan
-                    </div>
-
-                    <div class="btn btn-primary btn-block" onclick="sensus.methods.showSkForm('Hilang')">
-                        Hilang
-                    </div>
-
-                    <div class="btn btn-primary btn-block" onclick="sensus.methods.showSkForm('Tidak diketahui keberadaannya')">
-                        Tidak diketahui keberadaanya
-                    </div>
-
-                    <div class="btn btn-primary btn-block" onclick="sensus.methods.showSkForm('Double Catat')">
-                        Double catat
-                    </div>
-                    <a href="#" onclick="sensus.methods.backToStep(1)"><i class="fa fa-arrow-left"></i>&nbsp; Back</a>
+                    @foreach (Constant::$SENSUS_STATUS_03 as $sensus_status) 
+                        <div class="btn btn-primary btn-block" onclick="sensus.methods.showSkForm('{!! $sensus_status !!}')">
+                            {!! $sensus_status !!}
+                        </div>
+                    @endforeach
+                    
+                    <a href="#" onclick="sensus.methods.backToStep(1)" class="btn btn-danger btn-block"><i class="fa fa-arrow-left"></i>&nbsp; Kembali</a>
                 </div>
                 <div class="ubahsatuan-form" data-bind="visible: sensus.data.form.status_barang() == 'Tidak Ada' && sensus.data.step() == 3">
                     <div class="form-group">
