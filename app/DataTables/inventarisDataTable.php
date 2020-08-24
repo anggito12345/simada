@@ -113,29 +113,19 @@ class inventarisDataTable extends DataTable
     public function html()
     {
         $addtButtons = [
-            ['pageLength'],
+            ['extend' => 'create'],
+            ['text' => '<i class="fa fa-edit"></i> Ubah', 'action' => 'function(){onEdit()}', ],
+            ['text' => '<i class="fa fa-check-square-o"></i> Konfirmasi', 'action' => 'function(){onMultiSelect()}', ],
             ['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner'],
-            // ['extend' => 'create', 'className' => 'btn btn-default btn-sm no-corner'],
-            ['extend' => 'collection', 'text' => 'Aksi', 'className' => 'btn btn-default btn-sm no-corner',  'autoClose' => true, 'buttons' => [
-                ['extend' => 'create'],
-                ['text' => '<i class="fa fa-edit"></i> Ubah', 'action' => 'function(){onEdit()}', ],
-                ['text' => '<i class="fa fa-check-square-o"></i> Konfirmasi', 'action' => 'function(){onMultiSelect()}', ],
-               // ['text' => '<i class="fa fa-trash"></i> Hapus', 'action' => 'function(){onDelete()}', ],
-              /*  ['text' => '<i class="fa fa-eraser"></i> Penghapusan', 'action' => 'function(){onPenghapusan()}', ],*/
-            ]],
-            //['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner', 'buttons' => [ 'csv', 'excel']],
             ['extend' => 'print', 'className' => 'btn btn-default btn-sm no-corner'],
+            ['pageLength']
         ];
 
         if(\Request::route()->getName() == 'sensus.index') {
             $addtButtons = [
-                ['pageLength'],
-                ['extend' => 'collection', 'text' => 'Aksi', 'className' => 'btn btn-default btn-sm no-corner',  'autoClose' => true, 'buttons' => [
-                   ['extend' => 'create'],
-                   ['text' => '<i class="fa fa-edit"></i> Sensus', 'action' => 'function(){ sensus.methods.onSensus()}', ],
-                   // ['text' => '<i class="fa fa-trash"></i> Hapus', 'action' => 'function(){onDelete()}', ],
-                  /*  ['text' => '<i class="fa fa-eraser"></i> Penghapusan', 'action' => 'function(){onPenghapusan()}', ],*/
-                ]],
+                ['extend' => 'create'],
+                ['text' => '<i class="fa fa-edit"></i> Sensus', 'action' => 'function(){ sensus.methods.onSensus()}', ],
+                ['pageLength']
             ];
         }
 
