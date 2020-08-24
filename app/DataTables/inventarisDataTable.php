@@ -114,10 +114,10 @@ class inventarisDataTable extends DataTable
     {
         $addtButtons = [
             ['extend' => 'create'],
-            ['text' => '<i class="fa fa-edit"></i> Ubah', 'action' => 'function(){onEdit()}', ],
-            ['text' => '<i class="fa fa-check-square-o"></i> Konfirmasi', 'action' => 'function(){onMultiSelect()}', ],
-            ['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner'],
-            ['extend' => 'print', 'className' => 'btn btn-default btn-sm no-corner'],
+            ['text' => '<i class="fa fa-edit"></i> Ubah', 'action' => 'function(){onEdit()}'],
+            ['text' => '<i class="fa fa-check-square-o"></i> Konfirmasi', 'action' => 'function(){onMultiSelect()}', 'className' => 'konfirmasi-draft'],
+            ['extend' => 'export'],
+            ['extend' => 'print'],
             ['pageLength']
         ];
 
