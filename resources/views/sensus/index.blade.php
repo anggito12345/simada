@@ -89,9 +89,11 @@
                     </div>
 
                     <div class="btn btn-primary btn-block" onclick="sensus.methods.showSkForm('Tidak diketahui keberadaannya')">
-
                         Tidak diketahui keberadaanya
+                    </div>
 
+                    <div class="btn btn-primary btn-block" onclick="sensus.methods.showSkForm('Double Catat')">
+                        Double catat
                     </div>
                     <a href="#" onclick="sensus.methods.backToStep(1)"><i class="fa fa-arrow-left"></i>&nbsp; Back</a>
                 </div>
