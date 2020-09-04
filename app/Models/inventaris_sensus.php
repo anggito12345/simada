@@ -65,6 +65,9 @@ class inventaris_sensus extends Model
         'tanggal_sk',
         'status_barang_hilang',
         'status_barang',
+        'status_approval',
+        'created_by',
+        'status_ubah_satuan'
     ];
 
     /**

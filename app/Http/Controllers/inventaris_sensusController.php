@@ -9,6 +9,7 @@ use App\Http\Requests\Updateinventaris_sensusRequest;
 use App\Repositories\inventaris_sensusRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
+use App\Models\inventaris_sensus;
 use Response;
 
 class inventaris_sensusController extends AppBaseController
@@ -148,4 +149,21 @@ class inventaris_sensusController extends AppBaseController
 
         return redirect(route('inventarisSensuses.index'));
     }
+
+
+    public function partialview($id)
+    {
+        $mdl = new inventaris_sensus();
+
+        $data = inventaris_sensusRepository::query($mdl->newQuery())->first();
+
+        if (empty($data)) {
+            Flash::error('Sensus not found');
+
+            return 'not found';
+        }
+
+        return view('sensus.show_fields')->with('inventarisSensus', $data);
+    }
+
 }

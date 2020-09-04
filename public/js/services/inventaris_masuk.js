@@ -59,6 +59,41 @@ viewModel.services = Object.assign(viewModel.services, {
             dataType: 'json',
         })
     },
+    approveSensus: (tableListSelected, step) => {
+        let formData = new FormData($('#form-bpkad-sensus')[0])
+
+        dokumenMutasiCancel.fileList().forEach((d, index) => {
+            if (d.rawFile) {
+                formData.append(`dokumen_sensus_metadata_[${index}]`, d.rawFile)
+            } else {
+                formData.append(`dokumen_sensus_metadata_[${index}]`, false)
+            }
+
+            let keys = Object.keys(d)
+
+            keys.forEach((key) => {
+                if (key == 'rawFile') {
+                    return
+                }
+                formData.append(`dokumen_sensus_metadata_${key}[${index}]`, d[key])
+            })
+
+            return d.rawFile
+        });
+
+
+        formData.append('items', JSON.stringify(tableListSelected))
+        formData.append('step', step)
+
+        return __ajax({
+            url: `${$("[base-path]").val()}/api/sensus_/approvements`,
+            method: 'POST',
+            data: formData,
+            dataType: 'json',
+            processData: false,
+            contentType: false,
+        })
+    },
     cancelMutasi: (tableListSelected, step) => {
         let formData = new FormData($('#form-bpkad-mutasi')[0])
 
@@ -187,6 +222,14 @@ viewModel.services = Object.assign(viewModel.services, {
             dataType: 'json',
             processData: false,
             contentType: false,
+        })
+    },
+    countSensusWorkflow: () => {
+        __ajax({
+            url: `${$("[base-path]").val()}/api/inventaris_sensus/count`,
+            dataType: 'json',
+        }).then((d) => {
+            viewModel.data.countSensus(d)
         })
     },
     countMutasiWorkflow: () => {

@@ -7,6 +7,8 @@
            <a class="btn btn-primary pull-right" style="margin-top: -10px;margin-bottom: 5px" href="{!! route('inventaris.create') !!}">Add New</a>
         </h1> -->
     </section>
+    <?php
+    ?>
     <div class="content">
         <div class="clearfix"></div>
 
@@ -29,6 +31,13 @@
                         @include('inventaris.table')
                     </div>
                     <div class="tab-pane container fade" id="sensus">
+                        <div class="row">
+                            <div class="col-md-4">
+                                {{ Form::label('jenis_sensus', 'Jenis Sensus:') }}
+                                {{ Form::select('jenis_sensus', Constant::$SENSUS_STATUS_01, 0, ['class' => 'form-control', 'onchange' => 'sensus.methods.reloadGrid()', 'style' => 'width:100%']) }}
+                            </div>
+                        </div>
+                        <br />
                         <table id="table-sensus" class="table table-responsive" style="width:100%">
                             <thead>
                             </thead>
@@ -63,32 +72,32 @@
                     <select type="text" class="form-control" id="sensus-dd" data-bind="value: sensus.data.form.status_barang" placeholder="Pilih Status Barang" >
                         <option>Pilih Status Barang</option>
 
-                        @foreach (Constant::$SENSUS_STATUS_01 as $sensus_status)
-                            <option value="{!! $sensus_status !!}">{!! $sensus_status !!}</option>   
+                        @foreach (Constant::$SENSUS_STATUS_01 as $index => $sensus_status)
+                            <option value="{!! $index !!}">{!! $sensus_status !!}</option>
                         @endforeach
                     </select>
                 </div>
-
-                <div class="ubahsatuan-form" data-bind="if: sensus.data.form.status_barang() == 'Ubah Satuan' && sensus.data.step() == 2">
-                    @foreach (Constant::$SENSUS_STATUS_02 as $sensus_status)
-                        <div class="btn btn-primary btn-block">
+                {{-- options tidak ada --}}
+                <div class="ubahsatuan-form" data-bind="if: sensus.data.form.status_barang() == 1 && sensus.data.step() == 2">
+                    @foreach (Constant::$SENSUS_STATUS_02 as $index => $sensus_status)
+                        <div class="btn btn-primary btn-block"  onclick="sensus.methods.showSkForm('{!! $index !!}', 'status_ubah_satuan')">
                             {!! $sensus_status !!}
                         </div>
                     @endforeach
 
                     <a href="#" onclick="sensus.methods.backToStep(1)" class="btn btn-danger btn-block"><i class="fa fa-arrow-left"></i>&nbsp; Kembali</a>
                 </div>
-
-                <div class="ubahsatuan-form" data-bind="if: sensus.data.form.status_barang() == 'Tidak Ada' && sensus.data.step() == 2">
-                    @foreach (Constant::$SENSUS_STATUS_03 as $sensus_status) 
-                        <div class="btn btn-primary btn-block" onclick="sensus.methods.showSkForm('{!! $sensus_status !!}')">
+                {{-- options ubah satuan --}}
+                <div class="ubahsatuan-form" data-bind="if: sensus.data.form.status_barang() == 0 && sensus.data.step() == 2">
+                    @foreach (Constant::$SENSUS_STATUS_03 as $index => $sensus_status)
+                        <div class="btn btn-primary btn-block" onclick="sensus.methods.showSkForm('{!! $index !!}', 'status_barang_hilang')">
                             {!! $sensus_status !!}
                         </div>
                     @endforeach
-                    
+
                     <a href="#" onclick="sensus.methods.backToStep(1)" class="btn btn-danger btn-block"><i class="fa fa-arrow-left"></i>&nbsp; Kembali</a>
                 </div>
-                <div class="ubahsatuan-form" data-bind="visible: sensus.data.form.status_barang() == 'Tidak Ada' && sensus.data.step() == 3">
+                <div class="ubahsatuan-form" data-bind="visible: sensus.data.step() == 3">
                     <div class="form-group">
                         <label>
                             No SK.
@@ -121,6 +130,8 @@
 <script>
 
    $(document).ready(() => {
+
+        $("select[name=jenis_sensus]").select2()
 
         $('#sensus-dd').select2({
             placeholder: "Pilih Status Barang",

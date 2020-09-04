@@ -10,6 +10,7 @@ use Maatwebsite\Excel\Concerns\OnEachRow;
 use App\Models\satuanbarang;
 use Illuminate\Support\Facades\Storage;
 use App\Repositories\inventarisRepository;
+use Exception;
 
 class InventarisImport implements  OnEachRow
 {
@@ -66,6 +67,11 @@ class InventarisImport implements  OnEachRow
 
             $org = organisasi::where("kode", $row[7])->first();
 
+            if(empty($org)) {
+                throw new \Exception('organisasi tidak ditemukan');
+                return;
+            }
+
             inventarisRepository::InsertLogic([
                 "pidbarang" => $row[0],
                 "jumlah" => $row[1],
@@ -74,7 +80,9 @@ class InventarisImport implements  OnEachRow
                 "harga_satuan" => $row[3],
                 "tahun_perolehan" => $row[6],
                 "kode_barang" => inventarisRepository::kodeBarang($row[0]),
-                "pid_organisasi" => empty($org) ? null : $org->id
+                "pid_organisasi" => empty($org) ? null : $org->id,
+                "draft" => '1',
+                "tgl_dibukukan" => date('Y-m-d',strtotime('2020-08-20'))
             ]);
         } catch(\Exception $e) {
             throw new \Exception($e->getMessage());

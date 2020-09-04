@@ -18,29 +18,46 @@ let sensus = {
             status_barang: ko.observable(""),
             no_sk: ko.observable(""),
             tgl_sk: ko.observable(""),
-            status_barang_hilang: ko.observable("")
+            status_barang_hilang: ko.observable(""),
+            status_ubah_satuan: ko.observable("")
         }
     },
     methods: {
-        showSkForm: (choosen) => {
+        showSkForm: (choosen, tipe) => {
             sensus.data.step(3)
-            sensus.data.form.status_barang_hilang(choosen)
+            sensus.data.form[tipe](choosen)
         },
         backToStep: (step) => {
             sensus.data.step(step)
         },
         nextStep: (step) => {
             sensus.data.step(step)
-
+        },
+        reloadGrid: () => {
+            $(`#${sensus.data.statics.idGridSensus}`).DataTable().ajax.reload();
         },
         loadGrid: () => {
             $(`#${sensus.data.statics.idGridSensus}`).DataTable({
                 "ajax": {
                     "url": "inventarisSensuses",
                     "dataSrc": 'data',
+                    'data' : function(d) {
+
+                        d.jenis_sensus = $("[name=jenis_sensus]").val()
+
+                        delete d.search.regex;
+
+                        recFilter = d
+                    }
                 },
                 "processing": true,
                 "serverSide": true,
+                "createdRow": function( row, data, dataIndex){
+                    console.log(data)
+                    if( data['status_approval'] ==  `STEP-2`){
+                        $(row).addClass('bg-green');
+                    }
+                },
                 columns:[{
                     'data': 'nama',
                     'title': 'Nama Barang'
@@ -57,12 +74,8 @@ let sensus = {
                     'title': 'Tanggal Sensus'
                 },
                 {
-                    'data': 'status_barang_hilang',
-                    'title': 'Status Barang Menghilang'
-                },
-                {
-                    'data': 'status_barang',
-                    'title': 'Status Barang'
+                    'data': 'status_barang_',
+                    'title': 'Jenis Barang'
                 }]
             })
         },
@@ -174,6 +187,9 @@ $(document).ready(() => {
             })
         }
     })
+
+
+
 
     sensus.methods.loadGrid()
 })

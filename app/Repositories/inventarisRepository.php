@@ -50,6 +50,10 @@ class inventarisRepository extends BaseRepository
         return [];
     }
 
+
+    /**
+     * insert logic
+     */
     public static function InsertLogic($input) {
         DB::beginTransaction();
         try {

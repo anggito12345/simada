@@ -54,11 +54,11 @@ Route::post('pemanfaatans/edit/{id}', 'pemanfaatanAPIController@editCustom');
 
 Route::post('/inventaris/dokumenkronologis', 'inventarisAPIController@saveDokumenKronologis');
 
-Route::middleware('auth:api')->patch('inventaris_mutasi/approvements', function(
-    \App\Repositories\inventaris_mutasiRepository $inventaris_mutasiRepository,
+Route::middleware('auth:api')->post('sensus_/approvements', function(
+    \App\Repositories\inventaris_sensusRepository $inventaris_sensusRepository,
     inventaris_historyRepository $inventaris_historyRepository,
     Request $request) {
-    return $inventaris_mutasiRepository->approvements($request, $inventaris_historyRepository);
+    return $inventaris_sensusRepository->approvements($request, $inventaris_historyRepository);
 });
 
 Route::middleware('auth:api')->post('inventaris_mutasi/approvements', function(
@@ -67,6 +67,7 @@ Route::middleware('auth:api')->post('inventaris_mutasi/approvements', function(
     Request $request) {
     return $inventaris_mutasiRepository->approvements($request, $inventaris_historyRepository);
 });
+
 
 Route::middleware('auth:api')->post('inventaris_reklas/approvements', function(
     \App\Repositories\inventaris_reklasRepository $inventaris_reklasRepository,
@@ -711,6 +712,11 @@ Route::get('/file/get/{encrypted}', 'system_uploadAPIController@get');
 
 Route::middleware('auth:api')->get('inventaris_mutasi/count', function( \App\Repositories\inventaris_mutasiRepository $inventaris_mutasiRepository, Request $request) {
     return $inventaris_mutasiRepository->count($request);
+});
+
+
+Route::middleware('auth:api')->get('inventaris_sensus/count', function( \App\Repositories\inventaris_sensusRepository $inventaris_sensusRepository, Request $request) {
+    return $inventaris_sensusRepository->count($request);
 });
 
 Route::middleware('auth:api')->get('inventaris_penghapusan/count', function( \App\Repositories\inventaris_penghapusanRepository $inventaris_penghapusanRepository, Request $request) {

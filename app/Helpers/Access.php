@@ -7,7 +7,12 @@ use Constant;
 
 class Access {
 
-
+    /**
+     * methods to check is accesable ornot
+     * $kel is levels in m_organisasi, example values are (bpkad, opd, et)
+     * $access is detail access in users will required when $names filled
+     * $names is needed when u use $access
+     */
     public static function is($names = [], $access = [], $kel = []) {
         if (in_array(Constant::$GROUP_CABANGOPD_ORG, $kel)) {
             array_push($kel, Constant::$GROUP_UPT_ORG);

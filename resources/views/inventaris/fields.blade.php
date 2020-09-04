@@ -791,7 +791,14 @@
                                 type: "success",
                                 text: "Berhasil menyimpan data!",
                                 onClose: () => {
-                                    window.location = `${$('[base-path]').val()}/inventaris`
+                                    let url = "<?= isset($_GET['menuback']) ? $_GET['menuback'] : '' ?>"
+
+                                    if (url == '') {
+                                        window.location = `${$('[base-path]').val()}/inventaris`
+                                    } else {
+                                        window.location = url
+                                    }
+
                                 }
                             })
 

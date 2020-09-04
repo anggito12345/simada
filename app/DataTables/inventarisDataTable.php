@@ -47,7 +47,8 @@ class inventarisDataTable extends DataTable
                 return "<i class='fa fa-plus-circle text-success'></i>";
             })
             ->addColumn('organisasi', function($data) {
-                return \App\Models\organisasi::find($data->pid_organisasi)->nama;
+                $org = \App\Models\organisasi::find($data->pid_organisasi);
+                return empty($org) ? '-' : $org->nama;
             })
             ->addColumn('kodebarang', function($data) {
                 $barang = \App\Models\barang::find($data->pidbarang);
@@ -123,7 +124,7 @@ class inventarisDataTable extends DataTable
 
         if(\Request::route()->getName() == 'sensus.index') {
             $addtButtons = [
-                ['extend' => 'create'],
+                ['text' => 'Buat Inventaris', 'action' => 'function(){ console.log(window.location = "'.route('inventaris.create', ['menuback' => route('sensus.index')]).'"); window.location = "'.route('inventaris.create', ['menuback' => route('sensus.index')]).'"}'],
                 ['text' => '<i class="fa fa-edit"></i> Sensus', 'action' => 'function(){ sensus.methods.onSensus()}', ],
                 ['pageLength']
             ];

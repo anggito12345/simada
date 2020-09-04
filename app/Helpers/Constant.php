@@ -64,7 +64,12 @@ class Constant {
         'Tidak diketahui keberadaanya',
         'Double catat'
     ];
-    
+
+    public static $SENSUS_STATUS_APPROVAL = [
+        'Pengajuan',
+        'Disetujui BPKAD',
+
+    ];
     public static $GROUP_BPKAD_ORG = -1;
     public static $GROUP_OPD_ORG = 0;
     public static $GROUP_CABANGOPD_ORG = 1;

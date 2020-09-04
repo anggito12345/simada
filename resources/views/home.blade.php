@@ -60,6 +60,13 @@
     </div>
     @if(c::is([],[],[Constant::$GROUP_BPKAD_ORG]))
     <div class="item" data-bind="{
+        click: viewModel.clickEvent.setCurrentTab.bind(this, 'sensus'),
+        class: viewModel.data.currentTab() === 'sensus' ? 'active' : ''
+    }">
+        Sensus
+    </div>
+
+    <div class="item" data-bind="{
             click: viewModel.clickEvent.setCurrentTab.bind(this, 'reklas'),
             class: viewModel.data.currentTab() === 'reklas' ? 'active' : ''
         }">
@@ -208,6 +215,27 @@
     @endif
 
     @if(c::is([],[],[Constant::$GROUP_BPKAD_ORG]))
+    <div class="row" data-bind="if: viewModel.data.currentTab() === 'sensus'">
+        <div class="col-md-4">
+            <div class="info-box" data-bind="{
+                    click: viewModel.clickEvent.setCurrentHighlight.bind(this, 'sensus-bpkad'),
+                    class: viewModel.data.currentHighlight() === 'sensus-bpkad' ? 'active' : ''
+                }">
+                <span class="info-box-icon bg-green"><i class="fa fa-check"></i></span>
+
+                <div class="info-box-content">
+                    <span class="info-box-text">Persetujuan
+                        <i class="flag-active fa fa-circle text-success"></i>
+                    </span>
+                    <span class="info-box-number" data-bind="text: viewModel.data.countSensus().step1"></span>
+                </div>
+                <!-- /.info-box-content -->
+            </div>
+        </div>
+    </div>
+    @endif
+
+    @if(c::is([],[],[Constant::$GROUP_BPKAD_ORG]))
         <div class="row" data-bind="if: viewModel.data.currentTab() === 'reklas'">
             <div class="col-md-4">
                 <div class="info-box" data-bind="{
@@ -225,6 +253,7 @@
                 <!-- /.info-box-content -->
             </div>
         </div>
+
     </div>
     @endif
 </div>
@@ -283,6 +312,15 @@
                     <button type="button" class="btn btn-primary" onclick="beforeApproveValidasiPenghapusan()">Setujui</button>
                 @endif
             </div>
+
+            <div class="panel-body" data-bind="visible: viewModel.data.currentHighlight() == 'sensus-bpkad'">
+                <table class="table table-striped" id="table-sensus-bpkad">
+                </table>
+                @if(c::is([],[],[Constant::$GROUP_BPKAD_ORG]))
+                    <button type="button" class="btn btn-primary" onclick="beforeApproveBPKADSensus()">Setujui</button>
+                @endif
+            </div>
+
             <div class="panel-body" data-bind="visible: viewModel.data.currentHighlight() == 'reklas-bpkad'">
                 <table class="table table-striped" id="table-reklas-bpkad">
                 </table>
@@ -464,6 +502,34 @@
             </div>
             <div class="modal-footer">
                 <button type="button" class="btn btn-primary" onclick="approvementValidasiPenghapusan()">Submit</button>
+                <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+            </div>
+        </div>
+    </div>
+</div>
+
+<!-- sensus -->
+<div class="modal fade" id="modal-sensus-bpkad-form" role="dialog">
+    <div class="modal-dialog modal-lg" role="document">
+        <div class="modal-content">
+            <div class="modal-header">
+                <h5 class="modal-title">Sensus</h5>
+                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+                    <span aria-hidden="true">&times;</span>
+                </button>
+            </div>
+            <div class="modal-body">
+                <div class="container">
+                    {!! Form::open(['id' => 'form-bpkad-sensus' ]) !!}
+                    <div class="form-group">
+                        <label>Dokumen Rekomendasi Pengisi:</label>
+                        {!! Form::file('dokumen', ['class' => 'form-control', 'id' => 'dokumen-sensus-bpkad']) !!}
+                    </div>
+                    {!! Form::close() !!}
+                </div>
+            </div>
+            <div class="modal-footer">
+                <button type="button" class="btn btn-primary" onclick="approvementSensusBPKAD('STEP-1')">Submit</button>
                 <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
             </div>
         </div>
