@@ -58,7 +58,10 @@ class jabatanController extends AppBaseController
 
         $jabatan = $this->jabatanRepository->create($input);
 
-        $this->moduleAccessRepository->bulkSaveJabatan($input['access'], $jabatan->id);
+        if (isset($input['access'])) {
+            $this->moduleAccessRepository->bulkSaveJabatan($input['access'], $jabatan->id);
+        }
+
 
         Flash::success('Jabatan saved successfully.');
 
@@ -129,7 +132,7 @@ class jabatanController extends AppBaseController
 
         if (isset($input['access'])) {
             $this->moduleAccessRepository->bulkSaveJabatan($input['access'], $id);
-        }           
+        }
 
         Flash::success('Jabatan updated successfully.');
 

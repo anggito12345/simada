@@ -86,23 +86,23 @@ class inventaris_mutasiRepository extends BaseRepository
             'tahun_perolehan' => $inventaris['tahun_perolehan'],
             'harga_satuan' => $inventaris['harga_satuan'],
         ])->count();
-        
+
         return $isExist > 0;
     }
 
     /**
-     * copy invetaris to inventaris mutasi temporary 
+     * copy invetaris to inventaris mutasi temporary
      */
 
     public function moveInventaris($dataDetils = [], $idMutasi)
     {
         foreach ($dataDetils as $dataDetil) {
-            // move 
+            // move
             $inventariPrepareToCopy = \App\Models\inventaris::where('id', $dataDetil['inventaris'])->first()->toArray();
 
             // check is already on mutasi
             if ($this->isExist($inventariPrepareToCopy)) {
-                throw new Exception("Inventaris telah diajukan");                
+                throw new Exception("Inventaris telah diajukan");
                 return;
             }
 
@@ -149,7 +149,7 @@ class inventaris_mutasiRepository extends BaseRepository
             foreach ($theItem as $k => $each) {
 
                 switch ($req->get('step')) {
-                  
+
                     case 'STEP-2': {
                             if ($each['status'] == 'STEP-2') {
                                 DB::beginTransaction();
@@ -163,7 +163,7 @@ class inventaris_mutasiRepository extends BaseRepository
                                             if (isset($metadatas['dokumen_mutasi_cancel_metadata_keterangan'][$index]) && $metadatas['dokumen_mutasi_cancel_metadata_keterangan'][$index] != null) {
                                                 $systemUpload->keterangan = $metadatas['dokumen_mutasi_cancel_metadata_keterangan'][$index];
                                             }
-    
+
                                             $systemUpload->uid = $metadatas['dokumen_mutasi_cancel_metadata_uid'][$index];
                                             $systemUpload->foreign_field = 'id';
                                             $systemUpload->jenis = 'Dokumen Pembatalan Mutasi (BPKAD)';
@@ -212,7 +212,7 @@ class inventaris_mutasiRepository extends BaseRepository
                                 }
                             }
                             break;
-                        }                  
+                        }
                 }
             }
         }
@@ -264,7 +264,7 @@ class inventaris_mutasiRepository extends BaseRepository
                                             if (isset($metadatas['dokumen_persetujuan_mutasi_metadata_keterangan'][$index]) && $metadatas['dokumen_persetujuan_mutasi_metadata_keterangan'][$index] != null) {
                                                 $systemUpload->keterangan = $metadatas['dokumen_persetujuan_mutasi_metadata_keterangan'][$index];
                                             }
-    
+
                                             $systemUpload->uid = $metadatas['dokumen_persetujuan_mutasi_metadata_uid'][$index];
                                             $systemUpload->foreign_field = 'id';
                                             $systemUpload->jenis = 'Dokumen Persetujuan Mutasi (BPKAD)';
@@ -376,7 +376,7 @@ class inventaris_mutasiRepository extends BaseRepository
                 'inventaris_mutasi.status' => 'STEP-1'
             ])->get());
 
-        if (c::is([], [], [0])) {
+        if (c::is('', [], [0])) {
             $count['step2'] = count($this->allQuery()->select([
                 'inventaris_mutasi.mutasi_id'
             ])

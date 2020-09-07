@@ -2,6 +2,7 @@
 
 namespace App\DataTables;
 
+use App\Models\BaseModel;
 use App\Models\inventaris;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
@@ -9,6 +10,8 @@ use Auth;
 use Illuminate\Support\Facades\DB;
 use Constant;
 use App\Repositories\inventarisRepository;
+use Faker\Provider\Base;
+use c;
 
 class inventarisDataTable extends DataTable
 {
@@ -113,21 +116,67 @@ class inventarisDataTable extends DataTable
      */
     public function html()
     {
-        $addtButtons = [
-            ['extend' => 'create'],
-            ['text' => '<i class="fa fa-edit"></i> Ubah', 'action' => 'function(){onEdit()}'],
-            ['text' => '<i class="fa fa-check-square-o"></i> Konfirmasi', 'action' => 'function(){onMultiSelect()}', 'className' => 'konfirmasi-draft'],
-            ['extend' => 'export'],
-            ['extend' => 'print'],
-            ['pageLength']
-        ];
+
+        $addtButtons = [];
+
+        if (c::is('inventaris',['create'], BaseModel::getAccess(function($index, $label) {
+            if ($index >= Constant::$GROUP_BPKAD_ORG) {
+                return true;
+            }
+
+            return false;
+        }))) {
+           array_push($addtButtons, ['extend' => 'create']);
+        }
+
+        if (c::is('inventaris',['edit'], BaseModel::getAccess(function($index, $label) {
+            if ($index >= Constant::$GROUP_BPKAD_ORG) {
+                return true;
+            }
+            return false;
+        }))) {
+            array_push($addtButtons, ['text' => '<i class="fa fa-edit"></i> Ubah', 'action' => 'function(){onEdit()}']);
+        }
+
+        if (c::is('inventaris',['export'], BaseModel::getAccess(function($index, $label) {
+            if ($index >= Constant::$GROUP_BPKAD_ORG) {
+                return true;
+            }
+
+            return false;
+        }))) {
+            array_push($addtButtons,
+                ['extend' => 'export'],
+                ['extend' => 'print']);
+        }
+
+        array_push($addtButtons,
+        ['text' => '<i class="fa fa-check-square-o"></i> Konfirmasi', 'action' => 'function(){onMultiSelect()}', 'className' => 'konfirmasi-draft'],
+        ['pageLength']);
 
         if(\Request::route()->getName() == 'sensus.index') {
-            $addtButtons = [
-                ['text' => 'Buat Inventaris', 'action' => 'function(){ console.log(window.location = "'.route('inventaris.create', ['menuback' => route('sensus.index')]).'"); window.location = "'.route('inventaris.create', ['menuback' => route('sensus.index')]).'"}'],
-                ['text' => '<i class="fa fa-edit"></i> Sensus', 'action' => 'function(){ sensus.methods.onSensus()}', ],
-                ['pageLength']
-            ];
+
+            $addtButtons = [];
+
+            if (c::is('inventaris',['create'], BaseModel::getAccess(function($index, $label) {
+                if ($index >= Constant::$GROUP_BPKAD_ORG) {
+                    return true;
+                }
+
+                return false;
+            }))) {
+                array_push($addtButtons, ['extend' => 'create']);
+            }
+
+            if (c::is('sensus',['create'], BaseModel::getAccess(function($index, $label) {
+                if ($index >= Constant::$GROUP_BPKAD_ORG) {
+                    return true;
+                }
+
+                return false;
+            }))) {
+                array_push($addtButtons, ['text' => '<i class="fa fa-edit"></i> Sensus', 'action' => 'function(){ sensus.methods.onSensus()}', ]);
+            }
         }
 
         return $this->builder()

@@ -319,7 +319,7 @@ class inventarisAPIController extends AppBaseController
     public function update($id, UpdateinventarisAPIRequest $request)
     {
         $update_inventaris_setting = \App\Models\setting::where('nama', \Constant::$SETTING_UBAH_PENATA_USAHAAN)->first()->nilai;
-        
+
         $input = $request->all();
 
         /** @var inventaris $inventaris */
@@ -329,7 +329,7 @@ class inventarisAPIController extends AppBaseController
 
         $organisasi = \App\Models\organisasi::find(Auth::user()->pid_organisasi);
 
-        if ($organisasi->id != $inventaris->pid_organisasi && !c::is(['inventaris'],['update'],[Constant::$GROUP_BPKAD_ORG])) {
+        if ($organisasi->id != $inventaris->pid_organisasi && !c::is('inventaris',['update'],[Constant::$GROUP_BPKAD_ORG])) {
             return $this->sendError('Tidak bisa mengubah data inventaris');
         }
 
@@ -341,7 +341,7 @@ class inventarisAPIController extends AppBaseController
             return $this->sendError('Inventaris not found');
         }
 
-        if (c::is([],[],[0]) && empty($inventaris->organisasi->setting)) {
+        if (c::is('',[],[0]) && empty($inventaris->organisasi->setting)) {
             return $this->sendError('Setting OPD dikunci. Inventaris tidak dapat diubah');
         }
 
@@ -496,7 +496,7 @@ class inventarisAPIController extends AppBaseController
 
         $organisasi = \App\Models\organisasi::find(Auth::user()->pid_organisasi);
 
-        if ($organisasi->id != $inventaris->pid_organisasi && !c::is(['inventaris'],['update'],[Constant::$GROUP_BPKAD_ORG])) {
+        if ($organisasi->id != $inventaris->pid_organisasi && !c::is('inventaris',['update'],[Constant::$GROUP_BPKAD_ORG])) {
             return $this->sendError('Tidak bisa menyimpan dokumen kronologis inventaris');
         }
 

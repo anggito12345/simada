@@ -4,7 +4,7 @@
             {{ Form::label('Draft') }}
             {{ Form::select('draft', ['Tidak', 'Ya'], null, ['class' => 'form-control', 'onchange' => 'viewModel.changeEvent.refreshDatatable()'])}}
         </div>
-        @if (c::is([],[],[-1]))
+        @if (c::is('',[],[-1]))
             <div class="col-md-4">
                 {!! Form::label('opd_asal', 'OPD Asal') !!}
                 {!! Form::select('opd_asal', [] , "", ['class' => 'form-control', 'onchange' => 'viewModel.changeEvent.refreshDatatable()']) !!}
@@ -19,7 +19,7 @@
 
 <script>
     viewModel.jsLoaded.subscribe(() => {
-        @if (c::is([],[],[-1]))
+        @if (c::is('',[],[-1]))
             $('#opd_asal, #opd_tujuan').select2({
                 ajax: {
                     url: "<?= url('api/organisasis') ?>",
@@ -28,7 +28,7 @@
                         d.level = 0
                         return d;
                     },
-                    processResults: function (data) {            
+                    processResults: function (data) {
                         // Transforms the top-level key of the response object from 'items' to 'results'
                         return {
                             results: data.data

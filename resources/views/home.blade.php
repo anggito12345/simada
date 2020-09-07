@@ -58,7 +58,7 @@
         }">
         Penghapusan
     </div>
-    @if(c::is([],[],[Constant::$GROUP_BPKAD_ORG]))
+    @if(c::is('',[],[Constant::$GROUP_BPKAD_ORG]))
     <div class="item" data-bind="{
         click: viewModel.clickEvent.setCurrentTab.bind(this, 'sensus'),
         class: viewModel.data.currentTab() === 'sensus' ? 'active' : ''
@@ -82,7 +82,7 @@
         </div>
     </div>
 
-    @if(c::is([],[],[Constant::$GROUP_OPD_ORG, Constant::$GROUP_CABANGOPD_ORG]))
+    @if(c::is('',[],[Constant::$GROUP_OPD_ORG, Constant::$GROUP_CABANGOPD_ORG]))
     <div class="row" data-bind="if: viewModel.data.currentTab() === 'mutasi'">
         <div class="col-md-4">
             <div class="info-box" data-bind="{
@@ -137,7 +137,7 @@
         </div>
     </div>
     @endif
-    @if(c::is([],[],[Constant::$GROUP_BPKAD_ORG]))
+    @if(c::is('',[],[Constant::$GROUP_BPKAD_ORG]))
     <div class="row" data-bind="if: viewModel.data.currentTab() === 'mutasi'">
         <div class="col-md-4">
             <div class="info-box" data-bind="{
@@ -158,7 +158,7 @@
     </div>
     @endif
 
-    @if(c::is([],[],[Constant::$GROUP_OPD_ORG, Constant::$GROUP_CABANGOPD_ORG]))
+    @if(c::is('',[],[Constant::$GROUP_OPD_ORG, Constant::$GROUP_CABANGOPD_ORG]))
     <div class="row" data-bind="if: viewModel.data.currentTab() === 'penghapusan'">
         <div class="col-md-4">
             <div class="info-box" data-bind="{
@@ -177,7 +177,7 @@
             </div>
         </div>
     </div>
-    @elseif(c::is([],[],[Constant::$GROUP_BPKAD_ORG]))
+    @elseif(c::is('',[],[Constant::$GROUP_BPKAD_ORG]))
     <div class="row" data-bind="if: viewModel.data.currentTab() === 'penghapusan'">
         <div class="col-md-4">
             <div class="info-box" data-bind="{
@@ -214,7 +214,7 @@
     </div>
     @endif
 
-    @if(c::is([],[],[Constant::$GROUP_BPKAD_ORG]))
+    @if(c::is('',[],[Constant::$GROUP_BPKAD_ORG]))
     <div class="row" data-bind="if: viewModel.data.currentTab() === 'sensus'">
         <div class="col-md-4">
             <div class="info-box" data-bind="{
@@ -235,7 +235,7 @@
     </div>
     @endif
 
-    @if(c::is([],[],[Constant::$GROUP_BPKAD_ORG]))
+    @if(c::is('',[],[Constant::$GROUP_BPKAD_ORG]))
         <div class="row" data-bind="if: viewModel.data.currentTab() === 'reklas'">
             <div class="col-md-4">
                 <div class="info-box" data-bind="{
@@ -264,7 +264,7 @@
             <div class="panel-body" data-bind="visible: viewModel.data.currentHighlight() == 'mutasi-masuk'">
                 <table class="table table-striped" id="table-mutasi-masuk">
                 </table>
-                @if(c::is([],[],[Constant::$GROUP_OPD_ORG]))
+                @if(c::is('',[],[Constant::$GROUP_OPD_ORG]))
                     <button type="button" class="btn btn-primary" onclick="approvementMutasi('STEP-1')">Konfirmasi</button>
                 @endif
             </div>
@@ -272,7 +272,7 @@
                 <table class="table table-striped" id="table-mutasi-bpkad">
                 </table>
 
-                @if(c::is([],[],[Constant::$GROUP_BPKAD_ORG]))
+                @if(c::is('',[],[Constant::$GROUP_BPKAD_ORG]))
                 <div class="d-flex justify-content-center mt-5">
                     <div class="btn-group">
                         <button type="button" class="btn btn-primary" onclick="beforeApproveStep2(true)">Setujui</button>
@@ -285,7 +285,7 @@
             <div class="panel-body" data-bind="visible: viewModel.data.currentHighlight() == 'mutasi-konfirmasi'">
                 <table class="table table-striped " id="table-mutasi-konfirmasi">
                 </table>
-                @if(c::is([],[],[Constant::$GROUP_OPD_ORG]))
+                @if(c::is('',[],[Constant::$GROUP_OPD_ORG]))
                     <button type="button" class="btn btn-primary" onclick="approvementMutasiStep3('STEP-3')">Konfirmasi</button>
                 @endif
             </div>
@@ -293,7 +293,7 @@
             <div class="panel-body" data-bind="visible: viewModel.data.currentHighlight() == 'penghapusan-konfirmasi'">
                 <table class="table table-striped" id="table-penghapusan-konfirmasi">
                 </table>
-                @if(c::is([],[],[Constant::$GROUP_OPD_ORG]))
+                @if(c::is('',[],[Constant::$GROUP_OPD_ORG]))
                     <button type="button" class="btn btn-primary" onclick="beforeApproveKonfirmasiPenghapusan()">Setujui</button>
                 @endif
             </div>
@@ -301,14 +301,14 @@
             <div class="panel-body" data-bind="visible: viewModel.data.currentHighlight() == 'penghapusan-bpkad'">
                 <table class="table table-striped" id="table-penghapusan-bpkad">
                 </table>
-                @if(c::is([],[],[Constant::$GROUP_BPKAD_ORG]))
+                @if(c::is('',[],[Constant::$GROUP_BPKAD_ORG]))
                     <button type="button" class="btn btn-primary" onclick="beforeApproveBPKADPenghapusan()">Setujui</button>
                 @endif
             </div>
             <div class="panel-body" data-bind="visible: viewModel.data.currentHighlight() == 'penghapusan-validasi'">
                 <table class="table table-striped" id="table-penghapusan-validasi">
                 </table>
-                @if(c::is([],[],[Constant::$GROUP_BPKAD_ORG]))
+                @if(c::is('',[],[Constant::$GROUP_BPKAD_ORG]))
                     <button type="button" class="btn btn-primary" onclick="beforeApproveValidasiPenghapusan()">Setujui</button>
                 @endif
             </div>
@@ -316,7 +316,7 @@
             <div class="panel-body" data-bind="visible: viewModel.data.currentHighlight() == 'sensus-bpkad'">
                 <table class="table table-striped" id="table-sensus-bpkad">
                 </table>
-                @if(c::is([],[],[Constant::$GROUP_BPKAD_ORG]))
+                @if(c::is('',[],[Constant::$GROUP_BPKAD_ORG]))
                     <button type="button" class="btn btn-primary" onclick="beforeApproveBPKADSensus()">Setujui</button>
                 @endif
             </div>
@@ -324,7 +324,7 @@
             <div class="panel-body" data-bind="visible: viewModel.data.currentHighlight() == 'reklas-bpkad'">
                 <table class="table table-striped" id="table-reklas-bpkad">
                 </table>
-                @if(c::is([],[],[Constant::$GROUP_BPKAD_ORG]))
+                @if(c::is('',[],[Constant::$GROUP_BPKAD_ORG]))
                     <button type="button" class="btn btn-primary" onclick="approvementReklas('STEP-1')">Setujui</button>
                 @endif
             </div>

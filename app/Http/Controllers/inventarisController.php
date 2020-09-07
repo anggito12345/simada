@@ -99,7 +99,7 @@ class inventarisController extends AppBaseController
 
         $organisasi = \App\Models\organisasi::find(Auth::user()->pid_organisasi);
 
-        if ($organisasi->id != $inventaris->pid_organisasi && !c::is(['inventaris'],['update'],[Constant::$GROUP_BPKAD_ORG])) {
+        if ($organisasi->id != $inventaris->pid_organisasi && !c::is('inventaris',['update'],[Constant::$GROUP_BPKAD_ORG])) {
             Flash::error('Tidak bisa mengubah data inventaris');
 
             return redirect(route('inventaris.index'));

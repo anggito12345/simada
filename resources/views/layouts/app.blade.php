@@ -269,7 +269,7 @@
                                     <p>
                                         {!! Auth::user()->name !!}
                                         <small>{!! \App\Models\organisasi::find(Auth::user()->pid_organisasi)->nama !!}</small>
-                                        <small>{!! \App\Models\jabatan::find(Auth::user()->jabatan)->nama_jabatan !!} ( {!! \App\Models\BaseModel::$kelompokJabatanDs[\App\Models\jabatan::find(Auth::user()->jabatan)->kelompok] !!} )</small>
+                                        <small>{!! \App\Models\jabatan::find(Auth::user()->jabatan)->nama_jabatan !!}</small>
                                     </p>
                                 </li>
                                 <!-- Menu Footer-->

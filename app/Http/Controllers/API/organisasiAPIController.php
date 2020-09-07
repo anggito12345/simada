@@ -54,26 +54,27 @@ class organisasiAPIController extends AppBaseController
         ]);
         // ->join('m_jenis_opd', 'm_jenis_opd.id', 'm_organisasi.jenis')
 
-        if ($request->has('pid')) {
+        if ($request->has('pid') && !c::is('',[],[Constant::$GROUP_BPKAD_ORG, Constant::$GROUP_SEKDA, Constant::$GROUP_GUBERNUR])) {
+
 
             if ($request->input('pid') == "") {
                 return $this->sendResponse([], 'Organisasis retrieved successfully');
-            } else{
+            } else {
                 $querys = $querys->whereRaw('pid = '.$request->get('pid'));
             }
 
-            if (!c::is([],[],[Constant::$GROUP_BPKAD_ORG])) {
+            if (!c::is('',[],[Constant::$GROUP_BPKAD_ORG])) {
 
                 $organisasiUser = \App\Models\organisasi::find(Auth::user()->pid_organisasi);
                 if ($organisasiUser == null) {
                     $organisasiUser = new \App\Models\organisasi();
                 }
 
-                if (c::is([],[],[Constant::$GROUP_CABANGOPD_ORG])) {
+                if (c::is('',[],[Constant::$GROUP_CABANGOPD_ORG])) {
                     $querys = $querys->whereRaw('id = '.$organisasiUser->pid);
                 }
 
-                if (c::is([],[],[Constant::$GROUP_OPD_ORG])) {
+                if (c::is('',[],[Constant::$GROUP_OPD_ORG])) {
                     $querys = $querys
                         ->whereRaw('m_organisasi.id = '.$organisasiUser->id.' OR m_organisasi.pid = '.$organisasiUser->id)
                         ->whereRaw('(m_organisasi.level = \''. $request->input('level') . '\' OR m_organisasi.jabatans = \''. $request->input('level').'\')');
@@ -81,6 +82,13 @@ class organisasiAPIController extends AppBaseController
 
             }
 
+
+
+        } else {
+            $organisasiUser = \App\Models\organisasi::find(Auth::user()->pid_organisasi);
+            if (!empty($organisasiUser)) {
+                $querys = $querys->whereRaw('m_organisasi.level >= '.$organisasiUser->level);
+            }
         }
 
         if ($request->has('level')) {

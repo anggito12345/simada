@@ -65,10 +65,12 @@ class InventarisImport implements  OnEachRow
 
             $stBarang = satuanBarang::where("nama", $row[2])->first();
 
-            $org = organisasi::where("kode", $row[7])->first();
+            $org = organisasi::where("kode", trim($row[8]))->first();
+
+            dd($row);
 
             if(empty($org)) {
-                throw new \Exception('organisasi tidak ditemukan');
+                throw new \Exception('organisasi tidak ditemukan '.$row[8]);
                 return;
             }
 
@@ -82,7 +84,7 @@ class InventarisImport implements  OnEachRow
                 "kode_barang" => inventarisRepository::kodeBarang($row[0]),
                 "pid_organisasi" => empty($org) ? null : $org->id,
                 "draft" => '1',
-                "tgl_dibukukan" => date('Y-m-d',strtotime('2020-08-20'))
+                "tgl_dibukukan" => date('Y-m-d',strtotime($row[7].'-'.$row[6].'-'.$row[5]))
             ]);
         } catch(\Exception $e) {
             throw new \Exception($e->getMessage());

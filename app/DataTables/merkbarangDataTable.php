@@ -5,7 +5,9 @@ namespace App\DataTables;
 use App\Models\merkbarang;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
-
+use c;
+use App\Models\BaseModel;
+use Constant;
 class merkbarangDataTable extends DataTable
 {
     /**
@@ -41,6 +43,31 @@ class merkbarangDataTable extends DataTable
      */
     public function html()
     {
+
+        $addtButtons = [];
+
+        if (c::is('master merk barang',['create'], BaseModel::getAccess(function($index, $label) {
+            if ($index >= Constant::$GROUP_BPKAD_ORG) {
+                return true;
+            }
+
+            return false;
+        }))) {
+           array_push($addtButtons, ['extend' => 'create']);
+        }
+
+        if (c::is('master merk barang',['export'], BaseModel::getAccess(function($index, $label) {
+            if ($index >= Constant::$GROUP_BPKAD_ORG) {
+                return true;
+            }
+
+            return false;
+        }))) {
+            array_push($addtButtons,
+                ['extend' => 'export'],
+                ['extend' => 'print']);
+        }
+
         return $this->builder()
             ->columns($this->getColumns())
             ->minifiedAjax()
@@ -49,13 +76,7 @@ class merkbarangDataTable extends DataTable
                 'dom'       => 'Bfrtip',
                 'stateSave' => true,
                 'order'     => [[0, 'desc']],
-                'buttons'   => [
-                    ['extend' => 'create', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'print', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'reset', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'reload', 'className' => 'btn btn-default btn-sm no-corner',],
-                ],
+                'buttons'   => $addtButtons
             ]);
     }
 

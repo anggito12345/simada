@@ -34,7 +34,7 @@ class importController extends AppBaseController
 
             Excel::import(new InventarisImport, $fullpathFile);
         } catch (\Exception $e) {
-            Flash::error("Failed import data");
+            Flash::error($e->getMessage());
             return back()->withErrors($e->getMessage());
         }
 

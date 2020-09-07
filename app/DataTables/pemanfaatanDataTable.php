@@ -7,6 +7,8 @@ use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 use c;
 use Auth;
+use App\Models\BaseModel;
+use Constant;
 
 class pemanfaatanDataTable extends DataTable
 {
@@ -66,9 +68,9 @@ class pemanfaatanDataTable extends DataTable
             ->leftjoin('m_mitra', 'm_mitra.id', 'pemanfaatan.mitra');*/
 
         if (isset($_GET['isFromMainGrid'])) {
-            if (c::is([],[],[0])) {
+            if (c::is('',[],[0])) {
                 $query = $query->where('m_organisasi.id', Auth::user()->pid_organisasi);
-            } else if (c::is([],[],[-1]) && isset($_GET['opd']) && !empty($_GET['opd'])) {
+            } else if (c::is('',[],[-1]) && isset($_GET['opd']) && !empty($_GET['opd'])) {
                 $query = $query->where('m_organisasi.id', $_GET['opd']);
             }
         }
@@ -86,6 +88,29 @@ class pemanfaatanDataTable extends DataTable
      */
     public function html()
     {
+        $addtButtons = [];
+
+        if (c::is('pemanfaatan',['create'], BaseModel::getAccess(function($index, $label) {
+            if ($index >= Constant::$GROUP_BPKAD_ORG) {
+                return true;
+            }
+
+            return false;
+        }))) {
+           array_push($addtButtons, ['extend' => 'create']);
+        }
+
+        if (c::is('pemanfaatan',['export'], BaseModel::getAccess(function($index, $label) {
+            if ($index >= Constant::$GROUP_BPKAD_ORG) {
+                return true;
+            }
+
+            return false;
+        }))) {
+            array_push($addtButtons,
+                ['extend' => 'export'],
+                ['extend' => 'print']);
+        }
         return $this->builder()
             ->columns($this->getColumns())
             ->ajax([
@@ -103,13 +128,7 @@ class pemanfaatanDataTable extends DataTable
                 'dom'       => 'Bfrtip',
                 'stateSave' => true,
                 'order'     => [[0, 'desc']],
-                'buttons'   => [
-                    ['extend' => 'create', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'print', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'reset', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'reload', 'className' => 'btn btn-default btn-sm no-corner',],
-                ],
+                'buttons'   => $addtButtons,
             ]);
     }
 

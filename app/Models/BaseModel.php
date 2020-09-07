@@ -2,6 +2,7 @@
 
 namespace App\Models;
 
+use App\Helpers\Constant;
 use Eloquent as Model;
 
 class BaseModel extends Model {
@@ -119,7 +120,8 @@ class BaseModel extends Model {
         '2' => 'Tetap dan Bagi Hasil',
     ];
 
-    public static $kelompokJabatanDs = [
+    public static $kelompokLevelDs = [
+        '-4' => 'Auditor',
         '-3' => 'Gubernur',
         '-2' => 'Sekda',
         '-1' => 'BPKAD',
@@ -128,6 +130,23 @@ class BaseModel extends Model {
         '2' => 'Sub Kuasa Pengguna Barang'
     ];
 
+    public static function getAccess($conditional) {
+        $accs = [];
+
+        if ($conditional == null){
+            $conditional = function() {
+                return true;
+            };
+        }
+
+        foreach(self::$kelompokLevelDs as $index => $label) {
+            if($conditional($index, $label)) {
+                array_push($accs, $index);
+            }
+        }
+
+        return $accs;
+    }
     public static $mappedKibTable = [
         'A' => 'detil_tanah',
         'B' => 'detil_mesin',

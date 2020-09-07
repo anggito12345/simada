@@ -13,10 +13,20 @@ class Access {
      * $access is detail access in users will required when $names filled
      * $names is needed when u use $access
      */
-    public static function is($names = [], $access = [], $kel = []) {
+
+     /**
+      * access had some access name they are, view, export, create, update, delete, and import
+      * names had some module name you can find those in module table.
+      * any question can ask to anggitowibisono12@gmail.com
+      * how do we used this function , as example: is(['inventaris'],['create'],[-1])
+      * the third parameters are numeric value which is available in Constant class
+      */
+    public static function is($names = '', $access = [], $kel = []) {
         if (in_array(Constant::$GROUP_CABANGOPD_ORG, $kel)) {
             array_push($kel, Constant::$GROUP_UPT_ORG);
         }
+
+        $templateSQL = '(([names] AND [access]) OR ([kel]))';
 
         $combination = 'NAMES:' . json_encode($names) . 'ACCESS:' . json_encode($access) . 'KEL:' . json_encode($kel);
 
@@ -24,14 +34,20 @@ class Access {
             $cacheString = session('cache-user');
             if (strpos($cacheString, $combination) && strpos($cacheString, '&DELIMITER:')) {
                 $cacheArray = explode('&DELIMITER:', $cacheString);
+                if($names == 'master alamat') {
+                    return $cacheString;
+                }
+
                 foreach ($cacheArray as $key => $value) {
                     # code...
                     if(strpos($value, $combination)) {
                         return explode('RESULT:',$value)[1] == 'true' ? true : false;
                     }
                 }
+
                 return false;
             } else if (strpos($cacheString, $combination)) {
+
 
                 return explode('RESULT:', $cacheString)[1] == 'true' ? true : false;
             }
@@ -40,31 +56,37 @@ class Access {
         $query = \App\Models\users::where([
             'users.id' => Auth::user()->id,
         ])
-        ->join('m_jabatan', 'm_jabatan.id', 'users.jabatan')
-        ->join('m_organisasi', 'm_organisasi.id', 'users.pid_organisasi');
+        ->leftJoin('m_jabatan', 'm_jabatan.id', 'users.jabatan')
+        ->leftJoin('m_organisasi', 'm_organisasi.id', 'users.pid_organisasi');
 
-        if (count($names) > 0 || count($access) > 0) {
+        if ($names != '' || count($access) > 0) {
             $query = $query
-                ->join('module_access', 'module_access.pid_jabatan', 'users.jabatan');
+                ->leftJoin('module_access', 'module_access.pid_jabatan', 'users.jabatan');
         }
 
-        if (count($access) > 0) {
+        if ($names != '' && count($access) > 0) {
             array_walk($access, function(&$x) {$x = "'$x'";});
-            $query = $query
-                ->whereRaw('module_access.kode_module IN ('.implode(',', $access).')');
+
+
+            $templateSQL = str_replace('[names]', 'module_access.nama = \''.$names.'\'', $templateSQL);
+            $templateSQL = str_replace('[access]', 'module_access.kode_module IN ('.implode(',', $access).')',$templateSQL);
+
+        } else {
+            $templateSQL = str_replace('[names]', 'false',$templateSQL);
+            $templateSQL = str_replace('[access]', 'false',$templateSQL);
         }
 
         if (count($kel) > 0) {
-            array_walk($kel, function(&$x) {$x = "'$x'";});
-            $query = $query
-                ->whereRaw('m_organisasi.level IN ('.implode(',', $kel).')');
+            //array_walk($kel, function(&$x) {$x = "'$x'";});
+            $templateSQL = str_replace('[kel]', 'm_organisasi.level IN ('.implode(',', $kel).')',$templateSQL);
+        } else {
+            $templateSQL = str_replace('[kel]', 'false',$templateSQL);
         }
 
-        if (count($names) > 0) {
-            array_walk($names, function(&$x) {$x = "'$x'";});
-            $query = $query
-                ->whereRaw('module_access.nama IN ('.implode(',', $names).')');
-        }
+        $query = $query
+                ->whereRaw($templateSQL);
+
+
 
         if (empty(session('cache-user', null))) {
             Session::put('cache-user', 'START:' . $combination .  'RESULT:' . ($query->count() > 0 ? 'true' : 'false'));
@@ -75,7 +97,6 @@ class Access {
             }
 
         }
-
 
         Session::save();
 
