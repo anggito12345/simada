@@ -79,7 +79,8 @@ class inventaris extends Model
         'kode_ruang',
         'penanggung_jawab',
         'umur_ekonomis',
-        'kode_barang'
+        'kode_barang',
+        'import_flag'
     ];
 
     /**

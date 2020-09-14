@@ -15,6 +15,13 @@ use Exception;
 class InventarisImport implements  OnEachRow
 {
 
+    private $importName;
+
+    public function __construct($importName)
+    {
+        $this->importName = $importName;
+    }
+
     /**
     * @param array $row
     *
@@ -65,12 +72,11 @@ class InventarisImport implements  OnEachRow
 
             $stBarang = satuanBarang::where("nama", $row[2])->first();
 
-            $org = organisasi::where("kode", trim($row[8]))->first();
+            $org = organisasi::where("kode", trim($row[7]))->first();
 
-            dd($row);
 
             if(empty($org)) {
-                throw new \Exception('organisasi tidak ditemukan '.$row[8]);
+                throw new \Exception('organisasi tidak ditemukan '.$row[7]);
                 return;
             }
 
@@ -84,7 +90,9 @@ class InventarisImport implements  OnEachRow
                 "kode_barang" => inventarisRepository::kodeBarang($row[0]),
                 "pid_organisasi" => empty($org) ? null : $org->id,
                 "draft" => '1',
-                "tgl_dibukukan" => date('Y-m-d',strtotime($row[7].'-'.$row[6].'-'.$row[5]))
+                "tgl_dibukukan" => date('Y-m-d',strtotime($row[6].'-'.$row[5].'-'.$row[4])),
+                "tahun_perolehan" => $row[6],
+                "import_flag" => $this->importName
             ]);
         } catch(\Exception $e) {
             throw new \Exception($e->getMessage());

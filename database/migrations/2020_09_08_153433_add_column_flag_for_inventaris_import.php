@@ -4,7 +4,7 @@ use Illuminate\Support\Facades\Schema;
 use Illuminate\Database\Schema\Blueprint;
 use Illuminate\Database\Migrations\Migration;
 
-class AddColumnToInventarisToStoreKodeBarang extends Migration
+class AddColumnFlagForInventarisImport extends Migration
 {
     /**
      * Run the migrations.
@@ -13,13 +13,13 @@ class AddColumnToInventarisToStoreKodeBarang extends Migration
      */
     public function up()
     {
-        if (!Schema::hasColumn('inventaris', 'kode_barang')) {
+        //
+        if (!Schema::hasColumn('inventaris', 'import_flag')) {
+            //
             Schema::table('inventaris', function (Blueprint $table) {
-                //
-                $table->string('kode_barang', 100)->nullable();
+                $table->string('import_flag', 150)->nullable();
             });
         }
-
     }
 
     /**
@@ -29,10 +29,11 @@ class AddColumnToInventarisToStoreKodeBarang extends Migration
      */
     public function down()
     {
-        if (Schema::hasColumn('inventaris', 'kode_barang')) {
+        //
+        if (Schema::hasColumn('inventaris', 'import_flag')) {
+            //
             Schema::table('inventaris', function (Blueprint $table) {
-                //
-                $table->dropColumn('kode_barang');
+                $table->dropColumn('import_flag');
             });
         }
     }

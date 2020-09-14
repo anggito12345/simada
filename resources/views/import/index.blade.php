@@ -90,7 +90,9 @@
     }
 
     function submitForm() {
+        $(".loading-page").attr('style', 'display: block');
         $("#form-import").submit()
+
     }
 
 
