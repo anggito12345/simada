@@ -214,7 +214,4 @@ $countUserNeedOtor = \App\Models\users::where('aktif', '0')->count();
     </ul>
 </li>
 @endif
-<li class="{{ Request::is('importHistories*') ? 'active' : '' }}">
-    <a href="{{ route('importHistories.index') }}"><i class="fa fa-edit"></i><span>Import Histories</span></a>
-</li>
 
