@@ -58,14 +58,14 @@
         }">
         Penghapusan
     </div>
-    @if(c::is('',[],[Constant::$GROUP_BPKAD_ORG]))
+    {{-- @if(c::is('',[],[Constant::$GROUP_BPKAD_ORG]))
     <div class="item" data-bind="{
         click: viewModel.clickEvent.setCurrentTab.bind(this, 'sensus'),
         class: viewModel.data.currentTab() === 'sensus' ? 'active' : ''
     }">
         Sensus
-    </div>
-
+    </div> --}}
+    @if(c::is('',[],[Constant::$GROUP_BPKAD_ORG]))
     <div class="item" data-bind="{
             click: viewModel.clickEvent.setCurrentTab.bind(this, 'reklas'),
             class: viewModel.data.currentTab() === 'reklas' ? 'active' : ''

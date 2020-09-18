@@ -233,10 +233,20 @@ document.querySelector('#form-pemeliharaan').addEventListener('submit', (e) => {
     doSave(false)
 })
 
+$(document).ready(() => {
+    var url_string = window.location.href; //window.location.href
+    var url = new URL(url_string);
+    var idbarang = url.searchParams.get("idbarang");
+    if (idbarang) {
+        $("#pidinventaris_pemeliharaan").LookupTable().setValAjax("<?= url('api/barangs') ?>/"+idbarang).then((d) => {
+        })
+    }
+})
 </script>
 
 @if(isset($pemeliharaan))
 <script>
+
     $("#pidinventaris_pemeliharaan").LookupTable().setValAjax("<?= url('api/inventaris', [$pemeliharaan->pidinventaris]) ?>").then((d) => {})
 </script>
 @endif

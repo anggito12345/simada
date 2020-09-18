@@ -41,6 +41,8 @@ Route::get('/organisasis/changeSetting/{id}', 'organisasiController@changeSettin
 Auth::routes();
 
 
+Route::get('/inventarisHistories', 'inventaris_historyController@index');
+
 Route::resource('users', 'usersController');
 
 Route::resource('inventaris', 'inventarisController');
@@ -115,7 +117,6 @@ Route::resource('moduleAccesses', 'module_accessController');
 
 Route::resource('pengunaans', 'pengunaanController');
 
-Route::resource('inventarisHistories', 'inventaris_historyController');
 
 Route::resource('inventarisReklas', 'inventaris_reklasController');
 

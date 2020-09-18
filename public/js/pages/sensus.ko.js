@@ -4,7 +4,9 @@ viewModel.data.urlEachKIB = (newVal) => {
 
 let sensus = {
     data: {
-
+        select2Objects: {
+            kodeTujuan: null
+        },
         statics: {
             idGridInventaris: 'table-inventaris',
             idGridSensus: 'table-sensus',
@@ -120,6 +122,18 @@ let sensus = {
                 $(`#${sensus.data.statics.idModalSensus}`).modal('hide')
                 $(`#${sensus.data.statics.idGridInventaris}`).DataTable().ajax.reload()
                 $(`#${sensus.data.statics.idGridSensus}`).DataTable().ajax.reload()
+                let selectedRowGrid = $(`#${sensus.data.statics.idGridInventaris}`).DataTable().rows('.selected').data().toArray()[0]
+                if(sensus.data.form.status_barang() == 0 && (sensus.data.form.status_barang_hilang() == 1 || sensus.data.form.status_barang_hilang() == 2)) {
+
+                    window.location = `reklas/create?`+
+                    `id_awal=${selectedRowGrid.id}&`+
+                    `id_tujuan=${$("select[name=kode_tujuan]").select2('data')[0].id}&`+
+                    `nama_awal=${selectedRowGrid.kodebarang + ' - ' + selectedRowGrid.nama_rek_aset}&`+
+                    `nama_tujuan=${$("select[name=kode_tujuan]").select2('data')[0].text}`
+                } else if (sensus.data.form.status_barang() == 1 && sensus.data.form.status_ubah_satuan() == 1) {
+                    window.location = `pemeliharaans/create?`+
+                    `idbarang=${selectedRowGrid.pidbarang}`
+                }
             })
         },
         onSensus: () => {
@@ -142,6 +156,8 @@ let sensus = {
 sensus.data.form.status_barang.subscribe(() => {
     sensus.data.step(2)
     sensus.data.step.notifySubscribers()
+
+
 })
 
 
@@ -154,6 +170,48 @@ $(document).ready(() => {
             }
 
         })
+
+        if(sensus.data.select2Objects.kodeTujuan == null) {
+            sensus.data.select2Objects.kodeTujuan = $("select[name=kode_tujuan]").select2({
+                ajax: {
+                    url: "api/barangs/get?length=10",
+                    dataType: 'json',
+                    headers: {
+                        'Authorization':'Bearer ' + sessionStorage.getItem('api token'),
+                    },
+
+                    data: function (params) {
+                        params['search-lookup'] = {
+                            "nama_rek_aset": {
+                                operator: 'like',
+                                value: params.term === undefined ? '' : params.term,
+                                logic: 'or',
+                                group: 'filter'
+                            },
+                            "CONCAT(kode_akun,'.',kode_kelompok,'.',kode_jenis,'.',kode_objek,'.', kode_rincian_objek, '.', kode_sub_rincian_objek,'.',kode_sub_sub_rincian_objek)": {
+                                operator: 'like',
+                                value: params.term === undefined ? '' : params.term,
+                                logic: 'or',
+                                group: 'filter'
+                            },
+                        }
+
+                        return params;
+                    },
+                    processResults: function (data) {
+                        // Transforms the top-level key of the response object from 'items' to 'results'
+                        return {
+                            results: data.data.map((d) => {
+                                d.text = `${viewModel.helpers.buildKodeBarang(d)} - ${d.nama_rek_aset}`;
+                                return d
+                            })
+                        };
+                    }
+                },
+                dropdownParent: $(`#${sensus.data.statics.idModalSensus}`),
+                theme: 'bootstrap' ,
+            });
+        }
 
         sensus.data.step(1)
     })

@@ -1,4 +1,22 @@
 
+<!-- nilai_hub Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('nilai_hub_kibd', 'Nilai Hub:') !!}
+    {!! Form::number('nilai_hub_kibd', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB D"]().nilai_hub']) !!}
+</div>
+
+<!-- tipe Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('tipe_kibd', 'Tipe:') !!}
+    {!! Form::text('tipe_kibd', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB D"]().tipe']) !!}
+</div>
+
+<!-- tipe Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('kode_jalankibd', 'Kode Jalan:') !!}
+    {!! Form::text('kode_jalankibd', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB D"]().kode_jalan']) !!}
+</div>
+
 <!-- Konstruksi Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('konstruksi', 'Konstruksi:') !!}
@@ -8,7 +26,7 @@
 <!-- Panjang Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('panjang', 'Panjang:') !!}
-    {!! Form::text('panjang', null, ['class' => 'form-control', 'id' => 'panjang-detiljalan', 'data-bind' => 'value: viewModel.data["KIB D"]().panjang']) !!}    
+    {!! Form::text('panjang', null, ['class' => 'form-control', 'id' => 'panjang-detiljalan', 'data-bind' => 'value: viewModel.data["KIB D"]().panjang']) !!}
 </div>
 
 <!-- Lebar Field -->
@@ -45,7 +63,7 @@
 <u class="col-md-12">Dokumen</u>
 
 <div class="col-md-12">
-    
+
     <!-- Tgldokumen Field -->
     <div class="form-group col-sm-6">
         {!! Form::label('tgldokumen', 'Tanggal:') !!}
@@ -92,7 +110,7 @@
 
         let googleMapKoordinatLokasiJalan = null;
         let mapTanahJalan = null;
-        
+
         setTimeout(() => {
             googleMapKoordinatLokasiJalan = new GoogleMapInput(document.getElementById('koordinatlokasi-detiljalan'), {
                 value: viewModel.data["KIB D"]().koordinatlokasi
@@ -128,7 +146,7 @@
                 };
                 }
             },
-            theme: 'bootstrap' , 
+            theme: 'bootstrap' ,
         })
 
         $('#kodetanah-detiljalan').select2({
@@ -142,10 +160,10 @@
                 };
                 }
             },
-            theme: 'bootstrap' , 
+            theme: 'bootstrap' ,
         })
 
 
-      
+
     })
 </script>

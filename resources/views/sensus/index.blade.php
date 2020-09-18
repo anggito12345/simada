@@ -110,6 +110,12 @@
                         </label>
                         <input type='text' id="tgl_sk" class="form-control" data-bind="value: sensus.data.form.tgl_sk" />
                     </div>
+                    <div class="form-group" data-bind="visible: sensus.data.form.status_barang_hilang() == 1 || sensus.data.form.status_barang_hilang() == 2">
+                        <label>
+                            Kode Tujuan.
+                        </label>
+                        <select  class="form-control" name="kode_tujuan" data-bind="value: sensus.data.form.kode_tujuan" ></select>
+                    </div>
                     <input type="file" id="file-sensus-sk" />
                     <a href="#" onclick="sensus.methods.backToStep(2)"><i class="fa fa-arrow-left pull-left"></i>&nbsp; Back</a>
                     <div class="btn btn-success" style="float:right" onclick="sensus.methods.storeSensus()">
@@ -140,6 +146,8 @@
         $('#ubahsatuan-dd').select2({
             placeholder: "Pilih Status Barang",
         })
+
+
    })
 </script>
 @endsection

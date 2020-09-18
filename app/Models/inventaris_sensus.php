@@ -67,7 +67,8 @@ class inventaris_sensus extends Model
         'status_barang',
         'status_approval',
         'created_by',
-        'status_ubah_satuan'
+        'status_ubah_satuan',
+        'kode_tujuan'
     ];
 
     /**

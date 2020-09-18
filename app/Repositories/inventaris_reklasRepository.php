@@ -87,6 +87,8 @@ class inventaris_reklasRepository extends BaseRepository
     {
         $isAlreadyUpload = false;
 
+        dd('tetet');
+
         foreach (json_decode($req->get('items'), true) as $key => $item) {
             $fileDokumens = [];
             $theItem = $this->all([
@@ -182,8 +184,7 @@ class inventaris_reklasRepository extends BaseRepository
         $detilKontruksiArray = $detilKontruksi->first()->toArray();
 
         if (empty($detilKontruksi)) {
-            throw new Exception('Kontruksi not found');
-            return;
+            $detilKontruksi = new \App\Models\detilkonstruksi();
         }
 
         $tipe_kib = chr(64 + (int) $input['tipe_kib']);

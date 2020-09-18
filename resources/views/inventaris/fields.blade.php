@@ -57,6 +57,12 @@
     </div>
 </div>
 
+<!-- nama populer Field -->
+<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
+    {!! Form::label('nama_populer',  __('field.nama_populer').':') !!}
+    {!! Form::text('nama_populer', null, ['class' => 'form-control nama_populer','id'=>'nama_populer']) !!}
+</div>
+
 <!-- Perolehan Field -->
 <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
     {!! Form::label('perolehan', __('field.perolehan')) !!} <span class="text-danger">*</span>

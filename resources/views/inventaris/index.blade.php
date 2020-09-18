@@ -39,6 +39,27 @@ $isInventarisPage = true;
 
 @section('scripts_2')
 
+<div class="modal" id="modal-compare" role="dialog">
+    <div class="modal-dialog modal-lg" style="width:100vw;padding:0;margin:0" role="document">
+      <div class="modal-content" style="width:100vw">
+        <div class="modal-header">
+          <h5 class="modal-title">Compare</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body modal-compare-body">
+            Test
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
 <div class="modal" id="modal-mutasi" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">

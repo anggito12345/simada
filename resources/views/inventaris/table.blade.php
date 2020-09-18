@@ -166,90 +166,7 @@
                     })
                 } else {
                     viewModel.data.formPemanfaatan().pidinventaris = $("#table-inventaris").DataTable().rows('.selected').data()[0].id
-                   /* viewModel.jsLoaded.subscribe(() => {
-                        fileGalleryPemanfaatan = new FileGallery(document.getElementById('dokumen_pemanfaatan'), {
-                    title: 'File Dokumen',
-                    maxSize: 5000000,
-                    accept: App.Constant.MimeOffice,
-                    onDelete: () => {
-                        return new Promise((resolve, reject) => {
-                            let checkIfIdExist = fileGalleryPemanfaatan.checkedRow().filter((d) => {
-                                return d.id != undefined
-                            })
-                            if (checkIfIdExist.length < 1) {
-                                resolve(true)
-                                return
-                            }
-                            __ajax({
-                                method: 'DELETE',
-                                url: "http://simada-jabar.deva/api/system_uploads/" + checkIfIdExist.map((d) => {
-                                        return d.id
-                                    }),
-                            }).then((d) => {
-                                resolve(true)
-                                onPemanfaatanGetFiles(checkIfIdExist[0].foreign_id, () => {})
-                            })
-                        })
-                    }
-                })*/
-                   /* fileGalleryPemanfaatan.fileList([])
-                    fotoPemanfaatan.fileList([])*/
-           /*   })
-                  var fileGalleryPemanfaatan, fotoPemanfaatan
-            viewModel.jsLoaded.subscribe(() => {
 
-                fileGalleryPemanfaatan = new FileGallery(document.getElementById('dokumen_pemanfaatan'), {
-                    title: 'File Dokumen',
-                    maxSize: 5000000,
-                    accept: App.Constant.MimeOffice,
-                    onDelete: () => {
-                        return new Promise((resolve, reject) => {
-                            let checkIfIdExist = fileGalleryPemanfaatan.checkedRow().filter((d) => {
-                                return d.id != undefined
-                            })
-                            if (checkIfIdExist.length < 1) {
-                                resolve(true)
-                                return
-                            }
-                            __ajax({
-                                method: 'DELETE',
-                                url: "http://simada-jabar.deva/api/system_uploads/" + checkIfIdExist.map((d) => {
-                                        return d.id
-                                    }),
-                            }).then((d) => {
-                                resolve(true)
-                                onPemanfaatanGetFiles(checkIfIdExist[0].foreign_id, () => {})
-                            })
-                        })
-                    }
-                })
-
-                fotoPemanfaatan = new FileGallery(document.getElementById('foto_pemanfaatan'), {
-                    title: 'Foto',
-                    maxSize: 3000000,
-                    accept: "image/*",
-                    onDelete: () => {
-                        return new Promise((resolve, reject) => {
-                            let checkIfIdExist = fotoPemanfaatan.checkedRow().filter((d) => {
-                                return d.id != undefined
-                            })
-                            if (checkIfIdExist.length < 1) {
-                                resolve(true)
-                                return
-                            }
-                            __ajax({
-                                method: 'DELETE',
-                                url: "http://simada-jabar.deva/api/system_uploads/" + checkIfIdExist.map((d) => {
-                                        return d.id
-                                    }),
-                            }).then((d) => {
-                                resolve(true)
-                                onPemanfaatanGetFiles(checkIfIdExist[0].foreign_id, () => {})
-                            })
-                        })
-                    }
-                })
-            })*/
                     $("#modal-pemanfaatan").modal('show')
                 }
             }
@@ -418,7 +335,7 @@
                                 }
                             }).then((d) => {
                                 successCount.push(key);
-                                
+
                                 if (successCount.length == count) {
                                     swal.fire({
                                         type: "success",
@@ -429,7 +346,7 @@
                                     })
                                 }
                             })
-                        }); 
+                        });
                     }
                 }
             });
@@ -526,6 +443,7 @@
                 // "Penghapusan"
                 "Pemanfaatan",
                 "Dokumen-Kronologis",
+                "History"
             ]
 
             let selectEvent = 0
@@ -766,6 +684,43 @@
                         })
 
                         onDokumenKronologisGetFiles(row.data().id);
+
+                        document.querySelector(`#History-${selectEvent}`).innerHTML = `
+                        <div class='btn btn-success' onclick='onCompare("#table-history-<?= $uniqId ?>${selectEvent}")'>
+                            Bandingkan
+                        </div>
+                        <br />
+                        <br />
+                        <table class='mt-2 table  table-striped' id='table-history-<?= $uniqId ?>${selectEvent}'>
+                            <thead>
+                            </thead>
+                        </table>`
+
+                        let tableHistory = $(`#table-history-<?= $uniqId ?>${selectEvent}`).DataTable({
+                            ajax: {
+                                url: `${$("[base-path]").val()}/inventarisHistories?fid=${row.data().id}`,
+                                dataType: "json",
+                            },
+                            order : [[ 0, "asc"]],
+                            dom: 'Bfrtip',
+                            buttons: [
+                            ],
+                            columns: [
+                                {
+                                    title: 'Action',
+                                    data: 'action'
+                                },
+                                {
+                                    title: 'Tanggal History',
+                                    data: 'history_at'
+                                },
+                            ],
+                            'select': {
+                                'style': 'multi'
+                            },
+                            "processing": true,
+                            "serverSide": true,
+                        })
                     })
 
                 }
@@ -788,6 +743,54 @@
             })
         }
 
+        let colCount = 1;
+
+        // for handle comparing data inventaris history you only find the trigger in this file
+        function onCompare(idTable) {
+            let html = ''
+            let selectedRows = $(idTable).DataTable().rows('.selected').data().toArray()
+
+            if (selectedRows.length != 2) {
+                swal.fire({
+                    type: 'warning',
+                    text: 'Silahkan pilih 1',
+                })
+                return
+            }
+
+
+            for (let index = 0; index < selectedRows.length; index++) {
+                const element = selectedRows[index];
+
+                if(colCount == 1) {
+                    html += `<div class='row'>`
+                }
+                html += `<div class='col-md-4 mr-3'>Compare ${index} </br> </br> <table class='table table-striped table-bordered'>`;
+
+                let keys = Object.keys(element);
+
+                for (let keyIndex = 0; keyIndex < keys.length; keyIndex++) {
+                    const elementKey = keys[keyIndex];
+
+                    html += `<tr>
+                            <td style='width: 50px'>${elementKey}</td>
+                            <td style='width: 200px'>${element[elementKey]}</td>
+                        </tr>`
+                }
+
+                html += `</table></div>`
+
+                colCount++
+
+                if(colCount >= 3) {
+                    html += `</div>`
+                    colCount = 1
+                }
+            }
+            // get the selected
+            $(`.modal-compare-body`).html(html)
+            $(`#modal-compare`).modal('show')
+        }
     </script>
     @include('layouts.datatables_js')
     {!! $dataTable->scripts() !!}

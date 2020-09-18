@@ -104,6 +104,9 @@ class inventarisDataTable extends DataTable
 
         $buildingModel = inventarisRepository::appendInventarisGridFilter($buildingModel, $_GET);
 
+        $buildingModel = $buildingModel
+                ->leftJoin('inventaris_sensus', 'inventaris_sensus.idinventaris', 'inventaris.id')
+                ->whereRaw('inventaris_sensus.id IS NULL');
 
         return  $buildingModel->orderByRaw('inventaris.updated_at DESC NULLS LAST')
             ->orderBy('inventaris.id', 'desc');

@@ -75,6 +75,7 @@ class inventaris_historyRepository extends BaseRepository
         $inventaris['history_at'] = date('Y-m-d H:i:s');
         $inventaris['action'] = $action['nama'];
         $inventaris['harga_satuan'] = (int)$inventaris['harga_satuan'];
+        $inventaris['pidinventaris'] = (int)$inventaris['id'];
         $this->create($inventaris);
     }
 
