@@ -132,7 +132,9 @@ let sensus = {
                     `nama_tujuan=${$("select[name=kode_tujuan]").select2('data')[0].text}`
                 } else if (sensus.data.form.status_barang() == 1 && sensus.data.form.status_ubah_satuan() == 1) {
                     window.location = `pemeliharaans/create?`+
-                    `idbarang=${selectedRowGrid.pidbarang}`
+                    `idinventaris=${selectedRowGrid.id}&` +
+                    `tgldibukukan=${selectedRowGrid.tgl_dibukukan}&` +
+                    `hargasatuan=${selectedRowGrid.harga_satuan}`
                 }
             })
         },

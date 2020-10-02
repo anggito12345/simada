@@ -191,6 +191,18 @@ class inventarisRepository extends BaseRepository
             $buildingModel = $buildingModel->where('m_organisasi.id', $theFilter['organisasi_filter']);
         }
 
+        if (isset($theFilter['penggunafilter']) && $theFilter['penggunafilter'] != "" && $theFilter['penggunafilter'] != null) {
+            $buildingModel = $buildingModel->where('inventaris.pidopd', $theFilter['penggunafilter']);
+        }
+
+        if (isset($theFilter['kuasapengguna_filter']) && $theFilter['kuasapengguna_filter'] != "" && $theFilter['kuasapengguna_filter'] != null) {
+            $buildingModel = $buildingModel->where('inventaris.pidopd_cabang', $theFilter['kuasapengguna_filter']);
+        }
+
+        if (isset($theFilter['subkuasa_filter']) && $theFilter['subkuasa_filter'] != "" && $theFilter['subkuasa_filter'] != null) {
+            $buildingModel = $buildingModel->where('inventaris.pidupt', $theFilter['subkuasa_filter']);
+        }
+
 
         // take data which is doesn't has any duplicate data in inventaris_penghapusan
         if(isset($theFilter['is_exist_inventaris_penghapusan'])) {

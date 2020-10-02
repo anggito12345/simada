@@ -14,7 +14,14 @@
 
   <div class="box box-primary">
     <div class="box-body">
-      @include('inventaris.table_filter')
+      <label class="advance_filter_toggle text-info" style="cursor: pointer" onclick="viewModel.clickEvent.toggleAdvanceFilter()">
+        Advance Filter
+        <i class="fa fa-filter"></i>
+      </label>
+      <div class="advance_body">
+        @include('inventaris.table_filter')
+      </div>
+
       <div class="clearfix"></div>
 
       <div class="box box-primary">
@@ -33,6 +40,8 @@
 @endsection
 
 <?php
+
+// in some php file to detect they are called from inventaris page, needed this variable to be true.
 $isInventarisPage = true;
 ?>
 
@@ -205,6 +214,9 @@ $isInventarisPage = true;
     }
   })
   viewModel.clickEvent = Object.assign(viewModel.clickEvent, {
+    toggleAdvanceFilter: ()  => {
+        $('.advance_body').slideToggle('slow')
+    },
     showModalMutasi: ($id, $barangInfo) => {
       // try to match each default field to and from
 
@@ -432,5 +444,7 @@ $isInventarisPage = true;
       })
     },
   })
+
+
 </script>
 @endsection

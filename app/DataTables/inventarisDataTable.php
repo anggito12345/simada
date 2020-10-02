@@ -213,6 +213,15 @@ class inventarisDataTable extends DataTable
                     if ($("[name=organisasi_filter]").data("select2") && $("[name=organisasi_filter]").select2("data").length > 0)
                         d.organisasi_filter = $("[name=organisasi_filter]").select2("val")
 
+                    if ($("[name=penggunafilter]").data("select2") && $("[name=penggunafilter]").select2("data").length > 0)
+                        d.penggunafilter = $("[name=penggunafilter]").select2("val")
+
+                    if ($("[name=kuasapengguna_filter]").data("select2") && $("[name=kuasapengguna_filter]").select2("data").length > 0)
+                        d.kuasapengguna_filter = $("[name=kuasapengguna_filter]").select2("val")
+
+                    if ($("[name=subkuasa_filter]").data("select2") && $("[name=subkuasa_filter]").select2("data").length > 0)
+                        d.subkuasa_filter = $("[name=subkuasa_filter]").select2("val")
+
                     delete d.search.regex;
 
                     recFilter = d

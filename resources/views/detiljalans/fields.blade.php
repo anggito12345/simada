@@ -1,7 +1,13 @@
 
+<!-- Kodetanah Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('kodetanah', 'Kode Tanah:') !!}
+    {!! Form::select('kodetanah', [], null, ['class' => 'form-control', 'id' => 'kodetanah-detiljalan', 'data-bind' => 'value: viewModel.data["KIB D"]().kodetanah']) !!}
+</div>
+
 <!-- nilai_hub Field -->
 <div class="form-group col-sm-6">
-    {!! Form::label('nilai_hub_kibd', 'Nilai Hub:') !!}
+    {!! Form::label('nilai_hub_kibd', 'Nilai HBU:') !!}
     {!! Form::number('nilai_hub_kibd', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB D"]().nilai_hub']) !!}
 </div>
 
@@ -14,7 +20,7 @@
 <!-- tipe Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('kode_jalankibd', 'Kode Jalan:') !!}
-    {!! Form::text('kode_jalankibd', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB D"]().kode_jalan']) !!}
+    {!! Form::select('kode_jalankibd', [], null, ['class' => 'form-control', 'id' => 'kode_jalankibd', 'data-bind' => 'value: viewModel.data["KIB D"]().kode_jalan']) !!}
 </div>
 
 <!-- Konstruksi Field -->
@@ -84,11 +90,7 @@
     {!! Form::select('statustanah', [], null, ['class' => 'form-control', 'id' => 'statustanah-detiljalan', 'data-bind' => 'value: viewModel.data["KIB D"]().statustanah']) !!}
 </div>
 
-<!-- Kodetanah Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('kodetanah', 'Kode Tanah:') !!}
-    {!! Form::select('kodetanah', [], null, ['class' => 'form-control', 'id' => 'kodetanah-detiljalan', 'data-bind' => 'value: viewModel.data["KIB D"]().kodetanah']) !!}
-</div>
+
 
 <!-- Keterangan Field -->
 <div class="form-group col-sm-6">
@@ -163,6 +165,31 @@
             theme: 'bootstrap' ,
         })
 
+        $('#kodetanah-detiljalan').on('select2:select', function (e) {
+            // Do something
+            if ($('#kodetanah-detiljalan').select2('data').length > -1) {
+                viewModel.methods.SetAlamatHirearchy($('#kodetanah-detiljalan').select2('data')[0], 'KIB D')
+            }
+        });
+
+
+        $('#kode_jalankibd').select2({
+            ajax: {
+                url: "<?= url('api/m_kode_daerahs') ?>",
+                dataType: 'json',
+                processResults: function (data) {
+                // Transforms the top-level key of the response object from 'items' to 'results'
+
+                    return {
+                        results: data.data.map((d) => {
+                            d.text = d.nama
+                            return d
+                        })
+                    };
+                }
+            },
+            theme: 'bootstrap' ,
+        })
 
 
     })

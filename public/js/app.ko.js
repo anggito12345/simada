@@ -1,9 +1,12 @@
 let viewModel = {
+    methods: {
+
+    },
     pages: {
         loadJs: []
-    },    
+    },
     data: {
-        title: "SIMADA",        
+        title: "SIMADA",
         informations: {
             kibA: {
                 url: "detiltanahs",
@@ -27,7 +30,7 @@ let viewModel = {
                 url: "detiljalans",
                 string1: "KIB D",
                 string2: "detil_jalan",
-                
+
             },
             kibE: {
                 url: "detilasets",
@@ -49,7 +52,7 @@ let viewModel = {
     modal: {
 
     },
-    
+
     clickEvent: {
 
     },
@@ -57,7 +60,7 @@ let viewModel = {
     changeEvent: {
 
     },
-    
+
     collections: {
 
     },

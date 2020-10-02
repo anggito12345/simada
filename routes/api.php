@@ -288,6 +288,8 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
     detil_tanah.koordinattanah as tanah_koordinattanah,
     detil_tanah.koordinatlokasi as tanah_koordinatlokasi,
     detil_tanah.id as tanah_id,
+    detil_tanah.nilai_hub nilai_hbu,
+    detil_tanah.tipe tipe_hbu,
 
     detil_bangunan.id as bangunan_id,
     detil_bangunan.tgldokumen as bangunan_tgldokumen,
@@ -298,6 +300,8 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
     detil_bangunan.koordinattanah as bangunan_koordinattanah,
     detil_bangunan.koordinatlokasi as bangunan_koordinatlokasi,
     detil_bangunan.kodetanah as bangunan_kodetanah,
+    detil_bangunan.nilai_hub bangunan_nilai_hbu,
+    detil_bangunan.tipe bangunan_tipe_hbu,
 
     detil_mesin.id as mesin_id,
 
@@ -310,6 +314,8 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
     detil_jalan.koordinattanah as jalan_koordinattanah,
     detil_jalan.koordinatlokasi as jalan_koordinatlokasi,
     detil_jalan.kodetanah as jalan_kodetanah,
+    detil_jalan.nilai_hub jalan_nilai_hbu,
+    detil_jalan.tipe jalan_tipe_hbu,
 
     detil_aset_lainnya.id as aset_lainnya_id,
 
@@ -406,6 +412,8 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'nilai_aset' => 0.00,
                         'OPD' => $opd,
                         'UPT' => $upt,
+                        'nilai_hbu' => $value['nilai_hbu'],
+                        'tipe_hbu' => $value['tipe_hbu'],
                         'tahun_perolehan' => $value['tahun_perolehan'],
                         'jumlah_satuan' => $value['jumlah'],
                         'satuan' => $value['nama_satuan'],
@@ -435,6 +443,9 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'alamat_kabkot_id' => $value['alamat_kota'],
                         'alamat_propinsi_id' => $value['alamat_provinsi'],
                         'alamat_keldes_id' => $value['alamat_kelurahan'],
+                        'nilai_hbu' => $value['nilai_hbu'],
+                        'tipe_hbu' => $value['tipe_hbu'],
+                        'tahun_perolehan' => $value['tahun_perolehan'],
                         'alamat_kecamatan_id' => $value['alamat_kecamatan'],
                         'koordinat_latitude' => $value['tanah_koordinatlokasi'] != '' ? explode(',', $value['tanah_koordinatlokasi'])[1] : '',
                         'koordinat_longitude' => $value['tanah_koordinatlokasi'] != '' ? explode(',', $value['tanah_koordinatlokasi'])[0] : '',
@@ -468,6 +479,8 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'nilai_aset' => 0.00,
                         'OPD' => $opd,
                         'UPT' => $upt,
+                        'nilai_hbu' => $value['bangunan_nilai_hbu'],
+                        'tipe_hbu' => $value['bangunan_tipe_hbu'],
                         'tahun_perolehan' => $value['tahun_perolehan'],
                         'jumlah_satuan' => $value['jumlah'],
                         'satuan' => $value['nama_satuan'],
@@ -524,6 +537,8 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                         'koordinat_longitude' => $value['bangunan_koordinatlokasi'] != '' ? explode(',', $value['bangunan_koordinatlokasi'])[0] : '',
                         'koordinat' => $coordinateTranslated,
                         'aset_tanah_id' => $value['bangunan_kodetanah'],
+                        'nilai_hbu' => $value['bangunan_nilai_hbu'],
+                        'tipe_hbu' => $value['bangunan_tipe_hbu'],
                         'penggunaan_nama_mitra' => $bangunanPenggunaan
                     ];
                 }
@@ -629,6 +644,8 @@ Route::middleware('auth:api')->get('aset/{jenis?}/{query1?}', function($jenis = 
                     'koordinat_longitude' => $value['jalan_koordinatlokasi'] != '' ? explode(',', $value['jalan_koordinatlokasi'])[0] : '',
                     'koordinat' => $coordinateTranslated,
                     'aset_tanah_id' => $value['jalan_kodetanah'],
+                    'nilai_hbu' => $value['jalan_nilai_hbu'],
+                    'tipe_hbu' => $value['jalan_tipe_hbu'],
                     'penggunaan_nama_mitra' => $jalanPenggunaan
                 ];
             } else if (strpos(strtolower($value['nama_jenis']), 'konstruksi')) {
@@ -821,3 +838,11 @@ Route::resource('reklas', 'reklasAPIController');
 Route::resource('koreksis', 'koreksiAPIController');
 
 Route::resource('sensus', 'inventarisSensusAPIController');
+
+
+Route::resource('m_kode_daerahs', 'm_kode_daerahAPIController');
+
+
+Route::resource('sys_workflows', 'sys_workflowAPIController');
+
+Route::resource('sys_workflow_masters', 'sys_workflow_masterAPIController');

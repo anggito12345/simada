@@ -1,7 +1,7 @@
 viewModel.data = Object.assign(viewModel.data, {
     pidinventaris: "",
 
-    // 
+    //
     checkedItem: [],
 
     // mutasi data
@@ -14,7 +14,7 @@ viewModel.data = Object.assign(viewModel.data, {
         To: "",
         Type: "",
         From: ""
-    },      
+    },
 
     tipeKib: ko.observable(),
     "KIB F": ko.observable({
@@ -103,7 +103,7 @@ viewModel.data = Object.assign(viewModel.data, {
 
 viewModel.data.tipeKib.subscribe((newVal) => {
     if (viewModel.data.pidinventaris == "") {
-        return        
+        return
     }
     __ajax({
         "method": "GET",
@@ -112,21 +112,21 @@ viewModel.data.tipeKib.subscribe((newVal) => {
     }).then((response) => {
         if (response == null) {
             response = {}
-        }        
-        
+        }
+
         if (newVal == 'KIB A') {
             const tglSertifikat = document.getElementById('tgl_sertifikat')
             tglSertifikat.value = response.tgl_sertifikat
             tglSertifikat.dispatchEvent(new Event('change'))
 
-            App.Helpers.defaultSelect2($("#penggunaan"), `${$('[base-path]').val()}/api/pengunaans/${response.penggunaan}`,"id","nama", () => {                
+            App.Helpers.defaultSelect2($("#penggunaan"), `${$('[base-path]').val()}/api/pengunaans/${response.penggunaan}`,"id","nama", () => {
                 App.Helpers.defaultSelect2(
                     $("#idkota"), `${$('[base-path]').val()}/api/alamats/${response.idkota}`,
                     "id",
                     "nama",
                     () => {
                         App.Helpers.defaultSelect2(
-                            $("#idkecamatan"), 
+                            $("#idkecamatan"),
                             `${$('[base-path]').val()}/api/alamats/${response.idkecamatan}`,
                             "id",
                             "nama",
@@ -140,10 +140,10 @@ viewModel.data.tipeKib.subscribe((newVal) => {
                 )
             })
 
-            
 
-            
-        } else if (newVal == 'KIB B') {            
+
+
+        } else if (newVal == 'KIB B') {
             App.Helpers.defaultSelect2($('#merk-detilmesin'), `${$('[base-path]').val()}/api/merkbarangs/${response.merk}`,"id","nama",() => {
 
                 viewModel.data[newVal](response)
@@ -153,7 +153,7 @@ viewModel.data.tipeKib.subscribe((newVal) => {
             tgldokumen.value = response.tgldokumen
             tgldokumen.dispatchEvent(new Event('change'))
 
-            
+
             App.Helpers.defaultSelect2($('#kodetanah'), `${$('[base-path]').val()}/api/detiltanahs/${response.kodetanah}`,"id",["nama_kota",", ", "nama_kecamatan", ", ", "nomor_sertifikat"], () => {
                 App.Helpers.defaultSelect2($('#statustanah'), `${$('[base-path]').val()}/api/statustanahs/${response.statustanah}`,"id","nama", () => {
                     App.Helpers.defaultSelect2(
@@ -162,7 +162,7 @@ viewModel.data.tipeKib.subscribe((newVal) => {
                         "nama",
                         () => {
                             App.Helpers.defaultSelect2(
-                                $("#idkecamatan-detilbangunan"), 
+                                $("#idkecamatan-detilbangunan"),
                                 `${$('[base-path]').val()}/api/alamats/${response.idkecamatan}`,
                                 "id",
                                 "nama",
@@ -175,14 +175,15 @@ viewModel.data.tipeKib.subscribe((newVal) => {
                         }
                     )
                 })
-            })            
-            
+            })
+
         } else if (newVal == 'KIB D') {
             const tgldokumen = document.getElementById('tgldokumen-detiljalan')
             tgldokumen.value = response.tgldokumen
             tgldokumen.dispatchEvent(new Event('change'))
 
-            
+            App.Helpers.defaultSelect2($('#kode_jalankibd'), `${$('[base-path]').val()}/api/m_kode_daerahs/${response.kode_jalan}`, 'id', 'nama')
+
             App.Helpers.defaultSelect2($('#kodetanah-detiljalan'), `${$('[base-path]').val()}/api/detiltanahs/${response.kodetanah}`,"id",["nama_kota",", ", "nama_kecamatan", ", ", "nomor_sertifikat"], () => {
                 App.Helpers.defaultSelect2($('#statustanah-detiljalan'), `${$('[base-path]').val()}/api/statustanahs/${response.statustanah}`,"id","nama", () => {
                     App.Helpers.defaultSelect2(
@@ -191,7 +192,7 @@ viewModel.data.tipeKib.subscribe((newVal) => {
                         "nama",
                         (t) => {
                             App.Helpers.defaultSelect2(
-                                $("#idkecamatan-detiljalan"), 
+                                $("#idkecamatan-detiljalan"),
                                 `${$('[base-path]').val()}/api/alamats/${response.idkecamatan}`,
                                 "id",
                                 "nama",
@@ -204,8 +205,8 @@ viewModel.data.tipeKib.subscribe((newVal) => {
                         }
                     )
                 })
-            })                        
-        } else if (newVal == 'KIB E') {            
+            })
+        } else if (newVal == 'KIB E') {
             viewModel.data[newVal](response)
         } else if (newVal == 'KIB F') {
             const tgldokumen = document.getElementById('tgldokumen-detilkonstruksi')
@@ -216,7 +217,7 @@ viewModel.data.tipeKib.subscribe((newVal) => {
             tglmulai.value = response.tglmulai
             tglmulai.dispatchEvent(new Event('change'))
 
-            
+
             App.Helpers.defaultSelect2($('#kodetanah-detilkonstruksi'), `${$('[base-path]').val()}/api/detiltanahs/${response.kodetanah}`,"id",["nama_kota",", ", "nama_kecamatan", ", ", "nomor_sertifikat"], () => {
                 App.Helpers.defaultSelect2($('#statustanah-detilkonstruksi'), `${$('[base-path]').val()}/api/statustanahs/${response.statustanah}`,"id","nama", () => {
                     App.Helpers.defaultSelect2(
@@ -225,7 +226,7 @@ viewModel.data.tipeKib.subscribe((newVal) => {
                         "nama",
                         () => {
                             App.Helpers.defaultSelect2(
-                                $("#idkecamatan-detilkonstruksi"), 
+                                $("#idkecamatan-detilkonstruksi"),
                                 `${$('[base-path]').val()}/api/alamats/${response.idkecamatan}`,
                                 "id",
                                 "nama",
@@ -238,8 +239,8 @@ viewModel.data.tipeKib.subscribe((newVal) => {
                         }
                     )
                 })
-            })            
-            
+            })
+
         }
     })
 })
@@ -248,7 +249,7 @@ viewModel.data.tipeKib.subscribe((newVal) => {
 viewModel.clickEvent = Object.assign(viewModel.clickEvent, {
     checkItem: (e) => {
         let index = viewModel.data.checkedItem.indexOf($(e).attr('value'))
-        if ($(e).prop('checked')) {               
+        if ($(e).prop('checked')) {
             if ( index > -1) {
                 viewModel.data.checkedItem.splice(index, 1)
             } else {
@@ -257,5 +258,32 @@ viewModel.clickEvent = Object.assign(viewModel.clickEvent, {
         } else {
             viewModel.data.checkedItem.splice(index, 1)
         }
+    }
+})
+
+
+viewModel.methods = Object.assign(viewModel.methods, {
+
+
+    SetAlamatHirearchy: (alamat, kib) => {
+        viewModel.data[kib]().koordinattanah = alamat.koordinattanah
+        viewModel.data[kib]().koordinatlokasi = alamat.koordinatlokasi
+        App.Helpers.defaultSelect2($('#alamat_propinsi'), `${$('[base-path]').val()}/api/alamats/${alamat.alamat_propinsi}`, "id", "nama", () => {
+            if(alamat.alamat_kota) {
+                App.Helpers.defaultSelect2($('#alamat_kota'),  `${$('[base-path]').val()}/api/alamats/${alamat.alamat_kota}`, "id", "nama", () => {
+                    if(alamat.alamat_kecamatan) {
+                        App.Helpers.defaultSelect2($('#alamat_kecamatan'),  `${$('[base-path]').val()}/api/alamats/${alamat.alamat_kecamatan}`, "id", "nama", () => {
+                            if(alamat.alamat_kelurahan) {
+                                App.Helpers.defaultSelect2($('#alamat_kelurahan'),  `${$('[base-path]').val()}/api/alamats/${alamat.alamat_kelurahan}`, "id", "nama", () => {
+
+                                }) // END: #defaultSelect2 #alamat_kelurahan
+
+                            }
+                        }) // END: #defaultSelect2 #alamat_kecamatan
+                    }
+                }) // END: #defaultSelect2 #alamat_kota
+            }
+        }) // END: #defaultSelect2 #alamat_propinsi
+        viewModel.data[kib].notifySubscribers()
     }
 })

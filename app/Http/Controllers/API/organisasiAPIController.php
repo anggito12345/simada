@@ -54,7 +54,7 @@ class organisasiAPIController extends AppBaseController
         ]);
         // ->join('m_jenis_opd', 'm_jenis_opd.id', 'm_organisasi.jenis')
 
-        if ($request->has('pid') && !c::is('',[],[Constant::$GROUP_BPKAD_ORG, Constant::$GROUP_SEKDA, Constant::$GROUP_GUBERNUR])) {
+        if ($request->has('pid')) {
 
 
             if ($request->input('pid') == "") {

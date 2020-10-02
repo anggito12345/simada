@@ -139,3 +139,11 @@ Route::resource('inventarisSensuses', 'inventaris_sensusController');
 
 
 Route::resource('importHistories', 'import_historyController');
+
+
+Route::resource('mKodeDaerahs', 'm_kode_daerahController');
+
+
+Route::resource('sysWorkflows', 'sys_workflowController');
+
+Route::resource('sysWorkflowMasters', 'sys_workflow_masterController');

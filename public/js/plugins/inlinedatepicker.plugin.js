@@ -240,4 +240,7 @@ let inlineDatepicker = function(element, config) {
     showValue()
 
     self.creatingResult()
+
+    console.log(self)
+    return self;
 }
