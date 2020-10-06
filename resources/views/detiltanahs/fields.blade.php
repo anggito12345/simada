@@ -6,7 +6,7 @@
         <div class="input-group-append">
             <span class="input-group-text text-danger" id="basic-addon2">Pemisah pecahan dengan titik (misal: 1.5)</span>
         </div>
-    </div>    
+    </div>
 </div>
 
 <!-- Alamat Field -->
@@ -15,6 +15,17 @@
     {!! Form::textarea('alamat', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB A"]().alamat']) !!}
 </div>
 
+<!-- nilai_hub Field -->
+<div class="form-group col-sm-6 row">
+    {!! Form::label('nilai_hub_kiba', 'Nilai Hub:') !!}
+    {!! Form::number('nilai_hub_kiba', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB A"]().nilai_hub']) !!}
+</div>
+
+<!-- tipe Field -->
+<div class="form-group col-sm-6 row">
+    {!! Form::label('tipe_kiba', 'Tipe:') !!}
+    {!! Form::text('tipe_kiba', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB A"]().tipe']) !!}
+</div>
 
 
 <!-- Koordinatlokasi Field -->
@@ -81,11 +92,11 @@
 @endif
 
 
-<script type="text/javascript"> 
-    
+<script type="text/javascript">
+
     $('#luas').mask("#.##0", {reverse: true});
 
-    viewModel.jsLoaded.subscribe((newVal) => {    
+    viewModel.jsLoaded.subscribe((newVal) => {
         // document is ready. Do your stuff here
         let googleMapKoordinatLokasi = null;
         let mapTanah = null;
@@ -109,14 +120,16 @@
             buttonClear: true,
         });
 
+        $('input[tipe]')
+
         $('#penggunaan').select2({
             ajax: {
                 url: "<?= url('api/pengunaans') ?>",
                 dataType: 'json',
                 data: function (params) {
                     var query = {
-                        q: params.term,      
-                    } 
+                        q: params.term,
+                    }
                     return query;
                 },
                 processResults: function (data) {
@@ -129,8 +142,8 @@
             theme: 'bootstrap' ,
         })
 
-       
-        
+
+
     })
 </script>
 

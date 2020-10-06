@@ -1,3 +1,15 @@
+<!-- nilai_hub Field -->
+<div class="form-group col-sm-6 row">
+    {!! Form::label('nilai_hub_kibc', 'Nilai Hub:') !!}
+    {!! Form::number('nilai_hub_kibc', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB C"]().nilai_hub']) !!}
+</div>
+
+<!-- tipe Field -->
+<div class="form-group col-sm-6 row">
+    {!! Form::label('tipe_kibc', 'Tipe:') !!}
+    {!! Form::text('tipe_kibc', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB C"]().tipe']) !!}
+</div>
+
 <!-- Konstruksi Field -->
 <div class="form-group col-sm-6 row">
     {!! Form::label('konstruksi', 'Konstruksi:') !!}
@@ -8,7 +20,7 @@
 <u class="col-md-12 no-padding">Kontruksi Bangunan</u>
 
 <div class="col-md-12">
-    
+
     <!-- Bertingkat Field -->
     <div class="form-group col-sm-6 row">
         {!! Form::label('bertingkat', 'Bertingkat:') !!}&nbsp;
@@ -81,7 +93,7 @@
                 value: viewModel.data["KIB C"]().koordinattanah,
             })
         }, 2500)
-               
+
         $('#statustanah').select2({
             ajax: {
                 url: "<?= url('api/statustanahs') ?>",
@@ -93,7 +105,7 @@
                 };
                 }
             },
-            theme: 'bootstrap' , 
+            theme: 'bootstrap' ,
         })
 
         $('#kodetanah').select2({
@@ -107,7 +119,7 @@
                 };
                 }
             },
-            theme: 'bootstrap' , 
+            theme: 'bootstrap' ,
         })
 
 

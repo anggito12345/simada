@@ -81,11 +81,13 @@ class inventaris_reklasRepository extends BaseRepository
     }
 
     /**
-     * approving data penghapusan for bpkad
+     * approving data reklas for bpkad
      */
     public function approvements($req, $inventaris_historyRepository)
     {
         $isAlreadyUpload = false;
+
+        dd('tetet');
 
         foreach (json_decode($req->get('items'), true) as $key => $item) {
             $fileDokumens = [];
@@ -171,7 +173,7 @@ class inventaris_reklasRepository extends BaseRepository
 
         /** @var inventaris $inventaris */
         $inventaris = inventaris::withDrafts()->find($id);
-        
+
         if (empty($inventaris)) {
             throw new Exception('Inventaris not found');
             return;
@@ -179,12 +181,11 @@ class inventaris_reklasRepository extends BaseRepository
 
         $detilKontruksi = \App\Models\detilkonstruksi::where('pidinventaris', $id);
 
-        $detilKontruksiArray = $detilKontruksi->first()->toArray();        
+        $detilKontruksiArray = $detilKontruksi->first()->toArray();
 
         if (empty($detilKontruksi)) {
-            throw new Exception('Kontruksi not found');
-            return;
-        }        
+            $detilKontruksi = new \App\Models\detilkonstruksi();
+        }
 
         $tipe_kib = chr(64 + (int) $input['tipe_kib']);
 
@@ -228,10 +229,10 @@ class inventaris_reklasRepository extends BaseRepository
                 ])){
                     throw new Exception('Error insert detil tanah');
                     return;
-                };    
+                };
             }
 
-            
+
         } else if ($tipe_kib == 'B') {
 
             if(detilmesin::where('pidinventaris', $detilKontruksiArray['pidinventaris'])->count() <= 0) {
@@ -240,7 +241,7 @@ class inventaris_reklasRepository extends BaseRepository
                     'keterangan' => $detilKontruksiArray['keterangan'],
                 ]);
             }
-            
+
         } else if ($tipe_kib == 'C') {
             if (detilbangunan::where('pidinventaris', $detilKontruksiArray['pidinventaris'])->count() <= 0) {
                 detilbangunan::insert([
@@ -263,7 +264,7 @@ class inventaris_reklasRepository extends BaseRepository
                     'keterangan' => $detilKontruksiArray['keterangan'],
                 ]);
             }
-            
+
         } else if ($tipe_kib == 'D') {
             if(detiljalan::where('pidinventaris', $detilKontruksiArray['pidinventaris'])->count() <= 0) {
                 detiljalan::insert([
@@ -284,14 +285,14 @@ class inventaris_reklasRepository extends BaseRepository
                     'keterangan' => $detilKontruksiArray['keterangan'],
                 ]);
             }
-            
+
         } else if ($tipe_kib == 'E') {
             if(detilaset::where('pidinventaris', $detilKontruksiArray['pidinventaris'])->count() <= 0) {
                 detilaset::insert([
                     'pidinventaris' => $detilKontruksiArray['pidinventaris'],
                     'keterangan' => $detilKontruksiArray['keterangan'],
                 ]);
-            }           
+            }
         }
 
         // $detilKontruksi->delete();
@@ -337,7 +338,7 @@ class inventaris_reklasRepository extends BaseRepository
                 'inventaris_reklas.status' => 'STEP-1'
             ])->get());
 
-        
+
         return response()->json([
             'data' => $count
         ]);

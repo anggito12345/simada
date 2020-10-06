@@ -7,6 +7,8 @@ use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 use c;
 use Illuminate\Support\Facades\Auth;
+use App\Models\BaseModel;
+use Constant;
 
 class reklasDataTable extends DataTable
 {
@@ -63,9 +65,9 @@ class reklasDataTable extends DataTable
         ->join('m_jenis_barang', 'm_jenis_barang.kode', 'm_barang.kode_jenis');
 
         if (isset($_GET['isFromMainGrid'])) {
-            if (c::is([],[],[0])) {
+            if (c::is('',[],[0])) {
                 $query = $query->where('m_organisasi.id', Auth::user()->pid_organisasi);
-            } else if (c::is([],[],[-1]) && isset($_GET['opd']) && !empty($_GET['opd'])) {
+            } else if (c::is('',[],[-1]) && isset($_GET['opd']) && !empty($_GET['opd'])) {
                 $query = $query->where('m_organisasi.id', $_GET['opd']);
             }
         }
@@ -73,7 +75,7 @@ class reklasDataTable extends DataTable
         if (isset($_GET['status'])) {
             $query = $query->where('reklas_detil.status', $_GET['status']);
         }
-        
+
         return $query->orderBy('reklas.created_at', 'desc');
     }
 
@@ -84,6 +86,30 @@ class reklasDataTable extends DataTable
      */
     public function html()
     {
+        $addtButtons = [];
+
+        if (c::is('reklas',['create'], BaseModel::getAccess(function($index, $label) {
+            if ($index >= Constant::$GROUP_BPKAD_ORG) {
+                return true;
+            }
+
+            return false;
+        }))) {
+           array_push($addtButtons, ['extend' => 'create']);
+        }
+
+        if (c::is('reklas',['export'], BaseModel::getAccess(function($index, $label) {
+            if ($index >= Constant::$GROUP_BPKAD_ORG) {
+                return true;
+            }
+
+            return false;
+        }))) {
+            array_push($addtButtons,
+                ['extend' => 'export'],
+                ['extend' => 'print']);
+        }
+
         return $this->builder()
             ->columns($this->getColumns())
             // ->minifiedAjax()
@@ -102,13 +128,7 @@ class reklasDataTable extends DataTable
                 'dom'       => 'Bfrtip',
                 'stateSave' => true,
                 'order'     => [[0, 'desc']],
-                'buttons'   => [
-                    ['extend' => 'create', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'print', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'reset', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'reload', 'className' => 'btn btn-default btn-sm no-corner',],
-                ],
+                'buttons'   => $addtButtons,
             ]);
     }
 

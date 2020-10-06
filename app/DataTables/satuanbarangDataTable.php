@@ -5,7 +5,9 @@ namespace App\DataTables;
 use App\Models\satuanbarang;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
-
+use c;
+use App\Models\BaseModel;
+use Constant;
 class satuanbarangDataTable extends DataTable
 {
     /**
@@ -19,8 +21,8 @@ class satuanbarangDataTable extends DataTable
         $dataTable = new EloquentDataTable($query);
 
         return $dataTable
-            ->editColumn('aktif', ' {{  \App\Models\BaseModel::$YesNoDs[$aktif] }}')
-            ->editColumn('bisadibagi', ' {{  \App\Models\BaseModel::$YesNoDs[$bisadibagi] }}')
+            ->editColumn('aktif', ' {{  isset(\App\Models\BaseModel::$YesNoDs[$aktif]) ? \App\Models\BaseModel::$YesNoDs[$aktif] : "" }}')
+            ->editColumn('bisadibagi', ' {{  isset(\App\Models\BaseModel::$YesNoDs[$bisadibagi]) ? \App\Models\BaseModel::$YesNoDs[$bisadibagi] : "" }}')
             ->addColumn('action', 'satuanbarangs.datatables_actions');
     }
 
@@ -42,6 +44,30 @@ class satuanbarangDataTable extends DataTable
      */
     public function html()
     {
+        $addtButtons = [];
+
+        if (c::is('master satuan barang',['create'], BaseModel::getAccess(function($index, $label) {
+            if ($index >= Constant::$GROUP_BPKAD_ORG) {
+                return true;
+            }
+
+            return false;
+        }))) {
+           array_push($addtButtons, ['extend' => 'create']);
+        }
+
+        if (c::is('master satuan barang',['export'], BaseModel::getAccess(function($index, $label) {
+            if ($index >= Constant::$GROUP_BPKAD_ORG) {
+                return true;
+            }
+
+            return false;
+        }))) {
+            array_push($addtButtons,
+                ['extend' => 'export'],
+                ['extend' => 'print']);
+        }
+
         return $this->builder()
             ->columns($this->getColumns())
             ->minifiedAjax()
@@ -50,13 +76,7 @@ class satuanbarangDataTable extends DataTable
                 'dom'       => 'Bfrtip',
                 'stateSave' => true,
                 'order'     => [[0, 'desc']],
-                'buttons'   => [
-                    ['extend' => 'create', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'print', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'reset', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'reload', 'className' => 'btn btn-default btn-sm no-corner',],
-                ],
+                'buttons'   => $addtButtons
             ]);
     }
 

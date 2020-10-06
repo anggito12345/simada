@@ -18,7 +18,7 @@ class inventaris_historyDataTable extends DataTable
     {
         $dataTable = new EloquentDataTable($query);
 
-        return $dataTable->addColumn('action', 'inventaris_histories.datatables_actions');
+        return $dataTable;
     }
 
     /**
@@ -29,6 +29,10 @@ class inventaris_historyDataTable extends DataTable
      */
     public function query(inventaris_history $model)
     {
+        if(isset($_GET['fid'])) {
+            $model = $model->where('pidinventaris', $_GET['fid']);
+        }
+
         return $model->newQuery();
     }
 
@@ -42,7 +46,7 @@ class inventaris_historyDataTable extends DataTable
         return $this->builder()
             ->columns($this->getColumns())
             ->minifiedAjax()
-            ->addAction(['width' => '120px', 'printable' => false])
+            //->addAction(['width' => '120px', 'printable' => false])
             ->parameters([
                 'dom'       => 'Bfrtip',
                 'stateSave' => true,

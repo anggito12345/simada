@@ -13,12 +13,13 @@ class AddColumnToInventarisToStoreKodeBarang extends Migration
      */
     public function up()
     {
-        Schema::table('inventaris', function (Blueprint $table) {
-            //
+        if (!Schema::hasColumn('inventaris', 'kode_barang')) {
             Schema::table('inventaris', function (Blueprint $table) {
-                $table->string('kode_barang', 100)->nullable();             
+                //
+                $table->string('kode_barang', 100)->nullable();
             });
-        });
+        }
+
     }
 
     /**
@@ -28,8 +29,11 @@ class AddColumnToInventarisToStoreKodeBarang extends Migration
      */
     public function down()
     {
-        Schema::table('inventaris_to_store_kode_barang', function (Blueprint $table) {
-            //
-        });
+        if (Schema::hasColumn('inventaris', 'kode_barang')) {
+            Schema::table('inventaris', function (Blueprint $table) {
+                //
+                $table->dropColumn('kode_barang');
+            });
+        }
     }
 }

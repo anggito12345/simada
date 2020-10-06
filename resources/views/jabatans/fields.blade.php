@@ -13,7 +13,7 @@
 <!-- Kelompok Jabatan -->
 <div class="form-group col-sm-6 row">
     {!! Form::label('kelompok', 'Kelompok Jabatan:') !!}
-    {!! Form::select('kelompok', \App\Models\BaseModel::$kelompokJabatanDs, null, ['class' => 'form-control', 'placeholder' => 'Mohon Pilih']) !!}
+    {!! Form::select('kelompok', \App\Models\BaseModel::$kelompokLevelDs, null, ['class' => 'form-control', 'placeholder' => 'Mohon Pilih']) !!}
 </div>
 
 <!-- Nama Jabatan -->
@@ -27,13 +27,13 @@
 </div>
 
 <!-- modules table -->
-<?php 
-    $allowables_access = explode(',',env('ALLOWABLE_ACCESS', ''));    
+<?php
+    $allowables_access = explode(',',env('ALLOWABLE_ACCESS', ''));
     $modules = \App\Models\modules::get();
 ?>
 <table class='table  table-striped'>
     <tr>
-        <th >Access Name</th>        
+        <th >Access Name</th>
         @foreach($allowables_access as $key => $value)
         <th>{!! ucfirst($value) !!}</th>
         @endforeach
@@ -42,7 +42,7 @@
     <tr>
         <td>{!! ucfirst($module->nama) !!}</td>
         @foreach($allowables_access as $key => $value)
-        <?php 
+        <?php
             $checked = '';
             if (isset($jabatan)) {
                 $module_access = \App\Models\module_access::where([
@@ -56,7 +56,7 @@
                     $checked = 'checked';
                 }
             }
-            
+
         ?>
         <td><input type='checkbox' name='access[<?= $module->nama ?>][]' value="<?= $value ?>"  <?= $checked ?> /></td>
         @endforeach
@@ -90,7 +90,7 @@
 
 @if(isset($jabatan))
 <script>
-    App.Helpers.defaultSelect2($('#jenis'), `${$('[base-path]').val()}/api/jenisopds/<?= $jabatan->jenis ?>`,"id","nama",() => {        
+    App.Helpers.defaultSelect2($('#jenis'), `${$('[base-path]').val()}/api/jenisopds/<?= $jabatan->jenis ?>`,"id","nama",() => {
     })
 </script>
 @endif

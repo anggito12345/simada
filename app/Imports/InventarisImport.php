@@ -10,9 +10,17 @@ use Maatwebsite\Excel\Concerns\OnEachRow;
 use App\Models\satuanbarang;
 use Illuminate\Support\Facades\Storage;
 use App\Repositories\inventarisRepository;
+use Exception;
 
 class InventarisImport implements  OnEachRow
 {
+
+    private $importName;
+
+    public function __construct($importName)
+    {
+        $this->importName = $importName;
+    }
 
     /**
     * @param array $row
@@ -64,7 +72,13 @@ class InventarisImport implements  OnEachRow
 
             $stBarang = satuanBarang::where("nama", $row[2])->first();
 
-            $org = organisasi::where("kode", $row[7])->first();
+            $org = organisasi::where("kode", trim($row[7]))->first();
+
+
+            if(empty($org)) {
+                throw new \Exception('organisasi tidak ditemukan '.$row[7]);
+                return;
+            }
 
             inventarisRepository::InsertLogic([
                 "pidbarang" => $row[0],
@@ -73,7 +87,12 @@ class InventarisImport implements  OnEachRow
                 "satuan" => empty($stBarang) ? null : $stBarang->id,
                 "harga_satuan" => $row[3],
                 "tahun_perolehan" => $row[6],
-                "pid_organisasi" => empty($org) ? null : $org->id
+                "kode_barang" => inventarisRepository::kodeBarang($row[0]),
+                "pid_organisasi" => empty($org) ? null : $org->id,
+                "draft" => '1',
+                "tgl_dibukukan" => date('Y-m-d',strtotime($row[6].'-'.$row[5].'-'.$row[4])),
+                "tahun_perolehan" => $row[6],
+                "import_flag" => $this->importName
             ]);
         } catch(\Exception $e) {
             throw new \Exception($e->getMessage());

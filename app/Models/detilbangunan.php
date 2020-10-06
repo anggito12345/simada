@@ -34,7 +34,7 @@ class detilbangunan extends Model
 {
 
     public $table = 'detil_bangunan';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
@@ -58,8 +58,10 @@ class detilbangunan extends Model
         'nodokumen',
         'luastanah',
         'statustanah',
-        'kodetanah',        
-        'keterangan',        
+        'kodetanah',
+        'keterangan',
+        'nilai_hub',
+        'tipe'
     ];
 
     /**
@@ -96,7 +98,7 @@ class detilbangunan extends Model
      * @var array
      */
     public static $rules = [
-        
+
     ];
 
     public function Inventaris()

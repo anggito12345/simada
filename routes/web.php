@@ -34,11 +34,14 @@ Route::get('/lupa-password/{forgotPasswordCode}', 'usersController@forgotPasswor
 Route::get('/partials/view.mutasi/{id}', 'mutasiController@partialview');
 Route::get('/partials/view.penghapusan/{id}', 'penghapusanController@partialview');
 Route::get('/partials/view.rka/{id}', 'rkaController@partialview');
+Route::get('/partials/view.sensus/{id}', 'inventaris_sensusController@partialview');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/organisasis/settings', 'organisasiController@settings')->name('organisasis.settings');
 Route::get('/organisasis/changeSetting/{id}', 'organisasiController@changeSetting')->name('organisasis.changeSetting');
 Auth::routes();
 
+
+Route::get('/inventarisHistories', 'inventaris_historyController@index');
 
 Route::resource('users', 'usersController');
 
@@ -114,7 +117,6 @@ Route::resource('moduleAccesses', 'module_accessController');
 
 Route::resource('pengunaans', 'pengunaanController');
 
-Route::resource('inventarisHistories', 'inventaris_historyController');
 
 Route::resource('inventarisReklas', 'inventaris_reklasController');
 
@@ -126,4 +128,14 @@ Route::resource('rkaBarangs', 'rka_barangController');
 
 Route::resource('import', 'importController');
 
+Route::resource('sensus', 'sensusController');
+
 Route::post('/import/inventaris', 'importController@inventaris')->name("import.inventaris");
+
+
+Route::resource('inventarisSensuses', 'inventaris_sensusController');
+
+Route::resource('inventarisSensuses', 'inventaris_sensusController');
+
+
+Route::resource('importHistories', 'import_historyController');

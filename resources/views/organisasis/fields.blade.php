@@ -25,7 +25,7 @@
 <!-- Jabatan Field -->
 <div class="form-group col-sm-6 row">
     {!! Form::label('level', 'Level:') !!}
-    {!! Form::select('level', \App\Models\BaseModel::$kelompokJabatanDs, null, ['id' => 'jabatans', 'class' => 'form-control']) !!}
+    {!! Form::select('level', \App\Models\BaseModel::$kelompokLevelDs, null, ['id' => 'jabatans', 'class' => 'form-control']) !!}
 </div>
 
 <!-- Alamat Field -->
@@ -64,14 +64,14 @@
         },
         theme: 'bootstrap' ,
     })
-    
-  
+
+
 </script>
 
 @if(isset($organisasi))
 <script>
 App.Helpers.defaultSelect2(
-    $("#pid"), 
+    $("#pid"),
         `${$('[base-path]').val()}/api/organisasis/${<?= $organisasi->pid ?>}`,
         "id",
         "nama",

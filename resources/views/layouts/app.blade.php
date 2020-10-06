@@ -187,6 +187,9 @@
         <div class="loading-asset"></div>
     </div>
     @if (!Auth::guest())
+    <script>
+        localStorage.setItem('pid_organisasi', '<?= Auth::user()->pid_organisasi ?>');
+    </script>
     <div class="wrapper">
         <!-- Main Header -->
         <header class="main-header">
@@ -266,7 +269,7 @@
                                     <p>
                                         {!! Auth::user()->name !!}
                                         <small>{!! \App\Models\organisasi::find(Auth::user()->pid_organisasi)->nama !!}</small>
-                                        <small>{!! \App\Models\jabatan::find(Auth::user()->jabatan)->nama_jabatan !!} ( {!! \App\Models\BaseModel::$kelompokJabatanDs[\App\Models\jabatan::find(Auth::user()->jabatan)->kelompok] !!} )</small>
+                                        <small>{!! \App\Models\jabatan::find(Auth::user()->jabatan)->nama_jabatan !!}</small>
                                     </p>
                                 </li>
                                 <!-- Menu Footer-->
@@ -385,7 +388,7 @@
 
 
     <script>
-        localStorage.setItem('pid_organisasi', '<?= Auth::user()->pid_organisasi ?>');
+
 
         $.fn.select2.defaults.set("placeholder", "Silahkan Pilih");
         $.fn.select2.defaults.set("allow-clear", true);
@@ -448,6 +451,7 @@
 
         $( document ).ajaxStart(function() {
             $(".loading-page").attr('style', 'display: block');
+            //alert('test')
         }).ajaxError(function( event, jqxhr, settings, thrownError ) {
             if (jqxhr.status == 401) {
                 $('.btn-logout').click();
@@ -459,7 +463,7 @@
         });
 
         $("form").on("submit", function(){
-            $(".loading-page").attr('style', 'display: block');
+            //$(".loading-page").attr('style', 'display: block');
         });//submit
     </script>
     @yield('before_pages')

@@ -47,7 +47,7 @@ class inventaris_history extends Model
     use SoftDeletes;
 
     public $table = 'inventaris_history';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
@@ -89,7 +89,9 @@ class inventaris_history extends Model
         'penanggung_jawab',
         'umur_ekonomis',
         'action',
-        'history_at'
+        'history_at',
+        'nama_populer',
+        'pidinventaris'
     ];
 
     /**
@@ -140,7 +142,7 @@ class inventaris_history extends Model
      * @var array
      */
     public static $rules = [
-        
+
     ];
 
     public function setHistoryAtAttribute($value)
@@ -175,10 +177,10 @@ class inventaris_history extends Model
 
 
     public function setTglDibukukanAttribute($value)
-    {        
+    {
         $value = date("Y-m-d", strtotime($value));
         $this->attributes['tgl_dibukukan'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
-    }    
+    }
 
     public function getTglDibukukanAttribute($value)
     {
@@ -189,5 +191,5 @@ class inventaris_history extends Model
         return date("d/m/Y", strtotime($value));
     }
 
-    
+
 }

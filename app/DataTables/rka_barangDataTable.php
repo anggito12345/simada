@@ -45,9 +45,9 @@ class rka_barangDataTable extends DataTable
         ])  ->join('m_organisasi', 'm_organisasi.kode', 'rka_barang.kode_organisasi');
 
         if (isset($_GET['isFromMainGrid'])) {
-            if (c::is([], [], [0])) {
+            if (c::is('', [], [0])) {
                 $query = $query->where('m_organisasi.id', Auth::user()->pid_organisasi);
-            } else if (c::is([], [], [-1]) && isset($_GET['opd']) && !empty($_GET['opd'])) {
+            } else if (c::is('', [], [-1]) && isset($_GET['opd']) && !empty($_GET['opd'])) {
                 $query = $query->where('m_organisasi.id', $_GET['opd']);
             }
         }

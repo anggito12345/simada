@@ -21,7 +21,6 @@ class inventarisRepository extends BaseRepository
      * @var array
      */
     protected $fieldSearchable = [
-
         'kode_barang'
     ];
 
@@ -51,6 +50,10 @@ class inventarisRepository extends BaseRepository
         return [];
     }
 
+
+    /**
+     * insert logic
+     */
     public static function InsertLogic($input) {
         DB::beginTransaction();
         try {
@@ -261,14 +264,14 @@ class inventarisRepository extends BaseRepository
             // ->where('m_jabatan.level', '<=', $mineJabatan->level)
 
         // role conditional please check this whenever u want customizing role
-        if ($organisasiUser->jabatans == Constant::$GROUP_OPD_ORG) {
+        if ($organisasiUser->level == Constant::$GROUP_OPD_ORG) {
             $buildingModel = $buildingModel
                 ->whereRaw('( inventaris.pid_organisasi = '.$organisasiUser->id.' OR m_organisasi.pid = '.$organisasiUser->id . ')')
-                ->where('m_organisasi.jabatans', '>=', $organisasiUser->jabatans);
-        } else if ($organisasiUser->jabatans == Constant::$GROUP_CABANGOPD_ORG) {
+                ->where('m_organisasi.level', '>=', $organisasiUser->jabatans);
+        } else if ($organisasiUser->level == Constant::$GROUP_CABANGOPD_ORG) {
             $buildingModel = $buildingModel
                 ->whereRaw(' ( inventaris.pid_organisasi = '.$organisasiUser->id . ' OR m_organisasi.id = ' . $organisasiUser->pid . ' ) ')
-                ->where('m_organisasi.jabatans', '>=', Constant::$GROUP_OPD_ORG);
+                ->where('m_organisasi.level', '>=', Constant::$GROUP_OPD_ORG);
         }
 
         return $buildingModel;

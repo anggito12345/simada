@@ -5,6 +5,9 @@ namespace App\DataTables;
 use App\Models\alamat;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
+use c;
+use App\Models\BaseModel;
+use Constant;
 
 class alamatDataTable extends DataTable
 {
@@ -35,8 +38,8 @@ class alamatDataTable extends DataTable
     {
         $query = $model->newQuery()
         ->select([
-            "m_alamat.*",        
-            "m_alamat_2.nama as nama_foreign"        
+            "m_alamat.*",
+            "m_alamat_2.nama as nama_foreign"
         ])->leftJoin("m_alamat as m_alamat_2", "m_alamat_2.id", "m_alamat.pid");
 
         if (isset($_GET['jenis'])) {
@@ -54,16 +57,40 @@ class alamatDataTable extends DataTable
      */
     public function html()
     {
+        $addtButtons = [];
+
+        if (c::is('master barang lokasi',['create'], BaseModel::getAccess(function($index, $label) {
+            if ($index >= Constant::$GROUP_BPKAD_ORG) {
+                return true;
+            }
+
+            return false;
+        }))) {
+           array_push($addtButtons, ['extend' => 'create']);
+        }
+
+        if (c::is('master barang lokasi',['export'], BaseModel::getAccess(function($index, $label) {
+            if ($index >= Constant::$GROUP_BPKAD_ORG) {
+                return true;
+            }
+
+            return false;
+        }))) {
+            array_push($addtButtons,
+                ['extend' => 'export'],
+                ['extend' => 'print']);
+        }
+
         return $this->builder()
             ->columns($this->getColumns())
             ->ajax([
                 'url' => route('alamats.index'),
                 'type' => 'GET',
                 'dataType' => 'json',
-                'data' => 'function(d) {         
-                    if ($("[name=jenis]").val())             
+                'data' => 'function(d) {
+                    if ($("[name=jenis]").val())
                         d.jenis = $("[name=jenis]").val()
-                        
+
                 }',
             ])
             ->addAction(['width' => '120px', 'printable' => false])
@@ -71,13 +98,7 @@ class alamatDataTable extends DataTable
                 'dom'       => 'Bfrtip',
                 'stateSave' => true,
                 'order'     => [[0, 'desc']],
-                'buttons'   => [
-                    ['extend' => 'create', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'export', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'print', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'reset', 'className' => 'btn btn-default btn-sm no-corner',],
-                    ['extend' => 'reload', 'className' => 'btn btn-default btn-sm no-corner',],
-                ],
+                'buttons'   => $addtButtons
             ]);
     }
 

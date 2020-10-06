@@ -27,6 +27,24 @@
 </div>
 
 <script>
+
+    // Sembunyikan tombol konfirmasi jika bukan draft
+    $(document).ready(function () {
+        if ($('#draft').val() == "0") {
+            $('.konfirmasi-draft').hide();
+        } else {
+            $('.konfirmasi-draft').show();
+        }
+
+        $('#draft').change(function () {
+            if ($('#draft').val() == "0") {
+                $('.konfirmasi-draft').hide();
+            } else {
+                $('.konfirmasi-draft').show();
+            }
+        });
+    });
+
     viewModel.jsLoaded.subscribe(() => {
         $("#jenisbarangs_filter").select2({
             ajax: {                                

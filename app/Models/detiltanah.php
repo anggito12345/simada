@@ -31,7 +31,7 @@ class detiltanah extends Model
 {
 
     public $table = 'detil_tanah';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
@@ -54,6 +54,9 @@ class detiltanah extends Model
         'nomor_sertifikat',
         'penggunaan',
         'keterangan',
+        'nilai_hub',
+        'tipe',
+
     ];
 
     /**
@@ -87,7 +90,7 @@ class detiltanah extends Model
      * @var array
      */
     public static $rules = [
-        
+
     ];
 
     public function setTglSertifikatAttribute($value)
@@ -95,7 +98,7 @@ class detiltanah extends Model
         if ($value == null) {
             $value = date("Y-m-d");
         }
-        
+
         $value = date("Y-m-d", strtotime($value));
         $this->attributes['tgl_sertifikat'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
     }
@@ -128,5 +131,5 @@ class detiltanah extends Model
     {
         return $this->hasOne('App\Models\alamat', 'id', 'idkelurahan');
     }
-    
+
 }

@@ -29,6 +29,7 @@ return [
     'umur' => 'Jangka Waktu',
     'tgl_dibukukan' => 'Tgl Perolehan',
     'kode_ruang' => 'Kode Ruang',
-    'kode_gedung' => 'Kode Gedung', 
-    'penanggung_jawab' => 'Penanggung Jawab'
+    'kode_gedung' => 'Kode Gedung',
+    'penanggung_jawab' => 'Penanggung Jawab',
+    'nama_populer' => 'Nama Populer',
 ];

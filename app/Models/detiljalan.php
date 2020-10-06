@@ -34,7 +34,7 @@ class detiljalan extends Model
 {
 
     public $table = 'detil_jalan';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
@@ -60,7 +60,9 @@ class detiljalan extends Model
         'statustanah',
         'kodetanah',
         'keterangan',
-        
+        'nilai_hub',
+        'tipe',
+        'kode_jalan'
     ];
 
     /**
@@ -97,7 +99,7 @@ class detiljalan extends Model
      * @var array
      */
     public static $rules = [
-        
+
     ];
 
     public function setTgldokumenAttribute($value)

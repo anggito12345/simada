@@ -39,6 +39,27 @@ $isInventarisPage = true;
 
 @section('scripts_2')
 
+<div class="modal" id="modal-compare" role="dialog">
+    <div class="modal-dialog modal-lg" style="width:100vw;padding:0;margin:0" role="document">
+      <div class="modal-content" style="width:100vw">
+        <div class="modal-header">
+          <h5 class="modal-title">Compare</h5>
+          <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+            <span aria-hidden="true">&times;</span>
+          </button>
+        </div>
+        <div class="modal-body modal-compare-body">
+            Test
+        </div>
+        <div class="modal-footer">
+          <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+        </div>
+      </div>
+    </div>
+  </div>
+
+
+
 <div class="modal" id="modal-mutasi" role="dialog">
   <div class="modal-dialog" role="document">
     <div class="modal-content">
@@ -185,7 +206,7 @@ $isInventarisPage = true;
   })
   viewModel.clickEvent = Object.assign(viewModel.clickEvent, {
     showModalMutasi: ($id, $barangInfo) => {
-      // try to match each default field to and from          
+      // try to match each default field to and from
 
       $('#kode').select2({
         ajax: {
@@ -215,7 +236,7 @@ $isInventarisPage = true;
             return params;
           },
           processResults: function(data) {
-            // Transforms the top-level key of the response object from 'items' to 'results'   
+            // Transforms the top-level key of the response object from 'items' to 'results'
             return {
               results: data.data.map((d) => {
                 d.text = viewModel.helpers.buildKodeBarang(d) + " - " + d.nama_rek_aset
@@ -287,12 +308,12 @@ $isInventarisPage = true;
             swal.fire({
               type: "success",
               text: "Berhasil menghapus data inventaris!",
-              onClose: () => {          
+              onClose: () => {
                 $("#table-inventaris").DataTable().ajax.reload();
               }
             })
           })
-        }        
+        }
       })
     },
     savePemeliharaan: () => {

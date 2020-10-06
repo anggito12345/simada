@@ -129,7 +129,7 @@ const doSave = (isDraft) => {
     });
 };
 
-const editor = new $.fn.dataTable.Editor({         
+const editor = new $.fn.dataTable.Editor({
     table: "#table-detil-reklas",
     fields: [
         {
@@ -166,8 +166,8 @@ editor.on('open', (e, type) => {
                 },
                 data: function (params) {
                     var query = {
-                        q: params.term,       
-                    } 
+                        q: params.term,
+                    }
                     return query;
                 },
                 processResults: function (data) {
@@ -322,6 +322,22 @@ editor.on('initEdit', (e, node, data, items, type) => {
     }, 1);
 });
 
+$(document).ready(() => {
+    var url_string = window.location.href; //window.location.href
+    var url = new URL(url_string);
+    var id_awal = url.searchParams.get("id_awal");
+    var id_tujuan = url.searchParams.get("id_tujuan");
+    var nama_tujuan = url.searchParams.get("nama_tujuan");
+    var nama_awal = url.searchParams.get("nama_awal");
+    if (id_awal && id_tujuan) {
+        $('#table-detil-reklas').DataTable().rows.add([{
+            'kode_awal': parseInt(id_awal),
+            'kode_tujuan': parseInt(id_tujuan),
+            'kode_awalNama': nama_awal,
+            'kode_tujuanNama': nama_tujuan
+        }])
+    }
 
+})
 </script>
 @endsection

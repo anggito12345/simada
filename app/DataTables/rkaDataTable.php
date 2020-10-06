@@ -43,16 +43,17 @@ class rkaDataTable extends DataTable
         }
 
         $query = $query->select([
-            'rka.id',
-            'rka.no_spk',
-            'rka.no_bast'
-        ])->join('users', 'users.id', 'rka.created_by')
+            'rka.id as id',
+            'rka.no_spk as no_spk',
+            'rka.no_bast as no_bast',
+        ])
+            ->join('users', 'users.id', 'rka.created_by')
             ->join('m_organisasi', 'm_organisasi.id', 'users.pid_organisasi');
 
         if (isset($_GET['isFromMainGrid'])) {
-            if (c::is([],[],[0])) {
+            if (c::is('',[],[0])) {
                 $query = $query->where('m_organisasi.id', Auth::user()->pid_organisasi);
-            } else if (c::is([],[],[-1]) && isset($_GET['opd']) && !empty($_GET['opd'])) {
+            } else if (c::is('',[],[-1]) && isset($_GET['opd']) && !empty($_GET['opd'])) {
                 $query = $query->where('m_organisasi.id', $_GET['opd']);
             }
         }

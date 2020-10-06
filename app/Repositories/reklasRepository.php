@@ -96,8 +96,9 @@ class reklasRepository extends BaseRepository
         $detilKontruksi = detilkonstruksi::where('pidinventaris', $id)->first();
 
         if (empty($detilKontruksi)) {
-            throw new Exception('Kontruksi not found');
-            return;
+            $detilKontruksi = new \App\Models\detilkonstruksi();
+            $detilKontruksi['pidinventaris'] = $id;
+            $detilKontruksi['keterangan'] = '';
         }
 
         $detilKontruksiArray = $detilKontruksi->toArray();
@@ -146,7 +147,7 @@ class reklasRepository extends BaseRepository
                     ])){
                         throw new Exception('Error insert detil tanah');
                         return;
-                    };    
+                    };
                 }
 
                 break;
@@ -185,7 +186,7 @@ class reklasRepository extends BaseRepository
                 }
 
                 break;
-                
+
             case 'D':
                 if (detiljalan::where('pidinventaris', $detilKontruksiArray['pidinventaris'])->count() <= 0) {
                     detiljalan::insert([
@@ -269,7 +270,7 @@ class reklasRepository extends BaseRepository
 
                         reklas_detil::find($item['id'])
                             ->update([
-                                'status' => 'STEP-2',    
+                                'status' => 'STEP-2',
                             ]);
 
                         DB::commit();
@@ -281,7 +282,7 @@ class reklasRepository extends BaseRepository
                     }
 
                     break;
-                
+
                 default:
                     # code...
                     break;

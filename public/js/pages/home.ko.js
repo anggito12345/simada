@@ -12,8 +12,8 @@ function onDokumenPenghapusanGetFiles(foreignId, callback) {
             foreign_field: 'id',
             foreign_id: foreignId,
             foreign_table: 'inventaris_penghapusan',
-        },  
-    }).then((files) => {                
+        },
+    }).then((files) => {
         dokumenPenghapusan.fileList(files);
         callback();
     });
@@ -53,8 +53,8 @@ function onBeritaAcaraPenghapusanGetFiles(foreignId, callback) {
             foreign_field: 'id',
             foreign_id: foreignId,
             foreign_table: 'inventaris_penghapusan',
-        },  
-    }).then((files) => {                
+        },
+    }).then((files) => {
         dokumenPenghapusan.fileList(files);
         callback();
     });
@@ -63,6 +63,30 @@ function onBeritaAcaraPenghapusanGetFiles(foreignId, callback) {
 const beritaAcaraPenghapusan = new FileGallery(document.getElementById('berita-acara'), {
     title: 'Dokumen',
     accept: `${App.Constant.MimeOffice}|image/*`,
+    onDelete: () => {
+        return new Promise((resolve, reject) => {
+            let checkIfIdExist = beritaAcaraPenghapusan.checkedRow().filter((d) => {
+                return d.id != undefined
+            })
+            if (checkIfIdExist.length < 1) {
+                resolve(true)
+                return
+            }
+            __ajax({
+                method: 'DELETE',
+                url: "<?= url('api/system_uploads') ?>/" + checkIfIdExist.map((d) => {
+                    return d.id
+                }),
+            }).then((d) => {
+                resolve(true)
+                onBeritaAcaraPenghapusanGetFiles(checkIfIdExist[0].foreign_id, () => {})
+            })
+        })
+    }
+});
+
+const dokumenSensus = new FileGallery(document.getElementById('dokumen-sensus-bpkad'), {
+    title: 'Dokumen',
     onDelete: () => {
         return new Promise((resolve, reject) => {
             let checkIfIdExist = beritaAcaraPenghapusan.checkedRow().filter((d) => {
@@ -94,8 +118,8 @@ function onDokumenValidasiPenghapusanGetFiles(foreignId, callback) {
             foreign_field: 'id',
             foreign_id: foreignId,
             foreign_table: 'inventaris_penghapusan',
-        },  
-    }).then((files) => {                
+        },
+    }).then((files) => {
         dokumenValidasiPenghapusan.fileList(files);
         callback();
     });
@@ -135,8 +159,8 @@ function onDokumenPersetujuanMutasiBpkadGetFiles(foreignId, callback) {
             foreign_field: 'id',
             foreign_id: foreignId,
             foreign_table: 'inventaris_mutasi',
-        },  
-    }).then((files) => {                
+        },
+    }).then((files) => {
         dokumenPersetujuanMutasiBpkad.fileList(files);
         callback();
     });
@@ -176,8 +200,8 @@ function onDokumenMutasiCancelGetFiles(foreignId, callback) {
             foreign_field: 'id',
             foreign_id: foreignId,
             foreign_table: 'inventaris_mutasi',
-        },  
-    }).then((files) => {                
+        },
+    }).then((files) => {
         dokumenMutasiCancel.fileList(files);
         callback();
     });
@@ -234,6 +258,9 @@ viewModel.data = Object.assign(viewModel.data, {
     countPenghapusan: ko.observable({
         step1: 0,
         step2: 0
+    }),
+    countSensus: ko.observable({
+        step1: 0,
     }),
     countReklas: ko.observable({
         step1: 0
@@ -517,6 +544,51 @@ function loadDataTableValidasiPenghapusan() {
     })
 }
 
+
+/**
+ * sensus for step - 1
+ */
+
+function loadDataTableSensusBPKAD() {
+    $('#table-sensus-bpkad').DataTable({
+        ajax: `${$("[base-path]").val()}/inventarisSensuses?status=STEP-1`,
+        dom: 'Bfrtip',
+        'drawCallback': onloadDataTableSensus,
+        'select': {
+            'style': 'sing'
+        },
+        columns: [{
+            'orderable': false,
+            "className": "details-control",
+            "render": function (data, type, row) {
+                return '<i class="fa fa-plus-circle text-success"></i>'
+            },
+            data: "id",
+        },
+        {
+            title: 'Nama Barang',
+            data: 'nama'
+        },
+        {
+            title: 'Kode Barang',
+            data: 'kode_barang'
+        },
+        {
+            title: 'Tanggal Sensus',
+            data: 'tanggal_sk'
+        },
+        {
+            title: 'Jenis Sensus',
+            data: 'status_barang_'
+        },
+        {
+            title: 'Pemohon',
+            data: 'pemohon'
+        },
+        ]
+    })
+}
+
 /**
  * show modal mutasi for step-1
  */
@@ -543,8 +615,8 @@ function approvementMutasi(step) {
 }
 
 /**
- * to approve each mutasi for step-2 
- * 
+ * to approve each mutasi for step-2
+ *
  */
 
 function approvementMutasiStep2(step) {
@@ -582,7 +654,7 @@ function cancelMutasiStep2(step) {
 
 /**
  * approve bpkad for penghapusan
- * 
+ *
  */
 
 
@@ -604,7 +676,7 @@ function approvementPenghapusanBPKAD() {
 
 /**
  * approve konfirmasi for penghapusan
- * 
+ *
  */
 
 
@@ -625,7 +697,7 @@ function approvementKonfirmasiPenghapusan() {
 
 /**
  * approve validasi for penghapusan
- * 
+ *
  */
 
 
@@ -648,7 +720,7 @@ function approvementValidasiPenghapusan() {
 
 /**
  * approvement for step -3
- * 
+ *
  */
 
 function approvementMutasiStep3(step) {
@@ -667,7 +739,7 @@ function approvementMutasiStep3(step) {
 
 /**
  * approvement for reklas step 1
- * 
+ *
  */
 
 function approvementReklas(step) {
@@ -684,8 +756,26 @@ function approvementReklas(step) {
 }
 
 /**
+ * approvement sensus bpkad
+ */
+
+ function approvementSensusBPKAD(step) {
+    viewModel.services.approveSensus($('#table-sensus-bpkad').DataTable().rows('.selected').data().toArray(), step)
+        .then((d) => {
+            swal.fire({
+                type: 'success',
+                text: 'Sensus berhasil di setujui!'
+            }).then((d) => {
+                viewModel.clickEvent.setCurrentHighlight(viewModel.data.currentHighlight())
+                countSensusProgress();
+                $('#modal-sensus-bpkad-form').modal('hide')
+            })
+    })
+ }
+
+/**
  * form before bpkad giving approvement to mutation
- * 
+ *
  */
 
 
@@ -714,6 +804,40 @@ function beforeApproveValidasiPenghapusan() {
     dokumenValidasiPenghapusan.fileList([]);
     $('#modal-validasi-penghapusan-konfirmasi-form').modal('show')
 }
+
+/**
+ *
+ * before approve sensus
+ */
+
+ function beforeApproveBPKADSensus() {
+    dokumenSensus.fileList([]);
+    $('#modal-sensus-bpkad-form').modal('show')
+ }
+function onloadDataTableSensus(e) {
+    //  $(`#${e.sTableId} tbody`).unbind()
+    $(`#${e.sTableId} tbody`).unbind('click').on('click', 'td.details-control i', function (i, n) {
+        var tr = $(this).closest('tr');
+        var row = $(`#${e.sTableId}`).DataTable().row(tr);
+        // alert (row.child.isShown())
+        if (row.child.isShown()) {
+            // This row is already open - close it
+            $(this).attr('class', $(this).attr('class').replace('minus-circle', 'plus-circle'))
+
+            row.child.hide();
+            tr.removeClass('shown');
+        }
+        else {
+            $(this).attr('class', $(this).attr('class').replace('plus-circle', 'minus-circle'))
+
+            $.get(`${$("[base-path]").val()}/partials/view.sensus/${row.data().id}`).then((data) => {
+
+                row.child(`<div class='container container-view'>${data}</div>`).show();
+            })
+        }
+    })
+}
+
 
 /**
  * onDrawCallback DataTable
@@ -827,9 +951,20 @@ function onloadDataTablePenghapusan(e) {
     })
 }
 
+
+/**
+ * counting sensus masuk
+ * sensus on progress
+ * etc
+ */
+function countSensusProgress() {
+    viewModel.services.countSensusWorkflow()
+}
+
+
 /**
  * counting mutasi masuk
- * mutasi on progress 
+ * mutasi on progress
  * etc
  */
 function countMutasiProgress() {
@@ -857,9 +992,11 @@ function countReklasProgress() {
 /**
  * load functions
  */
+countSensusProgress()
 countMutasiProgress()
 countPenghapusanProgress()
 countReklasProgress()
+loadDataTableSensusBPKAD()
 loadDataTableMutasi()
 loadDataTableMutasiBPKAD();
 loadDataTableMutasiStep3();
