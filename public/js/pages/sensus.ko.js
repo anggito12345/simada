@@ -4,6 +4,9 @@ viewModel.data.urlEachKIB = (newVal) => {
 
 let sensus = {
     data: {
+        dropdownDataSource: {
+            statusBarang: ko.observableArray([])
+        },
         select2Objects: {
             kodeTujuan: null
         },
@@ -34,6 +37,11 @@ let sensus = {
         },
         nextStep: (step) => {
             sensus.data.step(step)
+            if(step == 2) {
+                sensus.data.form.status_barang.notifySubscribers()
+            }
+            sensus.data.step.notifySubscribers()
+
         },
         reloadGrid: () => {
             $(`#${sensus.data.statics.idGridSensus}`).DataTable().ajax.reload();
@@ -139,28 +147,22 @@ let sensus = {
             })
         },
         onSensus: () => {
-            if ($(`#${sensus.data.statics.idGridInventaris}`).DataTable().rows('.selected').count()!= 1 ) {
+
+            $(`#${sensus.data.statics.idModalSensus}`).modal('show')
+            /*if ($(`#${sensus.data.statics.idGridInventaris}`).DataTable().rows('.selected').count()!= 1 ) {
                 swal.fire({
                     type: 'error',
                     text: 'Silahkan pilih 1 yang ingin disensus',
                     title: 'Ubah'
                 })
             } else {
-                sensus.data.form.idinventaris(parseInt($(`#${sensus.data.statics.idGridInventaris}`).DataTable().rows('.selected').data().toArray()[0].id))
-                $(`#${sensus.data.statics.idModalSensus}`).modal('show')
 
-            }
+
+            }*/
         }
     }
 }
 
-
-sensus.data.form.status_barang.subscribe(() => {
-    sensus.data.step(2)
-    sensus.data.step.notifySubscribers()
-
-
-})
 
 
 $(document).ready(() => {

@@ -161,15 +161,15 @@ class inventarisDataTable extends DataTable
 
             $addtButtons = [];
 
-            if (c::is('inventaris',['create'], BaseModel::getAccess(function($index, $label) {
+            /*if (c::is('inventaris',['create'], BaseModel::getAccess(function($index, $label) {
                 if ($index >= Constant::$GROUP_BPKAD_ORG) {
                     return true;
                 }
 
                 return false;
             }))) {
-                array_push($addtButtons, ['extend' => 'create']);
-            }
+                array_push($addtButtons, ['text' => '<i class="fa fa-plus"></i> Barang Tidak Tercatat', 'action' => 'function(){ window.location = "'.route('inventaris.create').'?sensus=true"}', ]);
+            }*/
 
             if (c::is('sensus',['create'], BaseModel::getAccess(function($index, $label) {
                 if ($index >= Constant::$GROUP_BPKAD_ORG) {
