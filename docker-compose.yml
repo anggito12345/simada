@@ -1,0 +1,47 @@
+version: '3'
+
+networks:
+  laravel:
+
+services:
+  nginx:
+    image: nginx:stable-alpine
+    container_name: webserver-nginx
+    depends_on:
+      - php
+      - postgresql
+    ports:
+      - "8088:80"
+    volumes:
+      - ./:/var/www/html
+      - ./docker-compose/nginx/default.conf:/etc/nginx/conf.d/default.conf
+    networks:
+      - laravel
+
+
+  postgresql:
+    image: postgres:alpine
+    container_name: postgres
+    restart: unless-stopped
+    tty: true
+    ports:
+      - "5432:5432"
+    volumes:
+      - ./docker-compose/postgres:/var/lib/postgresql
+    networks:
+      - laravel
+    environment:
+      POSTGRES_USER: postgres
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_DB: simada
+
+  php:
+    build:
+      context: .
+      dockerfile: Dockerfile
+    volumes:
+      - ./:/var/www/html
+    ports:
+      - "9000:9000"
+    networks:
+      - laravel

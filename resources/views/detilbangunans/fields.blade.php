@@ -1,6 +1,12 @@
+<!-- Kodetanah Field -->
+<div class="form-group col-sm-6 row">
+    {!! Form::label('kodetanah', 'Kode Tanah:') !!}
+    {!! Form::select('kodetanah', [], null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB C"]().kodetanah']) !!}
+</div>
+
 <!-- nilai_hub Field -->
 <div class="form-group col-sm-6 row">
-    {!! Form::label('nilai_hub_kibc', 'Nilai Hub:') !!}
+    {!! Form::label('nilai_hub_kibc', 'Nilai HBU:') !!}
     {!! Form::number('nilai_hub_kibc', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB C"]().nilai_hub']) !!}
 </div>
 
@@ -122,6 +128,13 @@
             theme: 'bootstrap' ,
         })
 
+        $('#kodetanah').on('select2:select', function (e) {
+            // Do something
+            if ($('#kodetanah').select2('data').length > -1) {
+                viewModel.methods.SetAlamatHirearchy($('#kodetanah').select2('data')[0], 'KIB C')
+            }
+        });
+
 
         new inlineDatepicker(document.getElementById('tgldokumen'), {
             format: 'DD-MM-YYYY',
@@ -153,11 +166,7 @@
     {!! Form::select('statustanah', [], null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB C"]().statustanah']) !!}
 </div>
 
-<!-- Kodetanah Field -->
-<div class="form-group col-sm-6 row">
-    {!! Form::label('kodetanah', 'Kode Tanah:') !!}
-    {!! Form::select('kodetanah', [], null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB C"]().kodetanah']) !!}
-</div>
+
 
 <!-- Dokumen Field -->
 <!-- <div class="form-group col-sm-6 row">

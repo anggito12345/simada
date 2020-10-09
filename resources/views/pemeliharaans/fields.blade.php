@@ -54,7 +54,7 @@
 <!-- Biaya Field -->
 <div class="form-group <?= isset($isInventarisPage) ? 'col-md-12' : 'col-md-6'  ?>">
     {!! Form::label('biaya', 'Biaya Pemeliharaan:') !!}
-    {!! Form::number('biaya', null, ['class' => 'form-control']) !!}
+    {!! Form::text('biaya', null, ['class' => 'form-control']) !!}
 </div>
 
 <!-- Umur Ekonomis Field -->
@@ -96,10 +96,6 @@
 
 <script type="text/javascript">
 
-new inlineDatepicker(document.getElementById('tgl'), {
-    format: 'DD-MM-YYYY',
-    buttonClear: true,
-});
 
 new inlineDatepicker(document.getElementById('tglkontrak'), {
     format: 'DD-MM-YYYY',
@@ -236,12 +232,32 @@ document.querySelector('#form-pemeliharaan').addEventListener('submit', (e) => {
 $(document).ready(() => {
     var url_string = window.location.href; //window.location.href
     var url = new URL(url_string);
-    var idbarang = url.searchParams.get("idbarang");
-    if (idbarang) {
-        $("#pidinventaris_pemeliharaan").LookupTable().setValAjax("<?= url('api/barangs') ?>/"+idbarang).then((d) => {
+    var idinventaris = url.searchParams.get("idinventaris");
+    var tgldibukukan = url.searchParams.get("tgldibukukan");
+    var biaya = url.searchParams.get("hargasatuan");
+    if (idinventaris) {
+        $("#pidinventaris_pemeliharaan").LookupTable().setValAjax("<?= url('api/inventaris') ?>/"+idinventaris).then((d) => {
         })
     }
+
+    if (tgldibukukan) {
+        $('#tgl').val(tgldibukukan)
+    }
+
+    new inlineDatepicker(document.getElementById('tgl'), {
+        format: 'DD-MM-YYYY',
+        buttonClear: true,
+    });
+
+    alert(biaya)
+
+    if (biaya) {
+        $("#biaya").mask("#.##0,00", {reverse: true})
+        $("#biaya").val(biaya)
+    }
+
 })
+
 </script>
 
 @if(isset($pemeliharaan))

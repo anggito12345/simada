@@ -9,6 +9,8 @@ use App\Repositories\detiltanahRepository;
 use Illuminate\Http\Request;
 use App\Http\Controllers\AppBaseController;
 use Response;
+use Auth;
+use App\Helpers\Constant;
 
 /**
  * Class detiltanahController
@@ -22,6 +24,7 @@ class detiltanahAPIController extends AppBaseController
 
     public function __construct(detiltanahRepository $detiltanahRepo)
     {
+        $this->middleware('auth:api');
         $this->detiltanahRepository = $detiltanahRepo;
     }
 
@@ -50,36 +53,47 @@ class detiltanahAPIController extends AppBaseController
      */
     public function index(Request $request)
     {
-       
+        $organisasiUser = \App\Models\organisasi::find(Auth::user()->pid_organisasi);
 
-        $fieldText = "concat(al_kota.nama, ', ', al_kecamatan.nama, ', ', detil_tanah.nomor_sertifikat)";
+        $fieldText = "concat(inventaris.kode_barang, ' - ', inventaris.noreg, ' - ', inventaris.tahun_perolehan)";
 
         if ($request->__isset("fieldText")) {
             $fieldText = $request->input("fieldText");
         }
 
         $query = \App\Models\detiltanah::selectRaw(
-            $fieldText." as text, detil_tanah.id
+            $fieldText." as text, detil_tanah.*, inventaris.alamat_kota, inventaris.alamat_kecamatan, inventaris.alamat_kelurahan, inventaris.alamat_propinsi
         ")
         ->leftJoin('m_alamat as al_kota', 'al_kota.id', 'detil_tanah.idkota')
         ->leftJoin('m_alamat as al_kecamatan', 'al_kecamatan.id', 'detil_tanah.idkecamatan')
-        ->leftJoin('inventaris', 'inventaris.id', 'detil_tanah.pidinventaris');
-        
+        ->leftJoin('inventaris', 'inventaris.id', 'detil_tanah.pidinventaris')
+        ->leftJoin('m_organisasi', 'm_organisasi.id', 'inventaris.pid_organisasi');
+
 
         if ($request->__isset("q")) {
-            $query = $query->whereRaw("al_kota.nama like '%".$request->input("term")."%'")
-            ->orWhereRaw("al_kecamatan.nama like '%".$request->input("term")."%'")
-            ->orWhereRaw("nomor_sertifikat like '%".$request->input("term")."%'");
+            $query = $query->whereRaw("inventaris.kode_barang like '%".$request->input("term")."%'")
+            ->orWhereRaw("inventaris.tahun_perolehan like '%".$request->input("term")."%'")
+            ->orWhereRaw("inventaris.noreg like '%".$request->input("term")."%'");
         }
-        
+
 
         if ($request->__isset("addWhere")) {
             foreach ($request->input("addWhere") as $key => $value) {
                 $query = $query->whereRaw($value);
-            }            
+            }
         }
 
-        $detiltanahs = $query 
+        if ($organisasiUser->level == Constant::$GROUP_OPD_ORG) {
+            $query = $query
+                ->whereRaw('( inventaris.pid_organisasi = '.$organisasiUser->id.' OR m_organisasi.pid = '.$organisasiUser->id . ')')
+                ->where('m_organisasi.level', '>=', $organisasiUser->jabatans);
+        } else if ($organisasiUser->level == Constant::$GROUP_CABANGOPD_ORG) {
+            $query = $query
+                ->whereRaw(' ( inventaris.pid_organisasi = '.$organisasiUser->id . ' OR m_organisasi.id = ' . $organisasiUser->pid . ' ) ')
+                ->where('m_organisasi.level', '>=', Constant::$GROUP_OPD_ORG);
+        }
+
+        $detiltanahs = $query
         ->get();
 
         return $this->sendResponse($detiltanahs->toArray(), 'Detiltanahs retrieved successfully');

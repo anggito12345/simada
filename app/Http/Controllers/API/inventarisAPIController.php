@@ -222,7 +222,7 @@ class inventarisAPIController extends AppBaseController
 
                 $kibData['pidinventaris'] = $inventaris->id;
 
-                \App\Models\inventaris::saveKib($kibData, $input['tipe_kib']);
+                inventarisRepository::saveKib($kibData, $input['tipe_kib']);
 
                 $inventarisHistory = $inventaris->toArray();
 
@@ -387,7 +387,7 @@ class inventarisAPIController extends AppBaseController
 
             $kibData['pidinventaris'] = $id;
 
-            \App\Models\inventaris::saveKib($kibData, $input['tipe_kib']);
+            inventarisRepository::saveKib($kibData, $input['tipe_kib']);
 
             $inventarisHistory = $inventaris->toArray();
 

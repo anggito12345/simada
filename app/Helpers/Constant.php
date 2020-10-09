@@ -49,6 +49,8 @@ class Constant {
     ];
 
     public static $SENSUS_STATUS_01 = [
+        'Barang Tidak Tercatat',
+        'Barang Tercatat',
         'Tidak Ada',
         'Ubah Satuan'
     ];

@@ -45,15 +45,33 @@
         })
     }
 
-    new inlineDatepicker(document.getElementById('tgl'), {
+    var url_string = window.location.href; //window.location.href
+    var url = new URL(url_string);
+    var idbarang = url.searchParams.get("idbarang");
+    var tgldibukukan = url.searchParams.get("tgldibukukan");
+    if (idbarang) {
+        $("#pidinventaris_pemeliharaan").LookupTable().setValAjax("<?= url('api/barangs') ?>/"+idbarang).then((d) => {
+        })
+    }
+
+    if (tgldibukukan) {
+        $('#tgl').val(tgldibukukan)
+    }
+
+    let tglPemeliharaan = new inlineDatepicker(document.getElementById('tgl'), {
         format: 'DD-MM-YYYY',
         buttonClear: true,
     });
+
 
     new inlineDatepicker(document.getElementById('tglkontrak'), {
         format: 'DD-MM-YYYY',
         buttonClear: true,
     });
+
+
+
+
 
     function doSave(isDraft) {
         Swal.fire({

@@ -12,8 +12,22 @@
         <div class="col-md-4">
             {{ Form::label('koderincianobjek_filter', 'Rincian Objek:') }}
             {{ Form::select('koderincianobjek_filter', [], 0, ['class' => 'form-control', 'onchange' => 'viewModel.changeEvent.changeRefreshGrid()']) }}
-        </div>        
-    </div>    
+        </div>
+    </div>
+    <div class="row">
+        <div class="col-md-4">
+            {{ Form::label('penggunafilter', 'Pengguna:') }}
+            {{ Form::select('penggunafilter', [], 0, ['class' => 'form-control', 'onchange' => 'viewModel.changeEvent.changeRefreshGrid()']) }}
+        </div>
+        <div class="col-md-4">
+            {{ Form::label('kuasapengguna_filter', 'Kuasa Pengguna:') }}
+            {{ Form::select('kuasapengguna_filter', [], 0, ['class' => 'form-control', 'onchange' => 'viewModel.changeEvent.changeRefreshGrid()']) }}
+        </div>
+        <div class="col-md-4">
+            {{ Form::label('subkuasa_filter', 'Sub Kuasa Pengguna:') }}
+            {{ Form::select('subkuasa_filter', [], 0, ['class' => 'form-control', 'onchange' => 'viewModel.changeEvent.changeRefreshGrid()']) }}
+        </div>
+    </div>
     <div class="row">
         <div class="col-md-4">
             {{ Form::label('organisasi_filter', 'Organisasi:') }}
@@ -47,7 +61,7 @@
 
     viewModel.jsLoaded.subscribe(() => {
         $("#jenisbarangs_filter").select2({
-            ajax: {                                
+            ajax: {
                 url: "<?= url('api/jenisbarangs') ?>",
                 dataType: 'json',
                 data: function (params) {
@@ -74,13 +88,13 @@
         });
 
         $("#kodeobjek_filter").select2({
-            ajax: {                                
+            ajax: {
                 url: "<?= url('api/barangs') ?>",
                 dataType: 'json',
                 data: function (params) {
                     idInput = $(this)[0].id
 
-                    params.kode_jenis = $("#jenisbarangs_filter").val() 
+                    params.kode_jenis = $("#jenisbarangs_filter").val()
 
                     return params;
                 },
@@ -93,7 +107,7 @@
                             return d
                         })
                     };
-                },                                
+                },
             },
             theme: 'bootstrap' ,
         })
@@ -103,15 +117,15 @@
         });
 
         $("#koderincianobjek_filter").select2({
-            ajax: {                                
+            ajax: {
                 url: "<?= url('api/barangs') ?>",
                 dataType: 'json',
                 data: function (params) {
                     idInput = $(this)[0].id
-                    
 
-                    params.kode_objek = $("#kodeobjek_filter").select2('data')[0].kode_objek 
-                    params.kode_jenis = $("#jenisbarangs_filter").val() 
+
+                    params.kode_objek = $("#kodeobjek_filter").select2('data')[0].kode_objek
+                    params.kode_jenis = $("#jenisbarangs_filter").val()
 
                     return params;
                 },
@@ -125,15 +139,93 @@
                         })
                     };
                 },
-                
+
+            },
+            theme: 'bootstrap' ,
+        })
+
+        $("#penggunafilter").select2({
+            ajax: {
+                url: "<?= url('api/organisasis') ?>",
+                dataType: 'json',
+                data: function (params) {
+                    params.level = 0
+
+                    return params;
+                },
+                processResults: function (data) {
+                    // Transforms the top-level key of the response object from 'items' to 'results'
+                    return {
+                        results: data.data.map((d) => {
+                            d.text = d.text
+                            d.id = d.id
+                            return d
+                        })
+                    };
+                }
+            },
+            theme: 'bootstrap' ,
+        })
+
+        $('#penggunafilter').on('change', function (e) {
+            $("#kuasapengguna_filter").val("").trigger("change")
+        });
+
+        $("#kuasapengguna_filter").select2({
+            ajax: {
+                url: "<?= url('api/organisasis') ?>",
+                dataType: 'json',
+                data: function (params) {
+                    params.level = 1
+                    params.pid = $("#penggunafilter").select2('data')[0].id
+                    return params;
+                },
+                processResults: function (data) {
+                    // Transforms the top-level key of the response object from 'items' to 'results'
+                    return {
+                        results: data.data.map((d) => {
+                            d.text = d.text
+                            d.id = d.id
+                            return d
+                        })
+                    };
+                },
+            },
+            theme: 'bootstrap' ,
+        })
+
+        $('#kuasapengguna_filter').on('change', function (e) {
+            $("#subkuasa_filter").val("").trigger("change")
+        });
+
+        $("#subkuasa_filter").select2({
+            ajax: {
+                url: "<?= url('api/organisasis') ?>",
+                dataType: 'json',
+                data: function (params) {
+                    params.level = 2
+                    params.pid = $("#kuasapengguna_filter").select2('data')[0].id
+
+                    return params;
+                },
+                processResults: function (data) {
+                    // Transforms the top-level key of the response object from 'items' to 'results'
+                    return {
+                        results: data.data.map((d) => {
+                            d.text = d.text
+                            d.id = d.id
+                            return d
+                        })
+                    };
+                },
+
             },
             theme: 'bootstrap' ,
         })
 
 
-
         $("#organisasi_filter").select2({
-            ajax: {                                
+            ajax: {
                 url: "<?= url('api/organisasis') ?>?pid=<?= Auth::user()->pid_organisasi ?>",
                 dataType: 'json',
                 data: function (params) {
@@ -150,38 +242,10 @@
                         })
                     };
                 },
-                
+
             },
             theme: 'bootstrap' ,
         })
 
-        // $('#koderincianobjek_filter').on('change', function (e) {
-        //     $("#kodesubrincianobjek_filter").val("").trigger("change")
-        // });
-
-        // $("#kodesubrincianobjek_filter").select2({
-        //     ajax: {                                
-        //         url: "<?= url('api/barangs') ?>",
-        //         dataType: 'json',
-        //         data: function (params) {
-        //             idInput = $(this)[0].id
-        //             params.kode_objek = $("#kodeobjek_filter").select2('data')[0].kode_objek 
-        //             params.kode_jenis = $("#jenisbarangs_filter").val() 
-        //             params.kode_rincian_objek = $("#koderincianobjek_filter").select2('data')[0].kode_rincian_objek 
-
-        //             return params;
-        //         },
-        //         processResults: function (data) {
-        //             // Transforms the top-level key of the response object from 'items' to 'results'
-        //             return {
-        //                 results: data.data.map((d) => {
-        //                     d.text = d.nama_rek_aset
-        //                     return d
-        //                 })
-        //             };
-        //         }
-        //     },
-        //     theme: 'bootstrap' ,
-        // })
     })
 </script>

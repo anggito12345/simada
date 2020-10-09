@@ -1,14 +1,19 @@
+<!-- Kodetanah Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('kodetanah', 'Nomor Kode Tanah:') !!}
+    {!! Form::select('kodetanah',[], null, ['class' => 'form-control', 'id' => 'kodetanah-detilkonstruksi', 'data-bind' => 'value: viewModel.data["KIB F"]().kodetanah']) !!}
+</div>
+
 <!-- Konstruksi Field -->
 <div class="form-group col-sm-6">
     {!! Form::label('konstruksi', 'Konstruksi:') !!}
     {!! Form::text('konstruksi', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB F"]().konstruksi']) !!}
 </div>
 
-
 <u class="col-md-12">Konstruksi Bangunan</u>
 
 <div class="col-md-12">
-    
+
     <!-- Bertingkat Field -->
     <div class="form-group col-sm-6">
         {!! Form::label('bertingkat', 'Bertingkat:') !!}
@@ -56,14 +61,14 @@
 <u class="col-md-12">Dokumen</u>
 
 <div class="col-md-12">
-    
+
     <!-- Tgldokumen Field -->
     <div class="form-group col-sm-6">
         {!! Form::label('tgldokumen', 'Tanggal:') !!}
         {!! Form::text('tgldokumen', null, ['class' => 'form-control','id'=>'tgldokumen', 'id' => 'tgldokumen-detilkonstruksi', 'data-bind' => 'value: viewModel.data["KIB F"]().tgldokumen']) !!}
     </div>
 
-    
+
     <!-- Nodokumen Field -->
     <div class="form-group col-sm-6">
         {!! Form::label('nodokumen', 'Nomor:') !!}
@@ -83,11 +88,7 @@
     {!! Form::select('statustanah', [], null, ['class' => 'form-control', 'id' => 'statustanah-detilkonstruksi', 'data-bind' => 'value: viewModel.data["KIB F"]().statustanah']) !!}
 </div>
 
-<!-- Kodetanah Field -->
-<div class="form-group col-sm-6">
-    {!! Form::label('kodetanah', 'Nomor Kode Tanah:') !!}
-    {!! Form::select('kodetanah',[], null, ['class' => 'form-control', 'id' => 'kodetanah-detilkonstruksi', 'data-bind' => 'value: viewModel.data["KIB F"]().kodetanah']) !!}
-</div>
+
 
 <!-- Keterangan Field -->
 <div class="form-group col-sm-6">
@@ -126,7 +127,7 @@ viewModel.jsLoaded.subscribe(() => {
             value: viewModel.data["KIB F"]().koordinattanah,
         })
     }, 2500)
-   
+
 
     $('#statustanah-detilkonstruksi').select2({
         ajax: {
@@ -139,8 +140,10 @@ viewModel.jsLoaded.subscribe(() => {
             };
             }
         },
-        theme: 'bootstrap' , 
+        theme: 'bootstrap' ,
     })
+
+
 
     $('#kodetanah-detilkonstruksi').select2({
         ajax: {
@@ -153,9 +156,15 @@ viewModel.jsLoaded.subscribe(() => {
             };
             }
         },
-        theme: 'bootstrap' , 
+        theme: 'bootstrap' ,
     })
 
+    $('#kodetanah-detilkonstruksi').on('select2:select', function (e) {
+            // Do something
+        if ($('#kodetanah-detilkonstruksi').select2('data').length > -1) {
+            viewModel.methods.SetAlamatHirearchy($('#kodetanah-detilkonstruksi').select2('data')[0], 'KIB F')
+        }
+    });
 
     new inlineDatepicker(document.getElementById('tgldokumen-detilkonstruksi'), {
         format: 'DD-MM-YYYY',

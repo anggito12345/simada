@@ -1,5 +1,28 @@
 <?php
 
+
+//kode daerah
+Breadcrumbs::for('mKodeDaerahs.index', function ($trail) {
+    $trail->push('Kode Daerah', route('mKodeDaerahs.index'));
+});
+
+// Inventaris > Buat
+Breadcrumbs::for('mKodeDaerahs.create', function ($trail) {
+    $trail->parent('mKodeDaerahs.index');
+    $trail->push('Buat', route('mKodeDaerahs.create'));
+});
+
+// Inventaris > Ubah
+Breadcrumbs::for('mKodeDaerahs.edit', function ($trail,$data) {
+    $trail->parent('mKodeDaerahs.index', $data);
+    $trail->push('Ubah', route('mKodeDaerahs.edit',$data));
+});
+
+Breadcrumbs::for('mKodeDaerahs.show', function ($trail,$data) {
+    $trail->parent('mKodeDaerahs.index', $data);
+    $trail->push('Lihat', route('mKodeDaerahs.show',$data));
+});
+
 // Inventaris
 Breadcrumbs::for('inventaris.index', function ($trail) {
     $trail->push('Inventaris', route('inventaris.index'));

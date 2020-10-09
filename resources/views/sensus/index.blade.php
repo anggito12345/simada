@@ -69,12 +69,13 @@
                     <label>
                         Sensus
                     </label>
-                    <select type="text" class="form-control" id="sensus-dd" data-bind="value: sensus.data.form.status_barang" placeholder="Pilih Status Barang" >
+                    <select type="text" class="form-control" id="sensus-dd" onchange='sensus.methods.nextStep(2)'
+                        data-bind="
+                            value: sensus.data.form.status_barang,
+                            options: sensus.data.dropdownDataSource.statusBarang,
+                            optionsCaption: 'Choose one...'," placeholder="Pilih Status Barang" >
                         <option>Pilih Status Barang</option>
 
-                        @foreach (Constant::$SENSUS_STATUS_01 as $index => $sensus_status)
-                            <option value="{!! $index !!}">{!! $sensus_status !!}</option>
-                        @endforeach
                     </select>
                 </div>
                 {{-- options tidak ada --}}
@@ -134,9 +135,11 @@
 @endsection
 @section('scripts_2 ')
 <script>
-
+ alert('test')
+        console.log(<?= json_encode(Constant::$SENSUS_STATUS_01) ?>,'info')
    $(document).ready(() => {
 
+        sensus.data.dropdownDataSource.statusBarang(<?= json_encode(Constant::$SENSUS_STATUS_01) ?>)
         $("select[name=jenis_sensus]").select2()
 
         $('#sensus-dd').select2({

@@ -91,7 +91,8 @@
     c::is('master organisasi',['view'],[Constant::$GROUP_BPKAD_ORG]) ||
     c::is('master satuan barang',['view'],[Constant::$GROUP_BPKAD_ORG]) ||
     c::is('master mitra',['view'],[Constant::$GROUP_BPKAD_ORG]) ||
-    c::is('master kib',['view'],[Constant::$GROUP_BPKAD_ORG])
+    c::is('master kib',['view'],[Constant::$GROUP_BPKAD_ORG]) ||
+    c::is('master kode daerah',['view'],[Constant::$GROUP_BPKAD_ORG])
 
 )
 <li class="treeview {{ Request::is('alamats*', 'jenisbarangs*', 'kondisis*', 'merkbarangs*', 'organisasis*', 'perolehans*', 'satuanbarangs*', 'pengunaans*', 'mitras*', 'statustanahs*') && !Request::is('organisasis/settings') ? 'active' : '' }}">
@@ -150,6 +151,11 @@
             <a href="{!! route('pengunaans.index') !!}"><i class="fa fa-edit"></i><span>Pengunaan KIB A</span></a>
         </li>
         @endif
+
+        <li class="{{ Request::is('mKodeDaerahs*') ? 'active' : '' }}">
+            <a href="{{ route('mKodeDaerahs.index') }}"><i class="fa fa-edit"></i><span>Kode Daerah</span></a>
+        </li>
+
     </ul>
 </li>
 @endif
@@ -215,3 +221,11 @@ $countUserNeedOtor = \App\Models\users::where('aktif', '0')->count();
 </li>
 @endif
 
+{{-- <li class="{{ Request::is('sysWorkflows*') ? 'active' : '' }}">
+    <a href="{{ route('sysWorkflows.index') }}"><i class="fa fa-edit"></i><span>Sys Workflows</span></a>
+</li>
+
+<li class="{{ Request::is('sysWorkflowMasters*') ? 'active' : '' }}">
+    <a href="{{ route('sysWorkflowMasters.index') }}"><i class="fa fa-edit"></i><span>Sys Workflow Masters</span></a>
+</li>
+ --}}
