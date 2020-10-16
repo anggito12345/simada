@@ -58,13 +58,14 @@
         }">
         Penghapusan
     </div>
-    {{-- @if(c::is('',[],[Constant::$GROUP_BPKAD_ORG]))
+    @if(c::is('',[],[Constant::$GROUP_BPKAD_ORG]))
     <div class="item" data-bind="{
         click: viewModel.clickEvent.setCurrentTab.bind(this, 'sensus'),
         class: viewModel.data.currentTab() === 'sensus' ? 'active' : ''
     }">
         Sensus
-    </div> --}}
+    </div>
+    @endif
     @if(c::is('',[],[Constant::$GROUP_BPKAD_ORG]))
     <div class="item" data-bind="{
             click: viewModel.clickEvent.setCurrentTab.bind(this, 'reklas'),
@@ -101,7 +102,7 @@
                 <!-- /.info-box-content -->
             </div>
         </div>
-        <!-- <div class="col-md-4">
+        <div class="col-md-4">
             <div class="info-box" data-bind="{
                     click: viewModel.clickEvent.setCurrentHighlight.bind(this, 'mutasi-bpkad'),
                     class: viewModel.data.currentHighlight() === 'mutasi-bpkad' ? 'active' : ''
@@ -116,7 +117,7 @@
                     <span class="info-box-number" data-bind="text: viewModel.data.count().step2"></span>
                 </div>
             </div>
-        </div> -->
+        </div>
         <div class="col-md-4">
             <div class="info-box" data-bind="{
                     click: viewModel.clickEvent.setCurrentHighlight.bind(this, 'mutasi-konfirmasi'),

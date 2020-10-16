@@ -81,7 +81,8 @@ class inventaris extends Model
         'umur_ekonomis',
         'kode_barang',
         'import_flag',
-        'nama_populer'
+        'nama_populer',
+        'is_sensus'
     ];
 
     /**

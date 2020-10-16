@@ -12,12 +12,14 @@ use App\Http\Controllers\AppBaseController;
 use App\Models\barang;
 use App\Repositories\inventaris_historyRepository;
 use App\Repositories\inventaris_reklasRepository;
+use App\Repositories\inventaris_sensusRepository;
 use Response;
 use Illuminate\Support\Facades\Storage;
 use Illuminate\Support\Facades\DB;
 use Auth;
 use Exception;
 use c;
+use App\Helpers\Access;
 
 /**
  * Class inventarisController
@@ -30,16 +32,19 @@ class inventarisAPIController extends AppBaseController
     private $inventarisRepository;
     private $inventaris_historyRepository;
     private $inventaris_reklasRepository;
+    private $inventaris_sensusRepository;
 
     public function __construct(
         inventarisRepository $inventarisRepo,
         inventaris_historyRepository $inventaris_historyRepository,
-        inventaris_reklasRepository $inventaris_reklasRepository)
+        inventaris_reklasRepository $inventaris_reklasRepository,
+        inventaris_sensusRepository $inventaris_sensusRepository)
     {
         $this->middleware('auth:api');
         $this->inventarisRepository = $inventarisRepo;
         $this->inventaris_historyRepository = $inventaris_historyRepository;
         $this->inventaris_reklasRepository = $inventaris_reklasRepository;
+        $this->inventaris_sensusRepository = $inventaris_sensusRepository;
 
 
     }
@@ -141,103 +146,12 @@ class inventarisAPIController extends AppBaseController
 
         $input['idpegawai'] = $request->user()->id;
         $input['pid_organisasi'] = $request->user()->pid_organisasi;
-        $input['harga_satuan'] = str_replace(".", "", $input['harga_satuan']);
+        $input['harga_satuan'] = str_replace(".", "", explode(",",$input['harga_satuan'])[0]);
 
-        // generate no register
-        $modelInventaris = new \App\Models\inventaris();
-
-        $barangMaster = \App\Models\barang::find($input['pidbarang']);
-
-        $currentNoReg = DB::table($modelInventaris->table)
-            ->select([
-                'inventaris.*',
-            ])
-            ->join('m_barang', 'm_barang.id', 'inventaris.pidbarang')
-            ->where('m_barang.kode_jenis', '=', $barangMaster->kode_jenis)
-            ->where('inventaris.pid_organisasi', '=', $request->user()->pid_organisasi)
-            ->where('inventaris.tahun_perolehan', '=', $input['tahun_perolehan'])
-            ->orderBy('inventaris.noreg', 'desc')
-            ->lockForUpdate()->first();
-
-        $lastNoReg = 0;
-        if ($currentNoReg != null) {
-            $lastNoReg = (int) $currentNoReg->noreg;
-        }
-        for ($i = 0; $i < $input['jumlah']; $i++) {
-
-            $input['noreg'] = sprintf('%03d', $lastNoReg + 1);
-
-            $barang = barang::find($input['pidbarang']);
-
-            if (empty($barang)) {
-                throw new Exception('Barang not found');
-                return;
-            }
-
-            $input['umur_ekonomis'] = $barang->umur_ekonomis;
-            $input['kode_lokasi'] = inventarisRepository::generateKodeLokasi($input);
-
-
-
-            $inventaris = $this->inventarisRepository->create($input);
-
-            $request->merge(['idinventaris' => $inventaris["id"]]);
-
-            $fileDokumens = [];
-            $fileFotos = [];
-
-            DB::beginTransaction();
-            try {
-
-                $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen', $request, "inventaris", function ($metadatas, $index, $systemUpload) {
-                    if (isset($metadatas['dokumen_metadata_keterangan'][$index]) && $metadatas['dokumen_metadata_keterangan'][$index] != null) {
-                        $systemUpload->keterangan = $metadatas['dokumen_metadata_keterangan'][$index];
-                    }
-
-                    $systemUpload->uid = $metadatas['dokumen_metadata_uid'][$index];
-                    $systemUpload->foreign_field = 'id';
-                    $systemUpload->jenis = 'dokumen';
-                    $systemUpload->foreign_table = 'inventaris';
-                    $systemUpload->foreign_id = $metadatas['idinventaris'];
-
-                    return $systemUpload;
-                });
-
-
-                $fileFotos = \App\Helpers\FileHelpers::uploadMultiple('foto', $request, "inventaris", function ($metadatas, $index, $systemUpload) {
-                    if (isset($metadatas['foto_metadata_keterangan'][$index]) && $metadatas['foto_metadata_keterangan'][$index] != null) {
-                        $systemUpload->keterangan = $metadatas['foto_metadata_keterangan'][$index];
-                    }
-                    $systemUpload->uid = $metadatas['foto_metadata_uid'][$index];
-                    $systemUpload->foreign_field = 'id';
-                    $systemUpload->jenis = 'foto';
-                    $systemUpload->foreign_table = 'inventaris';
-                    $systemUpload->foreign_id = $metadatas['idinventaris'];
-
-
-                    return $systemUpload;
-                });
-
-                $kibData = json_decode($input['kib'], true);
-
-                $kibData['pidinventaris'] = $inventaris->id;
-
-                inventarisRepository::saveKib($kibData, $input['tipe_kib']);
-
-                $inventarisHistory = $inventaris->toArray();
-
-                $this->inventaris_historyRepository->postHistory($inventarisHistory, Constant::$ACTION_HISTORY['NEW']);
-
-                DB::commit();
-            } catch (\Exception $e) {
-                DB::rollBack();
-                \App\Helpers\FileHelpers::deleteAll($fileDokumens);
-                \App\Helpers\FileHelpers::deleteAll($fileFotos);
-                \App\Models\inventaris::find($inventaris->id)->delete();
-                return $this->sendError($e->getMessage() . $e->getTraceAsString());
-            }
-
-            $lastNoReg++;
+        try {
+            return $this->sendResponse($this->inventarisRepository->InsertLogic($input,$request), 'inventaris updated successfully');
+        }catch(\Exception $e) {
+            return $this->sendError($e->getMessage());
         }
 
 
@@ -318,90 +232,11 @@ class inventarisAPIController extends AppBaseController
      */
     public function update($id, UpdateinventarisAPIRequest $request)
     {
-        $update_inventaris_setting = \App\Models\setting::where('nama', \Constant::$SETTING_UBAH_PENATA_USAHAAN)->first()->nilai;
+
 
         $input = $request->all();
 
-        /** @var inventaris $inventaris */
-        $inventaris = inventaris::withDrafts()
-            ->with('Organisasi')
-            ->find($id);
-
-        $organisasi = \App\Models\organisasi::find(Auth::user()->pid_organisasi);
-
-        if ($organisasi->id != $inventaris->pid_organisasi && !c::is('inventaris',['update'],[Constant::$GROUP_BPKAD_ORG])) {
-            return $this->sendError('Tidak bisa mengubah data inventaris');
-        }
-
-        if (empty($inventaris->draft) && strtolower($update_inventaris_setting) != 'true') {
-            return $this->sendError('Tidak bisa mengubah data inventaris yang bukan draft');
-        }
-
-        if (empty($inventaris)) {
-            return $this->sendError('Inventaris not found');
-        }
-
-        if (c::is('',[],[0]) && empty($inventaris->organisasi->setting)) {
-            return $this->sendError('Setting OPD dikunci. Inventaris tidak dapat diubah');
-        }
-
-        $fileDokumens = [];
-        $fileFotos = [];
-
-        DB::beginTransaction();
-        try {
-
-            $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen', $request, "inventaris", function ($metadatas, $index, $systemUpload) {
-                if (isset($metadatas['dokumen_metadata_keterangan'][$index]) && $metadatas['dokumen_metadata_keterangan'][$index] != null) {
-                    $systemUpload->keterangan = $metadatas['dokumen_metadata_keterangan'][$index];
-                }
-
-                $systemUpload->uid = $metadatas['dokumen_metadata_uid'][$index];
-                $systemUpload->foreign_field = 'id';
-                $systemUpload->jenis = 'dokumen';
-                $systemUpload->foreign_table = 'inventaris';
-                $systemUpload->foreign_id = $metadatas['dokumen_metadata_id_inventaris'][$index];
-
-                return $systemUpload;
-            });
-
-
-            $fileFotos = \App\Helpers\FileHelpers::uploadMultiple('foto', $request, "inventaris", function ($metadatas, $index, $systemUpload) {
-                if (isset($metadatas['foto_metadata_keterangan'][$index]) && $metadatas['foto_metadata_keterangan'][$index] != null) {
-                    $systemUpload->keterangan = $metadatas['foto_metadata_keterangan'][$index];
-                }
-                $systemUpload->uid = $metadatas['foto_metadata_uid'][$index];
-                $systemUpload->foreign_field = 'id';
-                $systemUpload->jenis = 'foto';
-                $systemUpload->foreign_table = 'inventaris';
-                $systemUpload->foreign_id = $metadatas['foto_metadata_id_inventaris'][$index];
-
-                return $systemUpload;
-            });
-
-            $input['kode_lokasi'] = inventarisRepository::generateKodeLokasi($input);
-
-            $inventaris = $this->inventarisRepository->update($input, $id);
-
-            $kibData = json_decode($input['kib'], true);
-
-            $kibData['pidinventaris'] = $id;
-
-            inventarisRepository::saveKib($kibData, $input['tipe_kib']);
-
-            $inventarisHistory = $inventaris->toArray();
-
-            $this->inventaris_historyRepository->postHistory($inventarisHistory, Constant::$ACTION_HISTORY["UPDATE"]);
-
-            DB::commit();
-
-            return $this->sendResponse($inventaris->toArray(), 'inventaris updated successfully');
-        } catch (\Exception $e) {
-            DB::rollBack();
-            \App\Helpers\FileHelpers::deleteAll($fileDokumens);
-            \App\Helpers\FileHelpers::deleteAll($fileFotos);
-            return $this->sendError($e->getMessage() . $e->getTraceAsString());
-        }
+        $inventaris = inventarisRepository::UpdateLogic($input, $id,$request);
 
         return $this->sendResponse($inventaris->toArray(), 'inventaris updated successfully');
     }

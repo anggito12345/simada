@@ -1,8 +1,80 @@
+
+
 viewModel.data.urlEachKIB = (newVal) => {
     return `/api/detil${newVal.replace(/ /g,"").toLowerCase()}get`
 }
 
 let sensus = {
+    step: {
+        3: {
+           steplist: [
+                {
+                    label: "pilih opsi",
+                    step: 1,
+                },
+                {
+                    label: "isi form",
+                    step: 3
+                }
+           ]
+        },
+        4: {
+            steplist: [
+                 {
+                     label: "Pilih opsi",
+                     step: 1,
+                 },
+                 {
+                    label: "Pilih inventaris",
+                    step: 2
+                 },
+                 {
+                     label: "isi form",
+                     step: 3
+                 }
+            ]
+        },
+        0: {
+            steplist: [
+                {
+                    label: "Pilih opsi",
+                    step: 1,
+                },
+                {
+                   label: "Pilih opsi status Tidak Ada",
+                   step: 2
+                },
+                {
+                    label: "Pilih inventaris",
+                    step: 3
+                },
+                {
+                    label: "Isi form",
+                    step: 4
+                }
+            ]
+        },
+        1: {
+            steplist: [
+                {
+                    label: "Pilih opsi",
+                    step: 1,
+                },
+                {
+                   label: "Pilih opsi status Ubah Satuan",
+                   step: 2
+                },
+                {
+                    label: "Pilih inventaris",
+                    step: 3
+                },
+                {
+                    label: "isi form",
+                    step: 4
+                }
+            ]
+        }
+    },
     data: {
         dropdownDataSource: {
             statusBarang: ko.observableArray([])
@@ -28,18 +100,63 @@ let sensus = {
         }
     },
     methods: {
+        changeStatusBarang: () => {
+            setTimeout(() => {
+                if (sensus.data.form.status_barang() == 3) {
+                    sensus.data.form.idinventaris(-1)
+                    sensus.data.step(3)
+                    sensus.data.step.notifySubscribers()
+                } else {
+                    sensus.data.step(2)
+                    sensus.data.step.notifySubscribers()
+                }
+            }, 500);
+        },
         showSkForm: (choosen, tipe) => {
             sensus.data.step(3)
             sensus.data.form[tipe](choosen)
         },
         backToStep: (step) => {
+            if (sensus.data.form.status_barang() == '3') {
+                step = 1
+            } else if (sensus.data.form.status_barang() <= 1) {
+
+            }
+
             sensus.data.step(step)
+
         },
         nextStep: (step) => {
-            sensus.data.step(step)
+
             if(step == 2) {
                 sensus.data.form.status_barang.notifySubscribers()
             }
+
+
+            if(step == 3) {
+                if (sensus.data.form.status_barang() == 4) {
+                    // status barang barang tercatat
+                    if ($(`#${sensus.data.statics.idGridInventaris}`).DataTable().rows('.selected').data().toArray().length != 1) {
+                        swal.fire({
+                            text: 'Silahkan Pilih 1 inventaris',
+                            icon: 'warning'
+                        })
+                        return;
+                    }
+                }
+
+                if (sensus.data.form.status_barang() <= 1) {
+                    if ($(`#${sensus.data.statics.idGridInventaris}`).DataTable().rows('.selected').data().toArray().length != 1) {
+                        swal.fire({
+                            text: 'Silahkan Pilih 1 inventaris',
+                            icon: 'warning'
+                        })
+                        return;
+                    }
+                    step = 4
+                }
+            }
+            sensus.data.step(step)
             sensus.data.step.notifySubscribers()
 
         },
@@ -95,6 +212,11 @@ let sensus = {
             for ( var key in item ) {
                 formData.append(key, item[key]);
             }
+            let selectedRowGrid = $(`#${sensus.data.statics.idGridInventaris}`).DataTable().rows('.selected').data().toArray()[0]
+            //if not barang tidak tercatat
+            if (sensus.data.form.status_barang() != 3) {
+                formData.append('idinventaris', selectedRowGrid.id)
+            }
 
             for (let index = 0; index < sensus.data.fileGallery.fileList().length; index++) {
                 const d = sensus.data.fileGallery.fileList()[index]
@@ -130,7 +252,7 @@ let sensus = {
                 $(`#${sensus.data.statics.idModalSensus}`).modal('hide')
                 $(`#${sensus.data.statics.idGridInventaris}`).DataTable().ajax.reload()
                 $(`#${sensus.data.statics.idGridSensus}`).DataTable().ajax.reload()
-                let selectedRowGrid = $(`#${sensus.data.statics.idGridInventaris}`).DataTable().rows('.selected').data().toArray()[0]
+
                 if(sensus.data.form.status_barang() == 0 && (sensus.data.form.status_barang_hilang() == 1 || sensus.data.form.status_barang_hilang() == 2)) {
 
                     window.location = `reklas/create?`+
@@ -143,6 +265,10 @@ let sensus = {
                     `idinventaris=${selectedRowGrid.id}&` +
                     `tgldibukukan=${selectedRowGrid.tgl_dibukukan}&` +
                     `hargasatuan=${selectedRowGrid.harga_satuan}`
+                } else if (sensus.data.form.status_barang() == 3) {
+                    window.location= 'inventaris/create?is_sensus=' + d.id
+                } else if (sensus.data.form.status_barang() == 4) {
+                    window.location= `inventaris/${selectedRowGrid.id}/edit?is_sensus=${d.id}`
                 }
             })
         },
@@ -163,62 +289,54 @@ let sensus = {
     }
 }
 
+sensus.data.form.status_barang.subscribe(() => {
+
+
+
+
+})
 
 
 $(document).ready(() => {
-    $(`#${sensus.data.statics.idModalSensus}`).on('shown.bs.modal', function () {
-        let keys = Object.keys(sensus.data.form)
-        $.each(keys, (i, s) => {
-            if (s != "idinventaris") {
-                sensus.data.form[s]("")
+    sensus.data.select2Objects.kodeTujuan = $("select[name=kode_tujuan]").select2({
+        ajax: {
+            url: "api/barangs/get?length=10",
+            dataType: 'json',
+            headers: {
+                'Authorization':'Bearer ' + sessionStorage.getItem('api token'),
+            },
+
+            data: function (params) {
+                params['search-lookup'] = {
+                    "nama_rek_aset": {
+                        operator: 'like',
+                        value: params.term === undefined ? '' : params.term,
+                        logic: 'or',
+                        group: 'filter'
+                    },
+                    "CONCAT(kode_akun,'.',kode_kelompok,'.',kode_jenis,'.',kode_objek,'.', kode_rincian_objek, '.', kode_sub_rincian_objek,'.',kode_sub_sub_rincian_objek)": {
+                        operator: 'like',
+                        value: params.term === undefined ? '' : params.term,
+                        logic: 'or',
+                        group: 'filter'
+                    },
+                }
+
+                return params;
+            },
+            processResults: function (data) {
+                // Transforms the top-level key of the response object from 'items' to 'results'
+                return {
+                    results: data.data.map((d) => {
+                        d.text = `${viewModel.helpers.buildKodeBarang(d)} - ${d.nama_rek_aset}`;
+                        return d
+                    })
+                };
             }
-
-        })
-
-        if(sensus.data.select2Objects.kodeTujuan == null) {
-            sensus.data.select2Objects.kodeTujuan = $("select[name=kode_tujuan]").select2({
-                ajax: {
-                    url: "api/barangs/get?length=10",
-                    dataType: 'json',
-                    headers: {
-                        'Authorization':'Bearer ' + sessionStorage.getItem('api token'),
-                    },
-
-                    data: function (params) {
-                        params['search-lookup'] = {
-                            "nama_rek_aset": {
-                                operator: 'like',
-                                value: params.term === undefined ? '' : params.term,
-                                logic: 'or',
-                                group: 'filter'
-                            },
-                            "CONCAT(kode_akun,'.',kode_kelompok,'.',kode_jenis,'.',kode_objek,'.', kode_rincian_objek, '.', kode_sub_rincian_objek,'.',kode_sub_sub_rincian_objek)": {
-                                operator: 'like',
-                                value: params.term === undefined ? '' : params.term,
-                                logic: 'or',
-                                group: 'filter'
-                            },
-                        }
-
-                        return params;
-                    },
-                    processResults: function (data) {
-                        // Transforms the top-level key of the response object from 'items' to 'results'
-                        return {
-                            results: data.data.map((d) => {
-                                d.text = `${viewModel.helpers.buildKodeBarang(d)} - ${d.nama_rek_aset}`;
-                                return d
-                            })
-                        };
-                    }
-                },
-                dropdownParent: $(`#${sensus.data.statics.idModalSensus}`),
-                theme: 'bootstrap' ,
-            });
-        }
-
-        sensus.data.step(1)
-    })
+        },
+        dropdownParent: $(`#${sensus.data.statics.idModalSensus}`),
+        theme: 'bootstrap' ,
+    });
 
     const tglDibukukanInline = new inlineDatepicker(document.getElementById('tgl_sk'), {
         format: 'DD-MM-YYYY',

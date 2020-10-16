@@ -63,6 +63,7 @@ class pemeliharaanAPIController extends AppBaseController
     {
         $input = $request->all();
         $input['created_by'] = Auth::id();
+        $input['biaya'] = str_replace(".", "", explode(",",$input['biaya'])[0]);
 
         DB::beginTransaction();
         $fileMedias = [];
@@ -86,19 +87,19 @@ class pemeliharaanAPIController extends AppBaseController
             }
 
             $pemeliharaan = $this->pemeliharaanRepository->create($input);
-            $request->merge(['idpemeliharaan' => $pemeliharaan->id]); 
+            $request->merge(['idpemeliharaan' => $pemeliharaan->id]);
 
             $fileMedias = \App\Helpers\FileHelpers::uploadMultiple('media_pemeliharaan', $request, 'pemeliharaan', function($metadatas, $index, $systemUpload) {
                 if (isset($metadatas['media_pemeliharaan_metadata_keterangan'][$index]) && $metadatas['media_pemeliharaan_metadata_keterangan'][$index] != null) {
                     $systemUpload->keterangan = $metadatas['media_pemeliharaan_metadata_keterangan'][$index];
                 }
 
-                $systemUpload->uid = $metadatas['media_pemeliharaan_metadata_uid'][$index];             
+                $systemUpload->uid = $metadatas['media_pemeliharaan_metadata_uid'][$index];
                 $systemUpload->foreign_field = 'id';
                 $systemUpload->jenis = 'media';
                 $systemUpload->foreign_table = 'pemeliharaan';
                 $systemUpload->foreign_id = $metadatas['idpemeliharaan'];
-                                
+
                 return $systemUpload;
             });
 

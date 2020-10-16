@@ -165,6 +165,15 @@
 </div> -->
 
 @section(!isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'scripts' : 'scripts_2')
+    @if (isset($_GET['is_sensus']))
+    <script>
+        let isSensus = "{!! $_GET['is_sensus'] !!}"
+    </script>
+    @else
+    <script>
+        let isSensus = null
+    </script>
+    @endif
     <script type="text/javascript">
         const funcBarangSelect = function(d) {
             let appendKode = ""
@@ -729,6 +738,7 @@
                         let formData = new FormData($('#form-inventaris')[0])
 
                         formData.append(`draft`, isDraft ? '1' : '')
+                        formData.append(`is_sensus`, isSensus)
 
                         for (let index =0 ; index < fileGallery.fileList().length; index ++) {
                             const d = fileGallery.fileList()[index]
@@ -942,7 +952,7 @@
 <div class="form-group col-sm-12">
     {!! Form::submit('Simpan', ['class' => 'btn btn-primary submit']) !!}
 
-    @if ((isset($inventaris) && !empty($inventaris->draft)) || !isset($inventaris))
+    @if ((isset($inventaris) && !empty($inventaris->draft)) || !isset($inventaris) && !isset($_GET['is_sensus']))
         <div class="btn btn-info" onclick="onSave(true)">Draft</div>
     @endif
     <a href="{!! route('inventaris.index') !!}" class="btn btn-default">Batal</a>

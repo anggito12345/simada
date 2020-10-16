@@ -6,9 +6,11 @@ use App\Models\inventaris;
 use App\Repositories\BaseRepository;
 use Constant;
 use Auth;
+use Exception;
 use Illuminate\Support\Facades\Validator;
 use Illuminate\Support\Facades\DB;
 use Illuminate\Container\Container as Application;
+use c;
 
 /**
  * Class inventarisRepository
@@ -239,12 +241,126 @@ class inventarisRepository extends BaseRepository
         }
     }
 
+    public static function UpdateLogic($input, $id,$request = null) {
+        $update_inventaris_setting = \App\Models\setting::where('nama', \Constant::$SETTING_UBAH_PENATA_USAHAAN)->first()->nilai;
+        /** @var inventaris $inventaris */
+        $inventaris = inventaris::withDrafts()
+            ->with('Organisasi')
+            ->find($id);
+
+        $organisasi = \App\Models\organisasi::find(Auth::user()->pid_organisasi);
+
+        if ($organisasi->id != $inventaris->pid_organisasi && !c::is('inventaris',['update'],[Constant::$GROUP_BPKAD_ORG])) {
+            return $this->sendError('Tidak bisa mengubah data inventaris');
+        }
+
+        if (empty($inventaris->draft) && strtolower($update_inventaris_setting) != 'true') {
+            return $this->sendError('Tidak bisa mengubah data inventaris yang bukan draft');
+        }
+
+        if (empty($inventaris)) {
+            return $this->sendError('Inventaris not found');
+        }
+
+        if (c::is('',[],[0]) && empty($inventaris->organisasi->setting)) {
+            return $this->sendError('Setting OPD dikunci. Inventaris tidak dapat diubah');
+        }
+
+        $fileDokumens = [];
+        $fileFotos = [];
+
+        DB::beginTransaction();
+        try {
+            if (isset($request)) {
+                $fileDokumens = \App\Helpers\FileHelpers::uploadMultiple('dokumen', $request, "inventaris", function ($metadatas, $index, $systemUpload) {
+                    if (isset($metadatas['dokumen_metadata_keterangan'][$index]) && $metadatas['dokumen_metadata_keterangan'][$index] != null) {
+                        $systemUpload->keterangan = $metadatas['dokumen_metadata_keterangan'][$index];
+                    }
+
+                    $systemUpload->uid = $metadatas['dokumen_metadata_uid'][$index];
+                    $systemUpload->foreign_field = 'id';
+                    $systemUpload->jenis = 'dokumen';
+                    $systemUpload->foreign_table = 'inventaris';
+                    $systemUpload->foreign_id = $metadatas['dokumen_metadata_id_inventaris'][$index];
+
+                    return $systemUpload;
+                });
+
+
+                $fileFotos = \App\Helpers\FileHelpers::uploadMultiple('foto', $request, "inventaris", function ($metadatas, $index, $systemUpload) {
+                    if (isset($metadatas['foto_metadata_keterangan'][$index]) && $metadatas['foto_metadata_keterangan'][$index] != null) {
+                        $systemUpload->keterangan = $metadatas['foto_metadata_keterangan'][$index];
+                    }
+                    $systemUpload->uid = $metadatas['foto_metadata_uid'][$index];
+                    $systemUpload->foreign_field = 'id';
+                    $systemUpload->jenis = 'foto';
+                    $systemUpload->foreign_table = 'inventaris';
+                    $systemUpload->foreign_id = $metadatas['foto_metadata_id_inventaris'][$index];
+
+                    return $systemUpload;
+                });
+
+            }
+
+
+            $input['kode_lokasi'] = inventarisRepository::generateKodeLokasi($input);
+
+            $kibData = json_decode($input['kib'], true);
+
+            $kibData['pidinventaris'] = $id;
+
+
+
+            if (empty($input['is_sensus']) || $input['is_sensus'] == 'null') {
+
+                $inventarisRepository = new inventarisRepository(new Application());
+
+                $inventaris = $inventarisRepository->update($input, $id);
+
+                inventarisRepository::saveKib($kibData, $input['tipe_kib']);
+
+                $inventarisHistoryData = $inventaris->toArray();
+
+                $inventarisHistory = new inventaris_historyRepository(new Application());
+                $inventarisHistory->postHistory($inventarisHistoryData, Constant::$ACTION_HISTORY['NEW']);
+            } else {
+
+                $input['kib_data'] = $kibData;
+
+                $sensus = \App\Models\inventaris_sensus::find($input['is_sensus']);
+                $sensus->data_temporary = json_encode($input, 1);
+                $sensus->save();
+
+            }
+
+
+
+            DB::commit();
+
+            return $inventaris;
+        } catch (\Exception $e) {
+            DB::rollBack();
+            \App\Helpers\FileHelpers::deleteAll($fileDokumens);
+            \App\Helpers\FileHelpers::deleteAll($fileFotos);
+
+            throw new Exception($e->getMessage() . "-" . $e->getFile() . "-" .$e->getLine());
+
+            return "";
+        }
+
+        return $inventaris;
+    }
+
     /**
      * insert logic
      */
-    public static function InsertLogic($input) {
+    public static function InsertLogic($input, $request = null) {
         DB::beginTransaction();
         try {
+
+            if ($input['is_sensus'] == 'null') {
+                $input['is_sensus'] = null;
+            }
 
             // generate no register
             $modelInventaris = new \App\Models\inventaris();
@@ -327,6 +443,7 @@ class inventarisRepository extends BaseRepository
             $inventarisHistory->postHistory($inventarisHistoryData, Constant::$ACTION_HISTORY['NEW']);
 
 
+
             DB::commit();
         } catch (\Exception $e) {
 
@@ -358,7 +475,7 @@ class inventarisRepository extends BaseRepository
 
 
         if (isset($theFilter['jenisbarangs']) && $theFilter['jenisbarangs'] != "" && $theFilter['jenisbarangs'] != null) {
-            $buildingModel = $buildingModel->where('m_barang.kode_jenis', $_GET['jenisbarangs']);
+            $buildingModel = $buildingModel->where('m_barang.kode_jeniss', $_GET['jenisbarangs']);
         }
 
         if (isset($theFilter['kodeobjek']) && $theFilter['kodeobjek'] != "" && $theFilter['kodeobjek'] != null) {
@@ -405,14 +522,19 @@ class inventarisRepository extends BaseRepository
 
     }
 
-    public static function getData($isDraft = null, $rawSelect = "") {
-        $buildingModel = new \App\Models\inventaris();
+    public static function getData($isDraft = null, $rawSelect = "", $buildingModel = null) {
 
-        $buildingModel = $buildingModel->newQuery();
+        if ($buildingModel == null) {
+            $buildingModel = new \App\Models\inventaris();
+            $buildingModel = $buildingModel->NotSensus();
+        }
+
 
 
         if (isset($isDraft) && $isDraft == '1') {
-            $buildingModel = inventaris::onlyDrafts();
+            $buildingModel = $buildingModel->onlyDrafts();
+        } else {
+            $buildingModel = $buildingModel->NotDrafts();
         }
 
         $organisasiUser = \App\Models\organisasi::find(Auth::user()->pid_organisasi);

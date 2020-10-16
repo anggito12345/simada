@@ -57,8 +57,9 @@ Route::post('/inventaris/dokumenkronologis', 'inventarisAPIController@saveDokume
 Route::middleware('auth:api')->post('sensus_/approvements', function(
     \App\Repositories\inventaris_sensusRepository $inventaris_sensusRepository,
     inventaris_historyRepository $inventaris_historyRepository,
+    inventarisRepository $inventarisRepository,
     Request $request) {
-    return $inventaris_sensusRepository->approvements($request, $inventaris_historyRepository);
+    return $inventaris_sensusRepository->approvements($request, $inventaris_historyRepository, $inventarisRepository);
 });
 
 Route::middleware('auth:api')->post('inventaris_mutasi/approvements', function(

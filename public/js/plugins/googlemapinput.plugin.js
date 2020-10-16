@@ -40,6 +40,7 @@ let GoogleMapInput = function(element, config) {
         ],
         isNotInput: false,
         value: null,
+        referFocus: null
     }
 
     if  (config != null) {
@@ -328,6 +329,22 @@ let GoogleMapInput = function(element, config) {
         this.loadMap = () => {
             $(`#${mapId}`).html('')
 
+            let lon = position.coords.longitude
+            let lat = position.coords.latitude
+            let zoom = 8
+
+            if (self.defaultConfig.referFocus != null) {
+                let valLongLat = self.defaultConfig.referFocus.val().split(',')
+
+
+
+                if (valLongLat.length == 2) {
+                    lon = parseFloat(valLongLat[0])
+                    lat = parseFloat(valLongLat[1])
+                    zoom = 12
+                }
+            }
+
             let mapConfig = {
                 interactions: olgm.interaction.defaults(),
                 target: mapId,
@@ -335,8 +352,8 @@ let GoogleMapInput = function(element, config) {
                     googleLayer, raster, vector
                 ],
                 view: new ol.View({
-                  center: ol.proj.fromLonLat([position.coords.longitude, position.coords.latitude]),
-                  zoom: 8
+                  center: ol.proj.fromLonLat([lon, lat]),
+                  zoom: zoom
                 })
             }
 
@@ -421,7 +438,7 @@ let GoogleMapInput = function(element, config) {
                     if (validCoord) {
                         values.features[0].geometry.coordinates[0] = coordsTemp;
                     }
-    
+
                     if (values.features[0].geometry.type == "Polygon") {
                         let things = new ol.geom[values.features[0].geometry.type](
                             [ values.features[0].geometry.coordinates[0].concat([values.features[0].geometry.coordinates[0][0]]) ]

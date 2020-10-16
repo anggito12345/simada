@@ -17,7 +17,7 @@
 
 <!-- nilai_hub Field -->
 <div class="form-group col-sm-6 row">
-    {!! Form::label('nilai_hub_kiba', 'Nilai Hub:') !!}
+    {!! Form::label('nilai_hub_kiba', 'Nilai HBU:') !!}
     {!! Form::number('nilai_hub_kiba', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB A"]().nilai_hub']) !!}
 </div>
 
@@ -107,6 +107,7 @@
             });
 
             mapTanah = new GoogleMapInput(document.getElementById('koordinattanah'), {
+                referFocus: $('#koordinatlokasi'),
                 draw: true,
                 drawOptions: [
                     'Polygon'

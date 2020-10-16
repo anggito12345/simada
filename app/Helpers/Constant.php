@@ -49,10 +49,10 @@ class Constant {
     ];
 
     public static $SENSUS_STATUS_01 = [
-        'Barang Tidak Tercatat',
-        'Barang Tercatat',
-        'Tidak Ada',
-        'Ubah Satuan'
+        '3' => 'Barang Tidak Tercatat',
+        '4' => 'Barang Tercatat',
+        '0' => 'Tidak Ada',
+        '1' => 'Ubah Satuan'
     ];
 
     public static $SENSUS_STATUS_02 = [

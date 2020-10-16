@@ -65,7 +65,8 @@ class m_kode_daerahDataTable extends DataTable
     protected function getColumns()
     {
         return [
-            'nama'
+            'kode',
+            'nama',
         ];
     }
 

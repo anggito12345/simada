@@ -95,7 +95,7 @@ class inventarisController extends AppBaseController
     {
         $update_inventaris_setting = \App\Models\setting::where('nama', \Constant::$SETTING_UBAH_PENATA_USAHAAN)->first()->nilai;
 
-        $inventaris = inventaris::withDrafts()->find($id);
+        $inventaris = inventaris::withSensus()->withDrafts()->find($id);
 
         $organisasi = \App\Models\organisasi::find(Auth::user()->pid_organisasi);
 

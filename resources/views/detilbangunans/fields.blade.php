@@ -93,6 +93,7 @@
 
             mapTanahBangunan = new GoogleMapInput(document.getElementById('koordinattanah-detilbangunan'), {
                 draw: true,
+                referFocus: $('#koordinatlokasi-detilbangunan'),
                 drawOptions: [
                     'Polygon',
                 ],
