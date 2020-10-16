@@ -13,14 +13,16 @@ class AddFieldKodeInKodeJalanMaster extends Migration
      */
     public function up()
     {
-        Schema::create('m_kode_daerah', function(Blueprint $table)
-		{
-            $table->bigInteger('id', true);
-            $table->string("kode")->nullable();
-            $table->string("nama")->nullable();
-            $table->date("created_at")->nullable();
-            $table->date("updated_at")->nullable();
-		});
+        if (!Schema::hasTable('m_kode_daerah')){
+            Schema::create('m_kode_daerah', function(Blueprint $table)
+            {
+                $table->bigInteger('id', true);
+                $table->string("kode")->nullable();
+                $table->string("nama")->nullable();
+                $table->date("created_at")->nullable();
+                $table->date("updated_at")->nullable();
+            });
+        }
     }
 
     /**
