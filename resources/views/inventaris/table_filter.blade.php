@@ -30,10 +30,6 @@
     </div>
     <div class="row">
         <div class="col-md-4">
-            {{ Form::label('organisasi_filter', 'Organisasi:') }}
-            {{ Form::select('organisasi_filter', [], 0, ['class' => 'form-control', 'onchange' => 'viewModel.changeEvent.changeRefreshGrid()']) }}
-        </div>
-        <div class="col-md-4">
             {{ Form::label('draft', 'Draft:') }}
             {{ Form::select('draft', \App\Models\BaseModel::$YesNoDs, 0, ['class' => 'form-control', 'onchange' => 'viewModel.changeEvent.changeRefreshGrid()']) }}
         </div>
@@ -149,7 +145,7 @@
                 url: "<?= url('api/organisasis') ?>",
                 dataType: 'json',
                 data: function (params) {
-                    params.level = 0
+                    params.level = "-1,0,1"
 
                     return params;
                 },
@@ -176,7 +172,7 @@
                 url: "<?= url('api/organisasis') ?>",
                 dataType: 'json',
                 data: function (params) {
-                    params.level = 1
+                    params.level = "1,2"
                     params.pid = $("#penggunafilter").select2('data')[0].id
                     return params;
                 },

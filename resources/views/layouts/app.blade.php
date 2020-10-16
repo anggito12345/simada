@@ -106,6 +106,10 @@
         }
     </style>
 
+    <!-- Progress Step Bar -->
+
+    <link rel="stylesheet" href="<?= url('css/thirdparty/progressstep.min.css') ?>">
+
     <!-- Bootstrap 3.3.7 -->
     <link rel="stylesheet" href="<?= url('css/thirdparty/bootstrap.min.css') ?>">
     <link rel="stylesheet" href="<?= url('css/thirdparty/bootstrap-datepicker.min.css') ?>">

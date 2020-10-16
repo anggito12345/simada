@@ -98,18 +98,12 @@ class inventarisDataTable extends DataTable
      */
     public function query(inventaris $model)
     {
-        $mineJabatan = \App\Models\jabatan::find(Auth::user()->jabatan);
-
-        $buildingModel = inventarisRepository::getData(isset($_GET['draft']) && $_GET['draft'] != 0 ? $_GET['draft'] : null);
+        $buildingModel = inventarisRepository::getData(isset($_GET['draft']) && $_GET['draft'] != 0 ? $_GET['draft'] : null,null, null);
 
         $buildingModel = inventarisRepository::appendInventarisGridFilter($buildingModel, $_GET);
 
-        $buildingModel = $buildingModel
-                ->leftJoin('inventaris_sensus', 'inventaris_sensus.idinventaris', 'inventaris.id')
-                ->whereRaw('inventaris_sensus.id IS NULL');
-
         return  $buildingModel->orderByRaw('inventaris.updated_at DESC NULLS LAST')
-            ->orderBy('inventaris.id', 'desc');
+            ->orderBy('inventaris.id', 'desc')->newQuery();
     }
 
     /**
@@ -178,7 +172,8 @@ class inventarisDataTable extends DataTable
 
                 return false;
             }))) {
-                array_push($addtButtons, ['text' => '<i class="fa fa-edit"></i> Sensus', 'action' => 'function(){ sensus.methods.onSensus()}', ]);
+                array_push($addtButtons, ['text' => '<i class="fa fa-arrow-left"></i> Kembali', 'action' => 'function(){ sensus.data.form.status_barang() <= 1 ? sensus.methods.backToStep(2) : sensus.methods.backToStep(1)}', ]);
+                array_push($addtButtons, ['text' => '<i class="fa fa-arrow-right"></i> Lanjut', 'action' => 'function(){ sensus.methods.nextStep(3)}', ]);
             }
         }
 

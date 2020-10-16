@@ -120,6 +120,7 @@
 
             mapTanahJalan = new GoogleMapInput(document.getElementById('koordinattanah-detiljalan'), {
                 draw: true,
+                referFocus: $('#koordinatlokasi-detiljalan'),
                 drawOptions: [
                     'Polygon',
                     'LineString'

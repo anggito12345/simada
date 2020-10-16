@@ -54,7 +54,7 @@ class inventaris_sensusRepository extends BaseRepository
       /**
      * approving data penghapusan for bpkad
      */
-    public function approvements($req, $inventaris_historyRepository)
+    public function approvements($req, $inventaris_historyRepository, $inventarisRepository)
     {
         $isAlreadyUpload = false;
 
@@ -116,7 +116,7 @@ class inventaris_sensusRepository extends BaseRepository
                                 }
 
                                 // when status barang is 1
-                                if($each->status_barang == '1') {
+                                else if($each->status_barang == '1') {
 
                                     // when status ubah satuan is pisah
                                     if ($each->status_ubah_satuan == '0') {
@@ -126,6 +126,25 @@ class inventaris_sensusRepository extends BaseRepository
                                     }
 
                                     // otherwise will redirect to pemeliharaan
+                                }
+
+                                else if($each->status_barang == '3') {
+                                    // when status tidak tercatat
+                                    $inv = inventaris::WithSensus()->where([
+                                        'is_sensus' => $each->id
+                                    ])->first();
+                                    $inv->is_sensus = null;
+                                    $inv->save();
+                                }
+
+                                else if ($each->status_barang == '4') {
+                                    // when status tercatat
+                                    $data = json_decode($each->data_temporary,true);
+                                    $data['is_sensus'] = null;
+
+                                    inventarisRepository::UpdateLogic($data, $each->idinventaris);
+
+
                                 }
 
 
@@ -139,9 +158,7 @@ class inventaris_sensusRepository extends BaseRepository
                             } catch (\Exception $e) {
                                 \App\Helpers\FileHelpers::deleteAll($fileDokumens);
                                 DB::rollBack();
-                                return response()->json([
-                                    'message' => $e->getMessage()
-                                ], 500);
+                                return response($e);
                             }
                             break;
                         }
@@ -159,19 +176,23 @@ class inventaris_sensusRepository extends BaseRepository
      */
     public static function query($q) {
         $q = $q->select([
-            'm_barang.nama_rek_aset as nama',
+            DB::raw('COALESCE(m_barang.nama_rek_aset, barang2.nama_rek_aset) as nama'),
             'inventaris_sensus.id as id',
             'inventaris_sensus.no_sk as no_sk',
             'inventaris_sensus.*',
-            'inventaris.kode_barang as kode_barang',
+            DB::raw('COALESCE(inventaris.kode_barang, inven2.kode_barang ) as kode_barang'),
             'inventaris.noreg as noreg',
             'inventaris_sensus.tanggal_sk as tanggal_sk',
             'inventaris_sensus.status_barang_hilang as status_barang_hilang',
             'inventaris_sensus.status_barang as status_barang',
-            'm_organisasi.nama as pemohon'
+            'm_organisasi.nama as pemohon',
+
         ])
-        ->join('inventaris','inventaris.id','inventaris_sensus.idinventaris')
-        ->join('m_barang', 'm_barang.id', 'inventaris.pidbarang')
+        ->from('inventaris_sensus')
+        ->leftJoin('inventaris','inventaris.id','inventaris_sensus.idinventaris')
+        ->leftJoin('m_barang', 'm_barang.id', 'inventaris.pidbarang')
+        ->leftJoin('inventaris as inven2','inven2.is_sensus','inventaris_sensus.id')
+        ->leftJoin('m_barang as barang2', 'barang2.id', 'inven2.pidbarang')
         ->leftJoin('users', 'users.id', 'inventaris_sensus.created_by')
         ->leftJoin('m_organisasi', 'm_organisasi.id', 'users.pid_organisasi');
 

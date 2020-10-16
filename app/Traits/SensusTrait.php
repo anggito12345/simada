@@ -13,7 +13,12 @@ trait SensusTrait {
 
     public function scopeOnlySensus(Builder $query)
     {
-        return $query->withoutGlobalScope(new SensusScope)->where($this->getTable().'.is_sensus', '')->orWhereNotNull($this->getTable().'.is_sensus');
+        return $query->withoutGlobalScope(new SensusScope)->whereNull($this->getTable().'.is_sensus IS NOT NULL');
+    }
+
+    public function scopeNotSensus(Builder $query)
+    {
+        return $query->withoutGlobalScope(new SensusScope)->whereRaw($this->getTable().'.is_sensus IS NULL');
     }
 
     public function scopeWithSensus(Builder $query)

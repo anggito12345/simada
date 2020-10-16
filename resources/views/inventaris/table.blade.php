@@ -526,7 +526,9 @@
                     $(this).attr('class',$(this).attr('class').replace('plus-circle', 'minus-circle'))
 
                     let kib = "kib"+row.data().kelompok_kib
-                    $.get(`${$("[base-path]").val()}${viewModel.data.urlEachKIB("kib"+row.data().kelompok_kib)}/${row.data().pidinventaris == undefined ? row.data().id : row.data().pidinventaris}`).then((data) => {
+                    __ajax({
+                        url: `${$("[base-path]").val()}${viewModel.data.urlEachKIB("kib"+row.data().kelompok_kib)}/${row.data().pidinventaris == undefined ? row.data().id : row.data().pidinventaris}`
+                    }).then((data) => {
 
                         let url = viewModel.data.informations[kib].url
 

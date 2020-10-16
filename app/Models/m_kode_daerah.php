@@ -49,7 +49,8 @@ class m_kode_daerah extends Model
 
 
     public $fillable = [
-        'nama'
+        'nama',
+        'kode'
     ];
 
     /**

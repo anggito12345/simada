@@ -1,47 +1,24 @@
-version: '3'
-
-networks:
-  laravel:
+version: '3.8'
 
 services:
   nginx:
-    image: nginx:stable-alpine
-    container_name: webserver-nginx
-    depends_on:
-      - php
-      - postgresql
-    ports:
-      - "8088:80"
-    volumes:
-      - ./:/var/www/html
-      - ./docker-compose/nginx/default.conf:/etc/nginx/conf.d/default.conf
-    networks:
-      - laravel
-
-
-  postgresql:
-    image: postgres:alpine
-    container_name: postgres
-    restart: unless-stopped
-    tty: true
-    ports:
-      - "5432:5432"
-    volumes:
-      - ./docker-compose/postgres:/var/lib/postgresql
-    networks:
-      - laravel
-    environment:
-      POSTGRES_USER: postgres
-      POSTGRES_PASSWORD: postgres
-      POSTGRES_DB: simada
-
-  php:
+    container_name: con_laravel_sample
+    # lokasi source code
     build:
-      context: .
-      dockerfile: Dockerfile
+      context: ./
+      dockerfile: web.dockerfile
+    # path untuk source di dalam docker
     volumes:
-      - ./:/var/www/html
+      - ./:/var/www
+    image: webserver_laravel:1.0
     ports:
-      - "9000:9000"
-    networks:
-      - laravel
+      - "8070:80"
+
+  app:
+    container_name: app_laravel_sample
+    build:
+      context: ./
+      dockerfile: app.dockerfile
+    image: app_laravel:1.0
+    volumes:
+      - ./:/var/www

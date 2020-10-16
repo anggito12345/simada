@@ -11,7 +11,6 @@
   <div class="clearfix"></div>
 
   @include('flash::message')
-
   <div class="box box-primary">
     <div class="box-body">
       <label class="advance_filter_toggle text-info" style="cursor: pointer" onclick="viewModel.clickEvent.toggleAdvanceFilter()">
@@ -40,8 +39,7 @@
 @endsection
 
 <?php
-
-// in some php file to detect they are called from inventaris page, needed this variable to be true.
+// in some php file, to detect they are called from inventaris page, needed this variable to be true.
 $isInventarisPage = true;
 ?>
 
@@ -58,7 +56,6 @@ $isInventarisPage = true;
           </button>
         </div>
         <div class="modal-body modal-compare-body">
-            Test
         </div>
         <div class="modal-footer">
           <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>

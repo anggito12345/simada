@@ -63,25 +63,16 @@ class organisasiAPIController extends AppBaseController
                 $querys = $querys->whereRaw('pid = '.$request->get('pid'));
             }
 
-            if (!c::is('',[],[Constant::$GROUP_BPKAD_ORG])) {
 
-                $organisasiUser = \App\Models\organisasi::find(Auth::user()->pid_organisasi);
-                if ($organisasiUser == null) {
-                    $organisasiUser = new \App\Models\organisasi();
-                }
-
-                if (c::is('',[],[Constant::$GROUP_CABANGOPD_ORG])) {
-                    $querys = $querys->whereRaw('id = '.$organisasiUser->pid);
-                }
-
-                if (c::is('',[],[Constant::$GROUP_OPD_ORG])) {
-                    $querys = $querys
-                        ->whereRaw('m_organisasi.id = '.$organisasiUser->id.' OR m_organisasi.pid = '.$organisasiUser->id)
-                        ->whereRaw('(m_organisasi.level = \''. $request->input('level') . '\' OR m_organisasi.jabatans = \''. $request->input('level').'\')');
-                }
-
+            $organisasiUser = \App\Models\organisasi::find(Auth::user()->pid_organisasi);
+            if ($organisasiUser == null) {
+                $organisasiUser = new \App\Models\organisasi();
             }
 
+
+            $querys = $querys
+                //->whereRaw('m_organisasi.id = '.$organisasiUser->id.' OR m_organisasi.pid = '.$organisasiUser->id)
+                ->whereRaw('(m_organisasi.level IN ('. $request->input('level') . ') OR m_organisasi.jabatans = \''. $request->input('level').'\')');
 
 
         } else {
@@ -92,7 +83,7 @@ class organisasiAPIController extends AppBaseController
         }
 
         if ($request->has('level')) {
-            $querys = $querys->whereRaw('(m_organisasi.level = \''. $request->input('level') . '\' OR m_organisasi.jabatans = \''. $request->input('level').'\')');
+            $querys = $querys->whereRaw('(m_organisasi.level IN ('. $request->input('level') . ') OR m_organisasi.jabatans = \''. $request->input('level').'\')');
         }
 
         if ($request->has('q')) {

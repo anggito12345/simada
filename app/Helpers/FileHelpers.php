@@ -32,10 +32,13 @@ class FileHelpers {
         }
     }
 
-    public static function uploadMultiple($fileKey, $request, $folder, $funcBeforeSave) {
+    public static function uploadMultiple($fileKey, $input, $folder, $funcBeforeSave) {
         $ids = [];
         $systemUploadRetFunc = true;
-        $input = $request->all();
+        if (!is_array($input)) {
+            $input = $input->all();
+        }
+
 
         if (!isset($input[$fileKey])) {
             return;
@@ -44,8 +47,8 @@ class FileHelpers {
         $files = $input[$fileKey];
         $isUpdate = true;
 
-        if($files) {    
-            foreach ($files as $key => $value) {                                
+        if($files) {
+            foreach ($files as $key => $value) {
                 if (isset($input[$fileKey . '_metadata_id'][$key]) && $value) {
                     $isUpdate = true;
                     $systemUpload = \App\Models\system_upload::find($input[$fileKey . '_metadata_id'][$key]);
@@ -56,34 +59,34 @@ class FileHelpers {
                     $isUpdate = false;
                     $systemUpload = new \App\Models\system_upload();
                 }
-            
+
                 if ($value && $value != "false") {
                     $systemUpload->name = $value->getClientOriginalName();
                     $systemUpload->path = $value->storeAs('public/'. $folder, sha1(time(). $value->getClientOriginalName()). uniqid());
                     $systemUpload->size = $value->getSize();
                     $systemUpload->type = $value->getClientMimeType();
                 }
-                                
-                
+
+
                 if ($funcBeforeSave != null) {
-                    $systemUpload = $funcBeforeSave($input, $key, $systemUpload);      
-                }    
-                            
-                $systemUploadReturnData = $systemUpload->save();    
-                if (!$isUpdate) {                                          
+                    $systemUpload = $funcBeforeSave($input, $key, $systemUpload);
+                }
+
+                $systemUploadReturnData = $systemUpload->save();
+                if (!$isUpdate) {
                     array_push($ids, $systemUpload);
                 } else {
-                }                
+                }
             }
-        } 
+        }
 
         return $ids;
     }
 
 
-    public static function deleteAll($files, $commited = true) { 
+    public static function deleteAll($files, $commited = true) {
         if ($files == null) {
-            return; 
+            return;
         }
 
         foreach ($files as $key => $value) {
@@ -93,7 +96,7 @@ class FileHelpers {
             if ($commited) {
                 $systemUpload = \App\Models\system_upload::find($value->id);
             }
-            
+
             if ($value->path != "") {
                 Storage::delete($value->path);
             }
@@ -102,8 +105,8 @@ class FileHelpers {
                 $systemUpload->delete();
             }
 
-            
-        }        
+
+        }
     }
 
 
@@ -114,6 +117,6 @@ class FileHelpers {
             array_push($onlyFilenameArray, substr($filename, strrpos($filename, '/') + 1));
         }
 
-        return $onlyFilenameArray;    
+        return $onlyFilenameArray;
     }
 }

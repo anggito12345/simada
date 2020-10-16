@@ -14,18 +14,26 @@ class SensusScope implements Scope {
     public function apply(Builder $builder, Model $model) {
 
         $column = $model->table.'.is_sensus';
-        $builder->whereNull($column);
-        $this->addOnlyDrafts($builder);
+        //$builder->whereNull($column);
+        $this->addOnlySensus($builder);
     }
 
 
-    protected function addOnlyDrafts(Builder $builder)
+    protected function addOnlySensus(Builder $builder)
     {
 
         $builder->macro('OnlySensus', function(Builder $builder)
         {
 
-            $builder->withoutGlobalScope($this)->where('is_sensus', '1');
+            $builder->withoutGlobalScope($this)->whereRaw('is_sensus <= 0 ');
+
+            return $builder;
+        });
+
+        $builder->macro('NotSensus', function(Builder $builder)
+        {
+
+            $builder->withoutGlobalScope($this)->whereRaw('is_sensus > 0 ');
 
             return $builder;
         });

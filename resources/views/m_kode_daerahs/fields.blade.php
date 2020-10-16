@@ -1,3 +1,9 @@
+<!-- Kode Field -->
+<div class="form-group col-sm-6 row">
+    {!! Form::label('kode', 'Kode:') !!}
+    {!! Form::text('kode', null, ['class' => 'form-control']) !!}
+</div>
+
 <!-- Nama Field -->
 <div class="form-group col-sm-6 row">
     {!! Form::label('nama', 'Nama:') !!}
