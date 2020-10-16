@@ -13,7 +13,7 @@ class AddFieldKodeInKodeJalanMaster extends Migration
      */
     public function up()
     {
-        Schema::create('inventaris_sensus', function(Blueprint $table)
+        Schema::create('m_kode_daerah', function(Blueprint $table)
 		{
             $table->bigInteger('id', true);
             $table->string("kode")->nullable();
