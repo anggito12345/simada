@@ -13,10 +13,14 @@ class AddFieldKodeInKodeJalanMaster extends Migration
      */
     public function up()
     {
-        Schema::table('m_kode_daerah', function (Blueprint $table) {
-            //
-            $table->string("kode", 10)->nullable();
-        });
+        Schema::create('inventaris_sensus', function(Blueprint $table)
+		{
+            $table->bigInteger('id', true);
+            $table->string("kode")->nullable();
+            $table->string("nama")->nullable();
+            $table->date("created_at")->nullable();
+            $table->date("updated_at")->nullable();
+		});
     }
 
     /**
@@ -26,9 +30,6 @@ class AddFieldKodeInKodeJalanMaster extends Migration
      */
     public function down()
     {
-        Schema::table('m_kode_daerah', function (Blueprint $table) {
-            //
-            $table->dropColumn("kode");
-        });
+        Schema::drop('m_kode_daerah');
     }
 }
