@@ -13,12 +13,26 @@ services:
     image: webserver_laravel:1.0
     ports:
       - "8070:80"
-
+  db:
+    image: postgres
+    environment:
+      POSTGRES_PASSWORD: postgres
+      POSTGRES_USER: postgres
+      POSTGRES_DB: simada
+    volumes:
+      - pgdata:/var/lib/postgresql/data
+    ports:
+      - "5432:5432"
   app:
     container_name: app_laravel_sample
     build:
       context: ./
       dockerfile: app.dockerfile
     image: app_laravel:1.0
+    depends_on:
+      - db
     volumes:
       - ./:/var/www
+volumes:
+  pgdata:
+    driver: local
