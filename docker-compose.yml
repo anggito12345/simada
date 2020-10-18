@@ -35,6 +35,8 @@ services:
       - db
     volumes:
       - ./:/var/www
+    tty: true
+
 
 volumes:
   pgdata:
