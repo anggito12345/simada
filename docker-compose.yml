@@ -2,17 +2,18 @@ version: '3.8'
 
 services:
   nginx:
-    container_name: con_laravel_sample
+    container_name: webserver_simada
     # lokasi source code
     build:
       context: ./
-      dockerfile: web.dockerfile
+      dockerfile: webserver.dockerfile
     # path untuk source di dalam docker
     volumes:
       - ./:/var/www
-    image: webserver_laravel:1.0
+    image: webserver_simada:1.0
     ports:
-      - "8070:80"
+      - "${WEB_PORT:-80}:80"
+
   db:
     image: postgres
     environment:
@@ -23,16 +24,18 @@ services:
       - pgdata:/var/lib/postgresql/data
     ports:
       - "5432:5432"
+
   app:
-    container_name: app_laravel_sample
+    container_name: app_simada
     build:
       context: ./
       dockerfile: app.dockerfile
-    image: app_laravel:1.0
+    image: app_simada:1.0
     depends_on:
       - db
     volumes:
       - ./:/var/www
+
 volumes:
   pgdata:
     driver: local
