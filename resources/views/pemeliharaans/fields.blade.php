@@ -249,8 +249,6 @@ $(document).ready(() => {
         buttonClear: true,
     });
 
-    alert(biaya)
-
     if (biaya) {
         $("#biaya").mask("#.##0,00", {reverse: true})
         $("#biaya").val(biaya)

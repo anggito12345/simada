@@ -334,7 +334,8 @@ $(document).ready(() => {
             'kode_awal': parseInt(id_awal),
             'kode_tujuan': parseInt(id_tujuan),
             'kode_awalNama': nama_awal,
-            'kode_tujuanNama': nama_tujuan
+            'kode_tujuanNama': nama_tujuan,
+            'sensus': 'Y'
         }])
     }
 

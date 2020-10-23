@@ -48,6 +48,12 @@ class Constant {
         ],
     ];
 
+    public static $SENSUS_STATUS = [
+       'Belum disensus',
+       'Proses Verifikasi',
+       'Sudah disensus'
+    ];
+
     public static $SENSUS_STATUS_01 = [
         '3' => 'Barang Tidak Tercatat',
         '4' => 'Barang Tercatat',

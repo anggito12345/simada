@@ -16,7 +16,7 @@ class FlagForSensus extends Migration
         //
         if(Schema::hasTable('inventaris')) {
             Schema::table('inventaris', function(Blueprint $table) {
-                $table->string('is_sensus')->nullable();
+                $table->string('id_sensus')->nullable();
             });
         }
     }
@@ -31,7 +31,7 @@ class FlagForSensus extends Migration
         //
         if(Schema::hasTable('inventaris')) {
             Schema::table('inventaris', function(Blueprint $table) {
-                $table->dropColumn('is_sensus');
+                $table->dropColumn('id_sensus');
             });
         }
     }

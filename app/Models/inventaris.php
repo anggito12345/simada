@@ -82,7 +82,7 @@ class inventaris extends Model
         'kode_barang',
         'import_flag',
         'nama_populer',
-        'is_sensus'
+        'id_sensus'
     ];
 
     /**

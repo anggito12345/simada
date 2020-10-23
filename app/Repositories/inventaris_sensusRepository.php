@@ -47,6 +47,43 @@ class inventaris_sensusRepository extends BaseRepository
         return inventaris_sensus::class;
     }
 
+    public static function statusSensus($sensus, $output = 'text') {
+        if ($sensus == null) {
+            if ($output == 'text') {
+                return 'Belum disensus';
+            } else {
+                return '<i class=\'fa fa-close text-red\'></i>';
+            }
+        } else {
+            switch($sensus->status_approval) {
+                case 'STEP-1': {
+                    if ($output == 'text') {
+                        return 'Proses Verifikasi';
+                    } else {
+                        return '<i class=\'fa fa-info text-blue\'></i>';
+                    }
+                }
+                case'STEP-2': {
+
+                    if ($output == 'text') {
+                        return 'Telah disensus';
+                    } else {
+                        return '<i class=\'fa fa-check-circle text-green\'></i>';
+                    }
+                    break;
+                }
+                default: {
+                    if ($output == 'text') {
+                        return 'Belum disensus';
+                    } else {
+                        return '<i class=\'fa fa-close text-red\'></i>';
+                    }
+                }
+
+            }
+        }
+    }
+
     /**
      * approvement main logic sensus
      */
@@ -110,9 +147,23 @@ class inventaris_sensusRepository extends BaseRepository
 
                                 // it mean all tidak ada status will remove the inventaris from db
                                 if($each->status_barang == '0') {
-                                    inventaris::where([
-                                        'id' => $each->idinventaris
-                                    ])->delete();
+
+                                    if ($each->status_barang_hilang == '1' || $each->status_barang_hilang == '2') {
+
+                                        $inv = inventaris::where([
+                                            'id' => $each->idinventaris
+                                        ])->first();
+                                        $inv->pidbarang = $each->kode_tujuan;
+                                        $inv->save();
+
+                                    } else {
+                                        inventaris::where([
+                                            'id' => $each->idinventaris
+                                        ])->delete();
+                                    }
+
+
+
                                 }
 
                                 // when status barang is 1
@@ -120,9 +171,10 @@ class inventaris_sensusRepository extends BaseRepository
 
                                     // when status ubah satuan is pisah
                                     if ($each->status_ubah_satuan == '0') {
-                                        inventaris::where([
-                                            'id' => $each->idinventaris
-                                        ])->delete();
+                                        $data = json_decode($each->data_temporary,true);
+                                        $data['id_sensus'] = null;
+
+                                        inventarisRepository::UpdateLogic($data, $each->idinventaris);
                                     }
 
                                     // otherwise will redirect to pemeliharaan
@@ -131,16 +183,16 @@ class inventaris_sensusRepository extends BaseRepository
                                 else if($each->status_barang == '3') {
                                     // when status tidak tercatat
                                     $inv = inventaris::WithSensus()->where([
-                                        'is_sensus' => $each->id
+                                        'id_sensus' => $each->id
                                     ])->first();
-                                    $inv->is_sensus = null;
+                                    $inv->id_sensus = null;
                                     $inv->save();
                                 }
 
                                 else if ($each->status_barang == '4') {
                                     // when status tercatat
                                     $data = json_decode($each->data_temporary,true);
-                                    $data['is_sensus'] = null;
+                                    $data['id_sensus'] = null;
 
                                     inventarisRepository::UpdateLogic($data, $each->idinventaris);
 
@@ -191,7 +243,7 @@ class inventaris_sensusRepository extends BaseRepository
         ->from('inventaris_sensus')
         ->leftJoin('inventaris','inventaris.id','inventaris_sensus.idinventaris')
         ->leftJoin('m_barang', 'm_barang.id', 'inventaris.pidbarang')
-        ->leftJoin('inventaris as inven2','inven2.is_sensus','inventaris_sensus.id')
+        ->leftJoin('inventaris as inven2','inven2.id_sensus','inventaris_sensus.id')
         ->leftJoin('m_barang as barang2', 'barang2.id', 'inven2.pidbarang')
         ->leftJoin('users', 'users.id', 'inventaris_sensus.created_by')
         ->leftJoin('m_organisasi', 'm_organisasi.id', 'users.pid_organisasi');

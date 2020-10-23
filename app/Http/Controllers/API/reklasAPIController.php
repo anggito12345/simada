@@ -73,11 +73,11 @@ class reklasAPIController extends AppBaseController
                     $systemUpload->keterangan = $metadatas['dokumen_reklas_metadata_keterangan'][$index];
                 }
 
-                $systemUpload->uid = $metadatas['dokumen_reklas_metadata_uid'][$index];      
+                $systemUpload->uid = $metadatas['dokumen_reklas_metadata_uid'][$index];
                 $systemUpload->foreign_field = 'id';
                 $systemUpload->jenis = 'dokumen';
                 $systemUpload->foreign_table = 'reklas';
-                $systemUpload->foreign_id = $metadatas['idreklas'];                 
+                $systemUpload->foreign_id = $metadatas['idreklas'];
 
                 return $systemUpload;
             });
@@ -85,16 +85,17 @@ class reklasAPIController extends AppBaseController
             $details = json_decode($request->input('data-detil'), true);
 
             foreach ($details as $detail) {
+
                 $detailRecord = [
                     'idreklas' => $reklas->id,
                     'pidinventaris' => $detail['kode_awal'],
                     'pidbarang_tujuan' => $detail['kode_tujuan'],
-                    'status' => 'STEP-1',
+                    'status' => isset($detail['sensus']) ? 'SENSUS' : 'STEP-1',
                 ];
 
                 reklas_detil::create($detailRecord);
             }
-                             
+
             DB::commit();
         } catch (\Exception $e) {
             DB::rollBack();

@@ -311,7 +311,7 @@ class inventarisRepository extends BaseRepository
 
 
 
-            if (empty($input['is_sensus']) || $input['is_sensus'] == 'null') {
+            if (empty($input['id_sensus']) || $input['id_sensus'] == 'null') {
 
                 $inventarisRepository = new inventarisRepository(new Application());
 
@@ -326,9 +326,13 @@ class inventarisRepository extends BaseRepository
             } else {
 
                 $input['kib_data'] = $kibData;
-
-                $sensus = \App\Models\inventaris_sensus::find($input['is_sensus']);
+                $input['id_sensus'] = (int)$input['id_sensus'];
+                $sensus = \App\Models\inventaris_sensus::find($input['id_sensus']);
                 $sensus->data_temporary = json_encode($input, 1);
+
+                //check all data should be required
+
+
                 $sensus->save();
 
             }
@@ -358,8 +362,8 @@ class inventarisRepository extends BaseRepository
         DB::beginTransaction();
         try {
 
-            if ($input['is_sensus'] == 'null') {
-                $input['is_sensus'] = null;
+            if ($input['id_sensus'] == 'null') {
+                $input['id_sensus'] = null;
             }
 
             // generate no register
@@ -506,6 +510,18 @@ class inventarisRepository extends BaseRepository
             $buildingModel = $buildingModel->where('inventaris.pidupt', $theFilter['subkuasa_filter']);
         }
 
+        if (isset($theFilter['status_sensus']) && $theFilter['status_sensus'] != "" && $theFilter['status_sensus'] != null) {
+            //u can check constnt list status sensus on Constant class
+            if ($theFilter['status_sensus'] == 0) {
+                $buildingModel = $buildingModel->whereRaw('inventaris_sensus.id IS NULL');
+            } else if ($theFilter['status_sensus'] == 1) {
+                $buildingModel = $buildingModel->whereRaw('inventaris_sensus.status_approval = \'STEP-1\'');
+            } else if ($theFilter['status_sensus'] == 2) {
+                $buildingModel = $buildingModel->whereRaw('inventaris_sensus.status_approval = \'STEP-2\'');
+            }
+
+        }
+
 
         // take data which is doesn't has any duplicate data in inventaris_penghapusan
         if(isset($theFilter['is_exist_inventaris_penghapusan'])) {
@@ -526,7 +542,7 @@ class inventarisRepository extends BaseRepository
 
         if ($buildingModel == null) {
             $buildingModel = new \App\Models\inventaris();
-            $buildingModel = $buildingModel->NotSensus();
+            //$buildingModel = $buildingModel->NotSensus();
         }
 
 
@@ -579,7 +595,11 @@ class inventarisRepository extends BaseRepository
             ->leftJoin("detil_konstruksi", "detil_konstruksi.pidinventaris", "inventaris.id")
             ->leftJoin("m_merk_barang", "m_merk_barang.id", "detil_mesin.merk")
             ->leftJoin('inventaris_penghapusan', 'inventaris_penghapusan.id', 'inventaris.id')
-            ->leftJoin('m_organisasi', 'm_organisasi.id', 'inventaris.pid_organisasi');
+            ->leftJoin('m_organisasi', 'm_organisasi.id', 'inventaris.pid_organisasi')
+            ->leftJoin('inventaris_sensus', function($join){
+                $join->on("inventaris_sensus.idinventaris", "inventaris.id")->on(DB::raw("date_part('year', \"inventaris_sensus\".\"created_at\")"), DB::Raw(date('Y')));
+           });
+
             // role =================
             // ->where('m_jabatan.level', '<=', $mineJabatan->level)
 

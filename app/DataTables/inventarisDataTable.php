@@ -4,6 +4,7 @@ namespace App\DataTables;
 
 use App\Models\BaseModel;
 use App\Models\inventaris;
+use App\Repositories\inventaris_sensusRepository;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 use Auth;
@@ -46,6 +47,13 @@ class inventarisDataTable extends DataTable
                 $jenisbarang = \App\Models\jenisbarang::where('kode', $barang->kode_jenis)->first();
                 return $jenisbarang->nama . "(".chr(64+$jenisbarang->kode).")";
             })
+            ->addColumn('status_sensus', function($data) {
+                $sensus = \App\Models\inventaris_sensus::orderBy('id')
+                    ->where('idinventaris', $data->id)
+                    ->whereRaw('date_part(\'year\', created_at) = ' . date('Y'))
+                    ->first();
+                return inventaris_sensusRepository::statusSensus($sensus, 'icon');
+            })
             ->addColumn('detail', function($data) {
                 return "<i class='fa fa-plus-circle text-success'></i>";
             })
@@ -87,7 +95,7 @@ class inventarisDataTable extends DataTable
                 return $kode;
             })
             ->addColumn('action', 'inventaris.datatables_actions')
-            ->rawColumns(['detail', 'action', 'checkbox']);
+            ->rawColumns(['detail', 'action', 'checkbox','status_sensus']);
     }
 
     /**
@@ -155,16 +163,6 @@ class inventarisDataTable extends DataTable
 
             $addtButtons = [];
 
-            /*if (c::is('inventaris',['create'], BaseModel::getAccess(function($index, $label) {
-                if ($index >= Constant::$GROUP_BPKAD_ORG) {
-                    return true;
-                }
-
-                return false;
-            }))) {
-                array_push($addtButtons, ['text' => '<i class="fa fa-plus"></i> Barang Tidak Tercatat', 'action' => 'function(){ window.location = "'.route('inventaris.create').'?sensus=true"}', ]);
-            }*/
-
             if (c::is('sensus',['create'], BaseModel::getAccess(function($index, $label) {
                 if ($index >= Constant::$GROUP_BPKAD_ORG) {
                     return true;
@@ -195,6 +193,9 @@ class inventarisDataTable extends DataTable
                     d.draft = $("[name=draft]").val()
                     if ($("[name=jenisbarangs_filter]").data("select2"))
                         d.jenisbarangs = $("[name=jenisbarangs_filter]").select2("val")
+
+                    if ($("[name=status_sensus]").val())
+                        d.status_sensus = $("[name=status_sensus]").val()
 
                     if ($("[name=kodeobjek_filter]").data("select2") && $("[name=kodeobjek_filter]").select2("data").length > 0)
                         d.kodeobjek = $("[name=kodeobjek_filter]").select2("data")[0].kode_objek
@@ -249,6 +250,7 @@ class inventarisDataTable extends DataTable
     protected function getColumns()
     {
         return [
+            'id',
             [
                 'className' => 'details-control',
                 'orderable' => false,
@@ -283,6 +285,7 @@ class inventarisDataTable extends DataTable
             'organisasi',
             // 'barang',
             'harga_satuan',
+            'status_sensus'
             // 'keterangan'
             // 'pidbarang',
             // 'pidopd',

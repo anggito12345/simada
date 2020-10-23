@@ -17,7 +17,7 @@ class ChangeIsSensusInventarisTypeColumn extends Migration
         if(Schema::hasTable('inventaris')) {
             Schema::table('inventaris', function(Blueprint $table) {
                 DB::statement('ALTER TABLE inventaris ALTER COLUMN
-                        is_sensus TYPE integer USING (is_sensus::integer)');
+                        id_sensus TYPE integer USING (id_sensus::integer)');
             });
         }
     }
@@ -32,7 +32,7 @@ class ChangeIsSensusInventarisTypeColumn extends Migration
         //
         if(Schema::hasTable('inventaris')) {
             Schema::table('inventaris', function(Blueprint $table) {
-                $table->string('is_sensus')->nullable()->change();
+                $table->string('id_sensus')->nullable()->change();
             });
         }
     }

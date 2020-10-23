@@ -33,6 +33,12 @@
             {{ Form::label('draft', 'Draft:') }}
             {{ Form::select('draft', \App\Models\BaseModel::$YesNoDs, 0, ['class' => 'form-control', 'onchange' => 'viewModel.changeEvent.changeRefreshGrid()']) }}
         </div>
+        <div class="col-md-4">
+            {{ Form::label('status_sensus', 'Status Sensus:') }}
+            {{ Form::select('status_sensus',
+                \App\Helpers\Constant::$SENSUS_STATUS
+            , 0, ['class' => 'form-control', 'onchange' => 'viewModel.changeEvent.changeRefreshGrid()']) }}
+        </div>
     </div>
 </div>
 

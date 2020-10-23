@@ -24,6 +24,10 @@
         }
     </style>
     <style type="text/css">
+
+        .content {
+            font-size: 13.5px !important;
+        }
         .loading-asset {
             background-image: url(http://localhost/simada/public/images/loading.gif);
             width: 100px;

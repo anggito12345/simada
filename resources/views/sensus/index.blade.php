@@ -108,10 +108,7 @@
                             <div class="btn btn-success" style="float:right" onclick="sensus.methods.storeSensus()">
                                 Submit
                             </div>
-
                         </div>
-
-
                     </div>
                     <div class="tab-pane container fade" id="sensus">
                         <div class="row">
@@ -138,81 +135,7 @@
     </div>
 
 
-    <div class="modal" id="modal-sensus" role="dialog">
-        <div class="modal-dialog" role="document">
-            <div class="modal-content">
-            <div class="modal-header">
-                <h5 class="modal-title">Sensus</h5>
-                <button type="button" class="close" data-dismiss="modal" aria-label="Close">
-                <span aria-hidden="true">&times;</span>
-                </button>
-            </div>
-            <div class="modal-body">
-                <div class="form-group" data-bind="if: sensus.data.step() == 1">
-                    <label>
-                        Sensus
-                    </label>
-                    <select type="text" class="form-control" id="sensus-dd" data-bind="value: sensus.data.form.status_barang" onchange="sensus.methods.changeStatusBarang()" placeholder="Pilih Status Barang" >
-                        <option>Pilih Status Barang</option>
 
-                        @foreach (Constant::$SENSUS_STATUS_01 as $index => $sensus_status)
-                            <option value="{!! $index !!}">{!! $sensus_status !!}</option>
-                        @endforeach
-                    </select>
-                </div>
-                {{-- options tidak ada --}}
-                <div class="ubahsatuan-form" data-bind="if: sensus.data.form.status_barang() == 1 && sensus.data.step() == 2">
-                    @foreach (Constant::$SENSUS_STATUS_02 as $index => $sensus_status)
-                        <div class="btn btn-primary btn-block"  onclick="sensus.methods.showSkForm('{!! $index !!}', 'status_ubah_satuan')">
-                            {!! $sensus_status !!}
-                        </div>
-                    @endforeach
-
-                    <a href="#" onclick="sensus.methods.backToStep(1)" class="btn btn-danger btn-block"><i class="fa fa-arrow-left"></i>&nbsp; Kembali</a>
-                </div>
-                {{-- options ubah satuan --}}
-                <div class="ubahsatuan-form" data-bind="if: (sensus.data.form.status_barang() == 0 && sensus.data.step() == 2)">
-                    @foreach (Constant::$SENSUS_STATUS_03 as $index => $sensus_status)
-                        <div class="btn btn-primary btn-block" onclick="sensus.methods.showSkForm('{!! $index !!}', 'status_barang_hilang')">
-                            {!! $sensus_status !!}
-                        </div>
-                    @endforeach
-
-                    <a href="#" onclick="sensus.methods.backToStep(1)" class="btn btn-danger btn-block"><i class="fa fa-arrow-left"></i>&nbsp; Kembali</a>
-                </div>
-                <div class="ubahsatuan-form" data-bind="visible: sensus.data.step() == 3">
-                    <div class="form-group">
-                        <label>
-                            No SK.
-                        </label>
-                        <input type='text' class="form-control" data-bind="value: sensus.data.form.no_sk" />
-                    </div>
-                    <div class="form-group">
-                        <label>
-                            Tgl SK.
-                        </label>
-                        <input type='text' id="tgl_sk" class="form-control" data-bind="value: sensus.data.form.tgl_sk" />
-                    </div>
-                    <div class="form-group" data-bind="visible: sensus.data.form.status_barang_hilang() == 1 || sensus.data.form.status_barang_hilang() == 2">
-                        <label>
-                            Kode Tujuan.
-                        </label>
-                        <select  class="form-control" name="kode_tujuan" data-bind="value: sensus.data.form.kode_tujuan" ></select>
-                    </div>
-                    <input type="file" id="file-sensus-sk" />
-                    <a href="#" onclick="sensus.methods.backToStep(2)"><i class="fa fa-arrow-left pull-left"></i>&nbsp; Back</a>
-                    <div class="btn btn-success" style="float:right" onclick="sensus.methods.storeSensus()">
-                        Submit
-                    </div>
-
-                </div>
-
-            </div>
-            <div class="modal-footer">
-            </div>
-            </div>
-        </div>
-    </div>
 
 @endsection
 @section('scripts_2 ')

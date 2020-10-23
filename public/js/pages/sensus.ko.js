@@ -11,10 +11,12 @@ let sensus = {
                 {
                     label: "pilih opsi",
                     step: 1,
+                    form: 'form-opsi'
                 },
                 {
                     label: "isi form",
-                    step: 3
+                    step: 2,
+                    form: 'form-sensus'
                 }
            ]
         },
@@ -88,6 +90,7 @@ let sensus = {
             idModalSensus: 'modal-sensus',
             idInputFileSK: 'file-sensus-sk'
         },
+        currentForm: ko.observable('form-opsi'),
         step: ko.observable(1),
         fileGallery: null,
         form: {
@@ -265,10 +268,14 @@ let sensus = {
                     `idinventaris=${selectedRowGrid.id}&` +
                     `tgldibukukan=${selectedRowGrid.tgl_dibukukan}&` +
                     `hargasatuan=${selectedRowGrid.harga_satuan}`
+                } else if (sensus.data.form.status_barang() == 1 && sensus.data.form.status_ubah_satuan() == 0) {
+                    window.location= `inventaris/${selectedRowGrid.id}/edit?id_sensus=${d.id}`
                 } else if (sensus.data.form.status_barang() == 3) {
-                    window.location= 'inventaris/create?is_sensus=' + d.id
+                    window.location= 'inventaris/create?id_sensus=' + d.id
                 } else if (sensus.data.form.status_barang() == 4) {
-                    window.location= `inventaris/${selectedRowGrid.id}/edit?is_sensus=${d.id}`
+                    window.location= `inventaris/${selectedRowGrid.id}/edit?id_sensus=${d.id}`
+                } else {
+                    window.location.reload()
                 }
             })
         },
@@ -334,7 +341,6 @@ $(document).ready(() => {
                 };
             }
         },
-        dropdownParent: $(`#${sensus.data.statics.idModalSensus}`),
         theme: 'bootstrap' ,
     });
 
