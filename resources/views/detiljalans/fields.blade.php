@@ -170,6 +170,8 @@
             // Do something
             if ($('#kodetanah-detiljalan').select2('data').length > -1) {
                 viewModel.methods.SetAlamatHirearchy($('#kodetanah-detiljalan').select2('data')[0], 'KIB D')
+                document.getElementById('koordinatlokasi-detiljalan').dispatchEvent(new Event('change'))
+                document.getElementById('koordinattanah-detiljalan').dispatchEvent(new Event('change'))
             }
         });
 

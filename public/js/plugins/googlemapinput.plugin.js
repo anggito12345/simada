@@ -85,6 +85,7 @@ let GoogleMapInput = function(element, config) {
                 console.error("config value is required tag name of element doesn't input")
                 return
             }
+
         }
 
         if (!self.defaultConfig.isNotInput) {
@@ -179,8 +180,24 @@ let GoogleMapInput = function(element, config) {
             })
 
             inputMaskingElement.addEventListener('change', (ev) => {
-                element.value = ev.target.value
-                element.dispatchEvent(new Event('change'))
+                if (element.value != ev.target.value) {
+                    element.value = ev.target.value
+                    element.dispatchEvent(new Event('change'))
+                }
+            })
+
+            element.addEventListener('change', (ev) => {
+                if (inputMaskingElement.value != ev.target.value) {
+                    inputMaskingElement.value = ev.target.value
+                    inputMaskingElement.dispatchEvent(new Event('change'))
+                }
+
+                if (ev.target.value != null || ev.target.value != "") {
+                    inputGroupTextButton.className = "fa fa-globe text-green"
+                } else {
+                    inputGroupTextButton.className = "fa fa-globe text-green"
+                }
+
             })
 
             const modalMapPicker = `<div class="modal fade" id="${modalIdGoogleMap}" tabindex="-1" role="dialog">

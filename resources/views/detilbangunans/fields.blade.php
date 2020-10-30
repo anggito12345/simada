@@ -48,11 +48,7 @@
 
 
 
-<!-- Luastanah Field -->
-<div class="form-group col-sm-6 row">
-    {!! Form::label('luastanah', 'Luas Total Lantai:') !!}
-    {!! Form::number('luastanah', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB C"]().luastanah']) !!}
-</div>
+
 
 <!-- Alamat Field -->
 <div class="form-group col-sm-6 row">
@@ -133,6 +129,8 @@
             // Do something
             if ($('#kodetanah').select2('data').length > -1) {
                 viewModel.methods.SetAlamatHirearchy($('#kodetanah').select2('data')[0], 'KIB C')
+                document.getElementById('koordinatlokasi-detilbangunan').dispatchEvent(new Event('change'))
+                document.getElementById('koordinattanah-detilbangunan').dispatchEvent(new Event('change'))
             }
         });
 
@@ -159,6 +157,12 @@
         {!! Form::label('nodokumen', 'Nomor:') !!}
         {!! Form::text('nodokumen', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB C"]().nodokumen']) !!}
     </div>
+</div>
+
+<!-- Luastanah Field -->
+<div class="form-group col-sm-6 row">
+    {!! Form::label('luastanah', 'Luas Total Lantai:') !!}
+    {!! Form::number('luastanah', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB C"]().luastanah']) !!}
 </div>
 
 <!-- Statustanah Field -->

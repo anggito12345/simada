@@ -1,7 +1,12 @@
 @if(!isset($isInventarisPage))
 <!-- pid Field -->
 <div class="form-group <?= isset($isInventarisPage) ? 'col-md-12' : 'col-md-6'  ?>">
-    {!! Form::label('pidinventaris', 'Inventaris:') !!}
+    <span data-bind='visible: !viewModel.data.isSensus()'>
+        {!! Form::label('pidinventaris', 'Inventaris:') !!}
+    </span>
+    <span data-bind='visible: viewModel.data.isSensus()'>
+        {!! Form::label('pidinventaris', 'Inventaris Tujuan:') !!}
+    </span>
     {!! Form::text('pidinventaris', null, ['id' => 'pidinventaris_pemeliharaan', 'class' => 'form-control']) !!}
 </div>
 @endif
@@ -96,6 +101,10 @@
 
 <script type="text/javascript">
 
+viewModel.data = Object.assign(viewModel.data, {
+    isSensus: ko.observable(false),
+    idexceptinventaris: ko.observable()
+})
 
 new inlineDatepicker(document.getElementById('tglkontrak'), {
     format: 'DD-MM-YYYY',
@@ -106,9 +115,12 @@ if ($("#pidinventaris_pemeliharaan").length > 0) {
     $("#pidinventaris_pemeliharaan").LookupTable({
         DataTable: {
             ajax: {
-                url: $("[base-path]").val() + "/inventaris",
+                url: $("[base-path]").val() + "/api/inventaris/",
                 dataSrc: 'data',
                 data: (d) => {
+                    if (viewModel.data.isSensus()) {
+                        d['except-id-inventaris'] = viewModel.data.idexceptinventaris()
+                    }
                     return d
                 },
                 headers: {
@@ -236,8 +248,10 @@ $(document).ready(() => {
     var tgldibukukan = url.searchParams.get("tgldibukukan");
     var biaya = url.searchParams.get("hargasatuan");
     if (idinventaris) {
-        $("#pidinventaris_pemeliharaan").LookupTable().setValAjax("<?= url('api/inventaris') ?>/"+idinventaris).then((d) => {
-        })
+        viewModel.data.isSensus(true)
+        viewModel.data.idexceptinventaris(idinventaris)
+        // $("#pidinventaris_pemeliharaan").LookupTable().setValAjax("<?= url('api/inventaris') ?>/"+idinventaris).then((d) => {
+        // })
     }
 
     if (tgldibukukan) {

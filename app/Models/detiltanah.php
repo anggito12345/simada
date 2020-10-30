@@ -132,4 +132,9 @@ class detiltanah extends Model
         return $this->hasOne('App\Models\alamat', 'id', 'idkelurahan');
     }
 
+    public function Penggunaanmaster()
+    {
+        return $this->hasOne('App\Models\pengunaan', 'id', 'penggunaan');
+    }
+
 }

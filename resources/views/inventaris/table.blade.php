@@ -540,6 +540,16 @@
                         } else {
                             $.get(`${$("[base-path]").val()}/${url}/${data.id}?isAjax=true`).then((html) => {
                                 document.querySelector(`#Detail-${selectEvent}`).innerHTML = $(html).find(".container-view")[0].outerHTML
+                                // new GoogleMapInput(document.getElementsByClassName(`map-${data.pidinventaris}`)[0], {
+                                //     value : `${data.koordinattanah}`,
+                                //     draw: true,
+                                // })
+                                // setTimeout(() => {
+                                //    new GoogleMapInput(document.getElementsByClassName(`map-non-draw-${data.pidinventaris}`)[0], {
+                                //         value : `${data.koordinatlokasi}`,
+                                //         draw: false,
+                                //     })
+                                // }, 5000)
                             })
                         }
 
@@ -723,6 +733,9 @@
                             "processing": true,
                             "serverSide": true,
                         })
+
+
+
                     })
 
                 }

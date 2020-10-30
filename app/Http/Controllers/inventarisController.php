@@ -22,6 +22,7 @@ class inventarisController extends AppBaseController
     public function __construct(inventarisRepository $inventarisRepo)
     {
         parent::__construct();
+        $this->middleware("auth");
         $this->inventarisRepository = $inventarisRepo;
     }
 

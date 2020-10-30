@@ -186,6 +186,11 @@ class inventaris extends Model
         return $this->hasOne('App\Models\lokasi', 'id', 'pidlokasi');
     }
 
+    public function Satuanmaster()
+    {
+        return $this->hasOne('App\Models\satuanbarang', 'id', 'satuan');
+    }
+
     public function Barang()
     {
         return $this->hasOne('App\Models\barang', 'id', 'pidbarang');

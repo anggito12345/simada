@@ -15,7 +15,7 @@ let sensus = {
                 },
                 {
                     label: "isi form",
-                    step: 2,
+                    step: 3,
                     form: 'form-sensus'
                 }
            ]

@@ -49,9 +49,10 @@ class Constant {
     ];
 
     public static $SENSUS_STATUS = [
-       'Belum disensus',
-       'Proses Verifikasi',
-       'Sudah disensus'
+        'All',
+        'Belum disensus',
+        'Proses Verifikasi',
+        'Sudah disensus'
     ];
 
     public static $SENSUS_STATUS_01 = [

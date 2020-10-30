@@ -50,6 +50,13 @@ class inventarisAPIController extends AppBaseController
     }
 
     /**
+     * get common paging and sorting of datatable
+     */
+    public function getpemeliharaan(Request $request) {
+        return [];
+    }
+
+    /**
      * displaying sum of value based on current filter parameters
      */
     public function getSumHargaSatuan(Request $request) {

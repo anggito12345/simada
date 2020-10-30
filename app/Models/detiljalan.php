@@ -137,7 +137,7 @@ class detiljalan extends Model
         return $this->hasOne('App\Models\alamat', 'id', 'idkelurahan');
     }
 
-    public function Statustanah()
+    public function Statustanahmaster()
     {
         return $this->hasOne('App\Models\statustanah', 'id', 'statustanah');
     }
@@ -145,5 +145,10 @@ class detiljalan extends Model
     public function Kodetanah()
     {
         return $this->hasOne('App\Models\detil_tanah', 'id', 'kodetanah');
+    }
+
+    public function Kodejalanmaster()
+    {
+        return $this->hasOne('App\Models\m_kode_daerah', 'id', 'kode_jalan');
     }
 }

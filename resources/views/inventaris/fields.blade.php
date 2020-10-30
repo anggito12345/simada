@@ -171,7 +171,7 @@
     </script>
     @else
     <script>
-        let isSensus = null
+        let isSensus = 0
     </script>
     @endif
     <script type="text/javascript">

@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\inventaris;
+use App\Models\inventaris_sensus;
 use App\Repositories\BaseRepository;
 use Constant;
 use Auth;
@@ -447,6 +448,13 @@ class inventarisRepository extends BaseRepository
             $inventarisHistory->postHistory($inventarisHistoryData, Constant::$ACTION_HISTORY['NEW']);
 
 
+            if ($input['id_sensus'] != null) {
+                $sensus = inventaris_sensus::find((int)$input['id_sensus']);
+                if(!empty($sensus)) {
+                    $sensus->idinventaris = (int)$inventaris->id;
+                    $sensus->save();
+                }
+            }
 
             DB::commit();
         } catch (\Exception $e) {
@@ -475,6 +483,11 @@ class inventarisRepository extends BaseRepository
 
         if ($buildingModel == null) {
             return  $defRet->newQuery();
+        }
+
+        if (isset($theFilter['except-id-inventaris'])) {
+            $exceptIdInventaris = $theFilter['except-id-inventaris'];
+            $buildingModel = $buildingModel->whereRaw('inventaris.id NOT IN ('.$exceptIdInventaris.')');
         }
 
 
@@ -511,12 +524,12 @@ class inventarisRepository extends BaseRepository
         }
 
         if (isset($theFilter['status_sensus']) && $theFilter['status_sensus'] != "" && $theFilter['status_sensus'] != null) {
-            //u can check constnt list status sensus on Constant class
-            if ($theFilter['status_sensus'] == 0) {
+            //u can check constnt list status sensus on Constant class=
+            if ($theFilter['status_sensus'] == 1) {
                 $buildingModel = $buildingModel->whereRaw('inventaris_sensus.id IS NULL');
-            } else if ($theFilter['status_sensus'] == 1) {
-                $buildingModel = $buildingModel->whereRaw('inventaris_sensus.status_approval = \'STEP-1\'');
             } else if ($theFilter['status_sensus'] == 2) {
+                $buildingModel = $buildingModel->whereRaw('inventaris_sensus.status_approval = \'STEP-1\'');
+            } else if ($theFilter['status_sensus'] == 3) {
                 $buildingModel = $buildingModel->whereRaw('inventaris_sensus.status_approval = \'STEP-2\'');
             }
 

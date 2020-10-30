@@ -1,4 +1,4 @@
-<?php 
+<?php
     $uniqId = uniqid();
     $inventaris = \App\Models\inventaris::find($detilbangunan->pidinventaris);
 ?>
@@ -8,6 +8,20 @@
 <!-- Separator Field -->
 <div class="row">
     {!! Form::label('luas', 'DETIl KIB', ["class" => 'col-md-12 item-view text-left']) !!}
+</div>
+
+
+<!-- Nilai HBU Field -->
+<div class="row">
+    {!! Form::label('nilai_hub_kibc', 'Nilai HBU:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $detilbangunan->nilai_hub !!}</p>
+</div>
+
+
+<!-- Tipe Field -->
+<div class="row">
+    {!! Form::label('tipe', 'Tipe:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $detilbangunan->tipe !!}</p>
 </div>
 
 <!-- Konstruksi Field -->
@@ -40,34 +54,20 @@
     <p class="col-md-8 item-view">{!! $detilbangunan->alamat !!}</p>
 </div>
 
-<!-- Idkota Field -->
-<div class="row">
-    {!! Form::label('idkota', __('field.idkota'), ["class" => 'col-md-4 item-view']) !!}
-    <p class="col-md-8 item-view">{!! \App\Models\BaseModel::getRelationData($detilbangunan->kota, "nama", "") !!}</p>
-</div>
-
-<!-- Idkecamatan Field -->
-<div class="row">
-    {!! Form::label('idkecamatan', __('field.idkecamatan'), ["class" => 'col-md-4 item-view']) !!}
-    <p class="col-md-8 item-view">{!! \App\Models\BaseModel::getRelationData($detilbangunan->kecamatan, "nama", "") !!}</p>
-</div>
-
-<!-- Idkelurahan Field -->
-<div class="row">
-    {!! Form::label('idkelurahan', __('field.idkelurahan'), ["class" => 'col-md-4 item-view']) !!}
-    <p class="col-md-8 item-view">{!! \App\Models\BaseModel::getRelationData($detilbangunan->kelurahan, "nama", "") !!}</p>
-</div>
-
 <!-- Koordinatlokasi Field -->
 <div class="row">
     {!! Form::label('koordinatlokasi', 'Koordinat Lokasi:', ["class" => 'col-md-4 item-view']) !!}
-    <p class="col-md-8 item-view map-non-draw-<?= $uniqId ?>"></p>
+    <p class="col-md-8 item-view map-non-draw-<?= $detilbangunan->pidinventaris ?>">
+        {!! $detilbangunan->koordinatlokasi !!}
+    </p>
 </div>
 
 <!-- Koordinattanah Field -->
 <div class="row">
     {!! Form::label('koordinattanah', 'Koordinat Tanah:', ["class" => 'col-md-4 item-view']) !!}
-    <p class="col-md-8 item-view map-<?= $uniqId ?>"></p>
+    <p class="col-md-8 item-view map-<?= $detilbangunan->pidinventaris ?>">
+        {!! $detilbangunan->koordinattanah !!}
+    </p>
 </div>
 
 <!-- Tgldokumen Field -->
@@ -91,7 +91,7 @@
 <!-- Statustanah Field -->
 <div class="row">
     {!! Form::label('statustanah', 'Status tanah:', ["class" => 'col-md-4 item-view']) !!}
-    <p class="col-md-8 item-view">{!! $detilbangunan->statustanah !!}</p>
+    <p class="col-md-8 item-view">{!! \App\Models\BaseModel::getRelationData($detilbangunan->statustanahmaster, "nama", "") !!}</p>
 </div>
 
 <!-- Keterangan Field -->
@@ -102,7 +102,7 @@
 
 <div class="row container bg-white">
     <u>KIB A:</u>
-    <?php 
+    <?php
         $detiltanah = \App\Models\detiltanah::find($detilbangunan->kodetanah)
     ?>
     @if($detiltanah != null)
@@ -111,23 +111,3 @@
 </div>
 
 
-<script>
-
-    window["map-<?= $uniqId ?>"] = () => {
-        new GoogleMapInput(document.getElementsByClassName("map-<?= $uniqId ?>")[0], {
-            value : <?= $detilbangunan->koordinattanah ?>,
-            draw: true,
-        })
-
-        new GoogleMapInput(document.getElementsByClassName("map-non-draw-<?= $uniqId ?>")[0], {
-            value : "<?= $detilbangunan->koordinatlokasi ?>",
-            draw: false,
-        })
-    }
-    
-    // viewModel.jsLoaded.subscribe(() => {
-    //     mainShow()
-    // })
-
-    window["map-<?= $uniqId ?>"]()
-</script>

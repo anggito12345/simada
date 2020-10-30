@@ -278,13 +278,18 @@ class inventaris_sensusRepository extends BaseRepository
 
         $input['tanggal_sk'] = date('Y-m-d');
         $input['status_approval'] = 'STEP-1';
+        if ($input['status_barang'] == Constant::$SENSUS_STATUS_01[3]) {
+            $input['status_approval'] = 'STEP-1';
+        }
+
         $input['created_by'] = Auth::user()->id;
         $sensus = $this->create($input);
         $request->merge(['idsensus' => $sensus->id]);
 
-        if (Access::is([],[],[Constant::$GROUP_BPKAD_ORG])) {
-            $input['status_approval'] = 'STEP-2';
-        }
+        // if (Access::is([],[],[Constant::$GROUP_BPKAD_ORG])) {
+        //     $input['status_approval'] = 'STEP-2';
+        // }
+
 
 
 
@@ -302,9 +307,7 @@ class inventaris_sensusRepository extends BaseRepository
             return $systemUpload;
         });
 
-        if ($input['status_barang'] == Constant::$SENSUS_STATUS_01[0]) {
-            //inventaris::find($input['idinventaris'])->delete();
-        }
+
 
 
         return $sensus;

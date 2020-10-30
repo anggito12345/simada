@@ -10,7 +10,7 @@
 <div class="row">
     {!! Form::label('noreg', 'Kode Lokasi:', ["class" => 'col-md-4 item-view']) !!}
     <p class="col-md-8 item-view">
-        <?php  
+        <?php
             echo \App\Models\setting::where('nama', 'KODE_LOKASI_STATUS')->first()->nilai;
         ?>
     </p>
@@ -20,7 +20,7 @@
 <div class="row">
     {!! Form::label('noreg', 'Kode dan Nama Propinsi:', ["class" => 'col-md-4 item-view']) !!}
     <p class="col-md-8 item-view">
-        <?php  
+        <?php
             echo \App\Models\BaseModel::getRelationData($inventaris->propinsi, "kode", "");
             echo " / ";
             echo \App\Models\BaseModel::getRelationData($inventaris->propinsi, "nama", "");
@@ -32,7 +32,7 @@
 <div class="row">
     {!! Form::label('noreg', 'Kode dan Nama Kabupaten/Kota:', ["class" => 'col-md-4 item-view']) !!}
     <p class="col-md-8 item-view">
-        <?php  
+        <?php
             echo \App\Models\BaseModel::getRelationData($inventaris->kota, "kode", "");
             echo " / ";
             echo \App\Models\BaseModel::getRelationData($inventaris->kota, "nama", "");
@@ -44,7 +44,7 @@
 <div class="row">
     {!! Form::label('noreg', 'Nama Kecamatan:', ["class" => 'col-md-4 item-view']) !!}
     <p class="col-md-8 item-view">
-        <?php 
+        <?php
             echo \App\Models\BaseModel::getRelationData($inventaris->kecamatan, "nama", "");
         ?>
     </p>
@@ -54,7 +54,7 @@
 <div class="row">
     {!! Form::label('noreg', 'Nama Kelurahan/Desa:', ["class" => 'col-md-4 item-view']) !!}
     <p class="col-md-8 item-view">
-        <?php 
+        <?php
             echo \App\Models\BaseModel::getRelationData($inventaris->Kelurahan, "nama", "");
         ?>
     </p>
@@ -123,7 +123,7 @@
 <!-- Satuan Field -->
 <div class="row">
     {!! Form::label('satuan', 'Satuan:', ["class" => 'col-md-4 item-view']) !!}
-    <p class="col-md-8 item-view">{!! $inventaris->satuan !!}</p>
+    <p class="col-md-8 item-view">{!! \App\Models\BaseModel::getRelationData($inventaris->satuanmaster, "nama", "") !!}</p>
 </div>
 
 <!-- Harga Satuan Field -->

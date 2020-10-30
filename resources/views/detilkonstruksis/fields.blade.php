@@ -162,7 +162,10 @@ viewModel.jsLoaded.subscribe(() => {
     $('#kodetanah-detilkonstruksi').on('select2:select', function (e) {
             // Do something
         if ($('#kodetanah-detilkonstruksi').select2('data').length > -1) {
+            // you can find this method in inventaris.ko.js
             viewModel.methods.SetAlamatHirearchy($('#kodetanah-detilkonstruksi').select2('data')[0], 'KIB F')
+            document.getElementById('koordinatlokasi-detilkonstruksi').dispatchEvent(new Event('change'))
+            document.getElementById('koordinattanah-detilkonstruksi').dispatchEvent(new Event('change'))
         }
     });
 

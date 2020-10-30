@@ -53,6 +53,7 @@ Route::post('penghapusans/edit/{id}', 'penghapusanAPIController@editCustom');
 Route::post('pemanfaatans/edit/{id}', 'pemanfaatanAPIController@editCustom');
 
 Route::post('/inventaris/dokumenkronologis', 'inventarisAPIController@saveDokumenKronologis');
+Route::get('/inventaris/get', 'inventarisAPIController@getpemeliharaan');
 
 Route::middleware('auth:api')->post('sensus_/approvements', function(
     \App\Repositories\inventaris_sensusRepository $inventaris_sensusRepository,
