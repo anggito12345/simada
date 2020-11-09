@@ -24,6 +24,12 @@ Breadcrumbs::for('mKodeDaerahs.show', function ($trail,$data) {
 });
 
 // Inventaris
+Breadcrumbs::for('inventaris.deleted', function ($trail) {
+    $trail->push('Inventaris', route('inventaris.deleted'));
+});
+
+
+// Inventaris
 Breadcrumbs::for('inventaris.index', function ($trail) {
     $trail->push('Inventaris', route('inventaris.index'));
 });

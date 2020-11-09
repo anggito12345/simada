@@ -751,7 +751,12 @@ Route::middleware('auth:api')->get('reklas/count', function (\App\Repositories\r
 }) ;
 
 Route::resource('inventaris', 'inventarisAPIController');
+
+//regiter inventaris api custom
+Route::get('/v2/inventaris/get', 'inventarisAPIController@v2get');
+
 Route::post('/konfirmasidraft/', 'inventarisAPIController@konfirmasiDraft');
+
 Route::post('/generateKodeLokasi', 'inventarisAPIController@generateKodeLokasi');
 
 Route::get('/jenisbarangsget/getbykode/{id}', 'jenisbarangAPIController@getbykode');

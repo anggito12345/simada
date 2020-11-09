@@ -7,7 +7,7 @@ use App\Models\inventaris;
 use App\Repositories\inventaris_sensusRepository;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
-use Auth;
+use Route;
 use Illuminate\Support\Facades\DB;
 use Constant;
 use App\Repositories\inventarisRepository;
@@ -35,9 +35,13 @@ class inventarisDataTable extends DataTable
             })
             ->filterColumn('barang', function($query, $keyword) {
             })
+            ->editColumn('harga_satuan_r', function($data) {
+                return (float)$data->harga_satuan;
+            })
             ->editColumn('harga_satuan', function($data) {
                 return number_format($data->harga_satuan, 2);
             })
+
             ->addColumn('checkbox', function($data) {
 
                 return "<input type='checkbox' onclick='viewModel.clickEvent.checkItem(this)'  value={$data->id} />";
@@ -49,7 +53,7 @@ class inventarisDataTable extends DataTable
             })
             ->addColumn('status_sensus', function($data) {
                 $sensus = \App\Models\inventaris_sensus::orderBy('id')
-                    ->where('idinventaris', $data->id)
+                    ->where('id', $data->id_sensus)
                     ->whereRaw('date_part(\'year\', created_at) = ' . date('Y'))
                     ->first();
                 return inventaris_sensusRepository::statusSensus($sensus, 'icon');
@@ -106,9 +110,15 @@ class inventarisDataTable extends DataTable
      */
     public function query(inventaris $model)
     {
-        $buildingModel = inventarisRepository::getData(isset($_GET['draft']) && $_GET['draft'] != 0 ? $_GET['draft'] : null,null, null);
+        $buildingModel = new inventaris();
+        if (\Request::route()->getName() == 'inventaris.deleted') {
+            $buildingModel = $buildingModel->onlyTrashed();
+        }
+
+        $buildingModel = inventarisRepository::getData(isset($_GET['draft']) && $_GET['draft'] != 0 ? $_GET['draft'] : null,null, $buildingModel);
 
         $buildingModel = inventarisRepository::appendInventarisGridFilter($buildingModel, $_GET);
+
 
         return  $buildingModel->orderByRaw('inventaris.updated_at DESC NULLS LAST')
             ->orderBy('inventaris.id', 'desc')->newQuery();
@@ -181,7 +191,7 @@ class inventarisDataTable extends DataTable
             // ->minifiedAjax()
             ->addAction(['width' => '120px', 'printable' => false])
             ->ajax([
-                'url' => route('inventaris.index'),
+                'url' => \Request::route()->getName() == 'inventaris.deleted' ? route('inventaris.deleted') : route('inventaris.index'),
                 'type' => 'GET',
                 'dataType' => 'json',
                 'dataSrc' => 'function(d) {

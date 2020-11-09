@@ -1,7 +1,7 @@
 
 <?php
     $uniqId = uniqid();
-    $inventaris = \App\Models\inventaris::find($detiltanah->pidinventaris);
+    $inventaris = \App\Models\inventaris::withTrashed()->withDrafts()->find($detiltanah->pidinventaris);
 ?>
 
 @include('inventaris.show_fields')

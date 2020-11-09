@@ -26,6 +26,11 @@ class inventarisController extends AppBaseController
         $this->inventarisRepository = $inventarisRepo;
     }
 
+    public function deletedItem(inventarisDataTable $inventarisDataTable)
+    {
+        return $inventarisDataTable->render('inventaris.deleted');
+    }
+
     /**
      * Display a listing of the inventaris.
      *
@@ -74,7 +79,7 @@ class inventarisController extends AppBaseController
      */
     public function show($id)
     {
-        $inventaris = inventaris::withDrafts()->find($id);
+        $inventaris = inventaris::withDrafts()->withTrashed()->find($id);
 
         if (empty($inventaris)) {
             Flash::error('Inventaris not found');

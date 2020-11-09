@@ -62,6 +62,11 @@ class pemeliharaanAPIController extends AppBaseController
     public function store(CreatepemeliharaanAPIRequest $request)
     {
         $input = $request->all();
+
+        if ($input['id_sensus'] == 'null') {
+            $input['id_sensus'] = null;
+        }
+
         $input['created_by'] = Auth::id();
         $input['biaya'] = str_replace(".", "", explode(",",$input['biaya'])[0]);
 
@@ -75,7 +80,7 @@ class pemeliharaanAPIController extends AppBaseController
                 return $this->sendError('inventaris not found', 500);
             }
 
-            if (empty($request->input('draft'))) {
+            if (empty($request->input('draft')) && empty($input['id_sensus'])) {
                 $inventaris->update([
                     'umur_ekonomis' => (int) $inventaris->umur_ekonomis + (int) $input['umur_ekonomis'],
                     'harga_satuan' => (int) $inventaris->harga_satuan + (int) $input['biaya'],

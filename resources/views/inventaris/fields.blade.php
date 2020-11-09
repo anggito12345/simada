@@ -165,15 +165,28 @@
 </div> -->
 
 @section(!isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'scripts' : 'scripts_2')
+
+    @if (isset($_GET['is_ubah_satuan']))
+    <script>
+        let isUbahSatuan = "{!! $_GET['is_ubah_satuan'] !!}"
+    </script>
+    @else
+    <script>
+        let isUbahSatuan = null
+    </script>
+    @endif
+
     @if (isset($_GET['id_sensus']))
     <script>
         let isSensus = "{!! $_GET['id_sensus'] !!}"
     </script>
     @else
     <script>
-        let isSensus = 0
+        let isSensus = null
     </script>
     @endif
+
+
     <script type="text/javascript">
         const funcBarangSelect = function(d) {
             let appendKode = ""
@@ -739,6 +752,7 @@
 
                         formData.append(`draft`, isDraft ? '1' : '')
                         formData.append(`id_sensus`, isSensus)
+                        formData.append(`is_ubah_satuan`, isUbahSatuan)
 
                         for (let index =0 ; index < fileGallery.fileList().length; index ++) {
                             const d = fileGallery.fileList()[index]
@@ -809,11 +823,35 @@
                                 onClose: () => {
                                     let url = "<?= isset($_GET['menuback']) ? $_GET['menuback'] : '' ?>"
 
-                                    if (url == '') {
-                                        window.location = `${$('[base-path]').val()}/inventaris`
+                                    if (isUbahSatuan != 'yes') {
+                                        if (url == '') {
+                                            window.location = `${$('[base-path]').val()}/inventaris`
+                                        } else {
+                                            window.location = url
+                                        }
                                     } else {
-                                        window.location = url
+                                        Swal.fire({
+                                            title: '',
+                                            html: `Apakah ingin menambah data inventaris lagi?`,
+                                            type: 'warning',
+                                            showCancelButton: true,
+                                            confirmButtonColor: '#3085d6',
+                                            cancelButtonColor: '#d33',
+                                            confirmButtonText: 'Ya!'
+                                        }).then((result) => {
+                                            if(result.value) {
+                                                window.location.reload()
+                                            } else {
+                                                if (url == '') {
+                                                    window.location = `${$('[base-path]').val()}/inventaris`
+                                                } else {
+                                                    window.location = url
+                                                }
+                                            }
+                                        })
+
                                     }
+
 
                                 }
                             })

@@ -5,6 +5,8 @@ namespace App\Repositories;
 use App\Helpers\Access;
 use App\Models\inventaris;
 use App\Models\inventaris_sensus;
+use App\Models\pemeliharaan;
+use App\Models\ubah_satuan_stagging;
 use App\Repositories\BaseRepository;
 use Illuminate\Http\Request;
 use Illuminate\Support\Facades\Auth;
@@ -147,36 +149,69 @@ class inventaris_sensusRepository extends BaseRepository
 
                                 // it mean all tidak ada status will remove the inventaris from db
                                 if($each->status_barang == '0') {
+                                    $inv = inventaris::where([
+                                        'id' => $each->idinventaris
+                                    ])->first();
 
                                     if ($each->status_barang_hilang == '1' || $each->status_barang_hilang == '2') {
-
-                                        $inv = inventaris::where([
-                                            'id' => $each->idinventaris
-                                        ])->first();
-                                        $inv->pidbarang = $each->kode_tujuan;
-                                        $inv->save();
+                                        if (!empty($inv)) {
+                                            $inv->pidbarang = $each->kode_tujuan;
+                                            $inv->save();
+                                        }
 
                                     } else {
+                                        if (!empty($inv)) {
+                                            inventaris::where([
+                                                'id' => $each->idinventaris
+                                            ])->delete();
+                                        }
+                                    }
+                                    $inventaris_historyRepository->postHistory($inv->toArray(),'SENSUS TIDAK ADA ('.Constant::$SENSUS_STATUS_03[$each->status_barang_hilang].')');
+                                }
+
+                                // when status barang is 1
+                                else if($each->status_barang == '1') {
+                                    $inv = inventaris::where([
+                                        'id' => $each->idinventaris
+                                    ]);
+                                    // when status ubah satuan is pisah
+                                    if ($each->status_ubah_satuan == '0') {
+                                        inventaris::where([
+                                            'id' => $each->idinventaris
+                                        ])->delete();
+
+                                        ubah_satuan_stagging::where([
+                                            'id_sensus' => $each->id
+                                        ])->delete();
+                                    } else {
+                                        $pemeliharaan = pemeliharaan::where([
+                                            'id_sensus' => $each->id
+                                        ])->first();
+                                        // gabung
+
+
+                                        if(!empty($pemeliharaan)) {
+                                            //get pemeliharaan information
+                                            $inventarisPemeliharaan = inventaris::find($pemeliharaan->pidinventaris);
+
+                                            if (!empty($inventarisPemeliharaan)) {
+                                                $inventarisPemeliharaan->umur_ekonomis = (double) $inventarisPemeliharaan->umur_ekonomis + (double) $pemeliharaan->umur_ekonomis;
+                                                $inventarisPemeliharaan->harga_satuan = (double) $inventarisPemeliharaan->harga_satuan + (double) $pemeliharaan->biaya;
+                                                $inventarisPemeliharaan->save();
+                                            }
+
+                                            $pemeliharaan->id_sensus = null;
+                                            $pemeliharaan->save();
+
+                                        }
+
+
                                         inventaris::where([
                                             'id' => $each->idinventaris
                                         ])->delete();
                                     }
 
-
-
-                                }
-
-                                // when status barang is 1
-                                else if($each->status_barang == '1') {
-
-                                    // when status ubah satuan is pisah
-                                    if ($each->status_ubah_satuan == '0') {
-                                        $data = json_decode($each->data_temporary,true);
-                                        $data['id_sensus'] = null;
-
-                                        inventarisRepository::UpdateLogic($data, $each->idinventaris);
-                                    }
-
+                                    $inventaris_historyRepository->postHistory($inv->toArray(),'SENSUS UBAH SATUAN ('.Constant::$SENSUS_STATUS_02[$each->status_ubah_satuan].')');
                                     // otherwise will redirect to pemeliharaan
                                 }
 
@@ -185,18 +220,20 @@ class inventaris_sensusRepository extends BaseRepository
                                     $inv = inventaris::WithSensus()->where([
                                         'id_sensus' => $each->id
                                     ])->first();
-                                    $inv->id_sensus = null;
                                     $inv->save();
+                                    $inventaris_historyRepository->postHistory($inv->toArray(),'SENSUS TIDAK TERCATAT');
                                 }
 
                                 else if ($each->status_barang == '4') {
                                     // when status tercatat
                                     $data = json_decode($each->data_temporary,true);
-                                    $data['id_sensus'] = null;
-
-                                    inventarisRepository::UpdateLogic($data, $each->idinventaris);
 
 
+                                    $inventarisRepository->update($data, $each->idinventaris);
+                                    $inv = inventaris::WithSensus()->where([
+                                        'id' => $each->idinventaris
+                                    ])->first();
+                                    $inventaris_historyRepository->postHistory($inv->toArray(),'SENSUS TERCATAT');
                                 }
 
 
@@ -232,11 +269,13 @@ class inventaris_sensusRepository extends BaseRepository
             'inventaris_sensus.id as id',
             'inventaris_sensus.no_sk as no_sk',
             'inventaris_sensus.*',
+            'inventaris_sensus.idinventaris as pidinventaris',
             DB::raw('COALESCE(inventaris.kode_barang, inven2.kode_barang ) as kode_barang'),
             'inventaris.noreg as noreg',
             'inventaris_sensus.tanggal_sk as tanggal_sk',
             'inventaris_sensus.status_barang_hilang as status_barang_hilang',
             'inventaris_sensus.status_barang as status_barang',
+            "m_jenis_barang.kelompok_kib",
             'm_organisasi.nama as pemohon',
 
         ])
@@ -245,6 +284,7 @@ class inventaris_sensusRepository extends BaseRepository
         ->leftJoin('m_barang', 'm_barang.id', 'inventaris.pidbarang')
         ->leftJoin('inventaris as inven2','inven2.id_sensus','inventaris_sensus.id')
         ->leftJoin('m_barang as barang2', 'barang2.id', 'inven2.pidbarang')
+        ->leftJoin("m_jenis_barang", "m_jenis_barang.kode", "m_barang.kode_jenis")
         ->leftJoin('users', 'users.id', 'inventaris_sensus.created_by')
         ->leftJoin('m_organisasi', 'm_organisasi.id', 'users.pid_organisasi');
 
@@ -276,6 +316,10 @@ class inventaris_sensusRepository extends BaseRepository
     public function insertLogic(Request $request) {
         $input = $request->all();
 
+        if ($input['idinventaris'] == 'null') {
+            $input['idinventaris'] = null;
+        }
+
         $input['tanggal_sk'] = date('Y-m-d');
         $input['status_approval'] = 'STEP-1';
         if ($input['status_barang'] == Constant::$SENSUS_STATUS_01[3]) {
@@ -283,7 +327,27 @@ class inventaris_sensusRepository extends BaseRepository
         }
 
         $input['created_by'] = Auth::user()->id;
-        $sensus = $this->create($input);
+
+        $isExistedSensus = $this->all([
+            'date_part(\'year\', created_at)' => date('Y'),
+            'idinventaris' => $input['idinventaris']
+        ])->first();
+
+        if (!empty($isExistedSensus)) {
+            $isExistedSensus->status_approval = 'STEP-1';
+            $this->update($isExistedSensus->toArray(), $isExistedSensus->id);
+            $sensus = $isExistedSensus;
+        } else {
+            $sensus = $this->create($input);
+        }
+
+        $isInventarisExist = inventaris::find((int)$input['idinventaris']);
+
+        if (!empty($isInventarisExist)) {
+            $isInventarisExist->id_sensus = $sensus->id;
+            $isInventarisExist->save();
+        }
+
         $request->merge(['idsensus' => $sensus->id]);
 
         // if (Access::is([],[],[Constant::$GROUP_BPKAD_ORG])) {

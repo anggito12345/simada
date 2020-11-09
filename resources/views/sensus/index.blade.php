@@ -56,11 +56,6 @@
                                 @endforeach
                             </select>
                         </div>
-                        {{-- if step 2 and status tercatat --}}
-                        <div data-bind="visible: (sensus.data.form.status_barang() == 4 && sensus.data.step() == 2) || (sensus.data.form.status_barang() == 0 && sensus.data.step() == 3) || (sensus.data.form.status_barang() == 1 && sensus.data.step() == 3)">
-                            @include('inventaris.table')
-                        </div>
-
                         {{-- options tidak ada --}}
                         <div class="ubahsatuan-form" data-bind="if: sensus.data.form.status_barang() == 1 && sensus.data.step() == 2">
                             @foreach (Constant::$SENSUS_STATUS_02 as $index => $sensus_status)
@@ -71,6 +66,16 @@
 
                             <a href="#" onclick="sensus.methods.backToStep(1)" class="btn btn-danger btn-block"><i class="fa fa-arrow-left"></i>&nbsp; Kembali</a>
                         </div>
+
+                        {{-- if step 2 and status tercatat --}}
+                        <div data-bind="visible:
+                            (sensus.data.form.status_barang() == 4 && sensus.data.step() == 2) ||
+                            (sensus.data.form.status_barang() == 0 && sensus.data.step() == 3) ||
+                            (sensus.data.form.status_barang() == 1 && sensus.data.step() == 3)">
+                            @include('inventaris.table')
+                        </div>
+
+
                         {{-- options ubah satuan --}}
                         <div class="ubahsatuan-form" data-bind="if: (sensus.data.form.status_barang() == 0 && sensus.data.step() == 2)">
                             @foreach (Constant::$SENSUS_STATUS_03 as $index => $sensus_status)

@@ -4,6 +4,7 @@ namespace App\Repositories;
 
 use App\Models\inventaris;
 use App\Models\inventaris_sensus;
+use App\Models\ubah_satuan_stagging;
 use App\Repositories\BaseRepository;
 use Constant;
 use Auth;
@@ -363,9 +364,24 @@ class inventarisRepository extends BaseRepository
         DB::beginTransaction();
         try {
 
-            if ($input['id_sensus'] == 'null') {
+            $idSensusTemp = null;
+
+            if ($input['is_ubah_satuan'] != 'null') {
+                $idSensusTemp = $input['id_sensus'];
+            }
+
+
+            if ($input['id_sensus'] == 'null' || $input['is_ubah_satuan'] != 'null') {
                 $input['id_sensus'] = null;
             }
+
+
+            if ($input['is_ubah_satuan'] == 'null') {
+                $input['is_ubah_satuan'] = null;
+
+            }
+
+
 
             // generate no register
             $modelInventaris = new \App\Models\inventaris();
@@ -396,6 +412,13 @@ class inventarisRepository extends BaseRepository
                 $inventaris = $inventarisRepository->create($input);
 
                 $lastNoReg++;
+
+                if ($input['is_ubah_satuan'] != null) {
+                    ubah_satuan_stagging::create([
+                        'idinventaris' => $inventaris->id,
+                        'id_sensus' => $idSensusTemp
+                    ]);
+                }
             }
 
 
@@ -448,13 +471,19 @@ class inventarisRepository extends BaseRepository
             $inventarisHistory->postHistory($inventarisHistoryData, Constant::$ACTION_HISTORY['NEW']);
 
 
-            if ($input['id_sensus'] != null) {
+
+
+
+            if ($input['id_sensus'] != null && $input['is_ubah_satuan'] != null) {
+
                 $sensus = inventaris_sensus::find((int)$input['id_sensus']);
                 if(!empty($sensus)) {
                     $sensus->idinventaris = (int)$inventaris->id;
                     $sensus->save();
                 }
+
             }
+
 
             DB::commit();
         } catch (\Exception $e) {
@@ -553,11 +582,11 @@ class inventarisRepository extends BaseRepository
 
     public static function getData($isDraft = null, $rawSelect = "", $buildingModel = null) {
 
+
         if ($buildingModel == null) {
             $buildingModel = new \App\Models\inventaris();
             //$buildingModel = $buildingModel->NotSensus();
         }
-
 
 
         if (isset($isDraft) && $isDraft == '1') {
@@ -574,6 +603,7 @@ class inventarisRepository extends BaseRepository
         if ($rawSelect == "") {
             $buildingModel = $buildingModel->select([
                 "inventaris.*",
+                "inventaris.noreg",
                 "m_barang.nama_rek_aset",
                 "m_merk_barang.nama as merk",
                 "m_jenis_barang.kelompok_kib",
@@ -597,6 +627,7 @@ class inventarisRepository extends BaseRepository
             // role =================
             ->leftJoin("users","users.id", "inventaris.idpegawai")
             ->leftJoin("m_jabatan", "m_jabatan.id", 'users.jabatan')
+            ->leftJoin(app(ubah_satuan_stagging::class)->getTable(), app(ubah_satuan_stagging::class)->getTable().".idinventaris", "inventaris.id")
             ->leftJoin("inventaris_reklas", "inventaris.id", "inventaris_reklas.id")
             // role end
             ->leftJoin("detil_tanah", "detil_tanah.pidinventaris", "inventaris.id")
@@ -616,6 +647,8 @@ class inventarisRepository extends BaseRepository
             // role =================
             // ->where('m_jabatan.level', '<=', $mineJabatan->level)
 
+        //exclude data when still staging ubah data.
+        $buildingModel = $buildingModel->whereRaw(app(ubah_satuan_stagging::class)->getTable().'.idinventaris IS NULL');
         // role conditional please check this whenever u want customizing role
         if ($organisasiUser->level == Constant::$GROUP_OPD_ORG) {
             $buildingModel = $buildingModel

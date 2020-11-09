@@ -28,7 +28,7 @@ class pemeliharaan extends Model
     use Draftable;
 
     public $table = 'pemeliharaan';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
@@ -49,7 +49,8 @@ class pemeliharaan extends Model
         'keterangan',
         'umur_ekonomis',
         'created_by',
-        'draft'
+        'draft',
+        'id_sensus'
     ];
 
     /**
@@ -112,5 +113,5 @@ class pemeliharaan extends Model
     }
 
 
-    
+
 }

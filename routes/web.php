@@ -17,6 +17,7 @@
  */
 
 Route::get('inventaris/export/', 'InventarisController@export');
+Route::get('inventaris/deleted/', 'InventarisController@deletedItem')->name('inventaris.deleted');
 
  /**
   * Export route end!!!

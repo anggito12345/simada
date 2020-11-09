@@ -1,3 +1,17 @@
+viewModel.data = Object.assign(viewModel.data, {
+
+    urlEachKIB: (newVal) => {
+        return `/api/detil${newVal.replace(/ /g,"").toLowerCase()}get`
+    }
+})
+
+let dokumenKronologisGalery = [];
+
+let isReady = {
+
+}
+
+
 new inlineDatepicker(document.getElementById('tglsk'), {
     format: 'DD-MM-YYYY',
     buttonClear: true,
@@ -566,6 +580,10 @@ function loadDataTableSensusBPKAD() {
             data: "id",
         },
         {
+            title: 'Nomor Registrasi',
+            data: 'noreg'
+        },
+        {
             title: 'Nama Barang',
             data: 'nama'
         },
@@ -814,29 +832,385 @@ function beforeApproveValidasiPenghapusan() {
     dokumenSensus.fileList([]);
     $('#modal-sensus-bpkad-form').modal('show')
  }
-function onloadDataTableSensus(e) {
-    //  $(`#${e.sTableId} tbody`).unbind()
-    $(`#${e.sTableId} tbody`).unbind('click').on('click', 'td.details-control i', function (i, n) {
+
+ function onDokumenKronologisGetFiles(foreignId, id) {
+    return __ajax({
+        method: 'GET',
+        url: "<?= url('api/system_uploads') ?>",
+        data: {
+            jenis: 'dokumen_kronologis',
+            foreign_field: 'id',
+            foreign_id: foreignId,
+            foreign_table: 'inventaris',
+        },
+    }).then((files) => {
+        dokumenKronologisGalery[id].fileList(files);
+    });
+}
+
+ function onloadDataTableSensus(e) {
+
+    if (isReady[e.sTableId]) {
+        return
+    }
+
+    let allHeader = $(e.nTHead).find("th")
+    let createdMerge = document.createElement("tr")
+    createdMerge.setAttribute("row-cloned" ,true)
+    let headerByPass = 0
+
+
+    isReady[e.sTableId] = true
+
+    let element = $(e.nTHead).find("tr")[0]
+
+    e.nTHead.prepend(createdMerge)
+
+    // var template = Handlebars.compile($("#details-template").html())
+
+    const tabItems = [
+        "Detail",
+        "Pemeliharaan",
+        // "Penghapusan"
+        "Pemanfaatan",
+        "Dokumen-Kronologis",
+        "History"
+    ]
+
+    let selectEvent = 0
+
+
+
+
+    $(`#${e.sTableId} tbody`).on('click', 'td.details-control i', function (i, n) {
+
+        const self = this
+
         var tr = $(this).closest('tr');
         var row = $(`#${e.sTableId}`).DataTable().row(tr);
-        // alert (row.child.isShown())
-        if (row.child.isShown()) {
+
+        selectEvent++
+
+        let ulTabs = document.createElement('ul')
+        ulTabs.className = "nav nav-tabs"
+        ulTabs.id = `idTab-${row.data().id}${selectEvent}`
+        ulTabs.setAttribute('role', 'tablist')
+
+
+        let navItem = document.createElement("li")
+        navItem.className = "nav-item"
+
+        let aNavItem = document.createElement("a")
+        aNavItem.className = "nav-link"
+        aNavItem.setAttribute('data-toggle', 'tab')
+        aNavItem.setAttribute('role', 'tab')
+        aNavItem.setAttribute('arial-selected', true)
+
+        let tabContent = document.createElement("div")
+        tabContent.className = "tab-content"
+
+        let tabPane = document.createElement("div")
+        tabPane.className = "tab-pane fade p-2"
+        tabPane.setAttribute('role', 'tab')
+
+        for (let index = 0; index < tabItems.length; index++) {
+            const tabItem = tabItems[index];
+            const aNavItemReadyForInit = aNavItem.cloneNode(true)
+            const navItemReadyForInit = navItem.cloneNode(true)
+            aNavItemReadyForInit.id = `${tabItem}-tab-${selectEvent}`
+            aNavItemReadyForInit.setAttribute("href", `#${tabItem}-${selectEvent}`)
+            aNavItemReadyForInit.setAttribute("aria-controls", `${tabItem}-${selectEvent}`)
+
+            aNavItemReadyForInit.textContent = tabItem.split('-').join(' ');
+
+            if (index == 0) {
+                aNavItemReadyForInit.className += " active"
+            }
+
+            navItemReadyForInit.appendChild(aNavItemReadyForInit)
+
+            ulTabs.appendChild(navItemReadyForInit)
+
+            // --- tab-content
+
+            const tabPaneReadyForInit = tabPane.cloneNode(true)
+            if (index == 0) {
+                tabPaneReadyForInit.className += " show active  "
+            }
+
+            tabPaneReadyForInit.id = `${tabItem}-${selectEvent}`
+            tabPaneReadyForInit.setAttribute("aria-labelledby", `${tabItem}-${selectEvent}`)
+
+            tabContent.appendChild(tabPaneReadyForInit)
+        }
+
+
+
+        if ( row.child.isShown() ) {
             // This row is already open - close it
-            $(this).attr('class', $(this).attr('class').replace('minus-circle', 'plus-circle'))
+            $(this).attr('class',$(this).attr('class').replace('minus-circle', 'plus-circle'))
 
             row.child.hide();
             tr.removeClass('shown');
         }
         else {
-            $(this).attr('class', $(this).attr('class').replace('plus-circle', 'minus-circle'))
+            $(this).attr('class',$(this).attr('class').replace('plus-circle', 'minus-circle'))
 
-            $.get(`${$("[base-path]").val()}/partials/view.sensus/${row.data().id}`).then((data) => {
+            let kib = "kib"+row.data().kelompok_kib
+            __ajax({
+                url: `${$("[base-path]").val()}${viewModel.data.urlEachKIB("kib"+row.data().kelompok_kib)}/${row.data().pidinventaris == undefined ? row.data().idinventaris : row.data().pidinventaris}`
+            }).then((data) => {
 
-                row.child(`<div class='container container-view'>${data}</div>`).show();
+                let url = viewModel.data.informations[kib].url
+
+                row.child($(`<tr style="background:white" class="detail-pemeliharaan"><td colspan="${allHeader.length}">${ulTabs.outerHTML}${tabContent.outerHTML}</td>/tr>`)).show();
+
+                tr.addClass('shown');
+                if (data == null) {
+                    document.querySelector(`#Detail-${selectEvent}`).innerHTML = '<div class="text-center">Data not found</div>'
+                } else {
+                    $.get(`${$("[base-path]").val()}/${url}/${data.id}?isAjax=true`).then((html) => {
+                        document.querySelector(`#Detail-${selectEvent}`).innerHTML = $(html).find(".container-view")[0].outerHTML
+                        // new GoogleMapInput(document.getElementsByClassName(`map-${data.pidinventaris}`)[0], {
+                        //     value : `${data.koordinattanah}`,
+                        //     draw: true,
+                        // })
+                        // setTimeout(() => {
+                        //    new GoogleMapInput(document.getElementsByClassName(`map-non-draw-${data.pidinventaris}`)[0], {
+                        //         value : `${data.koordinatlokasi}`,
+                        //         draw: false,
+                        //     })
+                        // }, 5000)
+                    })
+                }
+
+
+                document.querySelector(`#Pemeliharaan-${selectEvent}`).innerHTML = `<table class='mt-2 table  table-striped' id='table-pemeliharaan-${row.data().id}${selectEvent}'>
+                    <thead>
+                        <tr>
+                            <th>Uraian</th>
+                            <th>Tanggal Pemakaian</th>
+                            <th>Tanggal Kontrak</th>
+                            <th>Nama Instansi/CV/PT</th>
+                            <th>Biaya Pemeliharaan</th>
+                        </tr>
+                    </thead>
+                    <tbody>
+                    </tbody>
+                </table>`
+
+                let table = $(`#table-pemeliharaan-${row.data().id}${selectEvent}`).DataTable({
+                    ajax: {
+                        url: `${$("[base-path]").val()}/pemeliharaans`,
+                        dataType: "json",
+                        data: (d) => {
+                            d.pidinventaris = row.data().idinventaris
+                        }
+                    },
+                    order : [[ 1, "asc"]],
+                    dom: 'Bfrtip',
+                    buttons: [
+
+                    ],
+                    columns: [
+                        {
+                            data: 'uraian'
+                        },
+                        {
+                            data: 'tgl'
+                        },
+                        {
+                            data: 'tglkontrak'
+                        },
+                        {
+                            data: 'persh'
+                        },
+                        {
+                            data: 'biaya'
+                        }
+                    ],
+                    'columnDefs': [
+                        {
+                            'targets': 0,
+                            'checkboxes': {
+                            'selectRow': true
+                            }
+                        }
+                    ],
+                    'select': {
+                        'style': 'multi'
+                    },
+                    "processing": true,
+                    "serverSide": true,
+                })
+
+
+                document.querySelector(`#Pemanfaatan-${selectEvent}`).innerHTML = `<table class='mt-2 table  table-striped' id='table-pemanfaatan-${row.data().id}${selectEvent}'>
+                    <thead>
+                    </thead>
+                </table>`
+
+                let tablePemanfaatan = $(`#table-pemanfaatan-${row.data().id}${selectEvent}`).DataTable({
+                    ajax: {
+                        url: `${$("[base-path]").val()}/pemanfaatans`,
+                        dataType: "json",
+                        data: (d) => {
+                            d.pidinventaris = row.data().idinventaris
+                        }
+                    },
+                    order : [[ 0, "asc"]],
+                    dom: 'Bfrtip',
+                    buttons: [
+                    ],
+                    columns: [
+                        {
+                            title: 'Jenis Pemanfaatan',
+                            data: 'peruntukan'
+                        },
+                        {
+                            title: 'Tipe Kontribusi',
+                            data: 'tipe_kontribusi'
+                        },
+                        {
+                            title: 'Tanggal Mulai',
+                            data: 'tgl_mulai'
+                        },
+                        {
+                            title: 'Tanggal Akhir',
+                            data: 'tgl_akhir'
+                        },
+                    ],
+                    'select': {
+                        'style': 'multi'
+                    },
+                    "processing": true,
+                    "serverSide": true,
+                })
+
+                // dokumen kronologis
+                document.querySelector(`#Dokumen-Kronologis-${selectEvent}`).innerHTML = `
+                <form id="dokumen-kronologis-form-${row.data().id}">
+                    <div class="form-group col-sm-12 col-md-12 row">
+                        <input class="form-control" id="dokumen-kronologis-${row.data().id}" name="dummy" multiple="" type="file" autocomplete="off">
+                    </div>
+                    <div class="form-group col-sm-12 col-md-12 justify-content-center row">
+                        <div class="btn-group">
+                            <button type="button" class="btn btn-primary" onclick="onSaveDokumenKronologis('${row.data().id}')">Simpan</button>
+                        </div>
+                    </div>
+                </form>`;
+
+                dokumenKronologisGalery[row.data().id] = new FileGallery(document.getElementById(`dokumen-kronologis-${row.data().id}`), {
+                    title: 'Dokumen Kronologis',
+                    maxSize: 5000000,
+                    accept: `${App.Constant.MimeOffice}|image/*|video/*`,
+                    onDelete: () => {
+                        return new Promise((resolve, reject) => {
+                            let checkIfIdExist = dokumenKronologisGalery[row.data().id].checkedRow().filter((d) => {
+                                return d.id != undefined
+                            })
+                            if (checkIfIdExist.length < 1) {
+                                resolve(true)
+                                return
+                            }
+                            __ajax({
+                                method: 'DELETE',
+                                url: "<?= url('api/system_uploads') ?>/" + checkIfIdExist.map((d) => {
+                                        return d.id
+                                    }),
+                            }).then((d) => {
+                                resolve(true)
+                                onDokumenKronologisGetFiles(row.data().idinventaris, row.data().id);
+                            })
+                        })
+                    }
+                })
+
+                onDokumenKronologisGetFiles(row.data().idinventaris, row.data().id);
+
+                document.querySelector(`#History-${selectEvent}`).innerHTML = `
+                <div class='btn btn-success' onclick='onCompare("#table-history-${row.data().id}${selectEvent}")'>
+                    Bandingkan
+                </div>
+                <br />
+                <br />
+                <table class='mt-2 table  table-striped' id='table-history-${row.data().id}${selectEvent}'>
+                    <thead>
+                    </thead>
+                </table>`
+
+                let tableHistory = $(`#table-history-${row.data().id}${selectEvent}`).DataTable({
+                    ajax: {
+                        url: `${$("[base-path]").val()}/inventarisHistories?fid=${row.data().pidinventaris}`,
+                        dataType: "json",
+                    },
+                    order : [[ 0, "asc"]],
+                    dom: 'Bfrtip',
+                    buttons: [
+                    ],
+                    columns: [
+                        {
+                            title: 'Action',
+                            data: 'action'
+                        },
+                        {
+                            title: 'Tanggal History',
+                            data: 'history_at'
+                        },
+                    ],
+                    'select': {
+                        'style': 'multi'
+                    },
+                    "processing": true,
+                    "serverSide": true,
+                })
+
+
+
             })
+
         }
-    })
+    });
 }
+
+
+// function onloadDataTableSensus(e) {
+//     //  $(`#${e.sTableId} tbody`).unbind()
+//     $(`#${e.sTableId} tbody`).unbind('click').on('click', 'td.details-control i', function (i, n) {
+//         var tr = $(this).closest('tr');
+//         var row = $(`#${e.sTableId}`).DataTable().row(tr);
+//         // alert (row.child.isShown())
+//         if (row.child.isShown()) {
+//             // This row is already open - close it
+//             $(this).attr('class', $(this).attr('class').replace('minus-circle', 'plus-circle'))
+
+//             row.child.hide();
+//             tr.removeClass('shown');
+//         }
+//         else {
+//             $(this).attr('class', $(this).attr('class').replace('plus-circle', 'minus-circle'))
+
+//             let kib = "kib"+row.data().kelompok_kib
+//             __ajax({
+//                 url: `${$("[base-path]").val()}${viewModel.data.urlEachKIB("kib"+row.data().kelompok_kib)}/${row.data().pidinventaris == undefined ? row.data().id : row.data().pidinventaris}`
+//             }).then((data) => {
+
+//                 let url = viewModel.data.informations[kib].url
+
+
+//                 tr.addClass('shown');
+//                 if (data == null) {
+//                     document.querySelector(`#Detail-${selectEvent}`).innerHTML = '<div class="text-center">Data not found</div>'
+//                 } else {
+//                     $.get(`${$("[base-path]").val()}/${url}/${data.id}?isAjax=true`).then((html) => {
+//                         row.child(`<div class='container container-view'>${$(html).find(".container-view")[0].outerHTML}</div>`).show();
+
+//                     })
+//                 }
+//             })
+//         }
+//     })
+// }
 
 
 /**

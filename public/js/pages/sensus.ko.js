@@ -215,10 +215,11 @@ let sensus = {
             for ( var key in item ) {
                 formData.append(key, item[key]);
             }
+
             let selectedRowGrid = $(`#${sensus.data.statics.idGridInventaris}`).DataTable().rows('.selected').data().toArray()[0]
             //if not barang tidak tercatat
             if (sensus.data.form.status_barang() != 3) {
-                formData.append('idinventaris', selectedRowGrid.id)
+                formData.set('idinventaris', selectedRowGrid.id)
             }
 
             for (let index = 0; index < sensus.data.fileGallery.fileList().length; index++) {
@@ -267,9 +268,10 @@ let sensus = {
                     window.location = `pemeliharaans/create?`+
                     `idinventaris=${selectedRowGrid.id}&` +
                     `tgldibukukan=${selectedRowGrid.tgl_dibukukan}&` +
-                    `hargasatuan=${selectedRowGrid.harga_satuan}`
+                    `hargasatuan=${selectedRowGrid.harga_satuan_r}&` +
+                    `id_sensus=${d.id}`
                 } else if (sensus.data.form.status_barang() == 1 && sensus.data.form.status_ubah_satuan() == 0) {
-                    window.location= `inventaris/${selectedRowGrid.id}/edit?id_sensus=${d.id}`
+                    window.location= `inventaris/create?id_sensus=${d.id}&is_ubah_satuan=yes`
                 } else if (sensus.data.form.status_barang() == 3) {
                     window.location= 'inventaris/create?id_sensus=' + d.id
                 } else if (sensus.data.form.status_barang() == 4) {
@@ -337,7 +339,10 @@ $(document).ready(() => {
                     results: data.data.map((d) => {
                         d.text = `${viewModel.helpers.buildKodeBarang(d)} - ${d.nama_rek_aset}`;
                         return d
-                    })
+                    }),
+                    "pagination": {
+                        "more": true
+                    }
                 };
             }
         },

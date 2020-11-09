@@ -84,6 +84,15 @@ class inventarisAPIController extends AppBaseController
     }
 
     /**
+     * versi get 2 api inventaris
+     */
+    public function v2get(Request $request)
+    {
+        $inventaris = $this->inventarisRepository->getData();
+        $inventaris = $this->inventarisRepository->appendInventarisGridFilter($inventaris, $request->all());
+        return $this->sendResponse($inventaris->get()->toArray(), 'Inventaris retrieved successfully');
+    }
+    /**
      * Display a listing of the inventaris.
      * GET|HEAD /inventaris
      *
@@ -94,6 +103,7 @@ class inventarisAPIController extends AppBaseController
     {
         $query = \App\Models\inventaris::select([
             'inventaris.noreg as text',
+            'inventaris.noreg',
             'inventaris.id',
             'inventaris.tahun_perolehan',
             'inventaris.harga_satuan',

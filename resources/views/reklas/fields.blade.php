@@ -38,6 +38,7 @@
 <script type="text/javascript">
 
 let kodeAwalTemp, kodeTujuanTemp = null;
+let isEditState = false
 
 new inlineDatepicker(document.getElementById('tglsurat'), {
     format: 'DD-MM-YYYY',
@@ -147,19 +148,25 @@ const editor = new $.fn.dataTable.Editor({
 
 let buttonsOpt = [
     { extend: "create", editor: editor },
+    { extend: "edit", editor: editor },
     { extend: "remove", editor: editor },
 ];
 
 let editorInit = false
 
 editor.on('open', (e, type) => {
-    $('#DTE_Field_kode_awal, #DTE_Field_kode_tujuan').val('').trigger('change')
+
+
+    if (!isEditState) {
+        $('#DTE_Field_kode_awal, #DTE_Field_kode_tujuan').val('').trigger('change')
+    }
+
 
     // Type is 'main', 'bubble' or 'inline'
     if (!editorInit) {
         $('#DTE_Field_kode_awal').select2({
             ajax: {
-                url: "<?= url('api/inventaris?is_exist_reklas=1') ?>",
+                url: "<?= url('api/v2/inventaris/get') ?>",
                 dataType: 'json',
                 headers: {
                     'Authorization':'Bearer ' + sessionStorage.getItem('api token'),
@@ -168,6 +175,10 @@ editor.on('open', (e, type) => {
                     var query = {
                         q: params.term,
                     }
+
+                    query["except-id-inventaris"] = $("#table-detil-reklas").DataTable().rows().data().toArray().map((d) => {
+                        return d.kode_awal
+                    }).join(',')
                     return query;
                 },
                 processResults: function (data) {
@@ -176,8 +187,14 @@ editor.on('open', (e, type) => {
                         results: data.data.map((d) => {
                             d.text = `${viewModel.helpers.buildKodeBarang(d)} - ${d.nama_rek_aset}`;
                             return d
-                        })
+                        }),
+                        "pagination": {
+                            "more": true
+                        }
                     };
+                },
+                "pagination": {
+                    "more": true
                 }
             },
             theme: 'bootstrap' ,
@@ -214,9 +231,12 @@ editor.on('open', (e, type) => {
                         results: data.data.map((d) => {
                             d.text = `${viewModel.helpers.buildKodeBarang(d)} - ${d.nama_rek_aset}`;
                             return d
-                        })
+                        }),
+                        "pagination": {
+                            "more": true
+                        }
                     };
-                }
+                },
             },
             theme: 'bootstrap' ,
         });
@@ -273,16 +293,14 @@ editor.on('preSubmit', (e, data, action) => {
 const detailTable = $('#table-detil-reklas').DataTable({
     buttons: buttonsOpt,
     data: [],
+    rowId: 'DT_RowId',
     dom: 'Bfrtip',
     searching: false,
     "lengthChange": false,
     "ordering": true,
     "aaSorting": [[ 0, "desc" ]],
     autoWidth: false, //step 1
-    select: {
-        style:    'os',
-        selector: 'td:first-child'
-    },
+    select: true,
     columns: [
         {
             data: null,
@@ -312,14 +330,20 @@ $('#table-detil-reklas').on('click', 'tbody td:not(:first-child)', function () {
     editor.inline(this);
 });
 
+editor.on( 'create', function ( e, json, data ) {
+    isEditState = false;
+} );
+
 editor.on('initEdit', (e, node, data, items, type) => {
+    //$('#DTE_Field_kode_awal, #DTE_Field_kode_tujuan').val('').trigger('change')
+    isEditState = true;
     kodeAwalTemp = data.kode_awal;
     kodeTujuanTemp = data.kode_tujuan;
 
     setTimeout(() => {
         App.Helpers.defaultSelect2($('#DTE_Field_kode_awal'), "<?= url('api/inventaris') ?>/" + data.kode_awal, "id", "nama_kode_barang_formated");
         App.Helpers.defaultSelect2($('#DTE_Field_kode_tujuan'), "<?= url('api/barangs') ?>/" + data.kode_tujuan, "id", "nama_kode_barang_formated");
-    }, 1);
+    }, 2000);
 });
 
 $(document).ready(() => {

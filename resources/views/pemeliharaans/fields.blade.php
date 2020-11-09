@@ -103,8 +103,11 @@
 
 viewModel.data = Object.assign(viewModel.data, {
     isSensus: ko.observable(false),
-    idexceptinventaris: ko.observable()
+    idexceptinventaris: ko.observable(),
+    idSensus: ko.observable(null)
 })
+
+$('#biaya').mask("#.##0,00", {reverse: true});
 
 new inlineDatepicker(document.getElementById('tglkontrak'), {
     format: 'DD-MM-YYYY',
@@ -115,10 +118,11 @@ if ($("#pidinventaris_pemeliharaan").length > 0) {
     $("#pidinventaris_pemeliharaan").LookupTable({
         DataTable: {
             ajax: {
-                url: $("[base-path]").val() + "/api/inventaris/",
+                url: $("[base-path]").val() + "/api/v2/inventaris/get",
                 dataSrc: 'data',
                 data: (d) => {
                     if (viewModel.data.isSensus()) {
+                        console.log('i am here?', d)
                         d['except-id-inventaris'] = viewModel.data.idexceptinventaris()
                     }
                     return d
@@ -216,6 +220,7 @@ const doSave = (isDraft) => {
             });
 
             formData.append('draft', isDraft ? '1' : '');
+            formData.append('id_sensus', viewModel.data.idSensus());
 
             __ajax({
                 method: 'POST',
@@ -246,7 +251,10 @@ $(document).ready(() => {
     var url = new URL(url_string);
     var idinventaris = url.searchParams.get("idinventaris");
     var tgldibukukan = url.searchParams.get("tgldibukukan");
+    var tgldibukukan = url.searchParams.get("tgldibukukan");
     var biaya = url.searchParams.get("hargasatuan");
+
+    viewModel.data.idSensus(url.searchParams.get("id_sensus"))
     if (idinventaris) {
         viewModel.data.isSensus(true)
         viewModel.data.idexceptinventaris(idinventaris)
@@ -264,7 +272,6 @@ $(document).ready(() => {
     });
 
     if (biaya) {
-        $("#biaya").mask("#.##0,00", {reverse: true})
         $("#biaya").val(biaya)
     }
 

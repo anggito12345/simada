@@ -11,6 +11,7 @@ var App = {
                     'Authorization':'Bearer ' + sessionStorage.getItem('api token'),
                 }
             }).then(function (data) {
+                console.log(select2Ele,data, url)
                 const generateText = (data, textFieldParam) => {
                     if (Array.isArray(textFieldParam)) {
                         let concatText = ""
@@ -215,6 +216,12 @@ jQuery.fn.extend({
                 $("#" + idlookup).modal("hide")
             })
         }
+
+
+        $(`#${idlookup}`).on('shown.bs.modal', function(){
+            console.log('asdasdasdasdasdasda')
+            $("#table-" + idlookup).DataTable().ajax.reload()
+        });
 
         for (let i = 0; i < filters.length; i ++) {
             const filterPlace = $("#" + idlookup + " .box-body")
