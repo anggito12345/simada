@@ -69,22 +69,22 @@
                         id: "-",
                         text: "<div class='text-gray'>Tambah Merk Barang Baru</div>"
                     }
-                    
+
 
                     data.data.unshift(options)
-                    
+
                     // Transforms the top-level key of the response object from 'items' to 'results'
                     return {
                         results: data.data
                     };
                 }
             },
-            templateResult: function (d) {                 
-                return $("<span>"+d.text+"</span>"); 
+            templateResult: function (d) {
+                return $("<span>"+d.text+"</span>");
             },
             templateSelection: function (d) { return $("<span>"+d.text+"</span>"); },
             theme: 'bootstrap' ,
-        })  
+        })
 
         $('<?=  "#merk-detilmesin" ?>').on('select2:select', function (e) {
             var data = e.params.data;
@@ -93,10 +93,10 @@
                 $('<?=  "#merk-detilmesin" ?>').val("").trigger("change")
             }
         });
-        
+
 
         // handler modal section here
         // this function will available if implement modal section
-                
+
     })
 </script>

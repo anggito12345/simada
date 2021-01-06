@@ -2,7 +2,7 @@
 <u class="col-md-12">Buku Perpustakaan</u>
 
 <div class="col-md-12">
-    
+
     <!-- Buku Judul Field -->
     <div class="form-group col-sm-6">
         {!! Form::label('buku_judul', 'Judul/Pencipta:') !!}
@@ -21,7 +21,7 @@
 <u class="col-md-12">Barang bercorak Kesenian/Kebudayaan</u>
 
 <div class="col-md-12">
-    
+
     <!-- Seni Asal Field -->
     <div class="form-group col-sm-6">
         {!! Form::label('seni_asal', __('field.seni_asal')) !!}
@@ -45,7 +45,7 @@
 <u class="col-md-12">Aset Biologis</u>
 
 <div class="col-md-12">
-    
+
     <!-- Ternak Jenis Field -->
     <div class="form-group col-sm-6">
         {!! Form::label('ternak_jenis', __('field.ternak_jenis')) !!}

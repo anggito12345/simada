@@ -733,6 +733,8 @@ Route::middleware('auth:api')->get('inventaris_mutasi/count', function( \App\Rep
     return $inventaris_mutasiRepository->count($request);
 });
 
+Route::get('/sensus/check/{id}', 'inventarisSensusAPIController@checkIfInProgress');
+Route::delete('/sensus/cancel/{id}', 'inventarisSensusAPIController@cancelSensus');
 
 Route::middleware('auth:api')->get('inventaris_sensus/count', function( \App\Repositories\inventaris_sensusRepository $inventaris_sensusRepository, Request $request) {
     return $inventaris_sensusRepository->count($request);

@@ -14,6 +14,12 @@
                     }
                 },
                 columns: [{
+                        data: 'id',
+                        title: 'ID'
+                    },{
+                        data: 'harga_satuan',
+                        title: 'Nilai Perolehan'
+                    },{
                         data: 'noreg',
                         title: 'Nomor Registrasi'
                     },

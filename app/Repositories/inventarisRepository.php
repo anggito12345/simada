@@ -244,6 +244,17 @@ class inventarisRepository extends BaseRepository
     }
 
     public static function UpdateLogic($input, $id,$request = null) {
+
+        if ($input['id_sensus'] == 'null' || $input['is_ubah_satuan'] != 'null') {
+            $input['id_sensus'] = null;
+        }
+
+
+        if ($input['is_ubah_satuan'] == 'null') {
+            $input['is_ubah_satuan'] = null;
+
+        }
+
         $update_inventaris_setting = \App\Models\setting::where('nama', \Constant::$SETTING_UBAH_PENATA_USAHAAN)->first()->nilai;
         /** @var inventaris $inventaris */
         $inventaris = inventaris::withDrafts()
@@ -309,7 +320,7 @@ class inventarisRepository extends BaseRepository
 
             $kibData = json_decode($input['kib'], true);
 
-            $kibData['pidinventaris'] = $id;
+            $kibData['pidinventaris'] = (int)$id;
 
 
 
@@ -393,6 +404,7 @@ class inventarisRepository extends BaseRepository
                     'inventaris.*',
                 ])
                 ->join('m_barang', 'm_barang.id', 'inventaris.pidbarang')
+                ->where('inventaris.pidbarang', '=', $input["pidbarang"])
                 ->where('m_barang.kode_jenis', '=', $barangMaster->kode_jenis)
                 ->where('inventaris.tahun_perolehan', '=', $input['tahun_perolehan'])
                 ->where('inventaris.harga_satuan', '=', str_replace(".","", $input['harga_satuan']))
@@ -554,13 +566,16 @@ class inventarisRepository extends BaseRepository
 
         if (isset($theFilter['status_sensus']) && $theFilter['status_sensus'] != "" && $theFilter['status_sensus'] != null) {
             //u can check constnt list status sensus on Constant class=
-            if ($theFilter['status_sensus'] == 1) {
-                $buildingModel = $buildingModel->whereRaw('inventaris_sensus.id IS NULL');
-            } else if ($theFilter['status_sensus'] == 2) {
-                $buildingModel = $buildingModel->whereRaw('inventaris_sensus.status_approval = \'STEP-1\'');
-            } else if ($theFilter['status_sensus'] == 3) {
-                $buildingModel = $buildingModel->whereRaw('inventaris_sensus.status_approval = \'STEP-2\'');
-            }
+
+            // if ($theFilter['status_sensus'] == 1) {
+            //     $buildingModel = $buildingModel->whereRaw('inventaris_sensus IS NULL');
+            // } else if ($theFilter['status_sensus'] == 2) {
+            //     $buildingModel = $buildingModel->whereRaw('inventaris_sensus.status_approval = \'STEP-1\'');
+            // } else if ($theFilter['status_sensus'] == 3) {
+            //     $buildingModel = $buildingModel->whereRaw('inventaris_sensus.status_approval = \'STEP-2\'');
+            // } else {
+
+            // }
 
         }
 
@@ -585,7 +600,7 @@ class inventarisRepository extends BaseRepository
 
         if ($buildingModel == null) {
             $buildingModel = new \App\Models\inventaris();
-            //$buildingModel = $buildingModel->NotSensus();
+           // $buildingModel = $buildingModel->WithSensus();
         }
 
 
@@ -639,10 +654,10 @@ class inventarisRepository extends BaseRepository
             ->leftJoin("detil_konstruksi", "detil_konstruksi.pidinventaris", "inventaris.id")
             ->leftJoin("m_merk_barang", "m_merk_barang.id", "detil_mesin.merk")
             ->leftJoin('inventaris_penghapusan', 'inventaris_penghapusan.id', 'inventaris.id')
-            ->leftJoin('m_organisasi', 'm_organisasi.id', 'inventaris.pid_organisasi')
-            ->leftJoin('inventaris_sensus', function($join){
-                $join->on("inventaris_sensus.idinventaris", "inventaris.id")->on(DB::raw("date_part('year', \"inventaris_sensus\".\"created_at\")"), DB::Raw(date('Y')));
-           });
+            ->leftJoin('m_organisasi', 'm_organisasi.id', 'inventaris.pid_organisasi');
+        //     ->leftJoin('inventaris_sensus', function($join){
+        //         $join->on("inventaris_sensus.idinventaris", "inventaris.id")->on(DB::raw("date_part('year', \"inventaris_sensus\".\"created_at\")"), DB::Raw(date('Y')));
+        //    });
 
             // role =================
             // ->where('m_jabatan.level', '<=', $mineJabatan->level)

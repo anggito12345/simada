@@ -11,7 +11,6 @@ var App = {
                     'Authorization':'Bearer ' + sessionStorage.getItem('api token'),
                 }
             }).then(function (data) {
-                console.log(select2Ele,data, url)
                 const generateText = (data, textFieldParam) => {
                     if (Array.isArray(textFieldParam)) {
                         let concatText = ""
@@ -39,6 +38,7 @@ var App = {
                 for (let d in data.data) {
                     option.dataset[d] = data.data[d]
                 }
+
 
                 select2Ele.append(option).trigger('change');
 
@@ -418,6 +418,7 @@ jQuery.fn.extend({
                 const inputNameElementMask = currEle.name + "-mask"
                 maskEle.name = inputNameElementMask
                 maskEle.style.display = "block"
+                //maskEle.setAttribute('except-rule', "true")
                 maskEle.className = "form-control width-80"
                 maskEle.disabled = true
                 maskEle.setAttribute('data-target', currSource)
@@ -1014,6 +1015,8 @@ const __ajax = (config) => {
         config.error = (xmlHttpError, textStatus, errorThrown) => {
             anoErrorFunc(textStatus)
             reject(textStatus)
+
+            console.log(xmlHttpError.responseText);
 
             swal.fire({
                 type: 'error',

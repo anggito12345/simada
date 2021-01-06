@@ -158,6 +158,10 @@
 
     </ul>
 </li>
+
+<li class="{{ Request::is('inventaris.deleted') ? 'active' : '' }}">
+    <a href="{!! route('inventaris.deleted') !!}"><i class="fa fa-trash"></i><span>Daftar Penghapusan</span></a>
+</li>
 @endif
 <?php
 $countUserNeedOtor = \App\Models\users::where('aktif', '0')->count();

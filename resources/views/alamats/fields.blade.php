@@ -17,6 +17,19 @@
     {!! Form::text('nama', null, ['class' => 'form-control']) !!}
 </div>
 
+<!-- Latitude Field -->
+<div class="form-group <?= strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
+    {!! Form::label('latitude', 'Latitude:') !!}
+    {!! Form::text('latitude', null, ['class' => 'form-control']) !!}
+</div>
+
+<!-- Longitude Field -->
+<div class="form-group <?= strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
+    {!! Form::label('longitude', 'Longitude:') !!}
+    {!! Form::text('longitude', null, ['class' => 'form-control']) !!}
+</div>
+
+
 <!-- Jenis Field -->
 <div class="form-group <?= strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
     {!! Form::label('jenis', 'Jenis:') !!}
@@ -40,7 +53,7 @@
 
 
 @section(strpos($idPostfix, 'non-ajax') > -1 ? 'scripts' : 'scripts_2')
-    <script type="text/javascript">        
+    <script type="text/javascript">
         var sourceConstantJenis = <?= json_encode(\App\Models\BaseModel::$jenisKotaDs) ?>;
         console.log(sourceConstantJenis)
         $('<?=  "#pid-".$idPostfix ?>').select2({
@@ -50,7 +63,7 @@
                 data: function (params) {
                     var query = {
                         q: params.term,
-                        fieldText: "concat(jenis, ' - ', nama)",                        
+                        fieldText: "concat(jenis, ' - ', nama)",
                     }
 
                     // Query parameters will be ?search=[term]&type=public
@@ -70,22 +83,22 @@
                     data.data.map(function(d) {
                         let splittedText = d.text.split('-');
                         if (d.text.indexOf("-") > -1 && sourceConstantJenis[parseInt(splittedText[0])] != undefined) {
-                            
+
                             console.log(splittedText);
                             d.text = sourceConstantJenis[parseInt(splittedText[0])] + ' - ' + splittedText[1]
-                        }                        
+                        }
 
                         return d
                     })
-                    
+
                     // Transforms the top-level key of the response object from 'items' to 'results'
                     return {
                         results: data.data
                     };
                 }
             },
-            templateResult: function (d) {                 
-                return $("<span>"+d.text+"</span>"); 
+            templateResult: function (d) {
+                return $("<span>"+d.text+"</span>");
             },
             templateSelection: function (d) { return $("<span>"+d.text+"</span>"); },
             theme: 'bootstrap' ,
@@ -98,7 +111,7 @@
                 $('<?=  "#pid-".$idPostfix ?>').val("").trigger("change")
             }
         });
-        
+
 
         // handler modal section here
         // this function will available if implement modal section
@@ -122,10 +135,10 @@
                             text: 'Data gagal disimpan',
                         })
                     }
-                   
+
                     $("#modal-alamat").modal("hide")
                 },
-                error: (response) => {                    
+                error: (response) => {
                     Swal.fire({
                         type: 'error',
                         text: 'Data gagal disimpan',

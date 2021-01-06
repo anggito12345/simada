@@ -132,6 +132,12 @@ if ($("#pidinventaris_pemeliharaan").length > 0) {
                 }
             },
             columns: [{
+                    data: 'id',
+                    title: 'ID'
+                },{
+                    data: 'harga_satuan',
+                    title: 'Nilai Perolehan'
+                },{
                     data: 'noreg',
                     title: 'Nomor Registrasi'
                 },

@@ -29,6 +29,17 @@
 </div>
 
 <!-- Harga Satuan Field -->
+@if(isset($inventaris))
+<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
+    {!! Form::label('harga_satuan', 'Harga Satuan:') !!} <span class="text-danger">*</span>
+    <div class="input-group">
+        <div class="input-group-prepend">
+            <span class="input-group-text" id="basic-addon1">Rp.</span>
+        </div>
+        {!! Form::text('harga_satuan', null, ['class' => 'form-control', 'required' => true, "disabled"]) !!}
+    </div>
+</div>
+@else
 <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
     {!! Form::label('harga_satuan', 'Harga Satuan:') !!} <span class="text-danger">*</span>
     <div class="input-group">
@@ -38,15 +49,22 @@
         {!! Form::text('harga_satuan', null, ['class' => 'form-control', 'required' => true]) !!}
     </div>
 </div>
-
+@endif
 
 <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpozs($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
     <div class="row">
         <div class="col-md-6">
+            @if(isset($inventaris))
+            {!! Form::label('jumlah', 'Jumlah') !!} <span class="text-danger">*</span>
+            <div class="input-group col-md-12 no-padding mr-2">
+                {!! Form::number('jumlah',  (isset($inventaris) ? $inventaris->jumlah : 1 ), ['class' => 'form-control', 'max' => 9999999, 'required' => true, "disabled"]) !!}
+            </div>
+            @else
             {!! Form::label('jumlah', 'Jumlah') !!} <span class="text-danger">*</span>
             <div class="input-group col-md-12 no-padding mr-2">
                 {!! Form::number('jumlah',  (isset($inventaris) ? $inventaris->jumlah : 1 ), ['class' => 'form-control', 'max' => 9999999, 'required' => true]) !!}
             </div>
+            @endif
         </div>
         <div class="col-md-6">
             {!! Form::label('satuan', 'Satuan') !!} <span class="text-danger">*</span>

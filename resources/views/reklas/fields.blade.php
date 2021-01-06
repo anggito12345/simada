@@ -353,6 +353,8 @@ $(document).ready(() => {
     var id_tujuan = url.searchParams.get("id_tujuan");
     var nama_tujuan = url.searchParams.get("nama_tujuan");
     var nama_awal = url.searchParams.get("nama_awal");
+    var kode_document = url.searchParams.get("kode_document");
+    $("#nosurat").val(kode_document)
     if (id_awal && id_tujuan) {
         $('#table-detil-reklas').DataTable().rows.add([{
             'kode_awal': parseInt(id_awal),

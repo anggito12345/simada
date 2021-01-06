@@ -580,6 +580,10 @@ function loadDataTableSensusBPKAD() {
             data: "id",
         },
         {
+            title: 'ID',
+            data: 'id'
+        },
+        {
             title: 'Nomor Registrasi',
             data: 'noreg'
         },
@@ -827,6 +831,32 @@ function beforeApproveValidasiPenghapusan() {
  *
  * before approve sensus
  */
+
+function cancelSensus() {
+    d = $('#table-sensus-bpkad').DataTable().rows('.selected').data().toArray()
+
+    if (d.length < 1) {
+        swal.fire({
+            type: 'warning',
+            text: 'pilih minimal 1 data inventaris'
+        })
+        return
+    }
+
+    __ajax({
+        url: `api/sensus/cancel/${d.map((dt) => { return dt.id }).join(",")}`,
+        method: 'DELETE'
+    }).then((d) => {
+        swal.fire({
+            type: 'success',
+            text: 'Sensus berhasil ditolak'
+        })
+
+        viewModel.clickEvent.setCurrentHighlight(viewModel.data.currentHighlight())
+        countSensusProgress();
+        //
+    })
+}
 
  function beforeApproveBPKADSensus() {
     dokumenSensus.fileList([]);

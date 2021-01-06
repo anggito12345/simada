@@ -319,6 +319,7 @@
                 </table>
                 @if(c::is('',[],[Constant::$GROUP_BPKAD_ORG]))
                     <button type="button" class="btn btn-primary" onclick="beforeApproveBPKADSensus()">Setujui</button>
+                    <button type="button" class="btn btn-primary" onclick="cancelSensus()">Tolak</button>
                 @endif
             </div>
 

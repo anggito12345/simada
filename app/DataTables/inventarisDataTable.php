@@ -140,7 +140,7 @@ class inventarisDataTable extends DataTable
             }
 
             return false;
-        }))) {
+        })) && \Request::route()->getName() != 'inventaris.deleted') {
            array_push($addtButtons, ['extend' => 'create']);
         }
 
@@ -149,7 +149,7 @@ class inventarisDataTable extends DataTable
                 return true;
             }
             return false;
-        }))) {
+        })) && \Request::route()->getName() != 'inventaris.deleted') {
             array_push($addtButtons, ['text' => '<i class="fa fa-edit"></i> Ubah', 'action' => 'function(){onEdit()}']);
         }
 
@@ -181,7 +181,7 @@ class inventarisDataTable extends DataTable
                 return false;
             }))) {
                 array_push($addtButtons, ['text' => '<i class="fa fa-arrow-left"></i> Kembali', 'action' => 'function(){ sensus.data.form.status_barang() <= 1 ? sensus.methods.backToStep(2) : sensus.methods.backToStep(1)}', ]);
-                array_push($addtButtons, ['text' => '<i class="fa fa-arrow-right"></i> Lanjut', 'action' => 'function(){ sensus.methods.nextStep(3)}', ]);
+                array_push($addtButtons, ['text' => '<i class="fa fa-arrow-right"></i> Lanjut', 'action' => 'function(){ sensus.methods.tableStep()}', ]);
             }
         }
 

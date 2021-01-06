@@ -81,6 +81,8 @@ viewModel.services = Object.assign(viewModel.services, {
             return d.rawFile
         });
 
+        console.log(tableListSelected)
+
 
         formData.append('items', JSON.stringify(tableListSelected))
         formData.append('step', step)

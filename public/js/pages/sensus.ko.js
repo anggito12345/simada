@@ -103,34 +103,8 @@ let sensus = {
         }
     },
     methods: {
-        changeStatusBarang: () => {
-            setTimeout(() => {
-                if (sensus.data.form.status_barang() == 3) {
-                    sensus.data.form.idinventaris(-1)
-                    sensus.data.step(3)
-                    sensus.data.step.notifySubscribers()
-                } else {
-                    sensus.data.step(2)
-                    sensus.data.step.notifySubscribers()
-                }
-            }, 500);
-        },
-        showSkForm: (choosen, tipe) => {
-            sensus.data.step(3)
-            sensus.data.form[tipe](choosen)
-        },
-        backToStep: (step) => {
-            if (sensus.data.form.status_barang() == '3') {
-                step = 1
-            } else if (sensus.data.form.status_barang() <= 1) {
-
-            }
-
-            sensus.data.step(step)
-
-        },
-        nextStep: (step) => {
-
+        tableStep: () => {
+            let step = 3
             if(step == 2) {
                 sensus.data.form.status_barang.notifySubscribers()
             }
@@ -159,6 +133,53 @@ let sensus = {
                     step = 4
                 }
             }
+            let data = $(`#${sensus.data.statics.idGridInventaris}`).DataTable().rows('.selected').data().toArray()
+
+            __ajax({
+                url: `api/sensus/check/${data[0].id}`,
+                method: 'GET'
+            }).then((d) => {
+                if (d.Data) {
+                    sensus.methods.nextStep(step)
+                } else {
+                    swal.fire({
+                        type: 'warning',
+                        text: 'Sensus sedang dalam proses'
+                    })
+                }
+                //
+            })
+
+        },
+        changeStatusBarang: () => {
+            setTimeout(() => {
+                if (sensus.data.form.status_barang() == 3) {
+                    sensus.data.form.idinventaris(-1)
+                    sensus.data.step(3)
+                    sensus.data.step.notifySubscribers()
+                } else {
+                    sensus.data.step(2)
+                    sensus.data.step.notifySubscribers()
+                }
+            }, 500);
+        },
+        showSkForm: (choosen, tipe) => {
+            sensus.data.step(3)
+            sensus.data.form[tipe](choosen)
+        },
+        backToStep: (step) => {
+            if (sensus.data.form.status_barang() == '3') {
+                step = 1
+            } else if (sensus.data.form.status_barang() <= 1) {
+
+            }
+
+            sensus.data.step(step)
+
+        },
+        nextStep: (step) => {
+
+
             sensus.data.step(step)
             sensus.data.step.notifySubscribers()
 
@@ -218,6 +239,16 @@ let sensus = {
 
             let selectedRowGrid = $(`#${sensus.data.statics.idGridInventaris}`).DataTable().rows('.selected').data().toArray()[0]
             //if not barang tidak tercatat
+            // if (sensus.data.form.status_barang() == 0 && ((sensus.data.form.status_barang_hilang() == 1 || sensus.data.form.status_barang_hilang() == 2))) {
+            //     if($("select[name=kode_tujuan]").select2('data').length < 1) {
+            //         swal.fire({
+            //             type: 'warning',
+            //             text: 'Kode tujuan wajib diisi'
+            //         })
+            //     }
+            //     return
+            // }
+
             if (sensus.data.form.status_barang() != 3) {
                 formData.set('idinventaris', selectedRowGrid.id)
             }
@@ -263,7 +294,8 @@ let sensus = {
                     `id_awal=${selectedRowGrid.id}&`+
                     `id_tujuan=${$("select[name=kode_tujuan]").select2('data')[0].id}&`+
                     `nama_awal=${selectedRowGrid.kodebarang + ' - ' + selectedRowGrid.nama_rek_aset}&`+
-                    `nama_tujuan=${$("select[name=kode_tujuan]").select2('data')[0].text}`
+                    `nama_tujuan=${$("select[name=kode_tujuan]").select2('data')[0].text}&` +
+                    `kode_document=${sensus.data.form.no_sk()}`
                 } else if (sensus.data.form.status_barang() == 1 && sensus.data.form.status_ubah_satuan() == 1) {
                     window.location = `pemeliharaans/create?`+
                     `idinventaris=${selectedRowGrid.id}&` +

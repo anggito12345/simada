@@ -160,7 +160,6 @@ class inventarisAPIController extends AppBaseController
     public function store(CreateinventarisAPIRequest $request)
     {
         $input = $request->all();
-
         $input['idpegawai'] = $request->user()->id;
         $input['pid_organisasi'] = $request->user()->pid_organisasi;
         $input['harga_satuan'] = str_replace(".", "", explode(",",$input['harga_satuan'])[0]);
@@ -168,7 +167,7 @@ class inventarisAPIController extends AppBaseController
         try {
             return $this->sendResponse($this->inventarisRepository->InsertLogic($input,$request), 'inventaris updated successfully');
         }catch(\Exception $e) {
-            return $this->sendError($e->getMessage());
+            return $this->sendError($e->getMessage(), $e->getLine());
         }
 
 
