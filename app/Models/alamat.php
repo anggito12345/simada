@@ -33,7 +33,9 @@ class alamat extends Model
         'nama',
         'jenis',
         'kodepos',
-        'kode'
+        'kode',
+        'latitude',
+        'longitude'
     ];
 
     /**

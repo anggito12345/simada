@@ -55,13 +55,13 @@
 @section(strpos($idPostfix, 'non-ajax') > -1 ? 'scripts' : 'scripts_2')
     <script type="text/javascript">
         var sourceConstantJenis = <?= json_encode(\App\Models\BaseModel::$jenisKotaDs) ?>;
-        console.log(sourceConstantJenis)
         $('<?=  "#pid-".$idPostfix ?>').select2({
             ajax: {
                 url: "<?= url('api/alamats') ?>",
                 dataType: 'json',
                 data: function (params) {
                     var query = {
+                        take: 15,
                         q: params.term,
                         fieldText: "concat(jenis, ' - ', nama)",
                     }
@@ -147,7 +147,7 @@
             })
         }
     </script>
-    @if (isset($alamat))
+    @if (isset($alamat) && $alamat->pid != "")
     <script>
         App.Helpers.defaultSelect2($('<?=  "#pid-".$idPostfix ?>'), "<?= url('api/alamats', [$alamat->pid]) ?>","id","nama")
     </script>

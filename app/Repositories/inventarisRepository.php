@@ -533,7 +533,7 @@ class inventarisRepository extends BaseRepository
 
 
         if (isset($theFilter['jenisbarangs']) && $theFilter['jenisbarangs'] != "" && $theFilter['jenisbarangs'] != null) {
-            $buildingModel = $buildingModel->where('m_barang.kode_jeniss', $_GET['jenisbarangs']);
+            $buildingModel = $buildingModel->where('m_barang.kode_jenis', $_GET['jenisbarangs']);
         }
 
         if (isset($theFilter['kodeobjek']) && $theFilter['kodeobjek'] != "" && $theFilter['kodeobjek'] != null) {

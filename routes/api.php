@@ -256,6 +256,12 @@ Route::middleware('auth:api')->get('lokasi/{level}/{pid?}', function($level, $pi
     ] , 200);
 });
 
+/**
+ * alamat api controller
+ */
+
+Route::resource('alamats', 'alamatAPIController');
+
 
 /**
  * inventaris
@@ -776,7 +782,7 @@ Route::resource('lokasis', 'lokasiAPIController');
 
 
 
-Route::resource('alamats', 'alamatAPIController');
+
 
 Route::resource('jenisbarangs', 'jenisbarangAPIController');
 

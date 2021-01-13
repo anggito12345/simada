@@ -59,6 +59,11 @@ class alamatAPIController extends AppBaseController
             }            
         }
 
+        
+        if ($request->__isset("take"))   {
+            $query = $query->orderByDesc("id")->take($request->input("take"));
+        }
+
         $alamats = $query 
         ->get();
 
