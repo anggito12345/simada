@@ -465,6 +465,11 @@
 
 
         $('#alamat_propinsi').on('change', function (e) {
+            const selectedItem = $('#alamat_propinsi').select2("data")
+            if (selectedItem.length > 0 && selectedItem[0].latitude != "" && selectedItem[0].longitude && viewModel.data[viewModel.data.tipeKib()]().koordinatlokasi == "") {
+                viewModel.data[viewModel.data.tipeKib()]().koordinatlokasi = selectedItem[0].longitude + "," + selectedItem[0].latitude
+                $('.koordinatlokasi').val(selectedItem[0].longitude + "," + selectedItem[0].latitude)
+            }
             $("#alamat_kota").val("").trigger("change")
         });
 
@@ -495,6 +500,11 @@
         })
 
         $('#alamat_kota').on('change', function (e) {
+            const selectedItem = $('#alamat_kota').select2("data")
+            if (selectedItem.length > 0 && selectedItem[0].latitude != "" && selectedItem[0].longitude && viewModel.data[viewModel.data.tipeKib()]().koordinatlokasi == "") {
+                viewModel.data[viewModel.data.tipeKib()]().koordinatlokasi = selectedItem[0].longitude + "," + selectedItem[0].latitude
+                $('.koordinatlokasi').val(selectedItem[0].longitude + "," + selectedItem[0].latitude)
+            }
             $("#alamat_kecamatan").val("").trigger("change")
         });
 
@@ -525,6 +535,11 @@
         })
 
         $('#alamat_kecamatan').on('change', function (e) {
+            const selectedItem = $('#alamat_kecamatan').select2("data")
+            if (selectedItem.length > 0 && selectedItem[0].latitude != "" && selectedItem[0].longitude && viewModel.data[viewModel.data.tipeKib()]().koordinatlokasi == "") {
+                viewModel.data[viewModel.data.tipeKib()]().koordinatlokasi = selectedItem[0].longitude + "," + selectedItem[0].latitude
+                $('.koordinatlokasi').val(selectedItem[0].longitude + "," + selectedItem[0].latitude)
+            }
             $("#alamat_kelurahan").val("").trigger("change")
         });
 
@@ -553,6 +568,17 @@
             },
             theme: 'bootstrap' ,
         })
+
+        $('#alamat_kelurahan').on('change', function (e) {
+            const selectedItem = $('#alamat_kelurahan').select2("data")
+            if (selectedItem.length > 0 && selectedItem[0].latitude != "" && selectedItem[0].longitude != "" && viewModel.data[viewModel.data.tipeKib()]().koordinatlokasi == "") {
+                
+                viewModel.data[viewModel.data.tipeKib()]().koordinatlokasi = selectedItem[0].longitude + "," + selectedItem[0].latitude
+                $('.koordinatlokasi').val(selectedItem[0].longitude + "," + selectedItem[0].latitude)
+            }
+
+            console.log($('#alamat_kelurahan').select2("data"), viewModel.data[viewModel.data.tipeKib()]().koordinatlokasi)
+        });
 
         $('#harga_satuan').mask("#.##0,00", {reverse: true});
 

@@ -158,7 +158,7 @@ class inventaris_sensusController extends AppBaseController
         $data = inventaris_sensusRepository::query($mdl->newQuery())->first();
 
         if (empty($data)) {
-            Flash::error('Sensus not found');
+            Flash::error('Inventaris Sensus not found');
 
             return 'not found';
         }

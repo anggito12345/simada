@@ -417,6 +417,29 @@
             }
         }
 
+        function onCalcAllPenyusutan() {
+            __ajax({
+                url: `${$("[base-path]").val()}/api/calcall/inventaris_penyusutan`,
+                method: 'POST'
+            }).then((d) => {
+                //window.open(`${$("[base-path]").val()}/${d.path}`,'blank');
+                swal.fire({
+                    icon: 'success',
+                    type: 'success',
+                    text: 'Penyusutan berhasil dihitung',
+                })
+            })
+        }
+
+        function onExportPenyusutan() {
+            __ajax({
+                url: `${$("[base-path]").val()}/api/exportall/inventaris_penyusutan`,
+                method: 'GET'
+            }).then((d) => {
+                window.open(`${$("[base-path]").val()}/${d.path}`,'blank');
+            })
+        }
+
         function onLoadDataTable(e) {
 
             if (isReady[e.sTableId]) {
@@ -443,7 +466,8 @@
                 // "Penghapusan"
                 "Pemanfaatan",
                 "Dokumen-Kronologis",
-                "History"
+                "History",
+                "Penyusutan"
             ]
 
             let selectEvent = 0
@@ -553,6 +577,101 @@
                             })
                         }
 
+
+                        document.querySelector(`#Penyusutan-${selectEvent}`).innerHTML = `
+                        <button class='btn btn-success' id='button-export-xl-penyusutan-<?= $uniqId ?>${selectEvent}'>
+                            <img src='${$("[base-path]").val()}/images/icons/icon_xlsx_2.png' width='32' />
+                            Export
+                        </button>
+                        <br>
+                        <br>
+                        <table class='mt-2 table  table-striped' id='table-penyusutan-<?= $uniqId ?>${selectEvent}'>
+                            <thead>
+                                <tr>
+                                    <th>Running Penyusutan</th>
+                                    <th>Running Sd Bulan</th>
+                                    <th>Beban Penyusutan Per Bulan</th>
+                                    <th>Masa manfaat Sd Akhir tahun</th>
+                                    <th>Penyusutan Sd tahun sebelumnya</th>
+                                    <th>Bulan Manfaat Berjalan</th>
+                                    <th>Penyusutan Tahun Sekarang</th>
+                                    <th>Penyusutan Sd Tahun Sekarang</th>
+                                    <th>Nilai Buku</th>
+                                </tr>
+                            </thead>
+                            <tbody>
+                            </tbody>
+                        </table>`
+
+                        $(`#button-export-xl-penyusutan-<?= $uniqId ?>${selectEvent}`).click(() => {
+                            __ajax({
+                                url: `${$("[base-path]").val()}/api/export/inventaris_penyusutan`,
+                                method: 'GET'
+                            }).then((d) => {
+                                window.open(`${$("[base-path]").val()}/${d.path}`,'blank');
+                            })
+                        })
+
+                        let tablePenyusutan = $(`#table-penyusutan-<?= $uniqId ?>${selectEvent}`).DataTable({
+                            ajax: {
+                                url: `${$("[base-path]").val()}/api/inventaris_penyusutan`,
+                                dataType: "json",
+                                data: (d) => {
+                                    d.pidinventaris = row.data().id
+                                },
+                                'beforeSend': function (request) {
+                                    request.setRequestHeader("Authorization", 'Bearer ' + sessionStorage.getItem('api token'));
+                                }
+                            },
+                            order : [[ 1, "asc"]],
+                            dom: 'Bfrtip',
+                            buttons: [
+
+                            ],
+                            columns: [
+                                {
+                                    data: 'running_penyusutan'
+                                },
+                                {
+                                    data: 'running_sd_bulan'
+                                },
+                                {
+                                    data: 'beban_penyusutan_perbulan'
+                                },
+                                {
+                                    data: 'masa_manfaat_sd_akhir_tahun'
+                                },
+                                {
+                                    data: 'penyusutan_sd_tahun_sebelumnya'
+                                },
+                                {
+                                    data: 'bulan_manfaat_berjalan'
+                                },
+                                {
+                                    data: 'penyusutan_tahun_sekarang'
+                                },
+                                {
+                                    data: 'penyusutan_sd_tahun_sekarang'
+                                },
+                                
+                                {
+                                    data: 'nilai_buku'
+                                }
+                            ],
+                            'columnDefs': [
+                                {
+                                    'targets': 0,
+                                    'checkboxes': {
+                                    'selectRow': true
+                                    }
+                                }
+                            ],
+                            'select': {
+                                'style': 'multi'
+                            },
+                            "processing": true,
+                            "serverSide": true,
+                        })
 
                         document.querySelector(`#Pemeliharaan-${selectEvent}`).innerHTML = `<table class='mt-2 table  table-striped' id='table-pemeliharaan-<?= $uniqId ?>${selectEvent}'>
                             <thead>

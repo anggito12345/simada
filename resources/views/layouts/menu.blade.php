@@ -80,9 +80,9 @@
     </li>
 @endif
 @if(c::is('master barang rka',['view'],[Constant::$GROUP_BPKAD_ORG]))
-    <li class="{{ Request::is('rkaBarangs*') ? 'active' : '' }}">
+    <!-- <li class="{{ Request::is('rkaBarangs*') ? 'active' : '' }}">
         <a href="{{ route('rkaBarangs.index') }}"><i class="fa fa-cubes"></i><span>Master Barang RKA</span></a>
-    </li>
+    </li> -->
 @endif
 
 @if(
@@ -150,11 +150,12 @@
         <li class="{{ Request::is('pengunaans*') ? 'active' : '' }}">
             <a href="{!! route('pengunaans.index') !!}"><i class="fa fa-edit"></i><span>Pengunaan KIB A</span></a>
         </li>
-        @endif
+        
 
         <li class="{{ Request::is('mKodeDaerahs*') ? 'active' : '' }}">
             <a href="{{ route('mKodeDaerahs.index') }}"><i class="fa fa-edit"></i><span>Kode Daerah</span></a>
         </li>
+        @endif
 
     </ul>
 </li>
@@ -233,3 +234,4 @@ $countUserNeedOtor = \App\Models\users::where('aktif', '0')->count();
     <a href="{{ route('sysWorkflowMasters.index') }}"><i class="fa fa-edit"></i><span>Sys Workflow Masters</span></a>
 </li>
  --}}
+

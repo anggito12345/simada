@@ -206,7 +206,8 @@ return [
     */
     'from_table' => [
 
-        'doctrine_mappings' => [],
+        'doctrine_mappings' => [
+        ],
     ],
 
 ];
