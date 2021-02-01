@@ -6,7 +6,6 @@
 
 <script>        
     function updateEnv(id, self) {
-        console.log('updating')
         __ajax({
             method: 'PUT',
             url: $("[base-path]").val() + "/api/settings/" + id,

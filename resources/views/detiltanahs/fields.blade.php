@@ -31,7 +31,7 @@
 <!-- Koordinatlokasi Field -->
 <div class="form-group col-sm-6 row">
     {!! Form::label('koordinatlokasi', 'Koordinat lokasi:') !!}
-    {!! Form::text('koordinatlokasi', null, ['class' => 'form-control', 'data-bind' => 'value: viewModel.data["KIB A"]().koordinatlokasi']) !!}
+    {!! Form::text('koordinatlokasi', null, ['class' => 'form-control koordinatlokasi', 'data-bind' => 'value: viewModel.data["KIB A"]().koordinatlokasi']) !!}
 </div>
 
 <!-- Koordinattanah Field -->

@@ -162,7 +162,9 @@ class inventarisDataTable extends DataTable
         }))) {
             array_push($addtButtons,
                 ['extend' => 'export'],
-                ['extend' => 'print']);
+                ['extend' => 'print'],
+                ['text' => '<img src="images/icons/icon_shrink.png" width="16" /> Penyusutan', 'action' => 'function(){onCalcAllPenyusutan()}'],
+                ['text' => '<img src="images/icons/icon_xlsx_2.png" width="16" /> Export Penyusutan', 'action' => 'function(){onExportPenyusutan()}']);
         }
 
         array_push($addtButtons,

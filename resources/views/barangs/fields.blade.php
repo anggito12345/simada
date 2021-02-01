@@ -52,7 +52,7 @@
     <div class="input-group">
         {!! Form::number('umur_ekonomis', null, ['class' => 'form-control']) !!}
         <div class="input-group-append">
-            <span class="input-group-text" id="basic-addon2">Tahun</span>
+            <span class="input-group-text" id="basic-addon2">Bulan</span>
         </div>
     </div>
 </div>

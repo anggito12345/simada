@@ -780,10 +780,6 @@ Route::resource('lokasis', 'lokasiAPIController');
 
 //Route::resource('satuan_barangs', 'satuan_barangAPIController');
 
-
-
-
-
 Route::resource('jenisbarangs', 'jenisbarangAPIController');
 
 Route::resource('kondisis', 'kondisiAPIController');
@@ -835,6 +831,12 @@ Route::resource('mutasi_detils', 'mutasi_detilAPIController');
 Route::resource('rkas', 'rkaAPIController');
 
 Route::resource('rka_detils', 'rka_detilAPIController');
+
+Route::resource('inventaris_penyusutan', 'inventaris_penyusutanAPIController');
+
+Route::post('/calcall/inventaris_penyusutan', 'inventaris_penyusutanAPIController@CalcPenyusutan');
+Route::get('/export/inventaris_penyusutan', 'inventaris_penyusutanAPIController@export');
+Route::get('/exportall/inventaris_penyusutan', 'inventaris_penyusutanAPIController@exportAllData');
 
 Route::resource('rka_barangs', 'rka_barangAPIController');
 

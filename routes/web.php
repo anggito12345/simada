@@ -36,11 +36,11 @@ Route::get('/partials/view.mutasi/{id}', 'mutasiController@partialview');
 Route::get('/partials/view.penghapusan/{id}', 'penghapusanController@partialview');
 Route::get('/partials/view.rka/{id}', 'rkaController@partialview');
 Route::get('/partials/view.sensus/{id}', 'inventaris_sensusController@partialview');
+Route::get('/partials/view.penyusutan/{id}', 'inventaris_penyusutanController@partialviewdetail');
 Route::get('/home', 'HomeController@index')->name('home');
 Route::get('/organisasis/settings', 'organisasiController@settings')->name('organisasis.settings');
 Route::get('/organisasis/changeSetting/{id}', 'organisasiController@changeSetting')->name('organisasis.changeSetting');
 Auth::routes();
-
 
 Route::get('/inventarisHistories', 'inventaris_historyController@index');
 
@@ -148,3 +148,6 @@ Route::resource('mKodeDaerahs', 'm_kode_daerahController');
 Route::resource('sysWorkflows', 'sys_workflowController');
 
 Route::resource('sysWorkflowMasters', 'sys_workflow_masterController');
+
+
+Route::resource('inventarisPenyusutans', 'inventaris_penyusutanController');

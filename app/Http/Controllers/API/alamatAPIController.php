@@ -48,7 +48,7 @@ class alamatAPIController extends AppBaseController
         }
 
         $query = \App\Models\alamat::selectRaw(
-            $fieldText." as text, id, kode
+            $fieldText." as text, id, kode, latitude, longitude
         ")
         ->whereRaw("nama ~* '".$term."'");
         

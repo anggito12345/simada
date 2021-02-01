@@ -66,7 +66,7 @@
 <!-- Koordinatlokasi Field -->
 <div class="form-group col-sm-6 row">
     {!! Form::label('koordinatlokasi', 'Koordinat Lokasi:') !!}
-    {!! Form::text('koordinatlokasi', null, ['class' => 'form-control', 'id' => 'koordinatlokasi-detilbangunan', 'data-bind' => 'value: viewModel.data["KIB C"]().koordinatlokasi']) !!}
+    {!! Form::text('koordinatlokasi', null, ['class' => 'form-control koordinatlokasi', 'id' => 'koordinatlokasi-detilbangunan', 'data-bind' => 'value: viewModel.data["KIB C"]().koordinatlokasi']) !!}
 </div>
 
 <!-- Koordinattanah Field -->
