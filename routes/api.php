@@ -811,6 +811,7 @@ Route::resource('detilasets', 'detilasetAPIController');
 Route::resource('detilkonstruksis', 'detilkonstruksiAPIController');
 
 Route::resource('pemeliharaans', 'pemeliharaanAPIController');
+Route::get('pemeliharaan/getbyidinventaris/{id}', 'pemeliharaanAPIController@getByIDInventaris');
 
 Route::resource('penghapusans', 'penghapusanAPIController');
 
@@ -835,7 +836,9 @@ Route::resource('rka_detils', 'rka_detilAPIController');
 Route::resource('inventaris_penyusutan', 'inventaris_penyusutanAPIController');
 
 Route::post('/calcall/inventaris_penyusutan', 'inventaris_penyusutanAPIController@CalcPenyusutan');
+
 Route::get('/export/inventaris_penyusutan', 'inventaris_penyusutanAPIController@export');
+
 Route::get('/exportall/inventaris_penyusutan', 'inventaris_penyusutanAPIController@exportAllData');
 
 Route::resource('rka_barangs', 'rka_barangAPIController');
@@ -863,3 +866,5 @@ Route::resource('m_kode_daerahs', 'm_kode_daerahAPIController');
 Route::resource('sys_workflows', 'sys_workflowAPIController');
 
 Route::resource('sys_workflow_masters', 'sys_workflow_masterAPIController');
+
+Route::get('report/daftarbarang/get', 'ReportAPIController@DaftarBarang');

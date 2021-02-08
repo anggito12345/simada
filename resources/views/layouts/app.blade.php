@@ -147,6 +147,8 @@
 
     <script src="<?= url('js/thirdparty/knockout-3.5.0.js') ?>"></script>
 
+    <script src="<?= url('js/thirdparty/lodash.min.js') ?>"></script>
+
     <script>
         var url_string = window.location.href; //window.location.href
         var url = new URL(url_string);

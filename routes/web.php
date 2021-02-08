@@ -16,6 +16,8 @@
  * Export route
  */
 
+ use Illuminate\Support\Facades\Route;
+
 Route::get('inventaris/export/', 'InventarisController@export');
 Route::get('inventaris/deleted/', 'InventarisController@deletedItem')->name('inventaris.deleted');
 
@@ -133,7 +135,6 @@ Route::resource('sensus', 'sensusController');
 
 Route::post('/import/inventaris', 'importController@inventaris')->name("import.inventaris");
 
-
 Route::resource('inventarisSensuses', 'inventaris_sensusController');
 
 Route::resource('inventarisSensuses', 'inventaris_sensusController');
@@ -151,3 +152,5 @@ Route::resource('sysWorkflowMasters', 'sys_workflow_masterController');
 
 
 Route::resource('inventarisPenyusutans', 'inventaris_penyusutanController');
+
+Route::get("/report/daftarbarang", "ReportController@DaftarBarang")->name("Report.DaftarBarang");

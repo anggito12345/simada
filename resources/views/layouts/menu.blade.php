@@ -169,6 +169,27 @@ $countUserNeedOtor = \App\Models\users::where('aktif', '0')->count();
 ?>
 
 @if(
+    c::is('pengaturan users',['view'],[Constant::$GROUP_BPKAD_ORG]) 
+)
+
+<li class="treeview {{ Request::is('users*', 'organisasis/settings', 'jabatans', 'settings')? 'active' : '' }}">
+    <a href="#">
+        <i class="fa fa-envelope"></i>
+        <span>Reports</span>
+        <span class="pull-right-container">
+
+            <i class="fa fa-angle-left pull-right"></i>
+        </span>
+    </a>
+    <ul class="treeview-menu">
+        <li class="{{ Request::is('DaftarBarang*') ? 'active' : '' }}">
+            <a href="{!! route('Report.DaftarBarang') !!}"><i class="fa fa-edit"></i><span>Daftar Barang</span></a>
+        </li>   
+    </ul>
+</li>
+@endif
+
+@if(
     c::is('pengaturan users',['view'],[Constant::$GROUP_BPKAD_ORG]) ||
     c::is('pengaturan OPD',['view'],[Constant::$GROUP_BPKAD_ORG]) ||
     c::is('pengaturan jabatan',['view'],[Constant::$GROUP_BPKAD_ORG]) ||
@@ -226,12 +247,4 @@ $countUserNeedOtor = \App\Models\users::where('aktif', '0')->count();
 </li>
 @endif
 
-{{-- <li class="{{ Request::is('sysWorkflows*') ? 'active' : '' }}">
-    <a href="{{ route('sysWorkflows.index') }}"><i class="fa fa-edit"></i><span>Sys Workflows</span></a>
-</li>
-
-<li class="{{ Request::is('sysWorkflowMasters*') ? 'active' : '' }}">
-    <a href="{{ route('sysWorkflowMasters.index') }}"><i class="fa fa-edit"></i><span>Sys Workflow Masters</span></a>
-</li>
- --}}
 

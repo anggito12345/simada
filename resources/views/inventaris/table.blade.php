@@ -431,9 +431,9 @@
             })
         }
 
-        function onExportPenyusutan() {
+        function onExportPenyusutan(to) {
             __ajax({
-                url: `${$("[base-path]").val()}/api/exportall/inventaris_penyusutan`,
+                url: `${$("[base-path]").val()}/api/exportall/inventaris_penyusutan?to=${to}`,
                 method: 'GET'
             }).then((d) => {
                 window.open(`${$("[base-path]").val()}/${d.path}`,'blank');
