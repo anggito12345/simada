@@ -81,10 +81,10 @@ class pemeliharaanAPIController extends AppBaseController
             }
 
             if (empty($request->input('draft')) && empty($input['id_sensus'])) {
-                $inventaris->update([
-                    'umur_ekonomis' => (int) $inventaris->umur_ekonomis + (int) $input['umur_ekonomis'],
-                    'harga_satuan' => (int) $inventaris->harga_satuan + (int) $input['biaya'],
-                ]);
+                // $inventaris->update([
+                //     'umur_ekonomis' => (int) $inventaris->umur_ekonomis + (int) $input['umur_ekonomis'],
+                //     'harga_satuan' => (int) $inventaris->harga_satuan + (int) $input['biaya'],
+                // ]);
 
                 $inventarisHistory = $inventaris->toArray();
 
@@ -190,4 +190,12 @@ class pemeliharaanAPIController extends AppBaseController
 
         return $this->sendResponse($id, 'Pemeliharaan deleted successfully');
     }
+
+    /**
+     * get pemeliharaan by id inventaris
+     */
+    public function getByIDInventaris($id) {
+        return $this->sendResponse(pemeliharaan::where('pidinventaris',$id)->get(), 'Successfully get pemeliharaan by id inventaris');
+    }
+
 }

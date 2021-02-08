@@ -4,6 +4,7 @@ namespace App\DataTables;
 
 use App\Models\BaseModel;
 use App\Models\inventaris;
+use App\Models\pemeliharaan;
 use App\Repositories\inventaris_sensusRepository;
 use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
@@ -39,7 +40,15 @@ class inventarisDataTable extends DataTable
                 return (float)$data->harga_satuan;
             })
             ->editColumn('harga_satuan', function($data) {
-                return number_format($data->harga_satuan, 2);
+                //get pemeliharaan
+
+                $hargaPemeliharaan = 0;
+                $pemeliharaans = pemeliharaan::where('pidinventaris', $data->id)->get();
+                foreach ($pemeliharaans as $pemeliharaan) {
+                    # code...
+                    $hargaPemeliharaan += $pemeliharaan->biaya;
+                }
+                return number_format($data->harga_satuan, 2)." <span class='text-success'>(".number_format($hargaPemeliharaan).")</span> ";
             })
 
             ->addColumn('checkbox', function($data) {
@@ -99,7 +108,7 @@ class inventarisDataTable extends DataTable
                 return $kode;
             })
             ->addColumn('action', 'inventaris.datatables_actions')
-            ->rawColumns(['detail', 'action', 'checkbox','status_sensus']);
+            ->rawColumns(['detail', 'action', 'checkbox','status_sensus', 'harga_satuan']);
     }
 
     /**
@@ -164,7 +173,7 @@ class inventarisDataTable extends DataTable
                 ['extend' => 'export'],
                 ['extend' => 'print'],
                 ['text' => '<img src="images/icons/icon_shrink.png" width="16" /> Penyusutan', 'action' => 'function(){onCalcAllPenyusutan()}'],
-                ['text' => '<img src="images/icons/icon_xlsx_2.png" width="16" /> Export Penyusutan', 'action' => 'function(){onExportPenyusutan()}']);
+                );
         }
 
         array_push($addtButtons,

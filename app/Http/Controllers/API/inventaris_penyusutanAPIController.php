@@ -2,7 +2,9 @@
 
 namespace App\Http\Controllers\API;
 
-use App\Exports\InventarisPenyusutanPhpSpread;
+use App\Exports\InventarisExport;
+use App\Exports\InventarisPenyusutanExport;
+use App\Exports\ReportInventarisExport;
 use App\Http\Requests\API\Createinventaris_reklasAPIRequest;
 use App\Http\Requests\API\Updateinventaris_reklasAPIRequest;
 use App\Models\inventaris_reklas;
@@ -177,7 +179,7 @@ class inventaris_penyusutanAPIController extends AppBaseController
             $filter['inventaris_id'] = $request->get('pidinventaris');
         }
 
-        $asetExp = new InventarisPenyusutanPhpSpread(inventaris_penyusutan::where($filter)->get(), $filename);
+        $asetExp = new InventarisPenyusutanExport(inventaris_penyusutan::where($filter)->get(), $filename);
         $asetExp->export();
 
         return $this->sendResponse([
@@ -194,69 +196,37 @@ class inventaris_penyusutanAPIController extends AppBaseController
         $filename = Auth::user()->id."-inventaris_penyusutan-all";
         $filter = [];
 
-        $inventaris = new inventaris();
+        if ($request->__isset("f_penggunafilter")) {
+            array_push($filter, [
+                'pidopd' => $request->input('f_penggunafilter')
+            ]);
+        }
 
-        $asetExp = new InventarisPenyusutanPhpSpread(
-            DB::table($inventaris->table.' as inv')->selectRaw(' 
-                inv.id,
-                inv.harga_satuan,
-                (CASE WHEN barang.umur_ekonomis != 0 THEN inv.harga_satuan/barang.umur_ekonomis else 0 END ) beban_penyusutan_perbulan,
-                (CASE WHEN invpe.id IS NULL then barang.umur_ekonomis ELSE invpe.masa_manfaat_sd_akhir_tahun END) masa_manfaat_sd_akhir_tahun,
-                (CASE WHEN invpe.id IS NULL then inv.harga_satuan ELSE invpe.penyusutan_sd_tahun_sebelumnya END) penyusutan_sd_tahun_sebelumnya,
-                (CASE WHEN invpe.id IS NULL then barang.umur_ekonomis ELSE invpe.running_sd_bulan END) running_sd_bulan,
-                (CASE WHEN invpe.id IS NULL then 0 ELSE invpe.bulan_manfaat_berjalan END) bulan_manfaat_berjalan,
-                (CASE WHEN invpe.id IS NULL then 0 ELSE invpe.penyusutan_tahun_sekarang END) penyusutan_tahun_sekarang,
-                (CASE WHEN invpe.id IS NULL then inv.harga_satuan ELSE invpe.penyusutan_sd_tahun_sekarang END) penyusutan_sd_tahun_sekarang,
-                (CASE WHEN invpe.id IS NULL then 0 ELSE invpe.nilai_buku END) nilai_buku')
-                ->join('m_barang as barang', 'barang.id', '=', 'inv.pidbarang')
-                ->leftJoin(DB::raw('
-                        (select 
-                            id, 
-                            inventaris_id, 
-                            masa_manfaat_sd_akhir_tahun,
-                            penyusutan_sd_tahun_sebelumnya,
-                            running_sd_bulan,
-                            bulan_manfaat_berjalan,
-                            penyusutan_tahun_sekarang,
-                            penyusutan_sd_tahun_sekarang,
-                            nilai_buku
-                        from report_inventaris_penyusutan rpt
-                        group by 
-                            id, 
-                            inventaris_id, 
-                            masa_manfaat_sd_akhir_tahun,
-                            penyusutan_sd_tahun_sebelumnya,
-                            running_sd_bulan,
-                            bulan_manfaat_berjalan,
-                            penyusutan_tahun_sekarang,
-                            penyusutan_sd_tahun_sekarang,
-                            nilai_buku,
-                            masa_manfaat_sd_akhir_tahun
-                        order by running_penyusutan desc) invpe
-                    ')
-                    , function($join)
-                    {
-                       $join->on('invpe.inventaris_id', '=', 'inv.id');
-                    })
-                ->groupBy(DB::raw('
-                    inv.id,
-                    barang.umur_ekonomis,
-                    invpe.id,
-                    invpe.penyusutan_sd_tahun_sebelumnya,
-                    invpe.running_sd_bulan,
-                    invpe.bulan_manfaat_berjalan,
-                    invpe.penyusutan_tahun_sekarang,
-                    invpe.penyusutan_sd_tahun_sekarang,
-                    invpe.nilai_buku,
-                    invpe.masa_manfaat_sd_akhir_tahun
-                ')
-                )->get(), $filename
-        );
-        $asetExp->export();
+        if ($request->__isset("f_subkuasa_filter")) {
+            array_push($filter, [
+                'pidopd_cabang' => $request->input('f_subkuasa_filter')
+            ]);
+        }
+
+        if ($request->__isset("f_kuasapengguna_filter")) {
+            array_push($filter, [
+                'pidupt' => $request->input('f_kuasapengguna_filter')
+            ]);
+        }
+
+        $asetExp = new ReportInventarisExport($filename, $filter);
+        $exportTo = "excel";
+        $ext = ".xlsx";
+        if ($request->__isset("to") && $request->get('to') == "pdf") {
+            $exportTo = $request->get('to');
+            $ext = ".pdf";
+        }
+
+        $asetExp->SetExportTo($exportTo)->export();
 
         return $this->sendResponse([
             'filename' => $filename,
-            'path' => 'tmp/'.$filename.'.xlsx'
+            'path' => 'tmp/'.$filename.$ext
         ] , 'File Exported');
      }
 }

@@ -2,6 +2,9 @@
 
 
 //kode daerah
+
+use DaveJamesMiller\Breadcrumbs\Facades\Breadcrumbs;
+
 Breadcrumbs::for('mKodeDaerahs.index', function ($trail) {
     $trail->push('Kode Daerah', route('mKodeDaerahs.index'));
 });
@@ -548,6 +551,11 @@ Breadcrumbs::for('import.index', function ($trail) {
 // import > index
 Breadcrumbs::for('sensus.index', function ($trail) {
     $trail->push('Sensus', route('sensus.index'));
+});
+
+// Report > Daftar Barang
+Breadcrumbs::for('Report.DaftarBarang', function ($trail) {
+    $trail->push('Report Daftar Barang', route('Report.DaftarBarang'));
 });
 
 
