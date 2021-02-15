@@ -171,7 +171,7 @@ class inventarisDataTable extends DataTable
         }))) {
             array_push($addtButtons,
                 ['extend' => 'export'],
-                ['extend' => 'print'],
+                ['extend' => 'print']
             );
 
             array_push($addtButtons, ['text' => '<img src="images/icons/icon_shrink.png" width="16" /> Penyusutan', 'action' => 'function(){onCalcAllPenyusutan()}']);
