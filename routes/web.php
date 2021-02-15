@@ -154,3 +154,9 @@ Route::resource('sysWorkflowMasters', 'sys_workflow_masterController');
 Route::resource('inventarisPenyusutans', 'inventaris_penyusutanController');
 
 Route::get("/report/daftarbarang", "ReportController@DaftarBarang")->name("Report.DaftarBarang");
+Route::get("/report/daftarbarangintrakomp", "ReportController@DaftarBarangIntraKomp")->name("Report.DaftarBarangIntraKomp");
+Route::get("/report/daftarbarangekstrakomp", "ReportController@DaftarBarangEkstraKomp")->name("Report.DaftarBarangEkstrakomp");
+Route::get("/report/daftarmutasitambah", "ReportController@DaftarMutasiTambah")->name("Report.DaftarMutasiTambah");
+Route::get("/report/daftarmutasikurang", "ReportController@DaftarMutasiKurang")->name("Report.DaftarMutasiKurang");
+Route::get("/report/lampiranbastmutasi", "ReportController@LampiranBASTMutasi")->name("Report.LampiranBASTMutasi");
+Route::get("/report/lampiransuratusulan", "ReportController@LampiranSuratUsulan")->name("Report.LampiranSuratUsulan");

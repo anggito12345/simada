@@ -184,7 +184,31 @@
     <ul class="treeview-menu">
         <li class="{{ Request::is('DaftarBarang*') ? 'active' : '' }}">
             <a href="{!! route('Report.DaftarBarang') !!}"><i class="fa fa-edit"></i><span>Daftar Barang</span></a>
-        </li>   
+        </li> 
+        
+        <li class="{{ Request::is('DaftarBarangIntraKomp*') ? 'active' : '' }}">
+            <a href="{!! route('Report.DaftarBarangIntraKomp') !!}"><i class="fa fa-edit"></i><span>Daftar Barang Intrakomp</span></a>
+        </li>
+
+        <li class="{{ Request::is('DaftarBarangEkstraKomp*') ? 'active' : '' }}">
+            <a href="{!! route('Report.DaftarBarangEkstrakomp') !!}"><i class="fa fa-edit"></i><span>Daftar Barang Ekstrakomp</span></a>
+        </li>
+
+        <li class="{{ Request::is('DaftarMutasiTambah*') ? 'active' : '' }}">
+            <a href="{!! route('Report.DaftarMutasiTambah') !!}"><i class="fa fa-edit"></i><span>Daftar Mutasi Tambah</span></a>
+        </li>
+
+        <li class="{{ Request::is('DaftarMutasiKurang*') ? 'active' : '' }}">
+            <a href="{!! route('Report.DaftarMutasiKurang') !!}"><i class="fa fa-edit"></i><span>Daftar Mutasi Kurang</span></a>
+        </li>
+
+        <li class="{{ Request::is('LampiranBASTMutasi*') ? 'active' : '' }}">
+            <a href="{!! route('Report.LampiranBASTMutasi') !!}"><i class="fa fa-edit"></i><span>Lampiran BAST Mutasi</span></a>
+        </li>
+
+        <li class="{{ Request::is('LampiranSuratUsulan*') ? 'active' : '' }}">
+            <a href="{!! route('Report.LampiranSuratUsulan') !!}"><i class="fa fa-edit"></i><span>Lampiran Surat Usulan</span></a>
+        </li>                                        
     </ul>
 </li>
 @endif
