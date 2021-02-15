@@ -33,7 +33,7 @@
         <div class="clearfix"></div>
         <div class="box box-primary">
             <div class="box-body">
-                <table id="report-daftarbarangintrakomp" class="table table-responsive table-bordered">
+                <table id="report-lampiransuratusulan" class="table table-responsive table-bordered">
                     <thead>
                         <tr>
                             <th colspan="3" class="text-center">
@@ -204,7 +204,7 @@
         function firstLoad() {
             let pemeliharaanHargaTotal = 0
 
-            $(`#report-daftarbarangintrakomp`).DataTable({    
+            $(`#report-lampiransuratusulan`).DataTable({    
                 ajax: {
                     url: `${$("[base-path]").val()}/api/report/daftarbarang/get`,
                     dataType: "json",
