@@ -33,7 +33,7 @@
         <div class="clearfix"></div>
         <div class="box box-primary">
             <div class="box-body">
-                <table id="report-daftarbarangintrakomp" class="table table-responsive table-bordered">
+                <table id="report-daftarmutasikurang" class="table table-responsive table-bordered">
                     <thead>
                         <tr>
                             <th colspan="3" class="text-center">
@@ -59,18 +59,6 @@
                             </th>
                             <th colspan="2" class="text-center align-middle">
                                 Jumlah
-                            </th>
-                            <th rowspan="2" class="text-center align-middle">
-                                Penyusutan s.d Tahun Sebelumnya
-                            </th>
-                            <th rowspan="2" class="text-center align-middle">
-                                Beban Penyusutan Tahun Berkenaan
-                            </th>
-                            <th rowspan="2" class="text-center align-middle">
-                                Penyusutan s.d Tahun Berkenaan
-                            </th>
-                            <th rowspan="2" class="text-center align-middle">
-                                Nilai Buku
                             </th>
                             <th rowspan="2" class="text-center align-middle">
                                 Keterangan/Tgl Buku/ Tahun Sensus
@@ -204,7 +192,7 @@
         function firstLoad() {
             let pemeliharaanHargaTotal = 0
 
-            $(`#report-daftarbarangintrakomp`).DataTable({    
+            $(`#report-daftarmutasikurang`).DataTable({    
                 ajax: {
                     url: `${$("[base-path]").val()}/api/report/daftarbarang/get`,
                     dataType: "json",
@@ -346,14 +334,6 @@
                                     ${$.fn.dataTable.render.number( ',', '.', 2 ).display(element.biaya) }
                                 </td>
                                 <td>
-                                </td>
-                                <td>
-                                </td>
-                                <td>
-                                </td>
-                                <td>
-                                </td>
-                                <td>
                                     ${element.keterangan}
                                 </td>
                             </tr>`);
@@ -406,22 +386,6 @@
                     },
                     {
                         data: 'harga_satuan',
-                        render: $.fn.dataTable.render.number( ',', '.', 2 )
-                    },
-                    {
-                        data: 'penyusutan_sd_tahun_sebelumnya',
-                        render: $.fn.dataTable.render.number( ',', '.', 2 )
-                    },
-                    {
-                        data: 'beban_penyusutan_perbulan',
-                        render: $.fn.dataTable.render.number( ',', '.', 2 )
-                    },
-                    {
-                        data: 'penyusutan_sd_tahun_sekarang',
-                        render: $.fn.dataTable.render.number( ',', '.', 2 )
-                    },
-                    {
-                        data: 'nilai_buku',
                         render: $.fn.dataTable.render.number( ',', '.', 2 )
                     },
                     {

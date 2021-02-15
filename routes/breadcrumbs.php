@@ -558,5 +558,36 @@ Breadcrumbs::for('Report.DaftarBarang', function ($trail) {
     $trail->push('Report Daftar Barang', route('Report.DaftarBarang'));
 });
 
+// Report > Daftar Barang Intrakomp
+Breadcrumbs::for('Report.DaftarBarangIntraKomp', function ($trail) {
+    $trail->push('Report Daftar Barang Intrakomp', route('Report.DaftarBarangIntraKomp'));
+});
+
+// Report > Daftar Barang Ekstrakomp
+Breadcrumbs::for('Report.DaftarBarangEkstrakomp', function ($trail) {
+    $trail->push('Report Daftar Barang Ekstrakomp', route('Report.DaftarBarangEkstrakomp'));
+});
+
+// Report > Daftar Mutasi Tambah
+Breadcrumbs::for('Report.DaftarMutasiTambah', function ($trail) {
+    $trail->push('Report Daftar Mutasi Tambah', route('Report.DaftarMutasiTambah'));
+});
+
+// Report > Daftar Mutasi Kurang
+Breadcrumbs::for('Report.DaftarMutasiKurang', function ($trail) {
+    $trail->push('Report Daftar Mutasi Kurang', route('Report.DaftarMutasiKurang'));
+});
+
+// Report > Lampiran BAST Mutasi
+Breadcrumbs::for('Report.LampiranBASTMutasi', function ($trail) {
+    $trail->push('Report Lampiran BAST Mutasi', route('Report.LampiranBASTMutasi'));
+});
+
+// Report > Lampiran Surat Usulan
+Breadcrumbs::for('Report.LampiranSuratUsulan', function ($trail) {
+    $trail->push('Report Lampiran Surat Usulan', route('Report.LampiranSuratUsulan'));
+});
+
+
 
 
