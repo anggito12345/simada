@@ -101,11 +101,12 @@ class inventaris_penyusutanRepository extends BaseRepository
         $currentMonth = date('m');
 
         $penyusutan = new inventaris_penyusutan();
+        $penyusutan->beban_penyusutan_perbulan = 0;
         if ($bItem->umur_ekonomis != 0) {
             $penyusutan->beban_penyusutan_perbulan = $inventaris->harga_satuan/$bItem->umur_ekonomis;    
         }
         
-        $penyusutan->beban_penyusutan_perbulan = 0;
+        
 
         $diffMonth = (($currentPrevYear - $yearInv) * 12) + ($currentPrevMonth - $mnInv);
         if ($diffMonth < 0) {

@@ -10,6 +10,29 @@
     TOTAL NILAI PEROLEHAN : <span class="total_harga_satuan"></span>
 </div>
 
+<div class="modal" id="modal-penyusutan" role="dialog">
+  <div class="modal-dialog" role="document">
+    <div class="modal-content">
+      <div class="modal-header">
+        <h5 class="modal-title">Penyusutan</h5>
+        <button type="button" class="close" data-dismiss="modal" aria-label="Close">
+          <span aria-hidden="true">&times;</span>
+        </button>
+      </div>
+      <div class="modal-body">
+        <div class="form-group">
+          <label>Ke Kode Barang Baru:</label>
+          {{ Form::select('kode', [], null, ['class' => 'form-control', 'id' => 'kode'] ) }}
+        </div>
+      </div>
+      <div class="modal-footer">
+        <button type="button" class="btn btn-primary" onclick="viewModel.clickEvent.confirmMutasiSwal()">Simpan</button>
+        <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
+      </div>
+    </div>
+  </div>
+</div>
+
 @section('scripts')
     <script>
 
