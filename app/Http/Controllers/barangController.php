@@ -20,6 +20,7 @@ class barangController extends AppBaseController
     {
         parent::__construct();
         $this->barangRepository = $barangRepo;
+        $this->middleware('auth');
     }
 
     /**

@@ -392,8 +392,6 @@ class inventarisRepository extends BaseRepository
 
             }
 
-
-
             // generate no register
             $modelInventaris = new \App\Models\inventaris();
 
@@ -407,7 +405,7 @@ class inventarisRepository extends BaseRepository
                 ->where('inventaris.pidbarang', '=', $input["pidbarang"])
                 ->where('m_barang.kode_jenis', '=', $barangMaster->kode_jenis)
                 ->where('inventaris.tahun_perolehan', '=', $input['tahun_perolehan'])
-                ->where('inventaris.harga_satuan', '=', str_replace(".","", $input['harga_satuan']))
+                ->where('inventaris.harga_satuan', '=', str_replace(',','.',str_replace(".","", $input['harga_satuan'])))
                 ->orderBy('inventaris.noreg', 'desc')
                 ->lockForUpdate()->first();
 

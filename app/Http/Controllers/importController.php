@@ -21,6 +21,7 @@ class importController extends AppBaseController
     public function __construct(import_historyRepository $import_historyRepository)
     {
         $this->import_historyRepository = $import_historyRepository;
+        $this->middleware('auth');
     }
 
     /**

@@ -868,3 +868,5 @@ Route::resource('sys_workflows', 'sys_workflowAPIController');
 Route::resource('sys_workflow_masters', 'sys_workflow_masterAPIController');
 
 Route::get('report/daftarbarang/get', 'ReportAPIController@DaftarBarang');
+
+Route::post('import', 'importAPIController@DoImport');

@@ -248,4 +248,14 @@
         width: 100%;
         font-size: 14px;
     }
+
+    /** common */
+
+    .opacity-2 {
+        opacity: 0.2 !important;
+    }
+
+    .opacity-8 {
+        opacity: 0.8 !important;
+    }
 </style>

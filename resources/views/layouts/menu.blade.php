@@ -165,7 +165,7 @@
 </li>
 @endif
 <?php
-$countUserNeedOtor = \App\Models\users::where('aktif', '0')->count();
+    $countUserNeedOtor = \App\Models\users::where('aktif', '0')->count();
 ?>
 
 @if(
@@ -189,6 +189,11 @@ $countUserNeedOtor = \App\Models\users::where('aktif', '0')->count();
 </li>
 @endif
 
+@if(c::is('pengaturan import',['view'],[Constant::$GROUP_BPKAD_ORG]))
+    <li class="{{ Request::is('import*') ? 'active' : '' }}">
+        <a href="{!! route('import.index') !!}"><i class="fa fa-database"></i><span>Data Center</span></a>
+    </li>
+@endif
 @if(
     c::is('pengaturan users',['view'],[Constant::$GROUP_BPKAD_ORG]) ||
     c::is('pengaturan OPD',['view'],[Constant::$GROUP_BPKAD_ORG]) ||
@@ -230,11 +235,6 @@ $countUserNeedOtor = \App\Models\users::where('aktif', '0')->count();
         @if(c::is('pengaturan jabatan',['view'],[Constant::$GROUP_BPKAD_ORG]))
             <li class="{{ Request::is('jabatans*') ? 'active' : '' }}">
                 <a href="{!! route('jabatans.index') !!}"><i class="fa fa-edit"></i><span>Jabatan/Roles</span></a>
-            </li>
-        @endif
-        @if(c::is('pengaturan import',['view'],[Constant::$GROUP_BPKAD_ORG]))
-            <li class="{{ Request::is('import*') ? 'active' : '' }}">
-                <a href="{!! route('import.index') !!}"><i class="fa fa-import"></i><span>Import Data</span></a>
             </li>
         @endif
         @if(c::is('setting',['view'],[Constant::$GROUP_BPKAD_ORG]))

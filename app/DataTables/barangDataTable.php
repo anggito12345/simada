@@ -95,6 +95,7 @@ class barangDataTable extends DataTable
             'kode_sub_rincian_objek',
             'kode_sub_sub_rincian_objek',
             'nama_rek_aset',
+            'umur_ekonomis'
             // 'aset',
             // 'obyek',
             // 'rincianobyek',

@@ -48,6 +48,11 @@ return [
             'root' => storage_path('app'),
         ],
 
+        'tmpimport' => [
+            'driver' => 'local',
+            'root' => storage_path('app/tmpimport'),
+        ],
+
         'public' => [
             'driver' => 'local',
             'root' => storage_path('app/public'),

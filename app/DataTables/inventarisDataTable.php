@@ -70,8 +70,8 @@ class inventarisDataTable extends DataTable
             ->addColumn('detail', function($data) {
                 return "<i class='fa fa-plus-circle text-success'></i>";
             })
-            ->addColumn('organisasi', function($data) {
-                $org = \App\Models\organisasi::find($data->pid_organisasi);
+            ->addColumn('pengguna_barang', function($data) {
+                $org = \App\Models\organisasi::find($data->pidopd);
                 return empty($org) ? '-' : $org->nama;
             })
             ->addColumn('kodebarang', function($data) {
@@ -173,7 +173,7 @@ class inventarisDataTable extends DataTable
                 ['extend' => 'export'],
                 ['extend' => 'print'],
                 ['text' => '<img src="images/icons/icon_shrink.png" width="16" /> Penyusutan', 'action' => 'function(){onCalcAllPenyusutan()}'],
-                );
+            );
         }
 
         array_push($addtButtons,
@@ -303,7 +303,7 @@ class inventarisDataTable extends DataTable
             'kondisi' => [
                 'title' => 'Keadaan Barang'
             ],
-            'organisasi',
+            'pengguna_barang',
             // 'barang',
             'harga_satuan',
             'status_sensus'

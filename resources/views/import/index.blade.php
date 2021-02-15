@@ -25,28 +25,50 @@
 
         <div class="clearfix"></div>
         <div class="box box-primary">
+            <div class="box-header">
+                Inventaris
+            </div>
             <div class="box-body">
+                <input type='file' id='fileimport' onchange='doImport()' style="display: none;" />
+                <div class="row">
+                    <div class="col-lg-3 col-xs-6">
+                        <div class="small-box bg-aqua">
+                            <div class="inner">
+                                <h3>*</h3>
 
-                <table class="table table-striped" id="datatable-import">
-                    <thead>
-                        <tr>
-                            <th>Nama</th>
-                            <th>Action</th>
-                        </tr>
-                    </thead>
-                    <tbody>
-                        @foreach($availableImport as $imp)
-                        <tr>
-                            <td>{!! $imp["name"] !!}</td>
-                            <td>
-                                <div class="btn btn-primary" onclick="showForm()">IMPORT</div>
-                            </td>
-                        </tr>
-                        @endforeach
-                    </tbody>
+                                <p>Baru</p>
+                            </div>
+                            <div class="icon">
+                                <!-- <img src="{!! asset('images/icons/icon_new_list.png') !!}" width=40 class="opacity-8" /> -->
+                                <i class="ion ion-ios-albums"></i>
+                            </div>
+                            <a href="#" onclick="doUpload('inventaris', 'baru')" class="small-box-footer">Import <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
+        <div class="box box-primary">
+            <div class="box-header">
+                Master Barang
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-lg-3 col-xs-6">
+                        <div class="small-box bg-red">
+                            <div class="inner">
+                                <h3>*</h3>
 
-                </table>
-
+                                <p>Update</p>
+                            </div>
+                            <div class="icon">
+                                <!-- <img src="{!! asset('images/icons/icon_new_list.png') !!}" width=40 class="opacity-8" /> -->
+                                <i class="ion ion-ios-bookmarks"></i>
+                            </div>
+                            <a href="#" onclick="doUpload('master-barang', 'update')" class="small-box-footer">Import <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                </div>
             </div>
         </div>
         <div class="text-center">
@@ -85,18 +107,31 @@
 @endsection
 @section("scripts")
 <script>
-    function showForm() {
-        $("#modal-import").modal('show')
+    let typeImport = '';
+    let actImport = '';
+
+    function doUpload(type, act) {
+        typeImport = type;
+        actImport = act;
+        $('#fileimport').click()
     }
 
-    function submitForm() {
-        $(".loading-page").attr('style', 'display: block');
-        $("#form-import").submit()
+    function doImport() {
+        if (typeImport != '' && actImport != '') {
+            
+            let data = new FormData();
 
+            data.append('fileimport', document.getElementById('fileimport').files[0])
+            __ajax({
+                url: `${$("[base-path]").val()}/api/import?type=${typeImport}&act=${actImport}`,
+                method: 'POST',
+                data: data,
+                processData: false,
+                contentType: false,
+            }).then((d) => {
+            })
+        }
     }
-
-
-    $("#datatable-import").DataTable()
 </script>
 @endsection
 
