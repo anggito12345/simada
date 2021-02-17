@@ -52,7 +52,7 @@ class inventaris_penyusutanRepository extends BaseRepository
     /**
      * calculating all data
      */
-    public function CalculatingAllPenyusutanData() {
+    public function CalculatingAllPenyusutanData($dateRunning) {
 
         $inventaris = new inventaris();
         $inventarises = DB::table($inventaris->table.' as inv')
@@ -65,22 +65,25 @@ class inventaris_penyusutanRepository extends BaseRepository
 
         foreach ($inventarises as $invent) {
             # code...
-            $this->CalculatingPenyusutan($invent->id);
+            $this->CalculatingPenyusutan($invent->id, $dateRunning);
         }
     } 
 
     /**
      * calculating penyusutan one data
      */
-    public function CalculatingPenyusutan($inventaris_id) {
+    public function CalculatingPenyusutan($inventaris_id, $dateRunning) {
         $inventaris = inventaris::withTrashed()->find((int)$inventaris_id);
         if (empty($inventaris)) {
             throw new \Exception("inventaris is empty");
         }
 
+        $yearRunning = date('Y', strtotime(str_replace('/', '-',$dateRunning)));
+        $monthRunning = date('m', strtotime(str_replace('/', '-',$dateRunning)));
+
         $ifExist = inventaris_penyusutan::where('inventaris_id', $inventaris_id)
-            ->whereRaw('EXTRACT(YEAR FROM running_penyusutan) = '.date('Y'))
-            ->whereRaw('EXTRACT(MONTH FROM running_penyusutan) = '.date('m'))
+            ->whereRaw('EXTRACT(YEAR FROM running_penyusutan) = '.$yearRunning)
+            ->whereRaw('EXTRACT(MONTH FROM running_penyusutan) = '.$monthRunning)
             ->count();
 
         if ($ifExist > 0) {
@@ -94,11 +97,11 @@ class inventaris_penyusutanRepository extends BaseRepository
 
         $yearInv = date('Y', strtotime(str_replace('/', '-',$inventaris->tgl_dibukukan)));
         $mnInv = date('m', strtotime(str_replace('/', '-',$inventaris->tgl_dibukukan)));
-        $currentPrevYear = date('Y', strtotime('-1 year', time()));
+        $currentPrevYear = date('Y', strtotime('-1 year',  strtotime(str_replace('/', '-',$inventaris->tgl_dibukukan))));
         $currentPrevMonth = 12;
 
-        $currentYear = date('Y');
-        $currentMonth = date('m');
+        $currentYear = $yearRunning;
+        $currentMonth = $monthRunning;
 
         $penyusutan = new inventaris_penyusutan();
         $penyusutan->beban_penyusutan_perbulan = 0;
@@ -118,7 +121,7 @@ class inventaris_penyusutanRepository extends BaseRepository
         }
 
         $penyusutan->penyusutan_sd_tahun_sebelumnya = $penyusutan->masa_manfaat_sd_akhir_tahun * $penyusutan->beban_penyusutan_perbulan;
-        $penyusutan->running_penyusutan = date('Y-m-d');
+        $penyusutan->running_penyusutan = date('Y-m-d', strtotime(str_replace('/', '-',$dateRunning)));
 
         $diffMonthSdSkr = (($currentYear - $yearInv) * 12) + ($currentMonth - $mnInv);
         if ($diffMonthSdSkr < 0) {
@@ -133,7 +136,7 @@ class inventaris_penyusutanRepository extends BaseRepository
         $penyusutan->penyusutan_tahun_sekarang = $penyusutan->bulan_manfaat_berjalan * $penyusutan->beban_penyusutan_perbulan;
         $penyusutan->penyusutan_sd_tahun_sekarang = $penyusutan->penyusutan_sd_tahun_sebelumnya + $penyusutan->penyusutan_tahun_sekarang;
         $penyusutan->nilai_buku = $inventaris->harga_satuan - $penyusutan->penyusutan_sd_tahun_sekarang;
-        $penyusutan->deskripsi = "Penyusutan ".date('Y-m');
+        $penyusutan->deskripsi = "Penyusutan ".date('Y-m', strtotime(str_replace('/', '-',$dateRunning)));
         $penyusutan->inventaris_id = $inventaris_id;
         $penyusutan->save();
     }

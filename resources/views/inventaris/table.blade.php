@@ -21,12 +21,12 @@
       </div>
       <div class="modal-body">
         <div class="form-group">
-          <label>Ke Kode Barang Baru:</label>
-          {{ Form::select('kode', [], null, ['class' => 'form-control', 'id' => 'kode'] ) }}
+          <label>Tanggal Running:</label>
+          {{ Form::text('tgl_running', null, ['class' => 'form-control', 'id' => 'tgl_running'] ) }}
         </div>
       </div>
       <div class="modal-footer">
-        <button type="button" class="btn btn-primary" onclick="viewModel.clickEvent.confirmMutasiSwal()">Simpan</button>
+        <button type="button" class="btn btn-primary" onclick="onCalcAllPenyusutan()">Hitung</button>
         <button type="button" class="btn btn-secondary" data-dismiss="modal">Tutup</button>
       </div>
     </div>
@@ -36,6 +36,7 @@
 @section('scripts')
     <script>
 
+        let tglRuningPicker = null;
         //store recent filter of grid, this varible would be use on calculating grand total
         let recFilter = {}
 
@@ -440,9 +441,20 @@
             }
         }
 
+        function onShowFormPenyusutan() {
+            if (!tglRuningPicker) {
+                tglRuningPicker = new inlineDatepicker(document.getElementById('tgl_running'), {
+                    format: 'DD-MM-YYYY',
+                    buttonClear: true,
+                });
+            }
+            $('#modal-penyusutan').modal('show');
+            
+        }
+
         function onCalcAllPenyusutan() {
             __ajax({
-                url: `${$("[base-path]").val()}/api/calcall/inventaris_penyusutan`,
+                url: `${$("[base-path]").val()}/api/calcall/inventaris_penyusutan?date_running=${tglRuningPicker.value()}`,
                 method: 'POST'
             }).then((d) => {
                 //window.open(`${$("[base-path]").val()}/${d.path}`,'blank');
@@ -451,6 +463,7 @@
                     type: 'success',
                     text: 'Penyusutan berhasil dihitung',
                 })
+                $('#modal-penyusutan').modal('hide')
             })
         }
 

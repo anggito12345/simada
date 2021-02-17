@@ -46,7 +46,7 @@ class inventaris_penyusutanAPIController extends AppBaseController
         $filter = [];
         if ($request->__isset("pidinventaris")) {
             $filter['inventaris_id'] = $request->get('pidinventaris');
-            $this->inventarisPenyusutanRepository->CalculatingPenyusutan($request->get('pidinventaris'));
+            $this->inventarisPenyusutanRepository->CalculatingPenyusutan($request->get('pidinventaris'), date('d-m-Y'));
         }
         $inventarisPenyusutan = $this->inventarisPenyusutanRepository->all(
             $filter,
@@ -155,9 +155,9 @@ class inventaris_penyusutanAPIController extends AppBaseController
     /**
      * calculating all inventaris penyusutan
      */
-    public function CalcPenyusutan() {
+    public function CalcPenyusutan(Request $request) {
         try {
-            $this->inventarisPenyusutanRepository->CalculatingAllPenyusutanData();
+            $this->inventarisPenyusutanRepository->CalculatingAllPenyusutanData($request->input('date_running'));
         } catch(Exception $e) {
             return $this->sendError($e->getMessage());
         }

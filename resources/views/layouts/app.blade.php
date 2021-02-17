@@ -29,7 +29,7 @@
             font-size: 13.5px !important;
         }
         .loading-asset {
-            background-image: url(http://localhost/simada/public/images/loading.gif);
+            background-image: url('{!! asset("images/loading.gif") !!}');
             width: 100px;
             height: 100px;
             z-index: 10001;

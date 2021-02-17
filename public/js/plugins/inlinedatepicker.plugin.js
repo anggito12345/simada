@@ -65,6 +65,8 @@ let inlineDatepicker = function(element, config) {
         dayPicker.setAttribute('disabled', 'disabled')
     }
 
+    this.config = defaultConfig;
+
     const dayPopulate = (daySelectElement) => {
         const saveRecentDayPicked = daySelectElement.value;
 
@@ -113,6 +115,18 @@ let inlineDatepicker = function(element, config) {
 
     const pad2 = function(number) {
         return (number < 10 ? '0' : '') + number
+    }
+
+    this.value = () => {
+        return element.value
+    }
+
+    this.setValue = (value) => {
+        const momentDate = moment(value, self.config.format);
+        yearPicker.value = momentDate.year()
+        monthPicker.value = parseInt(momentDate.month()+1)
+        dayPicker.value = momentDate.date()
+        self.creatingResult(true);
     }
 
     this.creatingResult = (poke) => {

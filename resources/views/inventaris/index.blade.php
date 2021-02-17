@@ -135,8 +135,6 @@ $isInventarisPage = true;
 
 <script>
   viewModel.jsLoaded.subscribe(() => {
-
-
     $("#table-penghapusan").DataTable({
       ajax: `${$("[base-path]").val()}/penghapusans`,
       dom: 'Bfrtip',
