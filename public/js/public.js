@@ -1014,15 +1014,23 @@ const __ajax = (config) => {
 
         config.error = (xmlHttpError, textStatus, errorThrown) => {
             anoErrorFunc(textStatus)
-            reject(textStatus)
 
-            console.log(xmlHttpError.responseText);
+            try {
+                reject(textStatus)
 
-            swal.fire({
-                type: 'error',
-                title: textStatus,
-                text: JSON.parse(xmlHttpError.responseText).message,
-            })
+                swal.fire({
+                    type: 'error',
+                    title: textStatus,
+                    text: JSON.parse(xmlHttpError.responseText).message,
+                })
+            } catch (error) {
+                swal.fire({
+                    type: 'error',
+                    title: 'Error',
+                    text: xmlHttpError.responseText
+                })
+            }
+            
         }
 
         $.ajax(config).then((d) => {
