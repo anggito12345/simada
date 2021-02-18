@@ -368,8 +368,9 @@ class inventarisRepository extends BaseRepository
         return $inventaris;
     }
 
-    /**
+    /*
      * insert logic
+     * function return id of inventaris
      */
     public static function InsertLogic($input, $request = null) {
         DB::beginTransaction();
@@ -496,6 +497,8 @@ class inventarisRepository extends BaseRepository
 
 
             DB::commit();
+
+            return (int)$inventaris->id;
         } catch (\Exception $e) {
 
             throw new \Exception($e->getMessage());

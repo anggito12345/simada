@@ -173,6 +173,8 @@ class importRepository extends BaseRepository {
     public function ImportInventarisNew($request) {
         $fileImport = $request->file('fileimport')->store('tmpimport');
 
+        $inventarisIDs = [];
+
         $reader = new Xlsx();
         $spreadSheet = $reader->load(Storage::disk('local')->getAdapter()->getPathPrefix() . '/' . $fileImport);
 
@@ -281,13 +283,28 @@ class importRepository extends BaseRepository {
                     
                 }
                 $inventarisRepository = new inventarisRepository(new Application());
-                $inventarisRepository->InsertLogic($data);
+                array_push($inventarisIDs, $inventarisRepository->InsertLogic($data));
             }
            
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
+
+            $firstID = null;
             
+            //flush all inserted inventaris
+            foreach ($inventarisIDs as $inventarisID) {
+                if ($firstID == null) {
+                    $firstID = $inventarisID;
+                }
+                inventaris::find($inventarisID)->delete();
+            }
+
+            //reset sequence to first id 
+            if ($firstID != null) {
+                DB::raw("ALTER SEQUENCE inventaris_id_seq RESTART WITH ".$firstID.";");    
+            }
+        
             throw new Exception($e->getMessage().PHP_EOL.$e->getLine().PHP_EOL.$e->getFile());
         } 
     }
