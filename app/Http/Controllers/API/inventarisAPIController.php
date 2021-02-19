@@ -68,12 +68,21 @@ class inventarisAPIController extends AppBaseController
 
         $hargaSatuanPerpage = 0;
 
-        $dataPerPage = $buildingModel->skip((int)$request->get('start'))->take((int)$request->get('length'))->get()->toArray();
+        $orderColumnName = $request->input('columns')[$request->input('order')[0]['column']];
+        $orderDir = $request->input('order')[0]['dir'];
+
+        $q = $buildingModel->skip((int)$request->get('start'))->take((int)$request->get('length'));
+        if (!empty($orderColumnName)) {
+            $q->orderBy($orderColumnName['data'], $orderDir);
+        }
+
+        $dataPerPage = $q->get()->toArray();
         foreach ($dataPerPage as $key => $value) {
             $hargaSatuanPerpage += (float)$value['harga_satuan'];
         }
 
         return $this->sendResponse([
+            'total_perPage' => $dataPerPage,
             'per_page' => number_format($hargaSatuanPerpage, 2),
             'all_page' => number_format(inventarisRepository::appendInventarisGridFilter(inventarisRepository::getData($isDraft), $_GET)->sum('inventaris.harga_satuan'), 2),
         ], 'Inventaris retrieved successfully');

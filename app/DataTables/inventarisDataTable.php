@@ -124,6 +124,12 @@ class inventarisDataTable extends DataTable
             $buildingModel = $buildingModel->onlyTrashed();
         }
 
+        $orderColumnName = $_GET['columns'][$_GET['order'][0]['column']];
+        $orderDir = $_GET['order'][0]['dir'];
+
+        if (!empty($orderColumnName)) {
+            $buildingModel = $buildingModel->orderBy($orderColumnName['data'], $orderDir);
+        }
         $buildingModel = inventarisRepository::getData(isset($_GET['draft']) && $_GET['draft'] != 0 ? $_GET['draft'] : null,null, $buildingModel);
 
         $buildingModel = inventarisRepository::appendInventarisGridFilter($buildingModel, $_GET);
