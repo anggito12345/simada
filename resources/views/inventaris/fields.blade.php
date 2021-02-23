@@ -99,6 +99,12 @@
     {!! Form::text('tgl_dibukukan', null, ['class' => 'form-control tgl_dibukukan','id'=>'tgl_dibukukan']) !!}
 </div>
 
+<!-- Tgl Perolehan Field -->
+<div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
+    {!! Form::label('tgl_perolehan',  __('field.tgl_perolehan').':') !!}
+    {!! Form::text('tgl_perolehan', null, ['class' => 'form-control tgl_perolehan','id'=>'tgl_perolehan']) !!}
+</div>
+
 <!-- Kode Ruang Field -->
 <!-- <div class="form-group col-sm-6 <?= !isset($idPostfix) || strpos($idPostfix, 'non-ajax') > -1 ? 'col-md-6' : 'col-md-12' ?> row">
     {!! Form::label('kode_ruang',  __('field.kode_ruang').':') !!}
@@ -600,11 +606,11 @@
                 return;
             }
 
-            let tglDibukukan = $('#tgl_dibukukan').val()
+            let tglPerolehan = $('#tgl_perolehan').val()
 
-            $($("#tgl_dibukukan").parent().find('select')[0]).val(parseInt($("#tahun_perolehan").val())).trigger('change')
+            $($("#tgl_perolehan").parent().find('select')[0]).val(parseInt($("#tahun_perolehan").val())).trigger('change')
 
-            tglDibukukanInline.creatingResult()
+            tglPerolehanInline.creatingResult()
         })
 
         $('#pidbarang').select2({
@@ -713,8 +719,16 @@
             },
             theme: 'bootstrap' ,
         })
-
+        
         const tglDibukukanInline = new inlineDatepicker(document.getElementsByClassName('tgl_dibukukan'), {
+            format: 'DD-MM-YYYY',
+            buttonClear: true,
+            readonly: {
+                //yearPicker: true
+            }
+        });
+
+        const tglPerolehanInline = new inlineDatepicker(document.getElementsByClassName('tgl_perolehan'), {
             format: 'DD-MM-YYYY',
             buttonClear: true,
             readonly: {

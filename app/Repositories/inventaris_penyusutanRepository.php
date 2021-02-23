@@ -59,7 +59,7 @@ class inventaris_penyusutanRepository extends BaseRepository
             ->selectRaw('inv.*')
             ->join('m_barang as barang', 'barang.id', '=', 'inv.pidbarang')
             ->whereRaw('
-                (DATE_PART(\'year\', AGE(now(), inv.tgl_dibukukan)) * 12)+DATE_PART(\'month\', AGE(now(), inv.tgl_dibukukan))+1 <= barang.umur_ekonomis and 
+                (DATE_PART(\'year\', AGE(now(), inv.tgl_perolehan)) * 12)+DATE_PART(\'month\', AGE(now(), inv.tgl_perolehan))+1 <= barang.umur_ekonomis and 
                 barang.umur_ekonomis != 0
             ')->get();
 
@@ -95,9 +95,9 @@ class inventaris_penyusutanRepository extends BaseRepository
             throw new \Exception("barang is empty");
         }
 
-        $yearInv = date('Y', strtotime(str_replace('/', '-',$inventaris->tgl_dibukukan)));
-        $mnInv = date('m', strtotime(str_replace('/', '-',$inventaris->tgl_dibukukan)));
-        $currentPrevYear = date('Y', strtotime('-1 year',  strtotime(str_replace('/', '-',$inventaris->tgl_dibukukan))));
+        $yearInv = date('Y', strtotime(str_replace('/', '-',$inventaris->tgl_perolehan)));
+        $mnInv = date('m', strtotime(str_replace('/', '-',$inventaris->tgl_perolehan)));
+        $currentPrevYear = date('Y', strtotime('-1 year',  strtotime(str_replace('/', '-',$inventaris->tgl_perolehan))));
         $currentPrevMonth = 12;
 
         $currentYear = $yearRunning;

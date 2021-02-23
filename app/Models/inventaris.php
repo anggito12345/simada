@@ -66,6 +66,7 @@ class inventaris extends Model
         'keterangan',
         'jumlah',
         'tgl_dibukukan',
+        'tgl_perolehan',
         'pidopd_cabang',
         'pidupt',
         'draft',
@@ -105,6 +106,7 @@ class inventaris extends Model
         'perolehan' => 'string',
         'kondisi' => 'string',
         'tgl_dibukukan' => 'date',
+        'tgl_perolehan' => 'date',
         'jumlah' => 'int',
         'lokasi_detil' => 'string',
         'umur_ekonomis' => 'integer',
@@ -165,6 +167,21 @@ class inventaris extends Model
         return date("d/m/Y", strtotime($value));
     }
 
+    public function setTglPerolehanAttribute($value)
+    {        
+        $value = date("Y-m-d", strtotime($value));
+        $this->attributes['tgl_perolehan'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
+    }
+
+
+    public function getTglPerolehanAttribute($value)
+    {
+        if ($value == "") {
+            return "";
+        }
+
+        return date("d/m/Y", strtotime($value));
+    }
 
     public function setTglDibukukanAttribute($value)
     {

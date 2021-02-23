@@ -38,6 +38,7 @@ class inventaris_mutasiRepository extends BaseRepository
         'tahun_perolehan',
         'jumlah',
         'tgl_dibukukan',
+        'tgl_perolehan',
         'satuan',
         'draft',
         'pidopd_cabang',

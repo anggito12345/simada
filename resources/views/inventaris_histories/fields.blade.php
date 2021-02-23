@@ -103,9 +103,20 @@
     {!! Form::date('tgl_dibukukan', null, ['class' => 'form-control','id'=>'tgl_dibukukan']) !!}
 </div>
 
+<!-- Tgl Perolehan Field -->
+<div class="form-group col-sm-6">
+    {!! Form::label('tgl_perolehan', 'Tgl Perolehan:') !!}
+    {!! Form::date('tgl_perolehan', null, ['class' => 'form-control','id'=>'tgl_perolehan']) !!}
+</div>
+
 @section('scripts')
     <script type="text/javascript">
         $('#tgl_dibukukan').datetimepicker({
+            format: 'YYYY-MM-DD HH:mm:ss',
+            useCurrent: false
+        })
+
+        $('#tgl_perolehan').datetimepicker({
             format: 'YYYY-MM-DD HH:mm:ss',
             useCurrent: false
         })

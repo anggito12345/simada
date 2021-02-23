@@ -43,6 +43,7 @@ class inventaris_reklasRepository extends BaseRepository
         'tahun_perolehan',
         'jumlah',
         'tgl_dibukukan',
+        'tgl_perolehan',
         'satuan',
         'pidopd_cabang',
         'pidupt',

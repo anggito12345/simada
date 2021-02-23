@@ -85,6 +85,7 @@ class inventaris_historyDataTable extends DataTable
             'tahun_perolehan',
             'jumlah',
             'tgl_dibukukan',
+            'tgl_perolehan',
             'satuan',
             'draft',
             'pidopd_cabang',

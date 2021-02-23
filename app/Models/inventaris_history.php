@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string tahun_perolehan
  * @property integer jumlah
  * @property string tgl_dibukukan
+ * @property string tgl_perolehan
  * @property integer satuan
  * @property boolean draft
  * @property integer pidopd_cabang
@@ -73,6 +74,7 @@ class inventaris_history extends Model
         'tahun_perolehan',
         'jumlah',
         'tgl_dibukukan',
+        'tgl_perolehan',
         'satuan',
         'draft',
         'pidopd_cabang',
@@ -116,6 +118,7 @@ class inventaris_history extends Model
         'tahun_perolehan' => 'string',
         'jumlah' => 'integer',
         'tgl_dibukukan' => 'date',
+        'tgl_perolehan' => 'date',
         'satuan' => 'integer',
         'draft' => 'boolean',
         'pidopd_cabang' => 'integer',
@@ -182,7 +185,23 @@ class inventaris_history extends Model
         $this->attributes['tgl_dibukukan'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
     }
 
+    public function setTglPerolehanAttribute($value)
+    {
+        $value = date("Y-m-d", strtotime($value));
+        $this->attributes['tgl_perolehan'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
+    }
+
     public function getTglDibukukanAttribute($value)
+    {
+        if ($value == "") {
+            return "";
+        }
+
+        return date("d/m/Y", strtotime($value));
+    }
+
+
+    public function getTglPerolehanAttribute($value)
     {
         if ($value == "") {
             return "";

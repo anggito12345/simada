@@ -94,6 +94,12 @@
     <p>{!! $inventarisReklas->tgl_dibukukan !!}</p>
 </div>
 
+<!-- Tgl Perolehan Field -->
+<div class="form-group">
+    {!! Form::label('tgl_perolehan', 'Tgl Perolehan:') !!}
+    <p>{!! $inventarisReklas->tgl_perolehan !!}</p>
+</div>
+
 <!-- Satuan Field -->
 <div class="form-group">
     {!! Form::label('satuan', 'Satuan:') !!}

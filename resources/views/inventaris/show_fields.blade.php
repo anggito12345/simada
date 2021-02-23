@@ -104,8 +104,14 @@
 
 <!-- Tgl Dibukukan Field -->
 <div class="row">
-    {!! Form::label('tgl_dibukukan', 'Tgl Perolehan:', ["class" => 'col-md-4 item-view']) !!}
+    {!! Form::label('tgl_dibukukan', 'Tgl Dibukukan:', ["class" => 'col-md-4 item-view']) !!}
     <p class="col-md-8 item-view">{!! $inventaris->tgl_dibukukan !!}</p>
+</div>
+
+<!-- Tgl Perolehan Field -->
+<div class="row">
+    {!! Form::label('tgl_perolehan', 'Tgl Perolehan:', ["class" => 'col-md-4 item-view']) !!}
+    <p class="col-md-8 item-view">{!! $inventaris->tgl_perolehan !!}</p>
 </div>
 
 <!-- Volume Field -->

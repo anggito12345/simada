@@ -93,6 +93,7 @@ class inventaris_reklasDataTable extends DataTable
             'tahun_perolehan',
             'jumlah',
             'tgl_dibukukan',
+            'tgl_perolehan',
             'satuan',
             'pidopd_cabang',
             'pidupt',

@@ -201,7 +201,7 @@ class importRepository extends BaseRepository {
                     
                     $data['draft'] = 1;
                     // special case for tgl perolehan
-                    $data['tgl_dibukukan'] = $activeSheet->getCell('G'.$rowIndex)->getValue().'-'.
+                    $data['tgl_perolehan'] = $activeSheet->getCell('G'.$rowIndex)->getValue().'-'.
                             $activeSheet->getCell('F'.$rowIndex)->getValue().'-'.
                             $activeSheet->getCell('E'.$rowIndex)->getValue();
                     

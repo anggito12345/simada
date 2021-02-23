@@ -33,6 +33,7 @@ class inventaris_historyRepository extends BaseRepository
         'tahun_perolehan',
         'jumlah',
         'tgl_dibukukan',
+        'tgl_perolehan',
         'satuan',
         'draft',
         'pidopd_cabang',

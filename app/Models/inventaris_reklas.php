@@ -26,6 +26,7 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string tahun_perolehan
  * @property integer jumlah
  * @property string tgl_dibukukan
+ * @property string tgl_perolehan
  * @property integer satuan
  * @property integer pidopd_cabang
  * @property integer pidupt
@@ -75,6 +76,7 @@ class inventaris_reklas extends Model
         'tahun_perolehan',
         'jumlah',
         'tgl_dibukukan',
+        'tgl_perolehan',
         'satuan',
         'pidopd_cabang',
         'pidupt',
@@ -119,6 +121,7 @@ class inventaris_reklas extends Model
         'tahun_perolehan' => 'string',
         'jumlah' => 'integer',
         'tgl_dibukukan' => 'date',
+        'tgl_perolehan' => 'date',
         'satuan' => 'integer',
         'pidopd_cabang' => 'integer',
         'pidupt' => 'integer',
@@ -163,12 +166,26 @@ class inventaris_reklas extends Model
         return date("d/m/Y", strtotime($value));
     }
 
+    public function setTglPerolehanAttribute($value)
+    {        
+        $value = date("Y-m-d", strtotime($value));
+        $this->attributes['tgl_perolehan'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
+    }
 
     public function setTglDibukukanAttribute($value)
     {        
         $value = date("Y-m-d", strtotime($value));
         $this->attributes['tgl_dibukukan'] = \Carbon\Carbon::createFromFormat('Y-m-d', $value);
     }    
+
+    public function getTglPerolehanAttribute($value)
+    {
+        if ($value == "") {
+            return "";
+        }
+
+        return date("d/m/Y", strtotime($value));
+    }
 
     public function getTglDibukukanAttribute($value)
     {
@@ -178,6 +195,7 @@ class inventaris_reklas extends Model
 
         return date("d/m/Y", strtotime($value));
     }
+    
 
     public function setReklasAtAttribute($value)
     {        
