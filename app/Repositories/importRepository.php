@@ -3,6 +3,7 @@
 namespace App\Repositories;
 
 use App\Models\barang;
+use App\Models\BaseModel;
 use App\Models\inventaris;
 use App\Models\jenisbarang;
 use App\Models\organisasi;
@@ -158,6 +159,111 @@ class importRepository extends BaseRepository {
                     $barang->umur_ekonomis = $umurEkonomis;
                     $barang->save();
                 }
+            }
+
+            DB::commit();
+        } catch (Exception $e) {
+            
+            DB::rollBack();
+            throw new Exception($e->getMessage().PHP_EOL.$e->getLine().PHP_EOL.$e->getFile());
+        }
+
+    }
+
+    public function importOrganisasiUpdate($request) {
+        $fileImport = $request->file('fileimport')->store('tmpimport');
+
+        $reader = new Xlsx();
+        $spreadSheet = $reader->load(Storage::disk('local')->getAdapter()->getPathPrefix() . '/' . $fileImport);
+
+        $activeSheet = $spreadSheet->getActiveSheet();
+
+        $rangeAlphabets = range('A', 'E');
+
+        try {
+            DB::beginTransaction();
+
+            foreach ($activeSheet->getRowIterator() as $row) {
+                $rowIndex = $row->getRowIndex();
+                if ($rowIndex == '1') {
+                    continue;
+                }
+                $kode = '';
+                $nama = '';
+                $indukOrganisasi = '';
+                $level = '';
+                $aktif = '';
+                foreach ($rangeAlphabets as $alphabet) {
+                    switch($alphabet) {
+                        // a for kode
+                        case "A": {
+                            $kode = $activeSheet->getCell($alphabet.$rowIndex)->getValue();
+                            break;
+                        }
+                        // 'B' for nama
+                        case "B": {
+                            $nama = $activeSheet->getCell($alphabet.$rowIndex)->getValue();
+                            break;
+                        }
+
+                        // 'C' for induk organisasi
+                        case "C": {
+                            $indukOrganisasi = $activeSheet->getCell($alphabet.$rowIndex)->getValue();
+                            break;
+                        }
+
+                        // 'D' for level as string
+                        case "D": {
+                            $level = $activeSheet->getCell($alphabet.$rowIndex)->getValue();
+                            break;
+                        }
+                        // 'E' for aktif as string
+                        case "E": {
+                            $aktif = $activeSheet->getCell($alphabet.$rowIndex)->getValue();
+                            break;
+                        }
+                    }
+                }
+
+                $whereFilter = [];
+                if ($kode != '') {
+                    //check data organisasi by kode
+                    $organisasi = organisasi::where('kode', $kode)->first();
+                }
+
+                if (empty($organisasi) && $nama != '') {
+                    $organisasi = organisasi::whereRaw('LOWER(nama) = \''.strtolower($nama).'\'')->first();
+                }
+
+                if (!empty($organisasi)) {
+                    $organisasi->nama = $nama;
+                    $organisasi->kode = $kode;
+                    //check induk organisasi by kode
+                    if ($indukOrganisasi != '') {
+                        $dataIndukOrganisasi = organisasi::where('kode', $indukOrganisasi)->first();
+                        
+                        if (!empty($dataIndukOrganisasi)) {
+                            $organisasi->pid = $dataIndukOrganisasi->id;
+                        }
+                    }
+
+                    //level check the name
+                    foreach (BaseModel::$kelompokLevelDs as $key => $value) {
+                        # code...
+                        if (strtolower($value) == strtolower($level)) {
+                            $organisasi->level = $key;
+                        }
+                    }
+
+                    $organisasi->aktif = 0;
+
+                    if (strtolower($aktif) == 'aktif') {
+                        $organisasi->aktif = 1;
+                    }
+
+                    $organisasi->save();
+                }
+                
             }
 
             DB::commit();

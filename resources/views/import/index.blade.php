@@ -71,6 +71,30 @@
                 </div>
             </div>
         </div>
+
+        <div class="box box-primary">
+            <div class="box-header">
+                Master Organisasi
+            </div>
+            <div class="box-body">
+                <div class="row">
+                    <div class="col-lg-3 col-xs-6">
+                        <div class="small-box bg-red">
+                            <div class="inner">
+                                <h3>*</h3>
+
+                                <p>Update</p>
+                            </div>
+                            <div class="icon">
+                                <!-- <img src="{!! asset('images/icons/icon_new_list.png') !!}" width=40 class="opacity-8" /> -->
+                                <i class="fa fa-users"></i>
+                            </div>
+                            <a href="#" onclick="doUpload('master-organisasi', 'update')" class="small-box-footer">Import <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                </div>
+            </div>
+        </div>
         <div class="text-center">
 
         </div>

@@ -28,6 +28,8 @@ class importAPIController extends AppBaseController {
                 $this->importRepository->ImportInventarisNew($request);
             } else if ($request->input('type') == 'master-barang' && $request->input('act') == 'update') {
                 $this->importRepository->importBarangUpdate($request);
+            } else if ($request->input('type') == 'master-organisasi' && $request->input('act') == 'update') {
+                $this->importRepository->importOrganisasiUpdate($request);
             }
             
         } catch (Exception $e) {

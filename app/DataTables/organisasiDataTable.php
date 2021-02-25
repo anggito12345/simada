@@ -22,6 +22,14 @@ class organisasiDataTable extends DataTable
         $dataTable = new EloquentDataTable($query);
 
         return $dataTable
+            ->addColumn('induk_organisasi', function($d) {
+                $organisasi = organisasi::find($d->pid);
+                if (!empty($organisasi)) {
+                    return $organisasi->nama;
+                } 
+
+                return '';
+            })
             ->addColumn('action', 'organisasis.datatables_actions');
     }
 
@@ -95,6 +103,7 @@ class organisasiDataTable extends DataTable
             // 'pid',
             'kode',
             'nama',
+            'induk_organisasi',
             // 'jenis',
             // 'alamat',
             // 'aktif'

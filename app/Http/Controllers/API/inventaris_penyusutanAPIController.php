@@ -214,6 +214,24 @@ class inventaris_penyusutanAPIController extends AppBaseController
             ]);
         }
 
+        if ($request->__isset("f_jenisbarangs")) {
+            array_push($filter, [
+                'barang.kode_jenis' => $request->input('f_jenisbarangs')
+            ]);
+        }
+
+        if ($request->__isset("f_kodeobjek")) {
+            array_push($filter, [
+                'barang.kode_objek' => $request->input('f_kodeobjek')
+            ]);
+        }
+
+        if ($request->__isset("f_koderincianobjek")) {
+            array_push($filter, [
+                'barang.kode_rincian_objek' => $request->input('f_koderincianobjek')
+            ]);
+        }
+
         $asetExp = new ReportInventarisExport($filename, $filter);
         $exportTo = "excel";
         $ext = ".xlsx";

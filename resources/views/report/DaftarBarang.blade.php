@@ -16,16 +16,30 @@
                 <label>Filter</label>
                 <div class="row">
                     <div class="col-md-3 col-lg-3 col-xs-12 col-sm-12">
+                        {{ Form::label('jenisbarangs_filter', 'Kelompok:') }}
+                        {{ Form::select('jenisbarangs_filter', [], 0, ['class' => 'form-control']) }}
+                    </div>
+                    <div class="col-md-3 col-lg-3 col-xs-12 col-sm-12">
+                        {{ Form::label('kodeobjek_filter', 'Objek:') }}
+                        {{ Form::select('kodeobjek_filter', [], 0, ['class' => 'form-control']) }}
+                    </div>
+                    <div class="col-md-3 col-lg-3 col-xs-12 col-sm-12">
+                        {{ Form::label('koderincianobjek_filter', 'Rincian Objek:') }}
+                        {{ Form::select('koderincianobjek_filter', [], 0, ['class' => 'form-control']) }}
+                    </div>
+                </div>
+                <div class="row">
+                    <div class="col-md-3 col-lg-3 col-xs-12 col-sm-12">
                         {{ Form::label('penggunafilter', 'Pengguna:') }}
-                        {{ Form::select('penggunafilter', [], 0, ['class' => 'form-control', 'onchange' => 'viewModel.changeEvent.changeRefreshGrid()']) }}
+                        {{ Form::select('penggunafilter', [], 0, ['class' => 'form-control']) }}
                     </div>
                     <div class="col-md-3 col-lg-3 col-xs-12 col-sm-12">
                         {{ Form::label('kuasapengguna_filter', 'Kuasa Pengguna:') }}
-                        {{ Form::select('kuasapengguna_filter', [], 0, ['class' => 'form-control', 'onchange' => 'viewModel.changeEvent.changeRefreshGrid()']) }}
+                        {{ Form::select('kuasapengguna_filter', [], 0, ['class' => 'form-control']) }}
                     </div>
                     <div class="col-md-3 col-lg-3 col-xs-12 col-sm-12">
                         {{ Form::label('subkuasa_filter', 'Sub Kuasa Pengguna:') }}
-                        {{ Form::select('subkuasa_filter', [], 0, ['class' => 'form-control', 'onchange' => 'viewModel.changeEvent.changeRefreshGrid()']) }}
+                        {{ Form::select('subkuasa_filter', [], 0, ['class' => 'form-control']) }}
                     </div>
                 </div>
             </div>
@@ -122,6 +136,97 @@
 <script>
 
     $(document).ready(() => {
+
+        $("#jenisbarangs_filter").select2({
+            ajax: {
+                url: "<?= url('api/jenisbarangs') ?>",
+                dataType: 'json',
+                data: function (params) {
+
+                    return params;
+                },
+                processResults: function (data) {
+                    // Transforms the top-level key of the response object from 'items' to 'results'
+                    return {
+                        results: data.data.map((d) => {
+                            d.text = d.nama
+                            d.id = parseInt(d.kode)
+
+                            return d
+                        })
+                    };
+                }
+            },
+            theme: 'bootstrap' ,
+        })
+
+        $('#jenisbarangs_filter').on('change', function (e) {
+            $("#kodeobjek_filter").val("").trigger("change")
+        });
+
+        $("#kodeobjek_filter").select2({
+            ajax: {
+                url: "<?= url('api/barangs') ?>",
+                dataType: 'json',
+                data: function (params) {
+                    idInput = $(this)[0].id
+
+                    params.kode_jenis = $("#jenisbarangs_filter").val()
+
+                    return params;
+                },
+                processResults: function (data) {
+                    // Transforms the top-level key of the response object from 'items' to 'results'
+                    return {
+                        results: data.data.map((d) => {
+                            d.text = d.nama_rek_aset
+                            d.id = d.id
+                            return d
+                        })
+                    };
+                },
+            },
+            theme: 'bootstrap' ,
+        })
+
+        $('#kodeobjek_filter').on('change', function (e) {
+            $("#koderincianobjek_filter").val("").trigger("change")
+        });
+
+        $("#koderincianobjek_filter").select2({
+            ajax: {
+                url: "<?= url('api/barangs') ?>",
+                dataType: 'json',
+                data: function (params) {
+                    idInput = $(this)[0].id
+
+
+                    params.kode_objek = $("#kodeobjek_filter").select2('data')[0].kode_objek
+                    params.kode_jenis = $("#jenisbarangs_filter").val()
+
+                    return params;
+                },
+                processResults: function (data) {
+                    // Transforms the top-level key of the response object from 'items' to 'results'
+                    return {
+                        results: data.data.map((d) => {
+                            d.text = d.nama_rek_aset
+                            d.id = d.id
+                            return d
+                        })
+                    };
+                },
+
+            },
+            theme: 'bootstrap' ,
+        })
+
+        $('#koderincianobjek_filter').on('change', function (e) {
+            viewModel.changeEvent.changeRefreshGrid()
+        });
+
+        
+
         $("#penggunafilter").select2({
             ajax: {
                 url: "<?= url('api/organisasis') ?>",
@@ -201,6 +306,36 @@
             theme: 'bootstrap' ,
         })
 
+        $('#subkuasa_filter').on('change', function (e) {
+            viewModel.changeEvent.changeRefreshGrid()
+        });
+
+        // d is Base filter
+        function filterAppend(d) {
+            if ($("[name=jenisbarangs_filter]").data("select2"))
+                d.f_jenisbarangs = $("[name=jenisbarangs_filter]").select2("val")
+
+            if ($("[name=kodeobjek_filter]").data("select2") && $("[name=kodeobjek_filter]").select2("data").length > 0)
+                d.f_kodeobjek = $("[name=kodeobjek_filter]").select2("data")[0].kode_objek
+
+            if ($("[name=koderincianobjek_filter]").data("select2") && $("[name=koderincianobjek_filter]").select2("data").length > 0)
+                d.f_koderincianobjek = $("[name=koderincianobjek_filter]").select2("data")[0].kode_rincian_objek
+
+            if ($("[name=kodesubrincianobjek_filter]").data("select2") && $("[name=kodesubrincianobjek_filter]").select2("data").length > 0)
+                d.f_kodesubrincianobjek = $("[name=kodesubrincianobjek_filter]").select2("data")[0].kode_sub_rincian_objek
+
+            if ($("[name=penggunafilter]").data("select2") && $("[name=penggunafilter]").select2("data").length > 0)
+                d.f_penggunafilter = $("[name=penggunafilter]").select2("val")
+
+            if ($("[name=kuasapengguna_filter]").data("select2") && $("[name=kuasapengguna_filter]").select2("data").length > 0)
+                d.f_kuasapengguna_filter = $("[name=kuasapengguna_filter]").select2("val")
+
+            if ($("[name=subkuasa_filter]").data("select2") && $("[name=subkuasa_filter]").select2("data").length > 0)
+                d.f_subkuasa_filter = $("[name=subkuasa_filter]").select2("val")
+
+            return d
+        }
+
         function firstLoad() {
             let pemeliharaanHargaTotal = 0
 
@@ -210,14 +345,8 @@
                     dataType: "json",
                     data: (d) => {
                         d.filter = {}
-                        if ($("[name=penggunafilter]").data("select2") && $("[name=penggunafilter]").select2("data").length > 0)
-                            d.f_penggunafilter = $("[name=penggunafilter]").select2("val")
 
-                        if ($("[name=kuasapengguna_filter]").data("select2") && $("[name=kuasapengguna_filter]").select2("data").length > 0)
-                            d.f_kuasapengguna_filter = $("[name=kuasapengguna_filter]").select2("val")
-
-                        if ($("[name=subkuasa_filter]").data("select2") && $("[name=subkuasa_filter]").select2("data").length > 0)
-                            d.f_subkuasa_filter = $("[name=subkuasa_filter]").select2("val")
+                        d = filterAppend(d);
 
                         return d
                     },
@@ -239,14 +368,9 @@
                                     let data = {
                                         to: 'excel'
                                     }
-                                    if ($("[name=penggunafilter]").data("select2") && $("[name=penggunafilter]").select2("data").length > 0)
-                                        data.f_penggunafilter = $("[name=penggunafilter]").select2("val")
 
-                                    if ($("[name=kuasapengguna_filter]").data("select2") && $("[name=kuasapengguna_filter]").select2("data").length > 0)
-                                        data.f_kuasapengguna_filter = $("[name=kuasapengguna_filter]").select2("val")
+                                    data = filterAppend(data)
 
-                                    if ($("[name=subkuasa_filter]").data("select2") && $("[name=subkuasa_filter]").select2("data").length > 0)
-                                        data.f_subkuasa_filter = $("[name=subkuasa_filter]").select2("val")
                                     for (let d in data)
                                         ret.push(encodeURIComponent(d) + '=' + encodeURIComponent(data[d]));
 

@@ -162,7 +162,9 @@ class ReportInventarisExport extends BaseExport
 
         $reportRepository = new reportRepository(new Application());
 
-        $DATA_DAFTAR_BARANG = $reportRepository->GetDataDaftarBarang(false, []);
+        $DATA_DAFTAR_BARANG = $reportRepository->GetDataDaftarBarang(false, [
+            'filters' => $this->filters
+        ]);
 
         $this->renderGrid($DATA_DAFTAR_BARANG, [
             'columnMapping' => [
