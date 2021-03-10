@@ -95,14 +95,17 @@ let GoogleMapInput = function(element, config) {
             const containerInputGroup = document.createElement('div')
             containerInputGroup.className = 'input-group'
 
-
-
             if (!self.defaultConfig.draw) {
                 inputMaskingElement = element.cloneNode(true)
                 inputMaskingElement.style.display = 'block'
             } else {
                 inputMaskingElement = document.createElement('textarea')
-                inputMaskingElement.value = Object.keys(self.defaultConfig.value).length == 0 ? '' : self.defaultConfig.value;
+                if (self.defaultConfig.value == null) {
+                    inputMaskingElement.value = {}
+                } else {
+                    inputMaskingElement.value = Object.keys(self.defaultConfig.value).length == 0 ? '' : self.defaultConfig.value;   
+                }
+                
                 inputMaskingElement.style.display = 'block'
             }
 
@@ -408,7 +411,23 @@ let GoogleMapInput = function(element, config) {
 
 
         const initValue = (value) => {
-            if (value != "" && value != null && !self.defaultConfig.draw) {
+            if (Array.isArray(value)) {
+                
+
+                if (self.marker != null) {
+                    source.clear();
+                    // source.removeFeature(self.marker)
+                }
+                value.forEach((d) => {
+                    console.log(d)
+                    let splittedValue = d.value.split(",")
+                    if (splittedValue.length < 2) {
+                        console.error("doesn't support fomat value!")
+                        return;
+                    }
+                    createLayer(splittedValue)
+                })
+            } else if (value != "" && value != null && !self.defaultConfig.draw) {
                 let splittedValue = value.split(",")
                 if (splittedValue.length < 2) {
                     console.error("doesn't support fomat value!")

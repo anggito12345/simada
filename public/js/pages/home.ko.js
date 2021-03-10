@@ -253,10 +253,22 @@ function makeHomeMap() {
     const element = document.getElementById('home-map-container');
     $(element).html(`<i class="fa fa-refresh fa-spin fa-lg fa-fw"></i> Mohon tunggu...`);
 
-    new GoogleMapInput(element, {
-        autoClose: false,
-        isNotInput: true,
-    });
+    __ajax({
+        url: `${$("[base-path]").val()}/api/aset/tanah`
+    }).then((d) => {
+        d.map((data) => {
+            data.value = `${data.koordinat_longitude},${data.koordinat_latitude}`
+            return 
+        })
+
+
+        new GoogleMapInput(element, {
+            autoClose: false,
+            isNotInput: true,
+            value: d
+        });
+    })
+    
 }
 
 /**

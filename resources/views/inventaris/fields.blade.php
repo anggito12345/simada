@@ -8,7 +8,7 @@
     {!! Form::label('pidbarang', 'Barang') !!}
     <div class="row">
         <div class="col-md-4">
-            {!! Form::text('kodebarang', null, ['class' => 'form-control','style' => 'margin:1px -15px 0 0px; float:left', 'readonly' => true]) !!}
+            {!! Form::text('kodebarang', null, ['class' => 'form-control','style' => 'margin:1px -15px 0 0px; float:left', 'disabled' => true]) !!}
         </div>
         <div class="col-md-8">
             {!! Form::text('pidbarang', null, ['class' => 'form-control baranglookup', 'id' => 'baranglookup']) !!}
@@ -36,7 +36,7 @@
         <div class="input-group-prepend">
             <span class="input-group-text" id="basic-addon1">Rp.</span>
         </div>
-        {!! Form::text('harga_satuan', null, ['class' => 'form-control', 'required' => true, "disabled"]) !!}
+        {!! Form::text('harga_satuan', null, ['class' => 'form-control', 'required' => true]) !!}
     </div>
 </div>
 @else
@@ -57,7 +57,7 @@
             @if(isset($inventaris))
             {!! Form::label('jumlah', 'Jumlah') !!} <span class="text-danger">*</span>
             <div class="input-group col-md-12 no-padding mr-2">
-                {!! Form::number('jumlah',  (isset($inventaris) ? $inventaris->jumlah : 1 ), ['class' => 'form-control', 'max' => 9999999, 'required' => true, "disabled"]) !!}
+                {!! Form::number('jumlah',  (isset($inventaris) ? $inventaris->jumlah : 1 ), ['class' => 'form-control', 'max' => 9999999, 'required' => true]) !!}
             </div>
             @else
             {!! Form::label('jumlah', 'Jumlah') !!} <span class="text-danger">*</span>

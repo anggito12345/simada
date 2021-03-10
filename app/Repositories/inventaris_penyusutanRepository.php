@@ -73,7 +73,7 @@ class inventaris_penyusutanRepository extends BaseRepository
      * calculating penyusutan one data
      */
     public function CalculatingPenyusutan($inventaris_id, $dateRunning) {
-        $inventaris = inventaris::withTrashed()->find((int)$inventaris_id);
+        $inventaris = inventaris::withTrashed()->withDrafts()->find((int)$inventaris_id);
         if (empty($inventaris)) {
             throw new \Exception("inventaris is empty");
         }

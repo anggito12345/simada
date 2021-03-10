@@ -90,6 +90,7 @@ class barangDataTable extends DataTable
             'id',
             'kode_akun',
             'kode_kelompok',
+            'kode_jenis',
             'kode_objek',
             'kode_rincian_objek',
             'kode_sub_rincian_objek',
