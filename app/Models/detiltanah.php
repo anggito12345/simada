@@ -56,6 +56,7 @@ class detiltanah extends Model
         'keterangan',
         'nilai_hub',
         'tipe',
+        'geom'
 
     ];
 

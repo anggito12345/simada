@@ -47,6 +47,17 @@ class inventarisRepository extends BaseRepository
         return inventaris::class;
     }
 
+    public static function toObject($json_string) {
+        $obj = json_decode($json_string);
+
+        while(is_string($obj)) {
+            $obj = json_decode($obj);
+        };
+
+        return $obj;
+
+    }
+
     /**
      * its called when penghapusan needed to get data inventaris
      *
@@ -58,21 +69,36 @@ class inventarisRepository extends BaseRepository
     public static function saveKib($dataKib, $tipe) {
         $rules = [];
 
+        if(array_key_exists('koordinattanah', $dataKib)) {
+
+            $koordinattanah = self::toObject($dataKib['koordinattanah']);
+
+            $geomString = "";
+
+            foreach ($koordinattanah->features[0]->geometry->coordinates[0] as $key => $value) {
+                # code...
+                $geomString .= $value[0]." ".$value[1];
+                if ($key !=  count($koordinattanah->features[0]->geometry->coordinates[0]) - 1) {
+                    $geomString .= ",";
+                }
+            }
+
+            $dataKib['geom'] = "POLYGON((".$geomString."))";
+
+            if (is_array($dataKib['koordinattanah'])) {
+                $dataKib['koordinattanah'] = json_encode($dataKib['koordinattanah']);
+            }
+        }
+
         switch ($tipe) {
             case 'A':
                 $rules = \App\Models\detiltanah::$rules;
-                $validator = Validator::make($dataKib, $rules);
-
+                $validator = Validator::make($dataKib, $rules);                
                 if ($validator->fails()) {
                     throw new \Exception($validator);
                     return;
                 }
-
-                if(array_key_exists('koordinattanah', $dataKib) && is_array($dataKib['koordinattanah'])) {
-                    $dataKib['koordinattanah'] = json_encode($dataKib['koordinattanah']);
-                }
-
-
+                
                 if (array_key_exists('tgl_sertifikat', $dataKib)) {
                     $dataKib['tgl_sertifikat'] = date("Y-m-d", strtotime($dataKib['tgl_sertifikat']));
                 } else {
