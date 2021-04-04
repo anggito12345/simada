@@ -75,18 +75,20 @@ class inventarisRepository extends BaseRepository
 
             $geomString = "";
 
-            foreach ($koordinattanah->features[0]->geometry->coordinates[0] as $key => $value) {
-                # code...
-                $geomString .= $value[0]." ".$value[1];
-                if ($key !=  count($koordinattanah->features[0]->geometry->coordinates[0]) - 1) {
-                    $geomString .= ",";
+            if (is_object($koordinattanah != NULL)) {
+                foreach ($koordinattanah->features[0]->geometry->coordinates[0] as $key => $value) {
+                    # code...
+                    $geomString .= $value[0]." ".$value[1];
+                    if ($key !=  count($koordinattanah->features[0]->geometry->coordinates[0]) - 1) {
+                        $geomString .= ",";
+                    }
                 }
-            }
-
-            $dataKib['geom'] = "POLYGON((".$geomString."))";
-
-            if (is_array($dataKib['koordinattanah'])) {
-                $dataKib['koordinattanah'] = json_encode($dataKib['koordinattanah']);
+    
+                $dataKib['geom'] = "POLYGON((".$geomString."))";
+    
+                if (is_array($dataKib['koordinattanah'])) {
+                    $dataKib['koordinattanah'] = json_encode($dataKib['koordinattanah']);
+                }
             }
         }
 
@@ -97,6 +99,10 @@ class inventarisRepository extends BaseRepository
                 if ($validator->fails()) {
                     throw new \Exception($validator);
                     return;
+                }
+
+                if(array_key_exists('luas', $dataKib)) {
+                    $dataKib['luas'] = str_replace('.', '', $dataKib['luas']);
                 }
                 
                 if (array_key_exists('tgl_sertifikat', $dataKib)) {

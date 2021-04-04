@@ -36,13 +36,83 @@
                             <div class="inner">
                                 <h3>*</h3>
 
-                                <p>Baru</p>
+                                <p>Tanah</p>
+                            </div>
+                            <div class="icon">
+                                <!-- <img src="{!! asset('images/icons/icon_new_list.png') !!}" width=40 class="opacity-8" /> -->
+                                <i class="ion ion-earth"></i>
+                            </div>
+                            <a href="#" onclick="doUpload('inventaris', 'detil_tanah')" class="small-box-footer">Import <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-xs-6">
+                        <div class="small-box bg-aqua">
+                            <div class="inner">
+                                <h3>*</h3>
+
+                                <p>Bangunan</p>
+                            </div>
+                            <div class="icon">
+                                <!-- <img src="{!! asset('images/icons/icon_new_list.png') !!}" width=40 class="opacity-8" /> -->
+                                <i class="fa fa-building"></i>
+                            </div>
+                            <a href="#" onclick="doUpload('inventaris', 'detil_bangunan')" class="small-box-footer">Import <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-xs-6">
+                        <div class="small-box bg-aqua">
+                            <div class="inner">
+                                <h3>*</h3>
+
+                                <p>Jalan</p>
+                            </div>
+                            <div class="icon">
+                                <!-- <img src="{!! asset('images/icons/icon_new_list.png') !!}" width=40 class="opacity-8" /> -->
+                                <i class="fa fa-road"></i>
+                            </div>
+                            <a href="#" onclick="doUpload('inventaris', 'detil_jalan')" class="small-box-footer">Import <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-xs-6">
+                        <div class="small-box bg-aqua">
+                            <div class="inner">
+                                <h3>*</h3>
+
+                                <p>Konstruksi</p>
                             </div>
                             <div class="icon">
                                 <!-- <img src="{!! asset('images/icons/icon_new_list.png') !!}" width=40 class="opacity-8" /> -->
                                 <i class="ion ion-ios-albums"></i>
                             </div>
-                            <a href="#" onclick="doUpload('inventaris', 'baru')" class="small-box-footer">Import <i class="fa fa-arrow-circle-right"></i></a>
+                            <a href="#" onclick="doUpload('inventaris', 'detil_konstruksi')" class="small-box-footer">Import <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-xs-6">
+                        <div class="small-box bg-aqua">
+                            <div class="inner">
+                                <h3>*</h3>
+
+                                <p>Mesin</p>
+                            </div>
+                            <div class="icon">
+                                <!-- <img src="{!! asset('images/icons/icon_new_list.png') !!}" width=40 class="opacity-8" /> -->
+                                <i class="fa fa-car"></i>
+                            </div>
+                            <a href="#" onclick="doUpload('inventaris', 'detil_mesin')" class="small-box-footer">Import <i class="fa fa-arrow-circle-right"></i></a>
+                        </div>
+                    </div>
+                    <div class="col-lg-3 col-xs-6">
+                        <div class="small-box bg-aqua">
+                            <div class="inner">
+                                <h3>*</h3>
+
+                                <p>Aset</p>
+                            </div>
+                            <div class="icon">
+                                <!-- <img src="{!! asset('images/icons/icon_new_list.png') !!}" width=40 class="opacity-8" /> -->
+                                <i class="ion ion-ios-albums"></i>
+                            </div>
+                            <a href="#" onclick="doUpload('inventaris', 'detil_aset')" class="small-box-footer">Import <i class="fa fa-arrow-circle-right"></i></a>
                         </div>
                     </div>
                 </div>
