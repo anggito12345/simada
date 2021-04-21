@@ -74,8 +74,8 @@ class inventarisRepository extends BaseRepository
             $koordinattanah = self::toObject($dataKib['koordinattanah']);
 
             $geomString = "";
-
-            if (is_object($koordinattanah != NULL)) {
+            
+            if (is_object($koordinattanah)) {
                 foreach ($koordinattanah->features[0]->geometry->coordinates[0] as $key => $value) {
                     # code...
                     $geomString .= $value[0]." ".$value[1];
@@ -513,10 +513,6 @@ class inventarisRepository extends BaseRepository
             $inventarisHistory = new inventaris_historyRepository(new Application());
             $inventarisHistory->postHistory($inventarisHistoryData, Constant::$ACTION_HISTORY['NEW']);
 
-
-
-
-
             if ($input['id_sensus'] != null && $input['is_ubah_satuan'] != null) {
 
                 $sensus = inventaris_sensus::find((int)$input['id_sensus']);
@@ -532,8 +528,6 @@ class inventarisRepository extends BaseRepository
 
             return (int)$inventaris->id;
         } catch (\Exception $e) {
-
-            throw new \Exception($e->getMessage());
 
             DB::rollBack();
 

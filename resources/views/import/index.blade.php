@@ -223,6 +223,13 @@
                 processData: false,
                 contentType: false,
             }).then((d) => {
+                swal.fire({
+                    type: "success",
+                    text: "Berhasil import data!",
+                    onClose: () => {
+                        // $("#table-inventaris").DataTable().ajax.reload();
+                    }
+                })
             })
         }
     }

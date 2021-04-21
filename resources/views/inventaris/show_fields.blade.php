@@ -147,7 +147,7 @@
 <!-- Kondisi Field -->
 <div class="row">
     {!! Form::label('kondisi', 'Kondisi:', ["class" => 'col-md-4 item-view']) !!}
-    <p class="col-md-8 item-view">{!! \App\Models\BaseModel::$kondisiDs[$inventaris->kondisi] !!}</p>
+    <p class="col-md-8 item-view">{!! $inventaris->kondisi != "" ? \App\Models\BaseModel::$kondisiDs[$inventaris->kondisi] : $inventaris->kondisi !!}</p>
 </div>
 
 <!-- Lokasi Detil Field -->

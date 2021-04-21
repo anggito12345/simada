@@ -275,8 +275,7 @@ class importRepository extends BaseRepository {
 
     }
 
-
-    public function ImportInventarisNew($request) {
+    public function ImportDetilTanah($request) {
         $fileImport = $request->file('fileimport')->store('tmpimport');
 
         $inventarisIDs = [];
@@ -288,7 +287,7 @@ class importRepository extends BaseRepository {
 
        
 
-        $rangeAlphabets = range('A', 'I');
+        $rangeAlphabets = range('A', 'R');
 
         try {
             DB::beginTransaction();
@@ -296,6 +295,10 @@ class importRepository extends BaseRepository {
                 $data = [
                     'is_ubah_satuan' => null,
                     'id_sensus' => null
+                ];
+
+                $dataKIB = [
+                    'luas' => 0
                 ];
 
                 $rowIndex = $row->getRowIndex();
@@ -307,9 +310,13 @@ class importRepository extends BaseRepository {
                     
                     $data['draft'] = 1;
                     // special case for tgl perolehan
-                    $data['tgl_perolehan'] = $activeSheet->getCell('G'.$rowIndex)->getValue().'-'.
-                            $activeSheet->getCell('F'.$rowIndex)->getValue().'-'.
-                            $activeSheet->getCell('E'.$rowIndex)->getValue();
+                    $data['tgl_perolehan'] = $activeSheet->getCell('J'.$rowIndex)->getValue().'-'.
+                            $activeSheet->getCell('I'.$rowIndex)->getValue().'-'.
+                            $activeSheet->getCell('H'.$rowIndex)->getValue();
+
+                    $data['tgl_dibukukan'] = $activeSheet->getCell('M'.$rowIndex)->getValue().'-'.
+                            $activeSheet->getCell('L'.$rowIndex)->getValue().'-'.
+                            $activeSheet->getCell('K'.$rowIndex)->getValue();
                     
                     switch($alphabet) {
                         // a for id barang or kode barang
@@ -318,47 +325,15 @@ class importRepository extends BaseRepository {
                             $data['kode_barang'] = inventarisRepository::kodeBarang($data['pidbarang']);
                             break;
                         }
-                        // 'G' for tahun perolehan
-                        case "G": {
-                            $data['tahun_perolehan'] = $activeSheet->getCell($alphabet.$rowIndex)->getValue();
-                            break;
-                        }
-                        // 'D' for harga satuan
-                        case "D": {
-                            $hargaSatuan = $activeSheet->getCell($alphabet.$rowIndex)->getFormattedValue();
 
-                            if (strpos($hargaSatuan, '.') > 0) {
-                                $hargaSatuan = explode('.', $hargaSatuan)[0].','.explode('.', $hargaSatuan)[1];
-                            }
-                            $data['harga_satuan'] = $hargaSatuan;
-                            break;
-                        }
                         // 'B' for jumlah
                         case "B": {
                             $data['jumlah'] = $activeSheet->getCell($alphabet.$rowIndex)->getValue();
                             break;
                         }
-    
-                        // 'H' for kode pengguna barang
-                        case "H": {
-                            $organisasi = organisasi::where('kode',$activeSheet->getCell($alphabet.$rowIndex)->getValue())->first();
-                            if (!empty($organisasi)) {
-                                $data['pidopd'] = $organisasi->id;
-                            }   
-                            break;
-                        }
-    
-                        // 'I' for kode kuasa pengguna barang
-                        case "I": {
-                            $organisasi = organisasi::where('kode',$activeSheet->getCell($alphabet.$rowIndex)->getValue())->first();
-                            if (!empty($organisasi)) {
-                                $data['pidopd_cabang'] = $organisasi->id;
-                            }   
-                            break;
-                        }
-    
-                        // 'C' for jumlah
-                        case "C": {
+
+                         // 'C' for jumlah
+                         case "C": {
 
                             $satuanAsText = $activeSheet->getCell($alphabet.$rowIndex)->getValue();
                             $satuanAsDataDB = satuanbarang::whereRaw('LOWER(nama) = \''.strtolower($satuanAsText).'\'')->first();
@@ -373,7 +348,80 @@ class importRepository extends BaseRepository {
                             }
                             break;
                         }
-    
+
+                        // 'D' for luas
+                        case "D": {
+                            $luas = $activeSheet->getCell($alphabet.$rowIndex)->getValue();
+                            // if (strpos($luas, '.') > 0) {
+                            //     $luas = explode('.', $luas)[0].','.explode('.', $luas)[1];
+                            // }
+                            $dataKIB['luas'] = $luas;
+                            break;
+                        }
+                        // 'E' for alamat
+                        case "E": {
+                            $dataKIB['alamat'] = $activeSheet->getCell($alphabet.$rowIndex)->getValue();
+                            break;
+                        }
+
+                        // 'F' for alamat
+                        case "F": {
+                            $koordinat = $activeSheet->getCell($alphabet.$rowIndex)->getValue();
+                            if (!empty($koordinat)) {
+                                $im = explode(",",str_replace(" ","", $koordinat));
+                                $dataKIB['koordinatlokasi'] = $im[1] . "," . $im[0];
+                            }
+                            
+                            break;
+                        }
+
+                        // 'D' for harga satuan
+                        case "G": {
+                            $hargaSatuan = $activeSheet->getCell($alphabet.$rowIndex)->getValue();
+
+                            $data['harga_satuan'] = $hargaSatuan;
+                            break;
+                        }
+
+                        // 'J' for tahun perolehan
+                        case "J": {
+                            $data['tahun_perolehan'] = $activeSheet->getCell($alphabet.$rowIndex)->getValue();
+                            break;
+                        }
+
+                        // 'N' for kode_pengguna_barang
+                        case "N": {
+                            $organisasi = organisasi::where('kode',$activeSheet->getCell($alphabet.$rowIndex)->getValue())->first();
+                            if (!empty($organisasi)) {
+                                $data['pidopd'] = $organisasi->id;
+                            }   
+                            break;
+                        }
+
+                        // 'O' for kode kuasa pengguna barang
+                        case "O": {
+                            $organisasi = organisasi::where('kode',$activeSheet->getCell($alphabet.$rowIndex)->getValue())->first();
+                            if (!empty($organisasi)) {
+                                $data['pidopd_cabang'] = $organisasi->id;
+                            }   
+                            break;
+                        }
+
+                        // 'P' for kode kuasa sub pengguna barang
+                        case "P": {
+                            $organisasi = organisasi::where('kode',$activeSheet->getCell($alphabet.$rowIndex)->getValue())->first();
+                            if (!empty($organisasi)) {
+                                $data['pidopd_cabang'] = $organisasi->id;
+                            }   
+                            break;
+                        }
+
+                        // 'Q' for kode kuasa sub pengguna barang
+                        case "Q": {
+                            $dataKIB['keterangan'] = $activeSheet->getCell($alphabet.$rowIndex)->getValue();
+                            break;
+                        }
+
                     }
     
                     $data['tipe_kib']  = '';
@@ -385,7 +433,11 @@ class importRepository extends BaseRepository {
                             $data['tipe_kib'] = $jenisBarang->kelompok_kib;
                         }
                     }
-                    $data['kib'] = '{}';
+                    if ($dataKIB['luas'] == '') {
+                        $dataKIB['luas'] = 0;
+                    }
+
+                    $data['kib'] = json_encode($dataKIB);
                     
                 }
                 $inventarisRepository = new inventarisRepository(new Application());
@@ -403,7 +455,11 @@ class importRepository extends BaseRepository {
                 if ($firstID == null) {
                     $firstID = $inventarisID;
                 }
-                inventaris::find($inventarisID)->delete();
+                $inventaris = inventaris::find($inventarisID);
+
+                if (!empty($inventaris)) {
+                    $inventaris->delete();
+                }
             }
 
             //reset sequence to first id 
@@ -414,4 +470,5 @@ class importRepository extends BaseRepository {
             throw new Exception($e->getMessage().PHP_EOL.$e->getLine().PHP_EOL.$e->getFile());
         } 
     }
+
 }
