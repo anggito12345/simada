@@ -1,6 +1,6 @@
 <?php 
     $uniqId = uniqid();
-    $inventaris = \App\Models\inventaris::find($detilmesin->pidinventaris);
+    $inventaris = \App\Models\inventaris::withDrafts()->find($detilmesin->pidinventaris);
 ?>
 
 @include('inventaris.show_fields')

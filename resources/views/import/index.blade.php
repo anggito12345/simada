@@ -112,7 +112,7 @@
                                 <!-- <img src="{!! asset('images/icons/icon_new_list.png') !!}" width=40 class="opacity-8" /> -->
                                 <i class="ion ion-ios-albums"></i>
                             </div>
-                            <a href="#" onclick="doUpload('inventaris', 'detil_aset')" class="small-box-footer">Import <i class="fa fa-arrow-circle-right"></i></a>
+                            <a href="#" onclick="doUpload('inventaris', 'aset_lainnya')" class="small-box-footer">Import <i class="fa fa-arrow-circle-right"></i></a>
                         </div>
                     </div>
                 </div>

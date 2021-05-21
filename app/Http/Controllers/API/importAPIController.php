@@ -26,6 +26,14 @@ class importAPIController extends AppBaseController {
         try {
             if ($request->input('type') == 'inventaris' && $request->input('act') == 'detil_tanah') {
                 $this->importRepository->ImportDetilTanah($request);
+            } else if ($request->input('type') == 'inventaris' && $request->input('act') == 'detil_mesin') {
+                $this->importRepository->ImportDetilMesin($request);
+            } else if ($request->input('type') == 'inventaris' && $request->input('act') == 'detil_bangunan') {
+                $this->importRepository->ImportGedungDanBangunan($request);
+            } else if ($request->input('type') == 'inventaris' && $request->input('act') == 'detil_jalan') {
+                $this->importRepository->ImportJalanDanIrigasi($request);
+            } else if ($request->input('type') == 'inventaris' && $request->input('act') == 'aset_lainnya') {
+                $this->importRepository->ImportDetilAsetTetapLainnya($request);
             } else if ($request->input('type') == 'master-barang' && $request->input('act') == 'update') {
                 $this->importRepository->importBarangUpdate($request);
             } else if ($request->input('type') == 'master-organisasi' && $request->input('act') == 'update') {

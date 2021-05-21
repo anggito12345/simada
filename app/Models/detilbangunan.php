@@ -75,7 +75,7 @@ class detilbangunan extends Model
         'konstruksi' => 'string',
         'bertingkat' => 'string',
         'beton' => 'string',
-        'luasbangunan' => 'integer',
+        'luasbangunan' => 'double',
         'alamat' => 'string',
         'idkota' => 'integer',
         'idkecamatan' => 'integer',

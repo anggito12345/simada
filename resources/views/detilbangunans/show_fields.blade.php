@@ -1,6 +1,6 @@
 <?php
     $uniqId = uniqid();
-    $inventaris = \App\Models\inventaris::find($detilbangunan->pidinventaris);
+    $inventaris = \App\Models\inventaris::withDrafts()->find($detilbangunan->pidinventaris);
 ?>
 
 @include('inventaris.show_fields')
@@ -33,13 +33,13 @@
 <!-- Bertingkat Field -->
 <div class="row">
     {!! Form::label('bertingkat', 'Bertingkat:', ["class" => 'col-md-4 item-view']) !!}
-    <p class="col-md-8 item-view">{!! \App\Models\BaseModel::$YesNoDs[$detilbangunan->bertingkat] !!}</p>
+    <p class="col-md-8 item-view">{!! $detilbangunan->bertingkat ? \App\Models\BaseModel::$YesNoDs[$detilbangunan->bertingkat] : "-" !!}</p>
 </div>
 
 <!-- Beton Field -->
 <div class="row">
     {!! Form::label('beton', 'Beton:', ["class" => 'col-md-4 item-view']) !!}
-    <p class="col-md-8 item-view">{!! \App\Models\BaseModel::$YesNoDs[$detilbangunan->beton] !!}</p>
+    <p class="col-md-8 item-view">{!! $detilbangunan->beton ? \App\Models\BaseModel::$YesNoDs[$detilbangunan->beton] : "-" !!}</p>
 </div>
 
 <!-- Luasbangunan Field -->
