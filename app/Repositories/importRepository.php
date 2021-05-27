@@ -297,7 +297,7 @@ class importRepository extends BaseRepository {
                 ];
 
                 $dataKIB = [
-                    'luas' => 0
+                    "luas" => 0
                 ];
 
                 $rowIndex = $row->getRowIndex();
@@ -436,11 +436,18 @@ class importRepository extends BaseRepository {
                         $dataKIB['luas'] = 0;
                     }
 
+                    if ($data['tipe_kib'] != 'A') {
+                        throw new Exception('data is not tipe kib A at row index : '.$data['pidbarang']);
+                    }
+
                     $data['kib'] = json_encode($dataKIB);
                     
                 }
-                $inventarisRepository = new inventarisRepository(new Application());
-                array_push($inventarisIDs, $inventarisRepository->InsertLogic($data));
+                if ($data['tipe_kib'] == "C") {
+                    $inventarisRepository = new inventarisRepository(new Application());
+                    array_push($inventarisIDs, $inventarisRepository->InsertLogic($data));
+                }
+                
             }
            
             DB::commit();
@@ -491,7 +498,6 @@ class importRepository extends BaseRepository {
                 ];
 
                 $dataKIB = [
-                    'luas' => 0
                 ];
 
                 $rowIndex = $row->getRowIndex();

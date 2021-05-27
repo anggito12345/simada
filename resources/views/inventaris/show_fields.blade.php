@@ -135,7 +135,7 @@
 <!-- Harga Satuan Field -->
 <div class="row">
     {!! Form::label('harga_satuan', 'Harga Satuan:', ["class" => 'col-md-4 item-view']) !!}
-    <p class="col-md-8 item-view">{!! $inventaris->harga_satuan !!}</p>
+    <p class="col-md-8 item-view">{!! number_format($inventaris->harga_satuan) !!}</p>
 </div>
 
 <!-- Perolehan Field -->

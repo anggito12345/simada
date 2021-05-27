@@ -97,7 +97,8 @@ class inventaris_penyusutanRepository extends BaseRepository
 
         $yearInv = date('Y', strtotime(str_replace('/', '-',$inventaris->tgl_perolehan)));
         $mnInv = date('m', strtotime(str_replace('/', '-',$inventaris->tgl_perolehan)));
-        $currentPrevYear = date('Y', strtotime('-1 year',  strtotime(str_replace('/', '-',$inventaris->tgl_perolehan))));
+        
+        $currentPrevYear = date('Y', strtotime('-1 year',  strtotime(str_replace('/', '-',$dateRunning))));
         $currentPrevMonth = 12;
 
         $currentYear = $yearRunning;
@@ -112,7 +113,7 @@ class inventaris_penyusutanRepository extends BaseRepository
         
 
         $diffMonth = (($currentPrevYear - $yearInv) * 12) + ($currentPrevMonth - $mnInv);
-        if ($diffMonth < 0) {
+        if ($yearInv > $currentPrevYear) {
             $penyusutan->masa_manfaat_sd_akhir_tahun = 0;
         } else if ($diffMonth+1 > $bItem->umur_ekonomis) {
             $penyusutan->masa_manfaat_sd_akhir_tahun = $bItem->umur_ekonomis;
