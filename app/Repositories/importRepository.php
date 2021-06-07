@@ -284,8 +284,6 @@ class importRepository extends BaseRepository {
 
         $activeSheet = $spreadSheet->getActiveSheet();
 
-       
-
         $rangeAlphabets = range('A', 'R');
 
         try {
@@ -422,7 +420,9 @@ class importRepository extends BaseRepository {
                         }
 
                     }
-    
+                    
+                    
+
                     $data['tipe_kib']  = '';
                     //special case for tipe_kib
                     $barang = barang::find($data['pidbarang']);
@@ -436,20 +436,27 @@ class importRepository extends BaseRepository {
                         $dataKIB['luas'] = 0;
                     }
 
-                    if ($data['tipe_kib'] != 'A') {
-                        throw new Exception('data is not tipe kib A at row index : '.$data['pidbarang']);
+                    if ( empty($data['pidbarang']) ) {
+                        continue;
                     }
+                    
+                    if ($data['tipe_kib'] != 'A') {
+                        throw new Exception('data is not tipe kib A at row index : '.$rowIndex);
+                    }
+                    
 
                     $data['kib'] = json_encode($dataKIB);
                     
                 }
-                if ($data['tipe_kib'] == "C") {
+                if ($data['tipe_kib'] == "A") {
                     $inventarisRepository = new inventarisRepository(new Application());
                     array_push($inventarisIDs, $inventarisRepository->InsertLogic($data));
                 }
                 
             }
            
+            
+
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
