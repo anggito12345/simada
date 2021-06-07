@@ -307,13 +307,13 @@ class importRepository extends BaseRepository {
                     
                     $data['draft'] = 1;
                     // special case for tgl perolehan
-                    $data['tgl_perolehan'] = $activeSheet->getCell('J'.$rowIndex)->getValue().'-'.
+                    $data['tgl_perolehan'] = $activeSheet->getCell('H'.$rowIndex)->getValue().'-'.
                             $activeSheet->getCell('I'.$rowIndex)->getValue().'-'.
-                            $activeSheet->getCell('H'.$rowIndex)->getValue();
+                            $activeSheet->getCell('J'.$rowIndex)->getValue();
 
-                    $data['tgl_dibukukan'] = $activeSheet->getCell('M'.$rowIndex)->getValue().'-'.
+                    $data['tgl_dibukukan'] = $activeSheet->getCell('K'.$rowIndex)->getValue().'-'.
                             $activeSheet->getCell('L'.$rowIndex)->getValue().'-'.
-                            $activeSheet->getCell('K'.$rowIndex)->getValue();
+                            $activeSheet->getCell('M'.$rowIndex)->getValue();
                     
                     switch($alphabet) {
                         // a for id barang or kode barang
@@ -762,8 +762,8 @@ class importRepository extends BaseRepository {
                         }
                         
 
-                        // 'G' for tahun perolehan
-                        case "G": {
+                        // 'I' for tahun perolehan
+                        case "I": {
                             $data['tahun_perolehan'] = $activeSheet->getCell($alphabet.$rowIndex)->getValue();
                             break;
                         }
@@ -941,8 +941,8 @@ class importRepository extends BaseRepository {
                         }
                         
 
-                        // 'G' for tahun perolehan
-                        case "G": {
+                        // 'I' for tahun perolehan
+                        case "I": {
                             $data['tahun_perolehan'] = $activeSheet->getCell($alphabet.$rowIndex)->getValue();
                             break;
                         }

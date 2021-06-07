@@ -63,6 +63,7 @@
     <p class="col-md-8 item-view">{!! $detiltanah->status_sertifikat !!}</p>
 </div>
 
+@if ($detiltanah->status_sertifikat != 'Tidak Ada') 
 <!-- Tgl Sertifikat Field -->
 <div class="row">
     {!! Form::label('tgl_sertifikat', 'Tgl Sertifikat:', ["class" => 'col-md-4 item-view']) !!}
@@ -71,9 +72,10 @@
 
 <!-- Nama Sertifikat Field -->
 <div class="row">
-    {!! Form::label('nomor_sertifikat', 'Nama Sertifikat:', ["class" => 'col-md-4 item-view']) !!}
+    {!! Form::label('nomor_sertifikat', 'Nomor Sertifikat:', ["class" => 'col-md-4 item-view']) !!}
     <p class="col-md-8 item-view">{!! $detiltanah->nomor_sertifikat !!}</p>
 </div>
+@endif
 
 <!-- Penggunaan Field -->
 <div class="row">

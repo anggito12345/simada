@@ -723,6 +723,7 @@
         const tglDibukukanInline = new inlineDatepicker(document.getElementsByClassName('tgl_dibukukan'), {
             format: 'DD-MM-YYYY',
             buttonClear: true,
+            minYear: 1940,
             readonly: {
                 //yearPicker: true
             }
@@ -731,6 +732,7 @@
         const tglPerolehanInline = new inlineDatepicker(document.getElementsByClassName('tgl_perolehan'), {
             format: 'DD-MM-YYYY',
             buttonClear: true,
+            minYear: 1940,
             readonly: {
                 yearPicker: true
             }
