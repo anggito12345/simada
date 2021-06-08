@@ -15,7 +15,7 @@
             @include('layouts.default_transaction_table_filter')
         </div>
 
-        <div class="clearfix" />
+        <div class="clearfix"></div>
 
         <div class="box box-primary">
             <div class="box-body">

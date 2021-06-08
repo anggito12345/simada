@@ -310,10 +310,18 @@ class inventarisDataTable extends DataTable
             'kondisi' => [
                 'title' => 'Keadaan Barang'
             ],
-            'pengguna_barang',
+            'pengguna_barang' => [
+                'footer' => 'm_barang.nama_rek_aset',
+                'title' => 'Pengguna Barang',
+                'name' => 'm_organisasi.nama',
+
+            ],
             // 'barang',
             'harga_satuan',
-            'status_sensus'
+            "status_sensus" => [
+                "name" => "status_sensus",
+                "orderable" => false
+            ]
             // 'keterangan'
             // 'pidbarang',
             // 'pidopd',

@@ -210,7 +210,7 @@ let sensus = {
                     }
                 },
                 columns:[{
-                    'data': 'nama',
+                    'data': 'm_barang.nama_rek_aset',
                     'title': 'Nama Barang'
                 },{
                     'data': 'noreg',

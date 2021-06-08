@@ -661,6 +661,7 @@ class inventarisRepository extends BaseRepository
                 "m_organisasi.setting as setauth",
                 "inventaris_penghapusan.id as ip",
                 "inventaris_reklas.id as ir",
+                "m_organisasi.nama as pengguna_barang",
                 "detil_mesin.norangka",
                 "detil_mesin.nomesin",
                 "detil_mesin.nopol"
@@ -689,12 +690,7 @@ class inventarisRepository extends BaseRepository
             ->leftJoin("m_merk_barang", "m_merk_barang.id", "detil_mesin.merk")
             ->leftJoin('inventaris_penghapusan', 'inventaris_penghapusan.id', 'inventaris.id')
             ->leftJoin('m_organisasi', 'm_organisasi.id', 'inventaris.pid_organisasi');
-        //     ->leftJoin('inventaris_sensus', function($join){
-        //         $join->on("inventaris_sensus.idinventaris", "inventaris.id")->on(DB::raw("date_part('year', \"inventaris_sensus\".\"created_at\")"), DB::Raw(date('Y')));
-        //    });
-
-            // role =================
-            // ->where('m_jabatan.level', '<=', $mineJabatan->level)
+       
 
         //exclude data when still staging ubah data.
         $buildingModel = $buildingModel->whereRaw(app(ubah_satuan_stagging::class)->getTable().'.idinventaris IS NULL');
