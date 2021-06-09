@@ -1,0 +1,393 @@
+{
+	"info": {
+		"_postman_id": "2bae0290-8126-4cd9-92de-5f4bead326fb",
+		"name": "SIMADA-API",
+		"description": "simada api documentation\n\nv 0.1",
+		"schema": "https://schema.getpostman.com/json/collection/v2.1.0/collection.json"
+	},
+	"item": [
+		{
+			"name": "token",
+			"item": [
+				{
+					"name": "request token",
+					"event": [
+						{
+							"listen": "test",
+							"script": {
+								"exec": [
+									"var jsonData = JSON.parse(responseBody);\r",
+									"pm.environment.set(\"token\", jsonData.token);"
+								],
+								"type": "text/javascript"
+							}
+						}
+					],
+					"request": {
+						"method": "POST",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"body": {
+							"mode": "raw",
+							"raw": "{\n\t\"username\": \"admin_bpkad\",\n\t\"password\": \"123456\"\n}"
+						},
+						"url": {
+							"raw": "{{host}}api/token",
+							"host": [
+								"{{host}}api"
+							],
+							"path": [
+								"token"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "lokasi",
+			"item": [
+				{
+					"name": "get data by pid",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}api/lokasi/kota/32",
+							"host": [
+								"{{host}}api"
+							],
+							"path": [
+								"lokasi",
+								"kota",
+								"32"
+							]
+						},
+						"description": "<br>\n:levels are:\n<br>\n<br>\n1. provinsi\n<br>\n2. kota\n<br>\n3. kecataman\n<br>\n4. kelurahan\n<br>\n<br>\ncontohnya:\n<br>\n1. /api/lokasi/provinsi\n<br>\n2. /api/lokasi/kota\n<br>\n3. /api/lokasi/kecamatan\n<br>\n4. /api/lokasi/kelurahan\n"
+					},
+					"response": []
+				},
+				{
+					"name": "get data all",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}api/lokasi/provinsi",
+							"host": [
+								"{{host}}api"
+							],
+							"path": [
+								"lokasi",
+								"provinsi"
+							]
+						},
+						"description": "\n"
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "skpd",
+			"item": [
+				{
+					"name": "get data",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [],
+						"url": {
+							"raw": "{{host}}api/skpd",
+							"host": [
+								"{{host}}api"
+							],
+							"path": [
+								"skpd"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "aset",
+			"item": [
+				{
+					"name": "get by jenis aset",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}api/aset/jalan,-irigasi-dan-jaringan",
+							"host": [
+								"{{host}}api"
+							],
+							"path": [
+								"aset",
+								"jalan,-irigasi-dan-jaringan"
+							]
+						},
+						"description": "parameters:\n<br>\n1. @skip : optional, integer\n<br>\n2. @take : optional, integer\n<br>\n\n<br>\ncontohnya:\n<br>\n1. {{host}}api/aset/tanah\n<br>\n2. {{host}}api/aset/peralatan-dan-mesin\n<br>\n3. {{host}}api/aset/gedung-dan-bangunan\n<br>\n4. {{host}}api/aset/jalan,-irigasi-dan-jaringan\n<br>\n5. {{host}}api/aset/aset-tetap-lainnya\n<br>\n6. {{host}}api/aset/konstruksi-dalam-pengerjaan\n<br>"
+					},
+					"response": []
+				},
+				{
+					"name": "get all aset type",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}api/aset/",
+							"host": [
+								"{{host}}api"
+							],
+							"path": [
+								"aset",
+								""
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get bangunan imb",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{host}}api/aset/gedung-dan-bangunan/imb",
+							"host": [
+								"{{host}}api"
+							],
+							"path": [
+								"aset",
+								"gedung-dan-bangunan",
+								"imb"
+							]
+						}
+					},
+					"response": []
+				},
+				{
+					"name": "get tanah bersertifikat",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"url": {
+							"raw": "{{host}}api/aset/tanah/bersertifikat",
+							"host": [
+								"{{host}}api"
+							],
+							"path": [
+								"aset",
+								"tanah",
+								"bersertifikat"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		},
+		{
+			"name": "user",
+			"item": [
+				{
+					"name": "user",
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Accept",
+								"value": "application/json",
+								"type": "text"
+							}
+						],
+						"url": {
+							"raw": "{{host}}api/user",
+							"host": [
+								"{{host}}api"
+							],
+							"path": [
+								"user"
+							]
+						},
+						"description": "get all users data\n"
+					},
+					"response": []
+				},
+				{
+					"name": "user info",
+					"protocolProfileBehavior": {
+						"disableBodyPruning": true
+					},
+					"request": {
+						"auth": {
+							"type": "bearer",
+							"bearer": [
+								{
+									"key": "token",
+									"value": "{{token}}",
+									"type": "string"
+								}
+							]
+						},
+						"method": "GET",
+						"header": [
+							{
+								"key": "Content-Type",
+								"name": "Content-Type",
+								"type": "text",
+								"value": "application/json"
+							},
+							{
+								"key": "Accept",
+								"type": "text",
+								"value": "application/json"
+							}
+						],
+						"body": {
+							"mode": "formdata",
+							"formdata": []
+						},
+						"url": {
+							"raw": "{{host}}api/user/info",
+							"host": [
+								"{{host}}api"
+							],
+							"path": [
+								"user",
+								"info"
+							]
+						}
+					},
+					"response": []
+				}
+			]
+		}
+	]
+}
