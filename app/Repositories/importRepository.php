@@ -274,6 +274,12 @@ class importRepository extends BaseRepository {
 
     }
 
+    public function reFormatHargaSatuan($hargaSatuan)  {
+        $hargaSatuan = str_replace(",","*", $hargaSatuan);
+        $hargaSatuan = str_replace(".", ",", $hargaSatuan);
+        return str_replace("*", ".", $hargaSatuan);
+    }
+
     public function ImportDetilTanah($request) {
         $fileImport = $request->file('fileimport')->store('tmpimport');
 
@@ -374,9 +380,9 @@ class importRepository extends BaseRepository {
 
                         // 'D' for harga satuan
                         case "G": {
-                            $hargaSatuan = $activeSheet->getCell($alphabet.$rowIndex)->getValue();
+                            $hargaSatuan = $activeSheet->getCell($alphabet.$rowIndex)->getFormattedValue();
 
-                            $data['harga_satuan'] = $hargaSatuan;
+                            $data['harga_satuan'] = $this->reFormatHargaSatuan($hargaSatuan);
                             break;
                         }
 
@@ -577,9 +583,9 @@ class importRepository extends BaseRepository {
 
                         // 'D' for harga satuan
                         case "E": {
-                            $hargaSatuan = $activeSheet->getCell($alphabet.$rowIndex)->getValue();
+                            $hargaSatuan = $activeSheet->getCell($alphabet.$rowIndex)->getFormattedValue();
 
-                            $data['harga_satuan'] = $hargaSatuan;
+                            $data['harga_satuan'] = $this->reFormatHargaSatuan($hargaSatuan);
                             break;
                         }
                         
@@ -755,9 +761,9 @@ class importRepository extends BaseRepository {
 
                         // 'F' for alamat
                         case "F": {
-                            $hargaSatuan = $activeSheet->getCell($alphabet.$rowIndex)->getValue();
+                            $hargaSatuan = $activeSheet->getCell($alphabet.$rowIndex)->getFormattedValue();
 
-                            $data['harga_satuan'] = $hargaSatuan;
+                            $data['harga_satuan'] = $this->reFormatHargaSatuan($hargaSatuan);
                             break;
                         }
                         
@@ -934,9 +940,9 @@ class importRepository extends BaseRepository {
 
                         // 'F' for alamat
                         case "F": {
-                            $hargaSatuan = $activeSheet->getCell($alphabet.$rowIndex)->getValue();
+                            $hargaSatuan = $activeSheet->getCell($alphabet.$rowIndex)->getFormattedValue();
 
-                            $data['harga_satuan'] = $hargaSatuan;
+                            $data['harga_satuan'] = $this->reFormatHargaSatuan($hargaSatuan);
                             break;
                         }
                         
@@ -1105,9 +1111,9 @@ class importRepository extends BaseRepository {
 
                         // 'E' for harga satuan
                         case "E": {
-                            $hargaSatuan = $activeSheet->getCell($alphabet.$rowIndex)->getValue();
+                            $hargaSatuan = $activeSheet->getCell($alphabet.$rowIndex)->getFormattedValue();
 
-                            $data['harga_satuan'] = $hargaSatuan;
+                            $data['harga_satuan'] = $this->reFormatHargaSatuan($hargaSatuan);
                             break;
                         }
                         
