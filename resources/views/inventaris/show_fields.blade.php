@@ -68,19 +68,19 @@
 
 <!-- Pidopd Field -->
 <div class="row">
-    {!! Form::label('pidopd', __('field.pidopd'), ["class" => 'col-md-4 item-view']) !!}
+    {!! Form::label('pidopd','Pengguna Barang', ["class" => 'col-md-4 item-view']) !!}
     <p class="col-md-8 item-view">{!! \App\Models\BaseModel::getRelationData($inventaris->organisasi, "nama", "") !!}</p>
 </div>
 
 <!-- Pidopd Cabang Field -->
 <div class="row">
-    {!! Form::label('pidopd', __('field.pidopd_cabang'), ["class" => 'col-md-4 item-view']) !!}
+    {!! Form::label('pidopd', 'Kuasa Pengguna Barang', ["class" => 'col-md-4 item-view']) !!}
     <p class="col-md-8 item-view">{!! \App\Models\BaseModel::getRelationData($inventaris->organisasicabang, "nama", "") !!}</p>
 </div>
 
 <!-- PidUPT Field -->
 <div class="row">
-    {!! Form::label('pidopd', __('field.pidupt'), ["class" => 'col-md-4 item-view']) !!}
+    {!! Form::label('pidopd', 'Sub Kuasa Pengguna Barang', ["class" => 'col-md-4 item-view']) !!}
     <p class="col-md-8 item-view">{!! \App\Models\BaseModel::getRelationData($inventaris->organisasiupt, "nama", "") !!}</p>
 </div>
 
