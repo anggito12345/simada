@@ -2,8 +2,8 @@
 
 namespace App\Models;
 
-use Eloquent as Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Model as EloquentModel;
+use Spatie\Permission\Traits\HasRoles;
 
 /**
  * Class users
@@ -16,9 +16,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string password
  * @property string remember_token
  */
-class users extends Model
+class users extends EloquentModel
 {
+    use HasRoles;
     // use SoftDeletes;
+    protected $guard_name = 'web';
 
     public $table = 'users';
     

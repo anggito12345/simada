@@ -14,8 +14,7 @@ use App\Http\Controllers\AppBaseController;
 use Illuminate\Support\Facades\Auth;
 use Response;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
-
-
+use Laracasts\Flash\Flash as FlashFlash;
 
 class usersController extends AppBaseController
 {
@@ -28,6 +27,7 @@ class usersController extends AppBaseController
 
     public function __construct(usersRepository $usersRepo)
     {
+        $this->middleware('auth');
         parent::__construct();
         $this->usersRepository = $usersRepo;
     }
@@ -40,7 +40,6 @@ class usersController extends AppBaseController
      */
     public function index(usersDataTable $usersDataTable)
     {
-        $this->middleware('auth');
         return $usersDataTable->render('users.index');
     }
 
@@ -64,13 +63,13 @@ class usersController extends AppBaseController
     public function store(CreateusersRequest $request)
     {
         $input = $request->all();
-        
+
 
         $input['password'] = Hash::make($request->password);
 
         $users = $this->usersRepository->create($input);
 
-        Flash::success('Users saved successfully.');
+        FlashFlash::success('Users saved successfully.');
 
 
         if (isset($input['from-login'])) {
@@ -78,6 +77,25 @@ class usersController extends AppBaseController
         }
 
         return redirect(route('users.index'));
+    }
+
+    /**
+     * Store a sign up user.
+     *
+     * @param CreateusersRequest $request
+     *
+     * @return Response
+     */
+    public function SignUp(CreateusersRequest $request)
+    {
+        $input = $request->all();
+        $input['password'] = Hash::make($request->password);
+
+        $users = $this->usersRepository->create($input);
+
+        FlashFlash::success('Users saved successfully.');
+
+        return redirect(route('login'));
     }
 
     /**
@@ -93,7 +111,7 @@ class usersController extends AppBaseController
         $users = $this->usersRepository->find($id);
 
         if (empty($users)) {
-            Flash::error('Users not found');
+            FlashFlash::error('Users not found');
 
             return redirect(route('users.index'));
         }
@@ -113,7 +131,7 @@ class usersController extends AppBaseController
         $users = $this->usersRepository->find($id);
 
         if (empty($users)) {
-            Flash::error('Users not found');
+            FlashFlash::error('Users not found');
 
             return redirect(route('users.index'));
         }
@@ -134,7 +152,7 @@ class usersController extends AppBaseController
         $users = $this->usersRepository->find($id);
 
         if (empty($users)) {
-            Flash::error('Users not found');
+            FlashFlash::error('Users not found');
 
             return redirect(route('users.index'));
         }
@@ -146,7 +164,7 @@ class usersController extends AppBaseController
         } else {
             $input['password'] = $users->password;
         }
-        
+
         if (isset($input['username']) && $input['username'] == "") {
             $input['username'] = $users->username;
         }
@@ -158,39 +176,39 @@ class usersController extends AppBaseController
         if (isset($input['from_forgot_password']) || isset($input['from_ubah_password'])) {
             if (!Hash::check($input['password_confirmation'], $input['password'])) {
                 // The passwords match...
-                Flash::error('Password lama tidak sama');
+                FlashFlash::error('Password lama tidak sama');
                 return redirect()->back();
             }
 
 
             if (strlen($input['password_confirmation']) < 6) {
-                Flash::error('Password minimal 6 huruf atau angka');
+                FlashFlash::error('Password minimal 6 huruf atau angka');
                 return redirect()->back();
             }
 
             if (isset($input['from_forgot_password'])) {
                 $input['email_forgot_password'] = '';
-            }            
+            }
         }
 
         $users = $this->usersRepository->update($input, $id);
 
-        if (isset($input['from_aktif_process'])) {            
-            Mail::to($users->email)->send(new \App\Mail\ActivationUser($users));            
+        if (isset($input['from_aktif_process'])) {
+            Mail::to($users->email)->send(new \App\Mail\ActivationUser($users));
             return redirect(route('users.index') . '?IsSent=true');
         }
 
-        if (isset($input['from_forgot_password'])) { 
-            Flash::success('Password berhasil diubah!.');
+        if (isset($input['from_forgot_password'])) {
+            FlashFlash::success('Password berhasil diubah!.');
             return redirect('/login?forgotPasswordCallback=1');
         }
 
         if (isset($input['from_ubah_password'])) {
-            Flash::success('Password berhasil diubah!.');
+            FlashFlash::success('Password berhasil diubah!.');
             return redirect('/home?triggerSwal=true&msg=Password berhasil diubah&type=success');
-        }    
+        }
 
-        Flash::success('Users updated successfully.');
+        FlashFlash::success('Users updated successfully.');
 
         return redirect(route('users.index'));
     }
@@ -208,14 +226,14 @@ class usersController extends AppBaseController
         $users = $this->usersRepository->find($id);
 
         if (empty($users)) {
-            Flash::error('Users not found');
+            FlashFlash::error('Users not found');
 
             return redirect(route('users.index'));
         }
 
         $this->usersRepository->delete($id);
 
-        Flash::success('Users deleted successfully.');
+        FlashFlash::success('Users deleted successfully.');
 
         return redirect(route('users.index'));
     }
@@ -227,7 +245,7 @@ class usersController extends AppBaseController
         if ($user) {
             return view('users.forgot_password')->with('users', $user );
         } else {
-            Flash::error('Link telah expired atau tidak valid!');
+            FlashFlash::error('Link telah expired atau tidak valid!');
             // it means fail on validate email forgot password code!
             return redirect('login?verificationCallback=2');
         }
@@ -240,19 +258,19 @@ class usersController extends AppBaseController
     }
 
 
-    
+
     public function activate($activationcode, Request $request)
     {
         $userByVerificationCode = \App\Models\users::where('email_verification_code', $activationcode)->first();
 
         if (empty($userByVerificationCode)) {
-            
-            Flash::error('Link telah expired atau tidak valid!');
+
+            FlashFlash::error('Link telah expired atau tidak valid!');
             if (!Auth::guest()) {
-            
+
                 $this->performLogout($request);
             }
-    
+
             return redirect('login?verificationCallback=0');
         }
 
@@ -262,16 +280,16 @@ class usersController extends AppBaseController
 
         $userByVerificationCode->save();
 
-        Flash::success('User berhasil diaktivasi!.');
+        FlashFlash::success('User berhasil diaktivasi!.');
 
         if (!Auth::guest()) {
-            
+
             $this->performLogout($request);
         }
 
         return redirect('login?verificationCallback=1');
 
 
-        
+
     }
 }

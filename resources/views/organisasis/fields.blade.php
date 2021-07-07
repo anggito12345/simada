@@ -16,16 +16,10 @@
     {!! Form::text('nama', null, ['class' => 'form-control']) !!}
 </div>
 
-<!-- Jabatan Field -->
-<!--<div class="form-group col-sm-6 row">
-    {!! Form::label('jabatans', 'Akses Jabatan:') !!}
-    {!! Form::select('jabatans', \App\Models\jabatan::pluck('nama', 'id'), [], ['id' => 'jabatans', 'class' => 'form-control']) !!}
-</div>-->
-
-<!-- Jabatan Field -->
+<!-- Level Organisasi Field -->
 <div class="form-group col-sm-6 row">
     {!! Form::label('level', 'Level:') !!}
-    {!! Form::select('level', \App\Models\BaseModel::$kelompokLevelDs, null, ['id' => 'jabatans', 'class' => 'form-control']) !!}
+    {!! Form::select('level', Constant::$ROLE_LEVEL, null, ['id' => 'level', 'class' => 'form-control']) !!}
 </div>
 
 <!-- Alamat Field -->
@@ -50,33 +44,5 @@
 
 
 @section('scripts')
-<script>
-    $('#pid').select2({
-        ajax: {
-            url: "<?= url('api/organisasis') ?>",
-            dataType: 'json',
-            processResults: function (data) {
-            // Transforms the top-level key of the response object from 'items' to 'results'
-            return {
-                results: data.data
-            };
-            }
-        },
-        theme: 'bootstrap' ,
-    })
-
-
-</script>
-
-@if(isset($organisasi))
-<script>
-App.Helpers.defaultSelect2(
-    $("#pid"),
-        `${$('[base-path]').val()}/api/organisasis/${<?= $organisasi->pid ?>}`,
-        "id",
-        "nama",
-        () => {}
-)
-</script>
-@endif
+    @include('organisasis.script')
 @endsection

@@ -11,7 +11,7 @@
     <!-- Bootstrap 3.3.7 -->
     <link rel="stylesheet" href="<?= url('css/thirdparty/bootstrap.min.css') ?>">
 
-    <!-- Font Awesome -->    
+    <!-- Font Awesome -->
     <link rel="stylesheet" href="<?= url('css/thirdparty/font-awesome.min.css') ?>">
 
     <!-- Ionicons -->
@@ -60,15 +60,66 @@
 
             {!! Form::text('from-login', true,['style' => 'display:none']) !!}
 
-            <?php 
-                $isFromRegister = true;
-                $noBtnSubmit = true;                
-            ?>
 
-            @include('users.fields')
-            
+            <!-- Name Field -->
+            <div class="form-group col-md-12">
+                {!! Form::label('nip', 'NIP:') !!} <span class='text text-danger'>*</span>
+                {!! Form::text('nip', null, ['class' => 'form-control', 'maxlength' => '18', 'minlength' => '18']) !!}
+            </div>
 
-            <div class="row">   
+            <div class="form-group col-md-12">
+                {!! Form::label('name', 'Nama:') !!} <span class='text text-danger'>*</span>
+                {!! Form::text('name', null, ['class' => 'form-control']) !!}
+            </div>
+
+            <!-- Email Field -->
+            <div class="form-group col-md-12">
+                {!! Form::label('email', 'Email:') !!} <span class='text text-danger'>*</span>
+                {!! Form::email('email', null, ['class' => 'form-control']) !!}
+            </div>
+
+            <div class="form-group col-md-12">
+                {!! Form::label('no_hp', 'HP:') !!} <span class='text text-danger'>*</span>
+                {!! Form::text('no_hp', null, ['class' => 'form-control']) !!}
+            </div>
+
+            <div class="form-group col-md-12">
+                {!! Form::label('tgl_lahir', 'Tanggal Lahir:') !!} <span class='text text-danger'>*</span>
+                {!! Form::text('tgl_lahir', null, ['class' => 'form-control']) !!}
+            </div>
+
+            <div class="form-group col-md-12 ">
+                {!! Form::label('jenis_kelamin', 'Jenis Kelamin:') !!}&nbsp;
+                <br />
+                <div class="radio">
+                    {!! Form::radio('jenis_kelamin', 'L', true, []) !!} Laki - Laki <br />
+                    {!! Form::radio('jenis_kelamin', 'P', false, []) !!} Perempuan
+                </div>
+            </div>
+
+            <div class="form-group col-md-12">
+                {!! Form::label('pid_organisasi', 'Organisasi:') !!} <span class='text text-danger'>*</span>
+                {!! Form::select('pid_organisasi', [], null, ['class' => 'form-control']) !!}
+            </div>
+
+
+            <div class="form-group col-md-12">
+                {!! Form::label('username', 'Username:') !!} <span class='text text-danger'>*</span>
+                {!! Form::text('username', null, ['class' => 'form-control']) !!}
+            </div>
+
+            <!-- Password Field -->
+            <div class="form-group col-md-12">
+                {!! Form::label('password', 'Password:') !!} <span class='text text-danger'>*</span>
+                {!! Form::password('password', ['class' => 'form-control', 'readonly' => 'true', 'onfocus' => 'this.removeAttribute("readonly");this.blur();    this.focus();']) !!}
+            </div>
+
+            <div class="form-group col-md-12">
+                {!! Form::label('password_confirmation', 'Konfirmasi Password:') !!} <span class='text text-danger'>*</span>
+                {!! Form::password('password_confirmation', ['class' => 'form-control', 'readonly' => 'true', 'onfocus' => 'this.removeAttribute("readonly");this.blur();    this.focus();']) !!}
+            </div>
+
+            <div class="row">
                 <!-- /.col -->
                 <div class="col-md-4">
                     <button type="submit" class="btn btn-primary btn-block btn-flat">Register</button>

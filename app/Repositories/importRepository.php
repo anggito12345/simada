@@ -2,6 +2,7 @@
 
 namespace App\Repositories;
 
+use App\Helpers\Constant;
 use App\Models\barang;
 use App\Models\BaseModel;
 use App\Models\merkbarang;
@@ -149,8 +150,8 @@ class importRepository extends BaseRepository {
                 }
 
                 $barang = barang::where($whereFilter)->first();
-                if(!empty($barang) && strtolower($umurEkonomis) != 'tdk ada' && 
-                    strtolower($umurEkonomis) != 'beragam' && 
+                if(!empty($barang) && strtolower($umurEkonomis) != 'tdk ada' &&
+                    strtolower($umurEkonomis) != 'beragam' &&
                     strtolower($umurEkonomis) != 'tidak ada' &&
                     strtolower($umurEkonomis) != 'tergantung' &&
                     $umurEkonomis != '') {
@@ -162,7 +163,7 @@ class importRepository extends BaseRepository {
 
             DB::commit();
         } catch (Exception $e) {
-            
+
             DB::rollBack();
             throw new Exception($e->getMessage().PHP_EOL.$e->getLine().PHP_EOL.$e->getFile());
         }
@@ -240,14 +241,14 @@ class importRepository extends BaseRepository {
                     //check induk organisasi by kode
                     if ($indukOrganisasi != '') {
                         $dataIndukOrganisasi = organisasi::where('kode', $indukOrganisasi)->first();
-                        
+
                         if (!empty($dataIndukOrganisasi)) {
                             $organisasi->pid = $dataIndukOrganisasi->id;
                         }
                     }
 
                     //level check the name
-                    foreach (BaseModel::$kelompokLevelDs as $key => $value) {
+                    foreach (Constant::$ROLE_LEVEL as $key => $value) {
                         # code...
                         if (strtolower($value) == strtolower($level)) {
                             $organisasi->level = $key;
@@ -262,12 +263,12 @@ class importRepository extends BaseRepository {
 
                     $organisasi->save();
                 }
-                
+
             }
 
             DB::commit();
         } catch (Exception $e) {
-            
+
             DB::rollBack();
             throw new Exception($e->getMessage().PHP_EOL.$e->getLine().PHP_EOL.$e->getFile());
         }
@@ -310,7 +311,7 @@ class importRepository extends BaseRepository {
                 }
                 foreach ($rangeAlphabets as $alphabet) {
                     # code...
-                    
+
                     $data['draft'] = 1;
                     // special case for tgl perolehan
                     $data['tgl_perolehan'] = $activeSheet->getCell('H'.$rowIndex)->getValue().'-'.
@@ -320,7 +321,7 @@ class importRepository extends BaseRepository {
                     $data['tgl_dibukukan'] = $activeSheet->getCell('K'.$rowIndex)->getValue().'-'.
                             $activeSheet->getCell('L'.$rowIndex)->getValue().'-'.
                             $activeSheet->getCell('M'.$rowIndex)->getValue();
-                    
+
                     switch($alphabet) {
                         // a for id barang or kode barang
                         case "A": {
@@ -340,7 +341,7 @@ class importRepository extends BaseRepository {
 
                             $satuanAsText = $activeSheet->getCell($alphabet.$rowIndex)->getValue();
                             $satuanAsDataDB = satuanbarang::whereRaw('LOWER(nama) = \''.strtolower($satuanAsText).'\'')->first();
-    
+
                             if (!empty($satuanAsDataDB)) {
                                 $data['satuan'] = $satuanAsDataDB->id;
                             } else {
@@ -374,7 +375,7 @@ class importRepository extends BaseRepository {
                                 $im = explode(",",str_replace(" ","", $koordinat));
                                 $dataKIB['koordinatlokasi'] = $im[1] . "," . $im[0];
                             }
-                            
+
                             break;
                         }
 
@@ -397,7 +398,7 @@ class importRepository extends BaseRepository {
                             $organisasi = organisasi::where('kode',$activeSheet->getCell($alphabet.$rowIndex)->getValue())->first();
                             if (!empty($organisasi)) {
                                 $data['pidopd'] = $organisasi->id;
-                            }   
+                            }
                             break;
                         }
 
@@ -406,7 +407,7 @@ class importRepository extends BaseRepository {
                             $organisasi = organisasi::where('kode',$activeSheet->getCell($alphabet.$rowIndex)->getValue())->first();
                             if (!empty($organisasi)) {
                                 $data['pidopd_cabang'] = $organisasi->id;
-                            }   
+                            }
                             break;
                         }
 
@@ -415,7 +416,7 @@ class importRepository extends BaseRepository {
                             $organisasi = organisasi::where('kode',$activeSheet->getCell($alphabet.$rowIndex)->getValue())->first();
                             if (!empty($organisasi)) {
                                 $data['pidopd_cabang'] = $organisasi->id;
-                            }   
+                            }
                             break;
                         }
 
@@ -426,8 +427,8 @@ class importRepository extends BaseRepository {
                         }
 
                     }
-                    
-                    
+
+
 
                     $data['tipe_kib']  = '';
                     //special case for tipe_kib
@@ -445,30 +446,30 @@ class importRepository extends BaseRepository {
                     if ( empty($data['pidbarang']) ) {
                         continue;
                     }
-                    
+
                     if ($data['tipe_kib'] != 'A') {
                         throw new Exception('data is not tipe kib A at row index : '.$rowIndex);
                     }
-                    
+
 
                     $data['kib'] = json_encode($dataKIB);
-                    
+
                 }
                 if ($data['tipe_kib'] == "A") {
                     $inventarisRepository = new inventarisRepository(new Application());
                     array_push($inventarisIDs, $inventarisRepository->InsertLogic($data));
                 }
-                
+
             }
-           
-            
+
+
 
             DB::commit();
         } catch (Exception $e) {
             DB::rollBack();
 
             $firstID = null;
-            
+
             //flush all inserted inventaris
             foreach ($inventarisIDs as $inventarisID) {
                 if ($firstID == null) {
@@ -481,13 +482,13 @@ class importRepository extends BaseRepository {
                 }
             }
 
-            //reset sequence to first id 
+            //reset sequence to first id
             if ($firstID != null) {
-                DB::raw("ALTER SEQUENCE inventaris_id_seq RESTART WITH ".$firstID.";");    
+                DB::raw("ALTER SEQUENCE inventaris_id_seq RESTART WITH ".$firstID.";");
             }
-        
+
             throw new Exception($e->getMessage().PHP_EOL.$e->getLine().PHP_EOL.$e->getFile());
-        } 
+        }
     }
 
     public function ImportDetilMesin($request) {
@@ -519,7 +520,7 @@ class importRepository extends BaseRepository {
                 }
                 foreach ($rangeAlphabets as $alphabet) {
                     # code...
-                    
+
                     $data['draft'] = 1;
                     // special case for tgl perolehan
                     $data['tgl_perolehan'] = $activeSheet->getCell('F'.$rowIndex)->getValue().'-'.
@@ -529,7 +530,7 @@ class importRepository extends BaseRepository {
                     $data['tgl_dibukukan'] = $activeSheet->getCell('I'.$rowIndex)->getValue().'-'.
                             $activeSheet->getCell('J'.$rowIndex)->getValue().'-'.
                             $activeSheet->getCell('K'.$rowIndex)->getValue();
-                    
+
                     switch($alphabet) {
                         // a for id barang or kode barang
                         case "A": {
@@ -549,7 +550,7 @@ class importRepository extends BaseRepository {
 
                             $satuanAsText = $activeSheet->getCell($alphabet.$rowIndex)->getValue();
                             $satuanAsDataDB = satuanbarang::whereRaw('LOWER(nama) = \''.strtolower($satuanAsText).'\'')->first();
-    
+
                             if (!empty($satuanAsDataDB)) {
                                 $data['satuan'] = $satuanAsDataDB->id;
                             } else {
@@ -567,8 +568,8 @@ class importRepository extends BaseRepository {
                             // if (strpos($luas, '.') > 0) {
                             //     $luas = explode('.', $luas)[0].','.explode('.', $luas)[1];
                             // }
-                            
-                            
+
+
                             if (!empty($merkBarang)) {
                                 $dataKIB['merk'] = $merkBarang->id;
                             } else {
@@ -588,7 +589,7 @@ class importRepository extends BaseRepository {
                             $data['harga_satuan'] = $this->reFormatHargaSatuan($hargaSatuan);
                             break;
                         }
-                        
+
 
                         // 'H' for tahun perolehan
                         case "H": {
@@ -601,7 +602,7 @@ class importRepository extends BaseRepository {
                             $organisasi = organisasi::where('kode',$activeSheet->getCell($alphabet.$rowIndex)->getValue())->first();
                             if (!empty($organisasi)) {
                                 $data['pidopd'] = $organisasi->id;
-                            }   
+                            }
                             break;
                         }
 
@@ -610,7 +611,7 @@ class importRepository extends BaseRepository {
                             $organisasi = organisasi::where('kode',$activeSheet->getCell($alphabet.$rowIndex)->getValue())->first();
                             if (!empty($organisasi)) {
                                 $data['pidopd_cabang'] = $organisasi->id;
-                            }   
+                            }
                             break;
                         }
 
@@ -619,7 +620,7 @@ class importRepository extends BaseRepository {
                             $organisasi = organisasi::where('kode',$activeSheet->getCell($alphabet.$rowIndex)->getValue())->first();
                             if (!empty($organisasi)) {
                                 $data['pidopd_cabang'] = $organisasi->id;
-                            }   
+                            }
                             break;
                         }
 
@@ -630,7 +631,7 @@ class importRepository extends BaseRepository {
                         }
 
                     }
-    
+
                     $data['tipe_kib']  = '';
                     //special case for tipe_kib
                     $barang = barang::find($data['pidbarang']);
@@ -641,19 +642,19 @@ class importRepository extends BaseRepository {
                         }
                     }
                     $data['kib'] = json_encode($dataKIB);
-                    
+
                 }
                 $inventarisRepository = new inventarisRepository(new Application());
                 array_push($inventarisIDs, $inventarisRepository->InsertLogic($data));
             }
-           
+
             DB::commit();
         } catch (Exception $e) {
-            
+
             DB::rollBack();
 
             $firstID = null;
-            
+
             //flush all inserted inventaris
             foreach ($inventarisIDs as $inventarisID) {
                 if ($firstID == null) {
@@ -666,13 +667,13 @@ class importRepository extends BaseRepository {
                 }
             }
 
-            //reset sequence to first id 
+            //reset sequence to first id
             if ($firstID != null) {
-                DB::raw("ALTER SEQUENCE inventaris_id_seq RESTART WITH ".$firstID.";");    
+                DB::raw("ALTER SEQUENCE inventaris_id_seq RESTART WITH ".$firstID.";");
             }
-        
+
             throw new Exception($e->getMessage().PHP_EOL.$e->getLine().PHP_EOL.$e->getFile());
-        } 
+        }
     }
 
     public function ImportGedungDanBangunan($request) {
@@ -705,7 +706,7 @@ class importRepository extends BaseRepository {
                 }
                 foreach ($rangeAlphabets as $alphabet) {
                     # code...
-                    
+
                     $data['draft'] = 1;
                     // special case for tgl perolehan
                     $data['tgl_perolehan'] = $activeSheet->getCell('G'.$rowIndex)->getValue().'-'.
@@ -715,7 +716,7 @@ class importRepository extends BaseRepository {
                     $data['tgl_dibukukan'] = $activeSheet->getCell('J'.$rowIndex)->getValue().'-'.
                             $activeSheet->getCell('K'.$rowIndex)->getValue().'-'.
                             $activeSheet->getCell('L'.$rowIndex)->getValue();
-                    
+
                     switch($alphabet) {
                         // a for id barang or kode barang
                         case "A": {
@@ -735,7 +736,7 @@ class importRepository extends BaseRepository {
 
                             $satuanAsText = $activeSheet->getCell($alphabet.$rowIndex)->getValue();
                             $satuanAsDataDB = satuanbarang::whereRaw('LOWER(nama) = \''.strtolower($satuanAsText).'\'')->first();
-    
+
                             if (!empty($satuanAsDataDB)) {
                                 $data['satuan'] = $satuanAsDataDB->id;
                             } else {
@@ -766,7 +767,7 @@ class importRepository extends BaseRepository {
                             $data['harga_satuan'] = $this->reFormatHargaSatuan($hargaSatuan);
                             break;
                         }
-                        
+
 
                         // 'I' for tahun perolehan
                         case "I": {
@@ -779,7 +780,7 @@ class importRepository extends BaseRepository {
                             $organisasi = organisasi::where('kode',$activeSheet->getCell($alphabet.$rowIndex)->getValue())->first();
                             if (!empty($organisasi)) {
                                 $data['pidopd'] = $organisasi->id;
-                            }   
+                            }
                             break;
                         }
 
@@ -788,7 +789,7 @@ class importRepository extends BaseRepository {
                             $organisasi = organisasi::where('kode',$activeSheet->getCell($alphabet.$rowIndex)->getValue())->first();
                             if (!empty($organisasi)) {
                                 $data['pidopd_cabang'] = $organisasi->id;
-                            }   
+                            }
                             break;
                         }
 
@@ -797,7 +798,7 @@ class importRepository extends BaseRepository {
                             $organisasi = organisasi::where('kode',$activeSheet->getCell($alphabet.$rowIndex)->getValue())->first();
                             if (!empty($organisasi)) {
                                 $data['pidopd_cabang'] = $organisasi->id;
-                            }   
+                            }
                             break;
                         }
 
@@ -808,31 +809,31 @@ class importRepository extends BaseRepository {
                         }
 
                     }
-    
+
                     $data['tipe_kib']  = '';
                     //special case for tipe_kib
                     $barang = barang::find($data['pidbarang']);
                     if (!empty($barang)) {
-                        
+
                         $jenisBarang = jenisbarang::where(['kode' => $barang->kode_jenis])->first();
                         if (!empty($jenisBarang)) {
                             $data['tipe_kib'] = $jenisBarang->kelompok_kib;
                         }
                     }
                     $data['kib'] = json_encode($dataKIB);
-                    
+
                 }
                 $inventarisRepository = new inventarisRepository(new Application());
                 array_push($inventarisIDs, $inventarisRepository->InsertLogic($data));
             }
-           
+
             DB::commit();
         } catch (Exception $e) {
-            
+
             DB::rollBack();
 
             $firstID = null;
-            
+
             //flush all inserted inventaris
             foreach ($inventarisIDs as $inventarisID) {
                 if ($firstID == null) {
@@ -845,13 +846,13 @@ class importRepository extends BaseRepository {
                 }
             }
 
-            //reset sequence to first id 
+            //reset sequence to first id
             if ($firstID != null) {
-                DB::raw("ALTER SEQUENCE inventaris_id_seq RESTART WITH ".$firstID.";");    
+                DB::raw("ALTER SEQUENCE inventaris_id_seq RESTART WITH ".$firstID.";");
             }
-        
+
             throw new Exception($e->getMessage().PHP_EOL.$e->getLine().PHP_EOL.$e->getFile());
-        } 
+        }
     }
 
     public function ImportJalanDanIrigasi($request) {
@@ -884,7 +885,7 @@ class importRepository extends BaseRepository {
                 }
                 foreach ($rangeAlphabets as $alphabet) {
                     # code...
-                    
+
                     $data['draft'] = 1;
                     // special case for tgl perolehan
                     $data['tgl_perolehan'] = $activeSheet->getCell('G'.$rowIndex)->getValue().'-'.
@@ -894,7 +895,7 @@ class importRepository extends BaseRepository {
                     $data['tgl_dibukukan'] = $activeSheet->getCell('J'.$rowIndex)->getValue().'-'.
                             $activeSheet->getCell('K'.$rowIndex)->getValue().'-'.
                             $activeSheet->getCell('L'.$rowIndex)->getValue();
-                    
+
                     switch($alphabet) {
                         // a for id barang or kode barang
                         case "A": {
@@ -914,7 +915,7 @@ class importRepository extends BaseRepository {
 
                             $satuanAsText = $activeSheet->getCell($alphabet.$rowIndex)->getValue();
                             $satuanAsDataDB = satuanbarang::whereRaw('LOWER(nama) = \''.strtolower($satuanAsText).'\'')->first();
-    
+
                             if (!empty($satuanAsDataDB)) {
                                 $data['satuan'] = $satuanAsDataDB->id;
                             } else {
@@ -945,7 +946,7 @@ class importRepository extends BaseRepository {
                             $data['harga_satuan'] = $this->reFormatHargaSatuan($hargaSatuan);
                             break;
                         }
-                        
+
 
                         // 'I' for tahun perolehan
                         case "I": {
@@ -958,7 +959,7 @@ class importRepository extends BaseRepository {
                             $organisasi = organisasi::where('kode',$activeSheet->getCell($alphabet.$rowIndex)->getValue())->first();
                             if (!empty($organisasi)) {
                                 $data['pidopd'] = $organisasi->id;
-                            }   
+                            }
                             break;
                         }
 
@@ -967,7 +968,7 @@ class importRepository extends BaseRepository {
                             $organisasi = organisasi::where('kode',$activeSheet->getCell($alphabet.$rowIndex)->getValue())->first();
                             if (!empty($organisasi)) {
                                 $data['pidopd_cabang'] = $organisasi->id;
-                            }   
+                            }
                             break;
                         }
 
@@ -976,7 +977,7 @@ class importRepository extends BaseRepository {
                             $organisasi = organisasi::where('kode',$activeSheet->getCell($alphabet.$rowIndex)->getValue())->first();
                             if (!empty($organisasi)) {
                                 $data['pidopd_cabang'] = $organisasi->id;
-                            }   
+                            }
                             break;
                         }
 
@@ -987,7 +988,7 @@ class importRepository extends BaseRepository {
                         }
 
                     }
-    
+
                     $data['tipe_kib']  = '';
                     //special case for tipe_kib
                     $barang = barang::find($data['pidbarang']);
@@ -998,19 +999,19 @@ class importRepository extends BaseRepository {
                         }
                     }
                     $data['kib'] = json_encode($dataKIB);
-                    
+
                 }
                 $inventarisRepository = new inventarisRepository(new Application());
                 array_push($inventarisIDs, $inventarisRepository->InsertLogic($data));
             }
-           
+
             DB::commit();
         } catch (Exception $e) {
-            
+
             DB::rollBack();
 
             $firstID = null;
-            
+
             //flush all inserted inventaris
             foreach ($inventarisIDs as $inventarisID) {
                 if ($firstID == null) {
@@ -1023,13 +1024,13 @@ class importRepository extends BaseRepository {
                 }
             }
 
-            //reset sequence to first id 
+            //reset sequence to first id
             if ($firstID != null) {
-                DB::raw("ALTER SEQUENCE inventaris_id_seq RESTART WITH ".$firstID.";");    
+                DB::raw("ALTER SEQUENCE inventaris_id_seq RESTART WITH ".$firstID.";");
             }
-        
+
             throw new Exception($e->getMessage().PHP_EOL.$e->getLine().PHP_EOL.$e->getFile());
-        } 
+        }
     }
 
     public function ImportDetilAsetTetapLainnya($request) {
@@ -1061,7 +1062,7 @@ class importRepository extends BaseRepository {
                 }
                 foreach ($rangeAlphabets as $alphabet) {
                     # code...
-                    
+
                     $data['draft'] = 1;
                     // special case for tgl perolehan
                     $data['tgl_perolehan'] = $activeSheet->getCell('F'.$rowIndex)->getValue().'-'.
@@ -1071,7 +1072,7 @@ class importRepository extends BaseRepository {
                     $data['tgl_dibukukan'] = $activeSheet->getCell('I'.$rowIndex)->getValue().'-'.
                             $activeSheet->getCell('J'.$rowIndex)->getValue().'-'.
                             $activeSheet->getCell('K'.$rowIndex)->getValue();
-                    
+
                     switch($alphabet) {
                         // a for id barang or kode barang
                         case "A": {
@@ -1091,7 +1092,7 @@ class importRepository extends BaseRepository {
 
                             $satuanAsText = $activeSheet->getCell($alphabet.$rowIndex)->getValue();
                             $satuanAsDataDB = satuanbarang::whereRaw('LOWER(nama) = \''.strtolower($satuanAsText).'\'')->first();
-    
+
                             if (!empty($satuanAsDataDB)) {
                                 $data['satuan'] = $satuanAsDataDB->id;
                             } else {
@@ -1116,7 +1117,7 @@ class importRepository extends BaseRepository {
                             $data['harga_satuan'] = $this->reFormatHargaSatuan($hargaSatuan);
                             break;
                         }
-                        
+
 
                         // 'H' for tahun perolehan
                         case "H": {
@@ -1129,7 +1130,7 @@ class importRepository extends BaseRepository {
                             $organisasi = organisasi::where('kode',$activeSheet->getCell($alphabet.$rowIndex)->getValue())->first();
                             if (!empty($organisasi)) {
                                 $data['pidopd'] = $organisasi->id;
-                            }   
+                            }
                             break;
                         }
 
@@ -1138,7 +1139,7 @@ class importRepository extends BaseRepository {
                             $organisasi = organisasi::where('kode',$activeSheet->getCell($alphabet.$rowIndex)->getValue())->first();
                             if (!empty($organisasi)) {
                                 $data['pidopd_cabang'] = $organisasi->id;
-                            }   
+                            }
                             break;
                         }
 
@@ -1147,7 +1148,7 @@ class importRepository extends BaseRepository {
                             $organisasi = organisasi::where('kode',$activeSheet->getCell($alphabet.$rowIndex)->getValue())->first();
                             if (!empty($organisasi)) {
                                 $data['pidopd_cabang'] = $organisasi->id;
-                            }   
+                            }
                             break;
                         }
 
@@ -1158,11 +1159,11 @@ class importRepository extends BaseRepository {
                         }
 
                     }
-    
+
                     $data['tipe_kib']  = '';
 
-                    
-                    
+
+
                     //special case for tipe_kib
                     $barang = barang::find($data['pidbarang']);
                     if (!empty($barang)) {
@@ -1172,20 +1173,20 @@ class importRepository extends BaseRepository {
                         }
                     }
                     $data['kib'] = json_encode($dataKIB);
-                    
+
                 }
                 $inventarisRepository = new inventarisRepository(new Application());
 
                 array_push($inventarisIDs, $inventarisRepository->InsertLogic($data));
-            }            
-           
+            }
+
             DB::commit();
         } catch (Exception $e) {
-        
+
             DB::rollBack();
 
             $firstID = null;
-            
+
             //flush all inserted inventaris
             foreach ($inventarisIDs as $inventarisID) {
                 if ($firstID == null) {
@@ -1198,12 +1199,12 @@ class importRepository extends BaseRepository {
                 }
             }
 
-            //reset sequence to first id 
+            //reset sequence to first id
             if ($firstID != null) {
-                DB::raw("ALTER SEQUENCE inventaris_id_seq RESTART WITH ".$firstID.";");    
+                DB::raw("ALTER SEQUENCE inventaris_id_seq RESTART WITH ".$firstID.";");
             }
-        
+
             throw new Exception($e->getMessage().PHP_EOL.$e->getLine().PHP_EOL.$e->getFile());
-        } 
+        }
     }
 }

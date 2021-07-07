@@ -3,9 +3,9 @@
 namespace App\Models;
 
 use App\Helpers\Constant;
-use Eloquent as Model;
+use Illuminate\Database\Eloquent\Model as EloquentModel;
 
-class BaseModel extends Model {
+class BaseModel extends EloquentModel {
 
     public function __construct()
     {
@@ -120,16 +120,6 @@ class BaseModel extends Model {
         '2' => 'Tetap dan Bagi Hasil',
     ];
 
-    public static $kelompokLevelDs = [
-        '-4' => 'Auditor',
-        '-3' => 'Gubernur',
-        '-2' => 'Sekda',
-        '-1' => 'BPKAD',
-        '0' => 'Pengguna Barang',
-        '1' => 'Kuasa Pengguna Barang',
-        '2' => 'Sub Kuasa Pengguna Barang'
-    ];
-
     public static function getAccess($conditional) {
         $accs = [];
 
@@ -139,7 +129,7 @@ class BaseModel extends Model {
             };
         }
 
-        foreach(self::$kelompokLevelDs as $index => $label) {
+        foreach(Constant::$ROLE_LEVEL as $index => $label) {
             if($conditional($index, $label)) {
                 array_push($accs, $index);
             }

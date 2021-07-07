@@ -23,6 +23,7 @@
         "mpdf/mpdf": "^8.0",
         "orangehill/iseed": "^2.6",
         "phpoffice/phpspreadsheet": "^1.11",
+        "spatie/laravel-permission": "v3",
         "yajra/laravel-datatables": "1.5",
         "yajra/laravel-datatables-oracle": "~9.0",
         "zircote/swagger-php": "^3.0"

@@ -1,6 +1,8 @@
 <?php
 
+use App\Helpers\Constant;
 use Illuminate\Database\Seeder;
+use Illuminate\Support\Facades\DB;
 
 class InitLockEditInventarisSystemSettingTableSeeder extends Seeder
 {
@@ -11,10 +13,10 @@ class InitLockEditInventarisSystemSettingTableSeeder extends Seeder
      */
     public function run()
     {
-        $lockInventarisSetting = \DB::table('system_setting')->where('nama', \Constant::$SETTING_UBAH_PENATA_USAHAAN)->first();
+        $lockInventarisSetting = DB::table('system_setting')->where('nama', Constant::$SETTING_UBAH_PENATA_USAHAAN)->first();
 
         if (empty($lockInventarisSetting)) {
-            \DB::table('system_setting')->insert([
+            DB::table('system_setting')->insert([
                 [
                     'id' => 7,
                     'nama' => 'UBAH_PENATA_USAHAAN',

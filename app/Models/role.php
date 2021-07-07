@@ -2,8 +2,7 @@
 
 namespace App\Models;
 
-use Eloquent as Model;
-use Illuminate\Database\Eloquent\SoftDeletes;
+use Illuminate\Database\Eloquent\Model as EloquentModel;
 
 /**
  * Class role
@@ -13,12 +12,11 @@ use Illuminate\Database\Eloquent\SoftDeletes;
  * @property string nama
  * @property integer level
  */
-class role extends Model
+class role extends \Spatie\Permission\Models\Role
 {
     // use SoftDeletes;
 
-    public $table = 'm_role';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
@@ -27,7 +25,6 @@ class role extends Model
 
 
     public $fillable = [
-        'nama',
         'level'
     ];
 
@@ -48,8 +45,8 @@ class role extends Model
      * @var array
      */
     public static $rules = [
-        
+
     ];
 
-    
+
 }
