@@ -279,7 +279,7 @@
                                     <p>
                                         {!! Auth::user()->name !!}
                                         <small>{!! \App\Models\organisasi::find(Auth::user()->pid_organisasi)->nama !!}</small>
-                                        <small>{!! \App\Models\jabatan::find(Auth::user()->jabatan)->nama_jabatan !!}</small>
+                                        {{-- <small>{!! \App\Models\jabatan::find(Auth::user()->jabatan)->nama_jabatan !!}</small> --}}
                                     </p>
                                 </li>
                                 <!-- Menu Footer-->

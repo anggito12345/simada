@@ -27,6 +27,7 @@ class usersController extends AppBaseController
 
     public function __construct(usersRepository $usersRepo)
     {
+        FlashFlash::error("Unauthorized");
         $this->middleware('auth');
         parent::__construct();
         $this->usersRepository = $usersRepo;
@@ -79,24 +80,7 @@ class usersController extends AppBaseController
         return redirect(route('users.index'));
     }
 
-    /**
-     * Store a sign up user.
-     *
-     * @param CreateusersRequest $request
-     *
-     * @return Response
-     */
-    public function SignUp(CreateusersRequest $request)
-    {
-        $input = $request->all();
-        $input['password'] = Hash::make($request->password);
 
-        $users = $this->usersRepository->create($input);
-
-        FlashFlash::success('Users saved successfully.');
-
-        return redirect(route('login'));
-    }
 
     /**
      * Display the specified users.

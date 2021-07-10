@@ -54,12 +54,9 @@
 
         @include('adminlte-templates::common.errors')
 
-        {!! Form::open(['route' => 'users.store']) !!}
+        {!! Form::open(['route' => 'auth.register']) !!}
 
             {!! csrf_field() !!}
-
-            {!! Form::text('from-login', true,['style' => 'display:none']) !!}
-
 
             <!-- Name Field -->
             <div class="form-group col-md-12">

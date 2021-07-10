@@ -5,15 +5,8 @@
     //dd(session('cache-user'));
 ?>
 @if(
-    c::is('inventaris',['view'],[Constant::$GROUP_OPD_ORG, Constant::$GROUP_BPKAD_ORG, Constant::$GROUP_CABANGOPD_ORG]) ||
-    c::is('pemeliharaan',['view'],[Constant::$GROUP_OPD_ORG, Constant::$GROUP_BPKAD_ORG, Constant::$GROUP_CABANGOPD_ORG]) ||
-    c::is('penghapusan',['view'],[Constant::$GROUP_OPD_ORG, Constant::$GROUP_BPKAD_ORG]) ||
-    c::is('pemanfaatan',['view'],[Constant::$GROUP_OPD_ORG, Constant::$GROUP_BPKAD_ORG]) ||
-    c::is('mutasi',['view'],[Constant::$GROUP_OPD_ORG, Constant::$GROUP_BPKAD_ORG]) ||
-    c::is('rka',['view'],[Constant::$GROUP_OPD_ORG, Constant::$GROUP_BPKAD_ORG]) ||
-    c::is('reklas',['view'],[Constant::$GROUP_OPD_ORG, Constant::$GROUP_BPKAD_ORG]) ||
-    c::is('sensus',['view'],[Constant::$GROUP_OPD_ORG, Constant::$GROUP_BPKAD_ORG]) ||
-    c::is('koreksi',['view'],[Constant::$GROUP_BPKAD_ORG])
+    Auth::user()->hasAnyRole('kuasa pengguna barang') ||
+    Auth::user()->hasAnyRole('pegelola barang')
 )
 <li class="treeview {{ Request::is('inventaris*', 'penghapusans*', 'pemeliharaans*', 'pemanfaatans*', 'mutasis*', 'rkas*', 'reklas*', 'koreksis*') ? 'active' : '' }}">
     <a href="#">
@@ -150,7 +143,7 @@
         <li class="{{ Request::is('pengunaans*') ? 'active' : '' }}">
             <a href="{!! route('pengunaans.index') !!}"><i class="fa fa-edit"></i><span>Pengunaan KIB A</span></a>
         </li>
-        
+
 
         <li class="{{ Request::is('mKodeDaerahs*') ? 'active' : '' }}">
             <a href="{{ route('mKodeDaerahs.index') }}"><i class="fa fa-edit"></i><span>Kode Daerah</span></a>
@@ -169,7 +162,7 @@
 ?>
 
 @if(
-    c::is('pengaturan users',['view'],[Constant::$GROUP_BPKAD_ORG]) 
+    c::is('pengaturan users',['view'],[Constant::$GROUP_BPKAD_ORG])
 )
 
 <li class="treeview {{ Request::is('users*', 'organisasis/settings', 'jabatans', 'settings')? 'active' : '' }}">
@@ -184,8 +177,8 @@
     <ul class="treeview-menu">
         <li class="{{ Request::is('DaftarBarang*') ? 'active' : '' }}">
             <a href="{!! route('Report.DaftarBarang') !!}"><i class="fa fa-edit"></i><span>Daftar Barang</span></a>
-        </li> 
-        
+        </li>
+
         <li class="{{ Request::is('DaftarBarangIntraKomp*') ? 'active' : '' }}">
             <a href="{!! route('Report.DaftarBarangIntraKomp') !!}"><i class="fa fa-edit"></i><span>Daftar Barang Intrakomp</span></a>
         </li>
@@ -208,7 +201,7 @@
 
         <li class="{{ Request::is('LampiranSuratUsulan*') ? 'active' : '' }}">
             <a href="{!! route('Report.LampiranSuratUsulan') !!}"><i class="fa fa-edit"></i><span>Lampiran Surat Usulan</span></a>
-        </li>                                        
+        </li>
     </ul>
 </li>
 @endif

@@ -2,7 +2,7 @@
 
 namespace App\Models;
 
-use Illuminate\Database\Eloquent\Model as EloquentModel;
+use Illuminate\Foundation\Auth\User as Authenticatable;
 use Spatie\Permission\Traits\HasRoles;
 
 /**
@@ -16,14 +16,14 @@ use Spatie\Permission\Traits\HasRoles;
  * @property string password
  * @property string remember_token
  */
-class users extends EloquentModel
+class users extends Authenticatable
 {
     use HasRoles;
     // use SoftDeletes;
     protected $guard_name = 'web';
 
     public $table = 'users';
-    
+
     const CREATED_AT = 'created_at';
     const UPDATED_AT = 'updated_at';
 
@@ -95,5 +95,14 @@ class users extends EloquentModel
     public function Organisasi()
     {
         return $this->hasOne('App\Models\organisasi', 'id', 'pid_organisasi');
+    }
+
+    public function hasRole($roles): bool
+    {
+        if (is_array($roles)) {
+
+        }
+
+        return false;
     }
 }

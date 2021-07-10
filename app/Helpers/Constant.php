@@ -91,7 +91,7 @@ class Constant {
     public static $ROLE_LEVEL = [
         '-4' => 'Auditor',
         '-3' => 'Gubernur',
-        '-1' => 'BPKAD',
+        '-1' => 'Pengelola Barang',
         '0' => 'Pengguna Barang',
         '1' => 'Kuasa Pengguna Barang',
         '2' => 'Sub Kuasa Pengguna Barang'
