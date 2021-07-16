@@ -91,7 +91,7 @@ return [
      */
 
     'display_permission_in_exception' => false,
-
+    'enable_wildcard_permission' => true,
     'cache' => [
 
         /*

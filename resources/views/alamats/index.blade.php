@@ -17,7 +17,7 @@
                 <div class="row">
                     <div class="col-md-4 form-group">
                         {!! Form::label('jenis', 'Jenis:') !!}
-                        {!! Form::select('jenis', \App\Models\BaseModel::$jenisKotaDs, null, ['class' => 'form-control', 'placeholder' => 'Silahkan pilih', 'onchange' => '$("#table-alamat").DataTable().ajax.reload();']) !!}       
+                        {!! Form::select('f_jenis', \App\Models\BaseModel::$jenisKotaDs, null, ['class' => 'form-control', 'placeholder' => 'Silahkan pilih', 'onchange' => '$("#table-alamat").DataTable().ajax.reload();']) !!}
                     </div>
                 </div>
             </div>
@@ -30,7 +30,7 @@
             </div>
         </div>
         <div class="text-center">
-        
+
         </div>
     </div>
 @endsection

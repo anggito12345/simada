@@ -88,12 +88,25 @@ class Constant {
     public static $GROUP_UPT_ORG = 2;
 
 
+    public static $ROLE_PENGELOLA_BARANG = "pengelola barang";
+    public static $ROLE_PENGGUNA_BARANG = "pengguna barang";
+    public static $ROLE_KUASA_PENGGUNA_BARANG = "kuasa pengguna barang";
+    public static $ROLE_SUB_KUASA_PENGGUNA_BARANG = "sub kuasa pengguna barang";
     public static $ROLE_LEVEL = [
         '-4' => 'Auditor',
-        '-3' => 'Gubernur',
+        '-2' => 'Gubernur',
         '-1' => 'Pengelola Barang',
         '0' => 'Pengguna Barang',
         '1' => 'Kuasa Pengguna Barang',
         '2' => 'Sub Kuasa Pengguna Barang'
     ];
+
+
+    //all role below here
+    public static $PERM_ALL_TRANSACTION = "AllTransaction";
+    public static $PERM_ALL_TRANSACTION_EXCEPT_KOREKSI = 'AllTransaction.Except.Koreksi';
+    public static $PERM_TRANSACTION_LEVEL1 = 'Transaction.Level1';
+    public static $PERM_TRANSACTION_LEVEL2 = 'Transaction.Level2';
+    public static $PERM_TRANSACTION_LEVEL3 = 'Transaction.Level3';
+    public static $PERM_TRANSACTION_LEVEL4 = 'Transaction.Level4';
 }

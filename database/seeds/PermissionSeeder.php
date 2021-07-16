@@ -1,5 +1,6 @@
 <?php
 
+use App\Helpers\Constant;
 use App\Models\users;
 use Illuminate\Database\Seeder;
 use Spatie\Permission\Models\Permission;
@@ -16,234 +17,221 @@ class PermissionSeeder extends Seeder
     public function run()
     {
         //
-        app()[PermissionRegistrar::class]->forgetCachedPermissions();
+        app('config')->set('permission.enable_wildcard_permission', true);
 
+        Permission::findOrCreate('*');
 
+        Permission::findOrCreate('master.*');
 
-        Permission::findOrCreate('Edit.Lokasi');
-        Permission::findOrCreate('Add.Lokasi');
-        Permission::findOrCreate('View.Lokasi');
-        Permission::findOrCreate('Import.Lokasi');
-        Permission::findOrCreate('Delete.Lokasi');
+        Permission::findOrCreate('master.lokasi.*');
+        Permission::findOrCreate('master.lokasi.update');
+        Permission::findOrCreate('master.lokasi.create');
+        Permission::findOrCreate('master.lokasi.read');
+        Permission::findOrCreate('master.lokasi.delete');
 
-        Permission::findOrCreate('Edit.Barang');
-        Permission::findOrCreate('Add.Barang');
-        Permission::findOrCreate('View.Barang');
-        Permission::findOrCreate('Import.Barang');
-        Permission::findOrCreate('Delete.Barang');
+        Permission::findOrCreate('master.barang.*');
+        Permission::findOrCreate('master.barang.update');
+        Permission::findOrCreate('master.barang.create');
+        Permission::findOrCreate('master.barang.read');
+        Permission::findOrCreate('master.barang.delete');
 
-        Permission::findOrCreate('Edit.Organisasi');
-        Permission::findOrCreate('Add.Organisasi');
-        Permission::findOrCreate('View.Organisasi');
-        Permission::findOrCreate('Import.Organisasi');
-        Permission::findOrCreate('Delete.Organisasi');
+        Permission::findOrCreate('master.organisasi.*');
+        Permission::findOrCreate('master.organisasi.update');
+        Permission::findOrCreate('master.organisasi.create');
+        Permission::findOrCreate('master.organisasi.read');
+        Permission::findOrCreate('master.organisasi.delete');
 
+        Permission::findOrCreate('master.satuan_barang.*');
+        Permission::findOrCreate('master.satuan_barang.update');
+        Permission::findOrCreate('master.satuan_barang.create');
+        Permission::findOrCreate('master.satuan_barang.read');
+        Permission::findOrCreate('master.satuan_barang.delete');
 
+        Permission::findOrCreate('master.mitra.*');
+        Permission::findOrCreate('master.mitra.update');
+        Permission::findOrCreate('master.mitra.create');
+        Permission::findOrCreate('master.mitra.read');
+        Permission::findOrCreate('master.mitra.delete');
 
-        Permission::findOrCreate('Edit.Satuan Barang');
-        Permission::findOrCreate('Add.Satuan Barang');
-        Permission::findOrCreate('View.Satuan Barang');
-        Permission::findOrCreate('Import.Satuan Barang');
-        Permission::findOrCreate('Delete.Satuan Barang');
+        Permission::findOrCreate('master.penggunaan_kib_a.*');
+        Permission::findOrCreate('master.penggunaan_kib_a.update');
+        Permission::findOrCreate('master.penggunaan_kib_a.create');
+        Permission::findOrCreate('master.penggunaan_kib_a.read');
+        Permission::findOrCreate('master.penggunaan_kib_a.delete');
 
-        Permission::findOrCreate('Edit.Mitra');
-        Permission::findOrCreate('Add.Mitra');
-        Permission::findOrCreate('View.Mitra');
-        Permission::findOrCreate('Import.Mitra');
-        Permission::findOrCreate('Delete.Mitra');
+        Permission::findOrCreate('master.kode_daerah.*');
+        Permission::findOrCreate('master.kode_daerah.update');
+        Permission::findOrCreate('master.kode_daerah.create');
+        Permission::findOrCreate('master.kode_daerah.read');
+        Permission::findOrCreate('master.kode_daerah.delete');
 
-        Permission::findOrCreate('Edit.Penggunaan KIB A');
-        Permission::findOrCreate('Add.Penggunaan KIB A');
-        Permission::findOrCreate('View.Penggunaan KIB A');
-        Permission::findOrCreate('Import.Penggunaan KIB A');
-        Permission::findOrCreate('Delete.Penggunaan KIB A');
+        Permission::findOrCreate('master.merk.*');
+        Permission::findOrCreate('master.merk.update');
+        Permission::findOrCreate('master.merk.create');
+        Permission::findOrCreate('master.merk.read');
+        Permission::findOrCreate('master.merk.delete');
 
-        Permission::findOrCreate('Edit.Kode Daerah');
-        Permission::findOrCreate('Add.Kode Daerah');
-        Permission::findOrCreate('View.Kode Daerah');
-        Permission::findOrCreate('Import.Kode Daerah');
-        Permission::findOrCreate('Delete.Kode Daerah');
+        Permission::findOrCreate('setup.*');
 
-        Permission::findOrCreate('Edit.Merk');
-        Permission::findOrCreate('Add.Merk');
-        Permission::findOrCreate('View.Merk');
-        Permission::findOrCreate('Import.Merk');
-        Permission::findOrCreate('Delete.Merk');
+        Permission::findOrCreate('setup.pengaturan.*');
+        Permission::findOrCreate('setup.pengaturan.update');
+        Permission::findOrCreate('setup.pengaturan.create');
+        Permission::findOrCreate('setup.pengaturan.read');
+        Permission::findOrCreate('setup.pengaturan.delete');
 
-        Permission::findOrCreate('Edit.Pengaturan');
-        Permission::findOrCreate('Add.Pengaturan');
-        Permission::findOrCreate('View.Pengaturan');
-        Permission::findOrCreate('Import.Pengaturan');
-        Permission::findOrCreate('Delete.Pengaturan');
+        Permission::findOrCreate('setup.data_center.*');
+        Permission::findOrCreate('setup.data_center.update');
+        Permission::findOrCreate('setup.data_center.create');
+        Permission::findOrCreate('setup.data_center.read');
+        Permission::findOrCreate('setup.data_center.delete');
 
-        Permission::findOrCreate('AllMaster');
+        Permission::findOrCreate('otorisasi.*');
+        Permission::findOrCreate('otorisasi.mutasi');
+        Permission::findOrCreate('otorisasi.penghapusan');
+        Permission::findOrCreate('otorisasi.sensus');
+        Permission::findOrCreate('otorisasi.reklas');
 
-        //===
+        Permission::findOrCreate('transaksi.*');
 
-        Permission::findOrCreate('Edit.Data Center');
-        Permission::findOrCreate('Add.Data Center');
-        Permission::findOrCreate('View.Data Center');
-        Permission::findOrCreate('Import.Data Center');
-        Permission::findOrCreate('Delete.Data Center');
+        Permission::findOrCreate('transaksi.penghapusan.*');
+        Permission::findOrCreate('transaksi.penghapusan.create');
+        Permission::findOrCreate('transaksi.penghapusan.update');
+        Permission::findOrCreate('transaksi.penghapusan.delete');
+        Permission::findOrCreate('transaksi.penghapusan.read');
+        Permission::findOrCreate('transaksi.penghapusan.post');
 
-        Permission::findOrCreate('Transaction.Level1');
-        Permission::findOrCreate('Transaction.Level2');
-        Permission::findOrCreate('Transaction.Level3');
-        Permission::findOrCreate('Transaction.Level4');
+        Permission::findOrCreate('transaksi.pemeliharaan.*');
+        Permission::findOrCreate('transaksi.pemeliharaan.create');
+        Permission::findOrCreate('transaksi.pemeliharaan.update');
+        Permission::findOrCreate('transaksi.pemeliharaan.delete');
+        Permission::findOrCreate('transaksi.pemeliharaan.read');
+        Permission::findOrCreate('transaksi.pemeliharaan.post');
 
-        Permission::findOrCreate('Verifikasi.Mutasi');
-        Permission::findOrCreate('Verifikasi.Penghapusan');
-        Permission::findOrCreate('Verifikasi.Sensus');
-        Permission::findOrCreate('Verifikasi.Reklas');
+        Permission::findOrCreate('transaksi.pemanfaatan.*');
+        Permission::findOrCreate('transaksi.pemanfaatan.create');
+        Permission::findOrCreate('transaksi.pemanfaatan.update');
+        Permission::findOrCreate('transaksi.pemanfaatan.delete');
+        Permission::findOrCreate('transaksi.pemanfaatan.read');
+        Permission::findOrCreate('transaksi.pemanfaatan.post');
 
-        //transaksi
-        Permission::findOrCreate('Edit.Penghapusan');
-        Permission::findOrCreate('Add.Penghapusan');
-        Permission::findOrCreate('View.Penghapusan');
-        Permission::findOrCreate('Import.Penghapusan');
-        Permission::findOrCreate('Delete.Penghapusan');
+        Permission::findOrCreate('transaksi.mutasi.*');
+        Permission::findOrCreate('transaksi.mutasi.create');
+        Permission::findOrCreate('transaksi.mutasi.update');
+        Permission::findOrCreate('transaksi.mutasi.delete');
+        Permission::findOrCreate('transaksi.mutasi.read');
+        Permission::findOrCreate('transaksi.mutasi.post');
 
-        Permission::findOrCreate('Edit.Pemeliharaan');
-        Permission::findOrCreate('Add.Pemeliharaan');
-        Permission::findOrCreate('View.Pemeliharaan');
-        Permission::findOrCreate('Import.Pemeliharaan');
-        Permission::findOrCreate('Delete.Pemeliharaan');
+        Permission::findOrCreate('transaksi.rka.*');
+        Permission::findOrCreate('transaksi.rka.create');
+        Permission::findOrCreate('transaksi.rka.update');
+        Permission::findOrCreate('transaksi.rka.delete');
+        Permission::findOrCreate('transaksi.rka.read');
+        Permission::findOrCreate('transaksi.rka.post');
 
-        Permission::findOrCreate('Edit.Pemanfaatan');
-        Permission::findOrCreate('Add.Pemanfaatan');
-        Permission::findOrCreate('View.Pemanfaatan');
-        Permission::findOrCreate('Import.Pemanfaatan');
-        Permission::findOrCreate('Delete.Pemanfaatan');
+        Permission::findOrCreate('transaksi.reklas.*');
+        Permission::findOrCreate('transaksi.reklas.create');
+        Permission::findOrCreate('transaksi.reklas.update');
+        Permission::findOrCreate('transaksi.reklas.delete');
+        Permission::findOrCreate('transaksi.reklas.read');
+        Permission::findOrCreate('transaksi.reklas.post');
 
-        Permission::findOrCreate('Edit.Mutasi');
-        Permission::findOrCreate('Add.Mutasi');
-        Permission::findOrCreate('View.Mutasi');
-        Permission::findOrCreate('Import.Mutasi');
-        Permission::findOrCreate('Delete.Mutasi');
+        Permission::findOrCreate('transaksi.sensus.*');
+        Permission::findOrCreate('transaksi.sensus.create');
+        Permission::findOrCreate('transaksi.sensus.update');
+        Permission::findOrCreate('transaksi.sensus.delete');
+        Permission::findOrCreate('transaksi.sensus.read');
+        Permission::findOrCreate('transaksi.sensus.post');
 
-        Permission::findOrCreate('Edit.RKA');
-        Permission::findOrCreate('Add.RKA');
-        Permission::findOrCreate('View.RKA');
-        Permission::findOrCreate('Import.RKA');
-        Permission::findOrCreate('Delete.RKA');
+        Permission::findOrCreate('transaksi.koreksi.*');
+        Permission::findOrCreate('transaksi.koreksi.create');
+        Permission::findOrCreate('transaksi.koreksi.update');
+        Permission::findOrCreate('transaksi.koreksi.delete');
+        Permission::findOrCreate('transaksi.koreksi.read');
+        Permission::findOrCreate('transaksi.koreksi.post');
 
-        Permission::findOrCreate('Edit.Reklas');
-        Permission::findOrCreate('Add.Reklas');
-        Permission::findOrCreate('View.Reklas');
-        Permission::findOrCreate('Import.Reklas');
-        Permission::findOrCreate('Delete.Reklas');
+        Permission::findOrCreate('transaksi.inventaris.*');
+        Permission::findOrCreate('transaksi.inventaris.create');
+        Permission::findOrCreate('transaksi.inventaris.update');
+        Permission::findOrCreate('transaksi.inventaris.delete');
+        Permission::findOrCreate('transaksi.inventaris.read');
+        Permission::findOrCreate('transaksi.inventaris.post');
 
-        Permission::findOrCreate('Edit.Sensus');
-        Permission::findOrCreate('Add.Sensus');
-        Permission::findOrCreate('View.Sensus');
-        Permission::findOrCreate('Import.Sensus');
-        Permission::findOrCreate('Delete.Sensus');
-
-        Permission::findOrCreate('Edit.Koreksi');
-        Permission::findOrCreate('Add.Koreksi');
-        Permission::findOrCreate('View.Koreksi');
-        Permission::findOrCreate('Import.Koreksi');
-        Permission::findOrCreate('Delete.Koreksi');
-
-        //posting data dari draft
-        Permission::findOrCreate('Inventaris.Post');
-
-        Permission::findOrCreate('AllTransaction.Except.Koreksi');
-        Permission::findOrCreate('AllTransaction');
-
+        Permission::findOrCreate('transaksi.level.1');
+        Permission::findOrCreate('transaksi.level.2');
+        Permission::findOrCreate('transaksi.level.3');
+        Permission::findOrCreate('transaksi.level.4');
 
         //create role sub kuasa pengguna barang
 
-        $role1AddPerm = Role::create(['name' => 'sub kuasa pengguna barang']);
+        $role1AddPerm = Role::create(['name' => 'sub kuasa pengguna barang', 'level' => 2]);
 
         //==== master
-        $role1AddPerm->givePermissionTo('Add.Lokasi');
-        $role1AddPerm->givePermissionTo('View.Lokasi');
-        $role1AddPerm->givePermissionTo('Import.Lokasi');
-        $role1AddPerm->givePermissionTo('Delete.Lokasi');
+        $role1AddPerm->givePermissionTo('master.*');
 
-        $role1AddPerm->givePermissionTo('Edit.Merk');
-        $role1AddPerm->givePermissionTo('Add.Merk');
-        $role1AddPerm->givePermissionTo('View.Merk');
-        $role1AddPerm->givePermissionTo('Import.Merk');
-        $role1AddPerm->givePermissionTo('Delete.Merk');
+        $role1AddPerm->givePermissionTo('master.merk.*');
         //==== transaksi
-
-        $role1AddPerm->givePermissionTo('AllTransaction.Except.Koreksi');
-        $role1AddPerm->givePermissionTo('AllTransaction');
-
-        $role1AddPerm->givePermissionTo('Transaction.Level4');
+        $role1AddPerm->givePermissionTo('transaksi.inventaris.*');
+        $role1AddPerm->givePermissionTo('transaksi.sensus.*');
+        $role1AddPerm->givePermissionTo('transaksi.reklas.*');
+        $role1AddPerm->givePermissionTo('transaksi.rka.*');
+        $role1AddPerm->givePermissionTo('transaksi.mutasi.*');
+        $role1AddPerm->givePermissionTo('transaksi.pemanfaatan.*');
+        $role1AddPerm->givePermissionTo('transaksi.pemeliharaan.*');
+        $role1AddPerm->givePermissionTo('transaksi.penghapusan.*');
+        $role1AddPerm->givePermissionTo('transaksi.level.4');
 
         // create role kuasa pengguna barang
 
-        $role2AddPerm = Role::create(['name' => 'kuasa pengguna barang']);
-        $role2AddPerm->givePermissionTo('Add.Lokasi');
-        $role2AddPerm->givePermissionTo('View.Lokasi');
-        $role2AddPerm->givePermissionTo('Import.Lokasi');
-        $role2AddPerm->givePermissionTo('Delete.Lokasi');
+        $role2AddPerm = Role::create(['name' => 'kuasa pengguna barang', 'level' => 1]);
+        //==== master
+        $role2AddPerm->givePermissionTo('master.lokasi.*');
 
-        $role2AddPerm->givePermissionTo('Edit.Merk');
-        $role2AddPerm->givePermissionTo('Add.Merk');
-        $role2AddPerm->givePermissionTo('View.Merk');
-        $role2AddPerm->givePermissionTo('Import.Merk');
-        $role2AddPerm->givePermissionTo('Delete.Merk');
+        $role2AddPerm->givePermissionTo('master.merk.*');
 
-        $role2AddPerm->givePermissionTo('Verifikasi.Mutasi');
+        $role2AddPerm->givePermissionTo('otorisasi.mutasi');
 
-        $role2AddPerm->givePermissionTo('AllTransaction.Except.Koreksi');
+        $role2AddPerm->givePermissionTo('transaksi.inventaris.*');
+        $role2AddPerm->givePermissionTo('transaksi.sensus.*');
+        $role2AddPerm->givePermissionTo('transaksi.reklas.*');
+        $role2AddPerm->givePermissionTo('transaksi.rka.*');
+        $role2AddPerm->givePermissionTo('transaksi.mutasi.*');
+        $role2AddPerm->givePermissionTo('transaksi.pemanfaatan.*');
+        $role2AddPerm->givePermissionTo('transaksi.pemeliharaan.*');
+        $role2AddPerm->givePermissionTo('transaksi.penghapusan.*');
 
-        $role2AddPerm->givePermissionTo('Transaction.Level3');
-
-
-
+        $role2AddPerm->givePermissionTo('transaksi.level.3');
         // create role pengguna barang
 
-        $role3AddPerm = Role::create(['name' => 'pengguna barang']);
-        $role3AddPerm->givePermissionTo('Add.Lokasi');
-        $role3AddPerm->givePermissionTo('View.Lokasi');
-        $role3AddPerm->givePermissionTo('Import.Lokasi');
-        $role3AddPerm->givePermissionTo('Delete.Lokasi');
+        $role3AddPerm = Role::create(['name' => 'pengguna barang', 'level' => 0]);
+       //==== master
+        $role3AddPerm->givePermissionTo('master.lokasi.*');
 
-        $role3AddPerm->givePermissionTo('Edit.Merk');
-        $role3AddPerm->givePermissionTo('Add.Merk');
-        $role3AddPerm->givePermissionTo('View.Merk');
-        $role3AddPerm->givePermissionTo('Import.Merk');
-        $role3AddPerm->givePermissionTo('Delete.Merk');
+        $role3AddPerm->givePermissionTo('master.merk.*');
 
-        $role3AddPerm->givePermissionTo('Verifikasi.Mutasi');
+        $role3AddPerm->givePermissionTo('otorisasi.mutasi');
 
-        $role1AddPerm->givePermissionTo('AllTransaction.Except.Koreksi');
+        $role3AddPerm->givePermissionTo('transaksi.inventaris.*');
+        $role3AddPerm->givePermissionTo('transaksi.sensus.*');
+        $role3AddPerm->givePermissionTo('transaksi.reklas.*');
+        $role3AddPerm->givePermissionTo('transaksi.rka.*');
+        $role3AddPerm->givePermissionTo('transaksi.mutasi.*');
+        $role3AddPerm->givePermissionTo('transaksi.pemanfaatan.*');
+        $role3AddPerm->givePermissionTo('transaksi.pemeliharaan.*');
+        $role3AddPerm->givePermissionTo('transaksi.penghapusan.*');
 
-        $role1AddPerm->givePermissionTo('Transaction.Level2');
+        $role3AddPerm->givePermissionTo('transaksi.level.2');
 
+        // create role pengelola barang
 
-        // create role Gubernur
+        $role4AddPerm = Role::create(['name' => 'pengelola barang', 'level' => -1]);
 
-        $role5AddPerm = Role::create(['name' => 'gubernur']);
+        $role4AddPerm->givePermissionTo('*');
 
-        $role5AddPerm->givePermissionTo('Verifikasi.Mutasi');
-        $role5AddPerm->givePermissionTo('Verifikasi.Penghapusan');
-        $role5AddPerm->givePermissionTo('Verifikasi.Sensus');
-        $role5AddPerm->givePermissionTo('Verifikasi.Reklas');
+        // create role pengelola barang
 
-        $role5AddPerm->givePermissionTo('Edit.Data Center');
-        $role5AddPerm->givePermissionTo('Add.Data Center');
-        $role5AddPerm->givePermissionTo('View.Data Center');
-        $role5AddPerm->givePermissionTo('Import.Data Center');
-        $role5AddPerm->givePermissionTo('Delete.Data Center');
+        $role5AddPerm = Role::create(['name' => 'gubernur', 'level' => -2]);
 
-        $role5AddPerm->givePermissionTo('Edit.Pengaturan');
-        $role5AddPerm->givePermissionTo('Add.Pengaturan');
-        $role5AddPerm->givePermissionTo('View.Pengaturan');
-        $role5AddPerm->givePermissionTo('Import.Pengaturan');
-        $role5AddPerm->givePermissionTo('Delete.Pengaturan');
-
-        $role5AddPerm->givePermissionTo('AllMaster');
-        $role5AddPerm->givePermissionTo('AllTransaction');
-
-        $role5AddPerm->givePermissionTo('Inventaris.Post');
-
-        $role5AddPerm->givePermissionTo('Transaction.Level1');
+        $role5AddPerm->givePermissionTo('*');
 
     }
 }

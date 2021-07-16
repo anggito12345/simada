@@ -7,7 +7,10 @@ use Yajra\DataTables\Services\DataTable;
 use Yajra\DataTables\EloquentDataTable;
 use c;
 use App\Models\BaseModel;
+use App\Repositories\alamatRepository;
 use Constant;
+use Illuminate\Container\Container;
+use Illuminate\Support\Facades\Auth;
 
 class alamatDataTable extends DataTable
 {
@@ -36,18 +39,12 @@ class alamatDataTable extends DataTable
      */
     public function query(alamat $model)
     {
-        $query = $model->newQuery()
-        ->select([
-            "m_alamat.*",
-            "m_alamat_2.nama as nama_foreign"
-        ])->leftJoin("m_alamat as m_alamat_2", "m_alamat_2.id", "m_alamat.pid");
-
-        if (isset($_GET['jenis'])) {
-            $query = $query->where([
-                'm_alamat.jenis' => $_GET['jenis']
-            ]);
+        $fJenis = "";
+        $q = new alamatRepository(new Container());
+        if (isset($_GET["f_jenis"])) {
+            $fJenis = $_GET["f_jenis"];
         }
-        return $query;
+        return $q->getAlamats($fJenis);
     }
 
     /**
@@ -59,27 +56,13 @@ class alamatDataTable extends DataTable
     {
         $addtButtons = [];
 
-        if (c::is('master barang lokasi',['create'], BaseModel::getAccess(function($index, $label) {
-            if ($index >= Constant::$GROUP_BPKAD_ORG) {
-                return true;
-            }
-
-            return false;
-        }))) {
+        if (Auth::user()->hasAnyPermission(['master.*', 'master.lokasi.*', 'master.lokasi.create'])) {
            array_push($addtButtons, ['extend' => 'create']);
         }
 
-        if (c::is('master barang lokasi',['export'], BaseModel::getAccess(function($index, $label) {
-            if ($index >= Constant::$GROUP_BPKAD_ORG) {
-                return true;
-            }
-
-            return false;
-        }))) {
-            array_push($addtButtons,
-                ['extend' => 'export'],
-                ['extend' => 'print']);
-        }
+        array_push($addtButtons,
+            ['extend' => 'export'],
+            ['extend' => 'print']);
 
         return $this->builder()
             ->columns($this->getColumns())
@@ -88,8 +71,8 @@ class alamatDataTable extends DataTable
                 'type' => 'GET',
                 'dataType' => 'json',
                 'data' => 'function(d) {
-                    if ($("[name=jenis]").val())
-                        d.jenis = $("[name=jenis]").val()
+                    if ($("[name=f_jenis]").val())
+                        d.f_jenis = $("[name=f_jenis]").val()
 
                 }',
             ])

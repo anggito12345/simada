@@ -83,8 +83,6 @@
                     data.data.map(function(d) {
                         let splittedText = d.text.split('-');
                         if (d.text.indexOf("-") > -1 && sourceConstantJenis[parseInt(splittedText[0])] != undefined) {
-
-                            console.log(splittedText);
                             d.text = sourceConstantJenis[parseInt(splittedText[0])] + ' - ' + splittedText[1]
                         }
 

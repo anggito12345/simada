@@ -41,16 +41,21 @@ Route::resource('users', 'usersController');
 Route::resource('inventaris', 'inventarisController');
 Route::resource('pemeliharaans', 'pemeliharaanController');
 Route::resource('penghapusans', 'penghapusanController');
+//master=================
 Route::resource('barangs', 'barangController');
-Route::resource('alamats', 'alamatController');
-Route::resource('jenisbarangs', 'jenisbarangController');
-Route::resource('kondisis', 'kondisiController');
-Route::resource('lokasis', 'lokasiController');
+Route::middleware([
+    'permission:master.lokasi.*|permission:master.*'
+    ])->resource('alamats', 'alamatController');
+
+//Route::resource('jenisbarangs', 'jenisbarangController');
+//Route::resource('kondisis', 'kondisiController');
+//Route::resource('lokasis', 'lokasiController');
 Route::resource('merkbarangs', 'merkbarangController');
 Route::resource('organisasis', 'organisasiController');
-Route::resource('perolehans', 'perolehanController');
+//Route::resource('perolehans', 'perolehanController');
 Route::resource('satuanbarangs', 'satuanbarangController');
-Route::resource('jenisopds', 'jenisopdController');
+//Route::resource('jenisopds', 'jenisopdController');
+
 Route::resource('detiltanahs', 'detiltanahController');
 Route::resource('detilmesins', 'detilmesinController');
 Route::resource('detilbangunans', 'detilbangunanController');

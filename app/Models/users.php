@@ -97,12 +97,4 @@ class users extends Authenticatable
         return $this->hasOne('App\Models\organisasi', 'id', 'pid_organisasi');
     }
 
-    public function hasRole($roles): bool
-    {
-        if (is_array($roles)) {
-
-        }
-
-        return false;
-    }
 }

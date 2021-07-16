@@ -9,6 +9,8 @@ use App\Http\Requests\UpdatealamatRequest;
 use App\Repositories\alamatRepository;
 use Flash;
 use App\Http\Controllers\AppBaseController;
+use Illuminate\Support\Facades\Auth;
+use Laracasts\Flash\Flash as FlashFlash;
 use Response;
 
 class alamatController extends AppBaseController
@@ -52,11 +54,16 @@ class alamatController extends AppBaseController
      */
     public function store(CreatealamatRequest $request)
     {
+        if (!Auth::user()->hasAnyPermission(['master.*', 'master.lokasi.*', 'master.lokasi.create'])) {
+            abort(403);
+            return;
+        }
+
         $input = $request->all();
 
         $alamat = $this->alamatRepository->create($input);
 
-        Flash::success('Alamat saved successfully.');
+        FlashFlash::success('Alamat saved successfully.');
 
         return redirect(route('alamats.index'));
     }
@@ -73,7 +80,7 @@ class alamatController extends AppBaseController
         $alamat = $this->alamatRepository->find($id);
 
         if (empty($alamat)) {
-            Flash::error('Alamat not found');
+            FlashFlash::error('Alamat not found');
 
             return redirect(route('alamats.index'));
         }
@@ -90,10 +97,15 @@ class alamatController extends AppBaseController
      */
     public function edit($id)
     {
+        if (!Auth::user()->hasAnyPermission(['master.*', 'master.lokasi.*', 'master.lokasi.update'])) {
+            abort(403);
+            return;
+        }
+
         $alamat = $this->alamatRepository->find($id);
 
         if (empty($alamat)) {
-            Flash::error('Alamat not found');
+            FlashFlash::error('Alamat not found');
 
             return redirect(route('alamats.index'));
         }
@@ -111,17 +123,22 @@ class alamatController extends AppBaseController
      */
     public function update($id, UpdatealamatRequest $request)
     {
+        if (!Auth::user()->hasAnyPermission(['master.*', 'master.lokasi.*', 'master.lokasi.update'])) {
+            abort(403);
+            return;
+        }
+
         $alamat = $this->alamatRepository->find($id);
 
         if (empty($alamat)) {
-            Flash::error('Alamat not found');
+            FlashFlash::error('Alamat not found');
 
             return redirect(route('alamats.index'));
         }
 
         $alamat = $this->alamatRepository->update($request->all(), $id);
 
-        Flash::success('Alamat updated successfully.');
+        FlashFlash::success('Alamat updated successfully.');
 
         return redirect(route('alamats.index'));
     }
@@ -135,17 +152,22 @@ class alamatController extends AppBaseController
      */
     public function destroy($id)
     {
+        if (!Auth::user()->hasAnyPermission(['master.*', 'master.lokasi.*', 'master.lokasi.delete'])) {
+            abort(403);
+            return;
+        }
+
         $alamat = $this->alamatRepository->find($id);
 
         if (empty($alamat)) {
-            Flash::error('Alamat not found');
+            FlashFlash::error('Alamat not found');
 
             return redirect(route('alamats.index'));
         }
 
         $this->alamatRepository->delete($id);
 
-        Flash::success('Alamat deleted successfully.');
+        FlashFlash::success('Alamat deleted successfully.');
 
         return redirect(route('alamats.index'));
     }

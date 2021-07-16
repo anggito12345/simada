@@ -11,6 +11,8 @@ use Illuminate\Support\Facades\Hash;
 use Flash;
 use Illuminate\Support\Facades\Mail;
 use App\Http\Controllers\AppBaseController;
+use App\Repositories\organisasiRepository;
+use App\Repositories\roleRepository;
 use Illuminate\Support\Facades\Auth;
 use Response;
 use Illuminate\Foundation\Auth\AuthenticatesUsers;
@@ -24,13 +26,17 @@ class usersController extends AppBaseController
 
     /** @var  usersRepository */
     private $usersRepository;
+    private $organisasiRepository;
+    private $roleRepository;
 
-    public function __construct(usersRepository $usersRepo)
+    public function __construct(roleRepository $roleRepository, usersRepository $usersRepo, organisasiRepository $organisasiRepository )
     {
         FlashFlash::error("Unauthorized");
         $this->middleware('auth');
         parent::__construct();
         $this->usersRepository = $usersRepo;
+        $this->organisasiRepository = $organisasiRepository;
+        $this->roleRepository = $roleRepository;
     }
 
     /**
@@ -176,6 +182,13 @@ class usersController extends AppBaseController
         }
 
         $users = $this->usersRepository->update($input, $id);
+        $organisasi = $this->organisasiRepository->find($input["pid_organisasi"]);
+        $roles = $this->roleRepository->all([
+            'level' => $organisasi->level,
+        ]);
+        if (count($roles) > 0) {
+            $users->assignRole($roles[0]->name);
+        }
 
         if (isset($input['from_aktif_process'])) {
             Mail::to($users->email)->send(new \App\Mail\ActivationUser($users));
